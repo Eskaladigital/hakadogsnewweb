@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Brain, Heart, Target, TrendingUp, CheckCircle, ArrowRight } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Metodología de Educación Canina - Hakadogs',
+  title: 'Hakadogs - Metodología de Educación Canina',
   description: 'Conoce nuestra metodología basada en refuerzo positivo, respeto y ciencia. Métodos probados y efectivos.',
 }
 

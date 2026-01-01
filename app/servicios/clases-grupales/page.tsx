@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { Users, CheckCircle, Calendar, ArrowRight } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Clases Grupales para Perros - Hakadogs Archena Murcia',
+  title: 'Hakadogs - Clases Grupales para Perros',
   description: 'Clases de socialización y obediencia en grupo. Aprende mientras tu perro socializa con otros perros.',
 }
 

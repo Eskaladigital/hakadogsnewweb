@@ -4,7 +4,7 @@ import { FileText, Home, Briefcase, Smartphone, BookOpen, Users, Info, Mail, Sca
 import { cities } from '@/lib/cities'
 
 export const metadata: Metadata = {
-  title: 'Mapa del Sitio | Hakadogs',
+  title: 'Hakadogs - Mapa del Sitio',
   description: 'Navegación completa del sitio web de Hakadogs - Educación Canina Profesional',
 }
 

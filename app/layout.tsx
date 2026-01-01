@@ -6,7 +6,7 @@ import BackToTop from '@/components/ui/BackToTop'
 import WhatsAppChat from '@/components/ui/WhatsAppChat'
 
 export const metadata: Metadata = {
-  title: 'Hakadogs - Educación Canina Profesional en Archena y Murcia',
+  title: 'Hakadogs - Educación Canina Profesional',
   description: 'Educación canina profesional con métodos positivos y respetuosos. +8 años de experiencia, +500 perros educados. BE HAKA!',
   keywords: ['educador canino murcia', 'adiestrador perros archena', 'educación canina', 'adiestramiento positivo'],
   icons: {

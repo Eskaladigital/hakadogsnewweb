@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { ArrowLeft, Shield } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Política de Privacidad | Hakadogs',
+  title: 'Hakadogs - Política de Privacidad',
   description: 'Política de privacidad y protección de datos de Hakadogs conforme al RGPD',
 }
 

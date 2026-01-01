@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { Award, Heart, TrendingUp, Users, Target, BookOpen, ArrowRight } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Sobre Nosotros - Alfredo Educador Canino - Hakadogs',
+  title: 'Hakadogs - Sobre Nosotros',
   description: 'Conoce a Alfredo, educador canino profesional con +8 años de experiencia y +500 perros educados en Archena y Región de Murcia.',
 }
 

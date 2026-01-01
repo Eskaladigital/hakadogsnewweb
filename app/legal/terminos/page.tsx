@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { ArrowLeft, FileText } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Términos y Condiciones | Hakadogs',
+  title: 'Hakadogs - Términos y Condiciones',
   description: 'Términos y condiciones de uso de los servicios de Hakadogs',
 }
 

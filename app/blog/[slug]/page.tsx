@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Calendar, User, Clock, Share2, Facebook, Twitter, Linkedin } from 'lucide-react'
+import type { Metadata } from 'next'
 
 // En producción, esto vendría de archivos MDX o base de datos
 const blogPosts: Record<string, any> = {
@@ -219,6 +220,21 @@ Aunque no son esenciales, proporcionan energía y fibra.
 
 ¿Dudas sobre la alimentación de tu perro? Consúltanos en nuestras sesiones personalizadas.
     `
+  }
+}
+
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const post = blogPosts[params.slug]
+  
+  if (!post) {
+    return {
+      title: 'Hakadogs - Artículo no encontrado',
+    }
+  }
+
+  return {
+    title: `Hakadogs - ${post.title}`,
+    description: post.excerpt || post.content.substring(0, 160),
   }
 }
 

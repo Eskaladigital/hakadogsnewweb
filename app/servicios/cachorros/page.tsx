@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { Baby, CheckCircle, Clock, ArrowRight } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Educación de Cachorros - Hakadogs Archena Murcia',
+  title: 'Hakadogs - Educación de Cachorros',
   description: 'Programa especializado para cachorros de 2 a 6 meses. Socialización temprana y bases sólidas desde el principio.',
 }
 

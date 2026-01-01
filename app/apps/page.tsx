@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Heart, Target, Users, ArrowRight, CheckCircle, Sparkles } from 'lucide-react'
 
 export const metadata = {
-  title: 'Apps de Educación Canina - Hakadogs',
+  title: 'Hakadogs - Apps de Educación Canina',
   description: 'Herramientas digitales para seguimiento de salud, adiestramiento y comunidad canina.',
 }
 

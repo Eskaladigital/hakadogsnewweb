@@ -24,12 +24,12 @@ export async function generateMetadata({ params }: { params: { ciudad: string } 
   
   if (!city) {
     return {
-      title: 'Ciudad no encontrada',
+      title: 'Hakadogs - Ciudad no encontrada',
     }
   }
 
   return {
-    title: `Adiestramiento y Educación Canina en ${city.name} | Hakadogs`,
+    title: `Hakadogs - Educación Canina en ${city.name}`,
     description: city.description,
     keywords: city.keywords.join(', '),
     openGraph: {
