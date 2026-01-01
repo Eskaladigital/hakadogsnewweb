@@ -10,18 +10,8 @@ export default function Footer() {
           {/* Logo y descripción */}
           <div className="md:col-span-1">
             <div className="mb-4">
-              {/* Logo en móvil - hakadogs-04.png */}
-              <div className="relative h-16 w-40 mx-auto md:hidden mb-4">
-                <Image
-                  src="/images/hakadogs-04.png"
-                  alt="Hakadogs"
-                  fill
-                  className="object-contain"
-                  priority
-                />
-              </div>
-              {/* Logo en desktop */}
-              <div className="hidden md:block relative h-28 w-28">
+              {/* Logo en móvil y desktop - hakadogs_logo_cara_transparente_vf.png */}
+              <div className="relative h-28 w-28 mx-auto md:mx-0">
                 <Image
                   src="/images/hakadogs_logo_cara_transparente_vf.png"
                   alt="Hakadogs"

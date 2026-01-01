@@ -27,7 +27,7 @@ export default function Navigation() {
             {/* Logo completo en desktop */}
             <div className="hidden sm:block relative h-14 w-48 group-hover:scale-105 transition-transform">
               <Image
-                src="/images/hakadogs_logo_texto_transparente.png"
+                src="/images/hakadogs-02.png"
                 alt="Hakadogs - Educación Canina"
                 fill
                 className="object-contain object-left"
