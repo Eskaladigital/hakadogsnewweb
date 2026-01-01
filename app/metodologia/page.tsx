@@ -261,12 +261,12 @@ export default function MetodologiaPage() {
           <p className="text-xl text-gray-200 mb-8">
             Experimenta la diferencia de una educación basada en respeto y ciencia
           </p>
-          <Link 
+          <Link
             href="/contacto"
-            className="inline-flex items-center bg-gold text-forest-dark px-8 py-4 rounded-xl font-bold hover:bg-gold/90 transition-all hover:scale-105"
+            className="inline-flex items-center bg-gold text-forest-dark px-8 py-4 rounded-xl font-bold hover:bg-gold/90 transition-all hover:scale-105 whitespace-nowrap"
           >
             Solicitar Consulta Gratuita
-            <ArrowRight className="ml-2" size={20} />
+            <ArrowRight className="ml-2 flex-shrink-0" size={20} />
           </Link>
         </div>
       </section>

@@ -193,10 +193,10 @@ export default function SobreNosotrosPage() {
           </p>
           <Link 
             href="/contacto"
-            className="inline-flex items-center btn-primary"
+            className="inline-flex items-center btn-primary whitespace-nowrap"
           >
             Contactar
-            <ArrowRight className="ml-2" size={20} />
+            <ArrowRight className="ml-2 flex-shrink-0" size={20} />
           </Link>
         </div>
       </section>

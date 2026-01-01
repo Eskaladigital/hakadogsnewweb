@@ -130,10 +130,10 @@ export default function CachorrosPage() {
             </p>
             <Link 
               href="/contacto"
-              className="inline-flex items-center bg-white text-gold px-8 py-4 rounded-xl font-bold hover:bg-gray-100 transition-all"
+              className="inline-flex items-center bg-white text-gold px-8 py-4 rounded-xl font-bold hover:bg-gray-100 transition-all whitespace-nowrap"
             >
               Consulta Gratuita
-              <ArrowRight className="ml-2" size={20} />
+              <ArrowRight className="ml-2 flex-shrink-0" size={20} />
             </Link>
           </div>
         </div>

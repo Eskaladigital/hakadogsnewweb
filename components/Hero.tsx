@@ -87,9 +87,9 @@ export default function Hero({
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link href={primaryCTA.href} className="btn-primary inline-flex items-center justify-center group">
+              <Link href={primaryCTA.href} className="btn-primary inline-flex items-center justify-center group whitespace-nowrap">
                 {primaryCTA.text}
-                <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
+                <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform flex-shrink-0" size={20} />
               </Link>
               {secondaryCTA && (
                 <Link href={secondaryCTA.href} className="btn-secondary inline-flex items-center justify-center">

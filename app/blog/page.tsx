@@ -169,8 +169,8 @@ export default function BlogPage() {
                         <User size={14} />
                         <span>{post.author}</span>
                       </div>
-                      <span className="text-forest-dark font-semibold group-hover:text-forest flex items-center">
-                        Leer más <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition" />
+                      <span className="text-forest-dark font-semibold group-hover:text-forest flex items-center whitespace-nowrap">
+                        Leer más <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition flex-shrink-0" />
                       </span>
                     </div>
                   </div>

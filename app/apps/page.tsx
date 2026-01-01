@@ -128,9 +128,9 @@ export default function AppsPage() {
 
                       {/* CTA Button */}
                       <Link href={app.href}>
-                        <button className={`group w-full bg-gradient-to-r ${app.gradient} text-white font-semibold py-4 px-8 rounded-xl hover:shadow-xl transition-all flex items-center justify-center`}>
+                        <button className={`group w-full bg-gradient-to-r ${app.gradient} text-white font-semibold py-4 px-8 rounded-xl hover:shadow-xl transition-all flex items-center justify-center whitespace-nowrap`}>
                           <span>Acceder a {app.name}</span>
-                          <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                          <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform flex-shrink-0" />
                         </button>
                       </Link>
                     </div>

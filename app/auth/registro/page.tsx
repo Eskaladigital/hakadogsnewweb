@@ -239,10 +239,10 @@ export default function RegistroPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full btn-primary flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full btn-primary flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
             >
               {loading ? 'Creando cuenta...' : 'Crear Cuenta'}
-              {!loading && <ArrowRight className="ml-2" size={20} />}
+              {!loading && <ArrowRight className="ml-2 flex-shrink-0" size={20} />}
             </button>
           </form>
 
