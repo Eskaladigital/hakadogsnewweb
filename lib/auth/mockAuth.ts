@@ -13,7 +13,7 @@ export const mockUsers: MockUser[] = [
   {
     id: '1',
     email: 'narciso.pardo@outlook.com',
-    password: '14356830Np',
+    password: 'Hacka2016@',
     name: 'Narciso Pardo',
     role: 'admin',
     created_at: new Date().toISOString(),
@@ -21,7 +21,7 @@ export const mockUsers: MockUser[] = [
   {
     id: '2',
     email: 'user@hakadogs.com',
-    password: '14356830Np',
+    password: 'Hacka2016@',
     name: 'Usuario Demo',
     role: 'user',
     created_at: new Date().toISOString(),

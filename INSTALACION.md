@@ -18,8 +18,8 @@ La aplicación está desplegada en AWS Amplify y se actualiza automáticamente c
 Ver archivo `USUARIOS_PRUEBA.md` para credenciales completas.
 
 ### Login Rápido
-- **Admin:** narciso.pardo@outlook.com / 14356830Np
-- **Usuario:** user@hakadogs.com / hakadogs2024
+- **Admin:** narciso.pardo@outlook.com / Hacka2016@
+- **Usuario:** user@hakadogs.com / Hacka2016@
 
 ---
 

@@ -166,12 +166,12 @@ hakadogs-app/
 
 ### 👨‍💼 Usuario ADMIN
 - **Email:** narciso.pardo@outlook.com
-- **Password:** 14356830Np
+- **Password:** Hacka2016@
 - **Acceso:** Panel admin + todas las funciones
 
 ### 👤 Usuario REGULAR
 - **Email:** user@hakadogs.com
-- **Password:** hakadogs2024
+- **Password:** Hacka2016@
 - **Acceso:** Apps y funciones de cliente
 
 **Ver:** `USUARIOS_PRUEBA.md` para más detalles

@@ -10,14 +10,14 @@
 
 ### 👨‍💼 Usuario ADMIN
 - **Email:** narciso.pardo@outlook.com
-- **Password:** 14356830Np
+- **Password:** Hacka2016@
 - **Rol:** Administrador
 - **Permisos:** Acceso completo al sistema, panel admin
 - **URL Admin:** `https://tu-app.amplifyapp.com/admin/dashboard`
 
 ### 👤 Usuario REGULAR
 - **Email:** user@hakadogs.com
-- **Password:** hakadogs2024
+- **Password:** Hacka2016@
 - **Rol:** Cliente estándar
 - **Permisos:** Acceso a apps y funcionalidades de cliente
 - **URL Perfil:** `https://tu-app.amplifyapp.com/cliente/perfil`
@@ -110,7 +110,7 @@ Luego commit y push a GitHub para que se despliegue automáticamente.
 2. Vuelve a iniciar sesión
 
 ### El admin login falla
-- Usa exactamente: `narciso.pardo@outlook.com` / `14356830Np`
+- Usa exactamente: `narciso.pardo@outlook.com` / `Hacka2016@`
 - El email debe coincidir exactamente (mayúsculas/minúsculas)
 
 ### Quiero limpiar la sesión
