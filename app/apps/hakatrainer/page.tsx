@@ -297,7 +297,7 @@ export default function HakaTrainerPage() {
                   <div className="p-6">
                     <div className="text-center">
                       <p className="text-3xl font-bold text-gray-900 mb-2">85%</p>
-                      <p className="text-sm text-gray-600 mb-4">para dominar "Llamada Nivel 5"</p>
+                      <p className="text-sm text-gray-600 mb-4">para dominar &quot;Llamada Nivel 5&quot;</p>
                       <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
                         <div className="bg-green-600 h-2 rounded-full" style={{ width: '85%' }}></div>
                       </div>

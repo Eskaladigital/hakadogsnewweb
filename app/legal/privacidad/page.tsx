@@ -187,7 +187,7 @@ export default function PrivacidadPage() {
             Corregir datos inexactos o incompletos. Puede hacerlo desde su perfil o solicitarlo por email.
           </p>
 
-          <h3>7.3. Derecho de Supresión ("Derecho al Olvido")</h3>
+          <h3>7.3. Derecho de Supresión (&quot;Derecho al Olvido&quot;)</h3>
           <p>
             Eliminar sus datos personales, salvo que exista obligación legal de conservarlos.
           </p>

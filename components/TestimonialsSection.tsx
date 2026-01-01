@@ -70,7 +70,7 @@ export default function TestimonialsSection() {
               
               {/* Text */}
               <p className="text-gray-700 mb-6 relative z-10">
-                "{testimonial.text}"
+                &quot;{testimonial.text}&quot;
               </p>
               
               {/* Author */}

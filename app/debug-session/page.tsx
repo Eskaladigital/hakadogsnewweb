@@ -89,7 +89,7 @@ export default function DebugSessionPage() {
           <ol className="text-blue-800 space-y-2 text-sm">
             <li>1. Si NO hay sesión, ve a <a href="/auth/login" className="underline font-semibold">/auth/login</a> e inicia sesión</li>
             <li>2. Después de iniciar sesión, vuelve a esta página</li>
-            <li>3. Si hay sesión pero no funciona "Mi Perfil", comparte toda esta información</li>
+            <li>3. Si hay sesión pero no funciona &quot;Mi Perfil&quot;, comparte toda esta información</li>
           </ol>
         </div>
       </div>

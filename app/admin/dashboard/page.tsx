@@ -210,7 +210,7 @@ export default function AdminDashboard() {
           <h3 className="text-lg font-bold text-blue-900 mb-2">👋 Panel de Administración</h3>
           <p className="text-blue-800">
             Este es el panel de administración de Hakadogs. Desde aquí puedes gestionar usuarios, 
-            ejercicios y todo el contenido del sistema. Las secciones marcadas como "Próximamente" 
+            ejercicios y todo el contenido del sistema. Las secciones marcadas como &quot;Próximamente&quot; 
             estarán disponibles en futuras actualizaciones.
           </p>
         </div>

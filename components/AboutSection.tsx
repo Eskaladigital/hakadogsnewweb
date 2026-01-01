@@ -67,7 +67,7 @@ export default function AboutSection() {
             </p>
             
             <p className="text-lg text-gray-700 mb-8 leading-relaxed">
-              Su filosofía <strong className="text-forest">"BE HAKA"</strong> se centra en el respeto 
+              Su filosofía <strong className="text-forest">&quot;BE HAKA&quot;</strong> se centra en el respeto 
               mutuo, la comunicación clara y el fortalecimiento del vínculo entre tú y tu perro.
             </p>
 

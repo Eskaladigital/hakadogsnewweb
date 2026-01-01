@@ -61,7 +61,7 @@ export default function LocalTestimonialsSection({ cityName, testimonials }: Loc
 
               {/* Testimonio */}
               <p className="text-gray-700 mb-6 italic leading-relaxed">
-                "{testimonial.text}"
+                &quot;{testimonial.text}&quot;
               </p>
 
               {/* Autor */}

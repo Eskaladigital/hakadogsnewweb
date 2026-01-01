@@ -232,7 +232,7 @@ export default function BlogPage() {
               No hay artículos en esta categoría
             </h3>
             <p className="text-gray-500 mb-8">
-              Prueba con otra categoría o selecciona "Todas"
+              Prueba con otra categoría o selecciona &quot;Todas&quot;
             </p>
             <button
               onClick={() => setSelectedCategory('Todas')}

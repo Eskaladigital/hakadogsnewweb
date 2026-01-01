@@ -212,9 +212,9 @@ export default function ModificacionConductaPage() {
             
             <div className="bg-cream rounded-xl p-6 mb-8">
               <p className="text-gray-700 italic mb-4">
-                "Max era agresivo con otros perros desde cachorro. No podíamos pasear tranquilos. 
+                &quot;Max era agresivo con otros perros desde cachorro. No podíamos pasear tranquilos. 
                 Después de 3 meses de trabajo con Alfredo, Max puede cruzarse con perros sin reaccionar. 
-                Ha cambiado completamente nuestra vida."
+                Ha cambiado completamente nuestra vida.&quot;
               </p>
               <p className="font-bold text-forest-dark">— Carlos M., Max (Pastor Alemán)</p>
             </div>

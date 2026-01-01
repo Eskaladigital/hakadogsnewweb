@@ -29,7 +29,7 @@ export default function TerminosPage() {
           
           <h2>1. Aceptación de los Términos</h2>
           <p>
-            Al acceder y utilizar la plataforma Hakadogs y sus servicios relacionados (en adelante, "el Servicio"), 
+            Al acceder y utilizar la plataforma Hakadogs y sus servicios relacionados (en adelante, &quot;el Servicio&quot;), 
             usted acepta estar sujeto a estos Términos y Condiciones. Si no está de acuerdo con alguna parte de 
             estos términos, no debe utilizar nuestro Servicio.
           </p>
@@ -157,7 +157,7 @@ export default function TerminosPage() {
 
           <h2>10. Limitación de Responsabilidad</h2>
           <p>
-            Hakadogs proporciona el Servicio "tal cual" y "según disponibilidad". No garantizamos que:
+            Hakadogs proporciona el Servicio &quot;tal cual&quot; y &quot;según disponibilidad&quot;. No garantizamos que:
           </p>
           <ul>
             <li>El Servicio estará disponible de forma ininterrumpida o libre de errores</li>
