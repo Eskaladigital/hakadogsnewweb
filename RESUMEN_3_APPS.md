@@ -1,5 +1,9 @@
 # 📱 LAS 3 APPS DE HAKADOGS - RESUMEN EJECUTIVO
 
+**Versión:** 1.0.0 PRODUCTION  
+**Estado:** ✅ DESPLEGADO EN AWS AMPLIFY  
+**Última actualización:** Enero 2026
+
 ## APP 1: HakaHealth - Salud y Seguimiento
 
 ### CONCEPTO

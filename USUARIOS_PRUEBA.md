@@ -205,6 +205,8 @@ Si tienes problemas con la autenticación en producción:
 ---
 
 **Última actualización:** Enero 2026  
+**Versión:** 1.0.0 PRODUCTION  
 **Proyecto:** HakaDogs - Educación Canina Profesional  
 **Sistema:** Autenticación Mock Local (sin backend)  
-**Plataforma:** AWS Amplify (Producción)
+**Plataforma:** AWS Amplify (Producción)  
+**Lanzamiento:** Versión 1.0 - Enero 2026

@@ -1,8 +1,8 @@
 # 🐕 HAKADOGS - Plataforma de Educación Canina
 
 **Versión**: 1.0.0 PRODUCTION  
-**URL Producción**: [Por configurar después del deploy]  
-**Estado**: ✅ **LISTO PARA DEPLOY EN AWS**
+**Fecha Lanzamiento**: Enero 2026  
+**Estado**: ✅ **DESPLEGADO EN AWS AMPLIFY**
 
 ---
 
@@ -30,11 +30,12 @@ Hakadogs es una plataforma web completa para educación canina profesional que i
 ### 🌐 URL de Producción
 **La aplicación está desplegada en AWS Amplify**
 
-- **URL Principal:** [Se configurará después del deploy]
+- **URL Principal:** https://[tu-app].amplifyapp.com (configurar en AWS Amplify Console)
 - **Repositorio GitHub:** https://github.com/ActtaxIA/HACKADOGS.git
+- **Versión:** 1.0.0 PRODUCTION
 
 ### ⚠️ IMPORTANTE
-**Esta aplicación NO se ejecuta en local**. Todos los accesos son a través de la URL de producción en AWS.
+**Esta aplicación NO se ejecuta en local**. Todos los accesos son a través de la URL de producción en AWS. Cada push a GitHub desencadena un deploy automático.
 
 ---
 
@@ -328,8 +329,9 @@ Este proyecto es propiedad privada de Hakadogs y no puede ser reproducido, distr
 ### 🚀 Deploy
 
 **Estado:** ✅ Desplegado en AWS Amplify  
-**URL:** [Se actualizará después del primer deploy]  
-**CI/CD:** Activo (push → build → deploy automático)
+**Versión:** 1.0.0 PRODUCTION  
+**CI/CD:** Activo (push → build → deploy automático)  
+**Última actualización:** Enero 2026
 
 ---
 
@@ -344,7 +346,8 @@ Para cualquier duda o problema:
 
 **Última actualización**: Enero 2026  
 **Versión**: 1.0.0 PRODUCTION  
-**Estado**: ✅ DESPLEGADO EN AWS
+**Estado**: ✅ DESPLEGADO EN AWS AMPLIFY  
+**Lanzamiento**: Versión 1.0 - Enero 2026
 
 ---
 
