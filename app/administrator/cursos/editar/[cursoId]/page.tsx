@@ -18,6 +18,9 @@ const LessonsManager = dynamic(() => import('@/components/admin/LessonsManager')
 interface LessonWithResources extends Lesson {
   resources: Resource[]
   isExpanded: boolean
+  videoUrl?: string
+  videoProvider?: string
+  isFreePreview?: boolean
 }
 
 export default function EditarCursoPage() {
