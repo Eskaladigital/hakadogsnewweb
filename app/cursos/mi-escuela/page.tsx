@@ -18,6 +18,7 @@ interface CursoConProgreso extends Course {
 export default function MiEscuelaPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
+  const [userName, setUserName] = useState('')
   const [cursosComprados, setCursosComprados] = useState<CursoConProgreso[]>([])
   const [cursosDisponibles, setCursosDisponibles] = useState<Course[]>([])
   const [stats, setStats] = useState({
