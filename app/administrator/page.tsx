@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { getLocalSession } from '@/lib/auth/mockAuth'
+import { getSession } from '@/lib/supabase/auth'
 import { getAllCourses, getAdminStats, deleteCourse, type Course } from '@/lib/supabase/courses'
 import { BookOpen, TrendingUp, DollarSign, Users, Plus, Edit, Trash2, Eye } from 'lucide-react'
 
@@ -20,15 +20,19 @@ export default function AdministratorPage() {
   })
 
   useEffect(() => {
-    const { data } = getLocalSession()
-    const session = data?.session
-    
-    if (!session || session.user?.user_metadata?.role !== 'admin') {
-      router.push('/cursos/auth/login?redirect=/administrator')
-    } else {
-      setIsAdmin(true)
-      loadData()
+    const checkAuth = async () => {
+      const { data } = await getSession()
+      const session = data?.session
+      
+      if (!session || session.user?.user_metadata?.role !== 'admin') {
+        router.push('/cursos/auth/login?redirect=/administrator')
+      } else {
+        setIsAdmin(true)
+        loadData()
+      }
     }
+    
+    checkAuth()
   }, [router])
 
   const loadData = async () => {
