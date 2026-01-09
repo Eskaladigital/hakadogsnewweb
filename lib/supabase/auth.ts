@@ -24,13 +24,22 @@ export const signIn = async (email: string, password: string) => {
     })
 
     if (error) {
+      // Log detallado del error para debugging
+      console.error('🔴 Error de Supabase Auth:', {
+        message: error.message,
+        status: error.status,
+        name: error.name,
+      })
+      
       // Mensaje personalizado según el tipo de error
       let errorMessage = error.message
       
-      if (error.message.includes('Email not confirmed')) {
-        errorMessage = '⚠️ Tu email aún no está confirmado. Revisa tu bandeja de entrada o contacta al administrador.'
+      if (error.message.includes('Email not confirmed') || error.status === 400) {
+        errorMessage = '⚠️ Tu email aún no está confirmado. Por favor, confirma tu email o contacta al administrador para activar tu cuenta.'
       } else if (error.message.includes('Invalid login credentials')) {
         errorMessage = '❌ Email o contraseña incorrectos. Verifica tus credenciales.'
+      } else if (error.status === 400) {
+        errorMessage = `⚠️ Error de autenticación (${error.status}): ${error.message}. Verifica que tu usuario esté confirmado en Supabase.`
       }
       
       return { data: null, error: { message: errorMessage } }
@@ -56,6 +65,7 @@ export const signIn = async (email: string, password: string) => {
 
     return { data: session, error: null }
   } catch (err: any) {
+    console.error('🔴 Error inesperado en signIn:', err)
     return { data: null, error: { message: err.message || 'Error al iniciar sesión' } }
   }
 }
