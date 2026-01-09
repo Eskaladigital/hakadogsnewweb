@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { BookOpen, ShoppingCart, Clock, CheckCircle, Lock, Award, TrendingUp, Play, Loader2 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { getLocalSession } from '@/lib/auth/mockAuth'
-import { getUserPurchasedCourses, getAllCourses, getUserCourseProgress } from '@/lib/supabase/courses'
+import { getUserPurchases, getAllCourses, getUserCourseProgress } from '@/lib/supabase/courses'
 import type { Course, UserCourseProgress } from '@/lib/supabase/courses'
 
 interface CursoConProgreso extends Course {
@@ -43,11 +43,12 @@ export default function MiEscuelaPage() {
         const allCourses = await getAllCourses()
         
         // Cargar cursos comprados
-        const purchased = await getUserPurchasedCourses(userId)
+        const purchases = await getUserPurchases(userId)
+        const purchased = purchases.map((p: any) => p.courses).filter(Boolean)
         
         // Cargar progreso de cada curso comprado
         const cursosConProgreso: CursoConProgreso[] = await Promise.all(
-          purchased.map(async (course) => {
+          purchased.map(async (course: Course) => {
             const progress = await getUserCourseProgress(userId, course.id)
             return {
               ...course,
