@@ -1,12 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, Suspense } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Mail, Lock, User, ArrowRight, AlertCircle } from 'lucide-react'
 import { authenticateLocal } from '@/lib/auth/mockAuth'
 
-export default function CursosLoginPage() {
+function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [email, setEmail] = useState('')
@@ -137,5 +137,22 @@ export default function CursosLoginPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function CursosLoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white pt-20 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-gradient-to-r from-forest to-sage rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
+            <User className="w-8 h-8 text-white" />
+          </div>
+          <p className="text-gray-600">Cargando...</p>
+        </div>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   )
 }
