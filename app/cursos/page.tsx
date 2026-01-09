@@ -217,10 +217,10 @@ export default function CursosPage() {
             Cursos de Educación Canina
           </h1>
           <p className="text-xl md:text-2xl mb-4 max-w-3xl mx-auto opacity-95">
-            Soluciones específicas para problemas concretos
+            Múltiples cursos específicos para problemas concretos
           </p>
           <p className="text-lg max-w-2xl mx-auto opacity-90">
-            Cursos cortos y prácticos. Cada uno resuelve un problema específico de tu perro.
+            Más de 10 cursos cortos y prácticos. Cada uno resuelve un problema específico: sentarse, venir, no tirar de la correa, solucionar mordidas, socialización y más.
           </p>
         </div>
       </section>
@@ -328,8 +328,11 @@ export default function CursosPage() {
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Cursos Específicos por Problema
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Cada curso resuelve un problema concreto. Elige el que necesitas y aprende a tu ritmo.
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-2">
+              Más de 10 cursos disponibles. Cada uno resuelve un problema concreto de forma rápida y efectiva.
+            </p>
+            <p className="text-lg text-gray-500 max-w-2xl mx-auto">
+              Elige el curso que necesitas según tu problema específico. Puedes comprar uno o varios cursos según tus necesidades.
             </p>
           </div>
 
@@ -414,15 +417,21 @@ export default function CursosPage() {
                 </p>
               </div>
               <div className="bg-white rounded-xl p-6 shadow-md">
+                <h3 className="font-bold text-gray-900 mb-2">¿Cuántos cursos hay disponibles?</h3>
+                <p className="text-gray-600">
+                  Actualmente tenemos más de 10 cursos específicos disponibles, cada uno enfocado en un problema concreto. Seguimos añadiendo nuevos cursos regularmente.
+                </p>
+              </div>
+              <div className="bg-white rounded-xl p-6 shadow-md">
                 <h3 className="font-bold text-gray-900 mb-2">¿Los cursos de pago son para siempre?</h3>
                 <p className="text-gray-600">
-                  Sí, una vez comprado un curso, tendrás acceso de por vida a todo el contenido y futuras actualizaciones.
+                  Sí, una vez comprado cualquier curso, tendrás acceso de por vida a todo el contenido y futuras actualizaciones de ese curso específico.
                 </p>
               </div>
               <div className="bg-white rounded-xl p-6 shadow-md">
                 <h3 className="font-bold text-gray-900 mb-2">¿Puedo comprar varios cursos?</h3>
                 <p className="text-gray-600">
-                  Sí, puedes comprar todos los cursos que necesites. Cada uno es independiente y se enfoca en un problema específico.
+                  ¡Por supuesto! Puedes comprar todos los cursos que necesites. Cada uno es independiente y se enfoca en un problema específico. Compra solo los que necesites según tu situación.
                 </p>
               </div>
               <div className="bg-white rounded-xl p-6 shadow-md">
