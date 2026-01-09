@@ -1,15 +1,15 @@
 # 📦 INFORMACIÓN DEL PROYECTO - HAKADOGS
 
-**⚠️ IMPORTANTE:** Esta aplicación **NO se ejecuta en local**. Está desplegada en producción en AWS Amplify.
+**⚠️ IMPORTANTE:** Esta aplicación está desplegada en producción en **Vercel**.
 
 ---
 
 ## 🌐 ACCESO A LA APLICACIÓN
 
 ### URL de Producción
-**https://[tu-app].amplifyapp.com**
+**https://[tu-dominio].vercel.app**
 
-La aplicación está desplegada en AWS Amplify y se actualiza automáticamente con cada push a GitHub.
+La aplicación está desplegada en Vercel y se actualiza automáticamente con cada push a GitHub.
 
 ---
 
@@ -27,21 +27,28 @@ Ver archivo `USUARIOS_PRUEBA.md` para credenciales completas.
 
 ### Repositorio GitHub
 ```bash
-git clone https://github.com/ActtaxIA/HACKADOGS.git
+git clone https://github.com/Eskaladigital/HACKADOGS.git
 ```
 
 ### Stack Tecnológico
 - **Frontend:** Next.js 14, React 18, TypeScript 5.3
 - **Estilos:** Tailwind CSS 3.4
-- **Deploy:** AWS Amplify
+- **Base de Datos:** Supabase
+- **Editor:** TinyMCE
+- **Deploy:** Vercel
 - **CI/CD:** Automático desde GitHub
 
-### Variables de Entorno (Configuradas en AWS)
+### Variables de Entorno (Configuradas en Vercel)
 ```bash
-NEXT_PUBLIC_APP_URL=https://tu-app.amplifyapp.com
-# Supabase (opcional - futuro)
+# Supabase
 NEXT_PUBLIC_SUPABASE_URL=tu_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_key
+
+# TinyMCE
+NEXT_PUBLIC_TINYMCE_API_KEY=tu_api_key
+
+# App URL (opcional)
+NEXT_PUBLIC_APP_URL=https://tu-dominio.vercel.app
 ```
 
 ---
@@ -52,38 +59,44 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_key
 
 1. **Clonar repositorio**
 ```bash
-git clone https://github.com/ActtaxIA/HACKADOGS.git
+git clone https://github.com/Eskaladigital/HACKADOGS.git
 cd hakadogs-app
 ```
 
-2. **Instalar dependencias** (si necesitas probar localmente)
+2. **Instalar dependencias**
 ```bash
 npm install
 ```
 
-3. **Hacer cambios en el código**
+3. **Configurar variables locales** (opcional para desarrollo local)
 ```bash
-# Edita los archivos que necesites
+cp .env.example .env.local
+# Editar .env.local con tus credenciales
 ```
 
-4. **Probar localmente** (opcional, solo si necesitas)
+4. **Probar localmente** (opcional)
 ```bash
 npm run dev
 # Abre http://localhost:3000
 ```
 
-5. **Subir cambios a GitHub**
+5. **Hacer cambios en el código**
+```bash
+# Edita los archivos que necesites
+```
+
+6. **Subir cambios a GitHub**
 ```bash
 git add .
 git commit -m "Descripción de los cambios"
 git push origin main
 ```
 
-6. **Deploy automático**
+7. **Deploy automático**
 ```
-AWS Amplify detecta el push
+Vercel detecta el push
   ↓
-Build automático (~5 minutos)
+Build automático (~2 minutos)
   ↓
 Deploy automático
   ↓
@@ -95,15 +108,16 @@ Deploy automático
 ## 🚀 DEPLOY Y CI/CD
 
 ### Estado Actual
-- ✅ Repositorio en GitHub
-- ✅ Deploy automático configurado
+- ✅ Repositorio en GitHub: https://github.com/Eskaladigital/HACKADOGS.git
+- ✅ Deploy automático en Vercel configurado
 - ✅ CI/CD activo
-- ✅ SSL/HTTPS configurado
+- ✅ SSL/HTTPS automático
+- ✅ Preview deployments para PRs
 
 ### Monitoreo
-1. Ve a AWS Amplify Console
-2. Selecciona la app HACKADOGS
-3. Revisa logs y estado del build
+1. Ve a Vercel Dashboard
+2. Selecciona el proyecto HACKADOGS
+3. Revisa logs, analytics y estado del build
 
 ---
 
@@ -111,24 +125,24 @@ Deploy automático
 
 ### Archivos Principales
 - `README.md` - Documentación general
-- `DEPLOY_AWS.md` - Guía completa de deploy
+- `DEPLOY_VERCEL.md` - Guía completa de deploy en Vercel
 - `USUARIOS_PRUEBA.md` - Credenciales de acceso
 - `CONTENIDO_UNICO_COMPLETO.md` - SEO local
-- `PROYECTO_DEFINITIVO_FINAL.md` - Resumen ejecutivo
+- `supabase/schema_cursos.sql` - Schema de base de datos
 
 ---
 
 ## 🐛 SOLUCIÓN DE PROBLEMAS
 
 ### La app no carga
-1. Verifica que AWS Amplify esté desplegado
-2. Revisa los logs en AWS Console
+1. Verifica que Vercel esté desplegado
+2. Revisa los logs en Vercel Dashboard
 3. Verifica el último build fue exitoso
 
 ### Cambios no se reflejan
 1. Verifica que el push a GitHub fue exitoso
-2. Ve a AWS Amplify y revisa el estado del build
-3. Espera ~5 minutos para que complete el deploy
+2. Ve a Vercel y revisa el estado del deployment
+3. Espera ~2 minutos para que complete el deploy
 4. Limpia caché del navegador (Ctrl+Shift+Delete)
 
 ### Error al hacer push
@@ -138,31 +152,43 @@ git pull origin main
 git push origin main
 ```
 
+### Error de build en Vercel
+1. Ve a Vercel Dashboard → Deployments
+2. Click en el deployment fallido
+3. Revisa los logs de error
+4. Verifica que todas las variables de entorno estén configuradas
+
 ---
 
 ## 🔒 SEGURIDAD
 
 ### Archivos Protegidos
 - `.env.local` - NO está en GitHub (ignorado)
-- Credenciales de AWS - Solo en AWS Console
-- Variables de entorno - Solo en AWS Amplify
+- Credenciales de Supabase - Solo en Vercel
+- API Keys - Solo en Variables de Entorno de Vercel
 
 ### Buenas Prácticas
 - ✅ Nunca subir credenciales a GitHub
-- ✅ Usar variables de entorno en AWS
+- ✅ Usar variables de entorno en Vercel
 - ✅ Mantener `.gitignore` actualizado
+- ✅ Rotar API keys periódicamente
 
 ---
 
 ## 📞 SOPORTE TÉCNICO
 
 ### Para Problemas de Deploy
-- **AWS Amplify Console:** https://console.aws.amazon.com/amplify
-- **Logs:** Ver en AWS Amplify → tu-app → Logs
+- **Vercel Dashboard:** https://vercel.com/dashboard
+- **Logs:** Ver en Vercel → tu proyecto → Deployments → Logs
+- **Documentación:** https://vercel.com/docs
 
 ### Para Cambios en el Código
-- **GitHub:** https://github.com/ActtaxIA/HACKADOGS
+- **GitHub:** https://github.com/Eskaladigital/HACKADOGS
 - **Issues:** Crear issue en GitHub si necesario
+
+### Para Base de Datos
+- **Supabase Dashboard:** https://supabase.com/dashboard
+- **Documentación:** https://supabase.com/docs
 
 ---
 
@@ -171,15 +197,17 @@ git push origin main
 ### Después de Cambios
 - [ ] Código commiteado a GitHub
 - [ ] Push exitoso a rama main
-- [ ] Build completado en AWS Amplify
+- [ ] Build completado en Vercel
 - [ ] Deploy exitoso
 - [ ] Cambios visibles en producción
 - [ ] Funcionalidad probada en navegador
+- [ ] Sin errores en consola
 
 ---
 
 **Última actualización:** Enero 2026  
 **Versión:** 1.0.0 PRODUCTION  
-**Plataforma:** AWS Amplify  
+**Plataforma:** Vercel  
+**Repositorio:** https://github.com/Eskaladigital/HACKADOGS.git  
 **Estado:** ✅ Desplegado y funcionando  
 **Lanzamiento:** Versión 1.0 - Enero 2026
