@@ -1,12 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Mail, Lock, User, ArrowRight, AlertCircle } from 'lucide-react'
+import { login } from '@/lib/auth/mockAuth'
 
 export default function CursosLoginPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -17,21 +19,30 @@ export default function CursosLoginPage() {
     setLoading(true)
     setError('')
 
-    // Mock login - esto se conectará a Supabase después
-    setTimeout(() => {
-      if (email && password) {
-        // Guardar sesión en localStorage
-        localStorage.setItem('hakadogs_cursos_session', JSON.stringify({
-          email,
-          name: email.split('@')[0],
-          loggedIn: true
-        }))
-        router.push('/cursos/mi-escuela')
-      } else {
-        setError('Por favor completa todos los campos')
+    try {
+      const { data, error: loginError } = login(email, password)
+      
+      if (loginError || !data) {
+        setError(loginError || 'Error al iniciar sesión')
         setLoading(false)
+        return
       }
-    }, 1000)
+
+      // Obtener la URL de redirección o usar default
+      const redirectUrl = searchParams?.get('redirect') || '/cursos/mi-escuela'
+      
+      // Si intenta acceder a /administrator pero no es admin, redirigir a mi-escuela
+      if (redirectUrl.includes('/administrator') && data.session.user.user_metadata.role !== 'admin') {
+        router.push('/cursos/mi-escuela')
+        return
+      }
+      
+      // Redirigir a la URL solicitada
+      router.push(redirectUrl)
+    } catch (err) {
+      setError('Error al iniciar sesión. Verifica tus credenciales.')
+      setLoading(false)
+    }
   }
 
   return (
@@ -106,6 +117,14 @@ export default function CursosLoginPage() {
                   Regístrate gratis
                 </Link>
               </p>
+            </div>
+
+            <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-sm text-blue-800 font-semibold mb-2">Usuarios de prueba:</p>
+              <div className="space-y-1 text-xs text-blue-700">
+                <p><strong>Admin:</strong> narciso.pardo@outlook.com / Hacka2016@</p>
+                <p><strong>Usuario:</strong> user@hakadogs.com / Hacka2016@</p>
+              </div>
             </div>
 
             <div className="mt-8 pt-6 border-t border-gray-200 text-center">
