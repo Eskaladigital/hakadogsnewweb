@@ -361,9 +361,11 @@ export async function getAdminStats() {
     .eq('payment_status', 'completed')
 
   const totalCourses = courses?.length || 0
-  const publishedCourses = courses?.filter(c => c.is_published).length || 0
+  // @ts-ignore
+  const publishedCourses = courses?.filter((c: any) => c.is_published).length || 0
   const totalSales = purchases?.length || 0
-  const totalRevenue = purchases?.reduce((sum, p) => sum + p.price_paid, 0) || 0
+  // @ts-ignore
+  const totalRevenue = purchases?.reduce((sum: number, p: any) => sum + p.price_paid, 0) || 0
 
   return {
     totalCourses,
