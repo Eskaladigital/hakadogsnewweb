@@ -364,26 +364,32 @@ export default function CursosPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all flex flex-col"
+                className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all flex flex-col border border-gray-100"
               >
                 {/* Header con icono y dificultad */}
-                <div className={`bg-gradient-to-r ${curso.color} p-6 text-white`}>
+                <div className="bg-gradient-to-br from-gray-50 to-white p-6 border-b border-gray-100">
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-4xl">{curso.icon}</span>
-                    <span className="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold">
+                    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                      curso.difficulty === 'Básico' 
+                        ? 'bg-green-100 text-green-700'
+                        : curso.difficulty === 'Intermedio'
+                        ? 'bg-amber-100 text-amber-700'
+                        : 'bg-forest/10 text-forest-dark'
+                    }`}>
                       {curso.difficulty}
                     </span>
                   </div>
-                  <h3 className="text-xl font-bold mb-2">{curso.title}</h3>
-                  <p className="text-white/90 text-sm">{curso.description}</p>
+                  <h3 className="text-xl font-bold mb-2 text-gray-900">{curso.title}</h3>
+                  <p className="text-gray-600 text-sm">{curso.description}</p>
                 </div>
 
                 {/* Contenido */}
                 <div className="p-6 flex-grow">
                   {/* Duración */}
                   <div className="flex items-center text-gray-600 mb-4">
-                    <Clock className="w-4 h-4 mr-2" />
-                    <span className="text-sm">{curso.duration}</span>
+                    <Clock className="w-4 h-4 mr-2 text-forest" />
+                    <span className="text-sm font-medium">{curso.duration}</span>
                   </div>
 
                   {/* Qué aprenderás */}
@@ -401,7 +407,7 @@ export default function CursosPage() {
                 </div>
 
                 {/* Footer con precio y botón */}
-                <div className="p-6 border-t border-gray-200 bg-gray-50">
+                <div className="p-6 border-t border-gray-100 bg-gray-50">
                   <div className="flex items-center justify-between mb-4">
                     <div>
                       <span className="text-3xl font-bold text-gray-900">{curso.price}€</span>
@@ -410,7 +416,7 @@ export default function CursosPage() {
                   </div>
                   <button
                     onClick={() => handleBuyCourse(curso.id)}
-                    className={`w-full bg-gradient-to-r ${curso.color} text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-all flex items-center justify-center whitespace-nowrap`}
+                    className="w-full bg-gradient-to-r from-forest to-sage text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-all flex items-center justify-center whitespace-nowrap shadow-md hover:shadow-lg"
                   >
                     <ShoppingCart className="w-5 h-5 mr-2" />
                     Comprar Curso
