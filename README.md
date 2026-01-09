@@ -52,10 +52,10 @@ Hakadogs es una plataforma web completa para educación canina profesional que i
 - **TinyMCE** (editor de contenido)
 
 ### Backend
-- **Supabase** (base de datos y autenticación)
-- **Mock Authentication** (desarrollo local)
+- **Supabase** (base de datos PostgreSQL y autenticación)
 - **Row Level Security** (RLS)
 - **Edge Functions** ready
+- **Supabase Auth** (autenticación real)
 
 ### Herramientas
 - **React Hook Form** + **Zod** (validación)
@@ -97,9 +97,9 @@ hakadogs-app/
 │   │   └── LessonsManager.tsx
 │   └── ui/                  # Componentes UI
 ├── lib/
-│   ├── auth/mockAuth.ts     # Auth mock
 │   ├── supabase/            # Cliente y funciones
 │   │   ├── client.ts
+│   │   ├── auth.ts          # Autenticación Supabase
 │   │   └── courses.ts       # API de cursos
 │   ├── utils.ts
 │   └── cities.ts            # 56 ciudades
@@ -149,33 +149,25 @@ hakadogs-app/
 - ✅ Robots.txt optimizado
 
 ### 🔐 Sistema de Autenticación
-- ✅ Registro de usuarios
+- ✅ Registro de usuarios con Supabase
 - ✅ Login con email/password
-- ✅ Sistema mock + Supabase ready
+- ✅ Autenticación real con Supabase Auth
 - ✅ Roles (cliente/admin)
-- ✅ Gestión de sesiones
-
----
-
-## 👥 USUARIOS DE PRUEBA
-
-### 👨‍💼 Usuario ADMIN
-- **Email:** narciso.pardo@outlook.com
-- **Password:** Hacka2016@
-- **Acceso:** Panel admin + todas las funciones
-
-### 👤 Usuario REGULAR
-- **Email:** user@hakadogs.com
-- **Password:** Hacka2016@
-- **Acceso:** Cursos y funciones de cliente
-
-**Ver:** `USUARIOS_PRUEBA.md` para más detalles
+- ✅ Gestión de sesiones segura
+- ✅ Protección de rutas por rol
 
 ---
 
 ## 🗄️ BASE DE DATOS (Supabase)
 
-### Tablas de Cursos (NUEVO)
+### Sistema de Autenticación
+- **Supabase Auth** integrado
+- Registro y login con email/password
+- Gestión automática de sesiones
+- Roles personalizados (user/admin)
+- Políticas RLS por usuario
+
+### Tablas de Cursos
 1. **courses** - Información de cursos
 2. **course_lessons** - Lecciones de cada curso
 3. **course_resources** - Recursos descargables
@@ -226,14 +218,16 @@ hakadogs-app/
 
 ### Variables de Entorno (Configuradas en Vercel)
 ```bash
-NEXT_PUBLIC_APP_URL=https://tu-dominio.vercel.app
+# Supabase (REQUERIDO)
+NEXT_PUBLIC_SUPABASE_URL=https://tu-proyecto.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_anon_key_aqui
+SUPABASE_SERVICE_ROLE_KEY=tu_service_role_key_aqui
 
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL=tu_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_key
+# TinyMCE (Editor de contenido - REQUERIDO para admin)
+NEXT_PUBLIC_TINYMCE_API_KEY=tu_api_key_aqui
 
-# TinyMCE (Editor de contenido)
-NEXT_PUBLIC_TINYMCE_API_KEY=tu_api_key
+# URL de la app
+NEXT_PUBLIC_SITE_URL=https://tu-dominio.vercel.app
 ```
 
 ### CI/CD Automático
@@ -255,10 +249,11 @@ Deploy automático
 
 ### Archivos de Documentación
 - `README.md` - Este archivo (documentación principal)
-- `USUARIOS_PRUEBA.md` - Credenciales y sistema de autenticación
+- `DEPLOY_VERCEL.md` - Guía completa de despliegue en Vercel
 - `CONTENIDO_UNICO_COMPLETO.md` - SEO local 56 ciudades
 - `SEO_LOCAL_Y_LEGAL.md` - Legal + localidades
 - `supabase/schema_cursos.sql` - Esquema de base de datos de cursos
+- `supabase/storage_setup.sql` - Configuración de Storage y RLS
 
 ### Recursos Útiles
 - [Documentación Next.js](https://nextjs.org/docs)

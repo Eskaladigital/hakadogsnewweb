@@ -1,25 +1,37 @@
 # 📦 INFORMACIÓN DEL PROYECTO - HAKADOGS
 
-**⚠️ IMPORTANTE:** Esta aplicación está desplegada en producción en **Vercel**.
+**⚠️ IMPORTANTE:** Esta aplicación está desplegada en producción en **Vercel** con **autenticación real de Supabase**.
 
 ---
 
 ## 🌐 ACCESO A LA APLICACIÓN
 
 ### URL de Producción
-**https://[tu-dominio].vercel.app**
+**https://hakadogsnewweb.vercel.app**
 
 La aplicación está desplegada en Vercel y se actualiza automáticamente con cada push a GitHub.
 
+### 🔐 Sistema de Autenticación
+- **Registro de usuarios:** Los usuarios se registran directamente en la aplicación
+- **Base de datos:** Supabase Auth (PostgreSQL)
+- **Roles:** user (por defecto) / admin (asignado manualmente en Supabase)
+
 ---
 
-## 👥 USUARIOS DE PRUEBA
+## 🛡️ NO HAY USUARIOS DE PRUEBA
 
-Ver archivo `USUARIOS_PRUEBA.md` para credenciales completas.
+Esta es una **aplicación en producción real** con autenticación de Supabase.
 
-### Login Rápido
-- **Admin:** narciso.pardo@outlook.com / Hacka2016@
-- **Usuario:** user@hakadogs.com / Hacka2016@
+- ✅ Los usuarios se registran en `/cursos/auth/registro`
+- ✅ Las credenciales se almacenan en Supabase
+- ✅ El rol de admin se asigna manualmente en Supabase Dashboard
+
+### Asignar Rol de Admin
+1. Ve a Supabase Dashboard → Authentication → Users
+2. Selecciona el usuario
+3. Click en "..." → Edit User
+4. En "User Metadata" agrega: `{"role": "admin"}`
+5. Guarda los cambios
 
 ---
 
@@ -40,16 +52,21 @@ git clone https://github.com/Eskaladigital/HACKADOGS.git
 
 ### Variables de Entorno (Configuradas en Vercel)
 ```bash
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL=tu_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_key
+# Supabase (REQUERIDO - Obtener de Supabase Dashboard)
+NEXT_PUBLIC_SUPABASE_URL=https://tu-proyecto.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...tu_anon_key
+SUPABASE_SERVICE_ROLE_KEY=eyJ...tu_service_role_key
 
-# TinyMCE
-NEXT_PUBLIC_TINYMCE_API_KEY=tu_api_key
+# TinyMCE (REQUERIDO para panel admin - Obtener de tiny.cloud)
+NEXT_PUBLIC_TINYMCE_API_KEY=tu_api_key_aqui
 
-# App URL (opcional)
-NEXT_PUBLIC_APP_URL=https://tu-dominio.vercel.app
+# URL de la app
+NEXT_PUBLIC_SITE_URL=https://hakadogsnewweb.vercel.app
 ```
+
+**📍 Dónde obtener las credenciales:**
+- **Supabase:** https://supabase.com/dashboard → Tu Proyecto → Settings → API
+- **TinyMCE:** https://www.tiny.cloud/auth/signup/ (gratis hasta 1000 cargas/mes)
 
 ---
 
@@ -126,9 +143,10 @@ Deploy automático
 ### Archivos Principales
 - `README.md` - Documentación general
 - `DEPLOY_VERCEL.md` - Guía completa de deploy en Vercel
-- `USUARIOS_PRUEBA.md` - Credenciales de acceso
+- `INSTALACION.md` - Este archivo (info de producción)
 - `CONTENIDO_UNICO_COMPLETO.md` - SEO local
 - `supabase/schema_cursos.sql` - Schema de base de datos
+- `supabase/storage_setup.sql` - Configuración de Storage
 
 ---
 
