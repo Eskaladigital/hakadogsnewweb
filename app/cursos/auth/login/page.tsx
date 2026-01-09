@@ -32,8 +32,9 @@ export default function CursosLoginPage() {
       const redirectUrl = searchParams?.get('redirect') || '/cursos/mi-escuela'
       
       // Si intenta acceder a /administrator pero no es admin, redirigir a mi-escuela
-      if (redirectUrl.includes('/administrator') && data.session.user.user_metadata.role !== 'admin') {
+      if (redirectUrl.includes('/administrator') && data.user.user_metadata.role !== 'admin') {
         router.push('/cursos/mi-escuela')
+        setLoading(false)
         return
       }
       
