@@ -142,17 +142,43 @@ export const getSession = async () => {
     // Intentar obtener el rol desde múltiples fuentes
     let role: 'admin' | 'user' = 'user'
     
-    // 1. Primero desde user_metadata
-    if (data.session.user.user_metadata?.role === 'admin') {
+    // 1. Primero desde user_metadata (lo más común)
+    const userMetadataRole = data.session.user.user_metadata?.role
+    if (userMetadataRole === 'admin') {
       role = 'admin'
+      console.log('✅ Rol encontrado en user_metadata:', userMetadataRole)
     }
     
-    // 2. Si no está, intentar desde app_metadata (donde Supabase a veces guarda roles)
-    if (role === 'user' && (data.session.user.app_metadata as any)?.role === 'admin') {
-      role = 'admin'
+    // 2. Si no está, intentar desde app_metadata
+    if (role === 'user') {
+      const appMetadataRole = (data.session.user.app_metadata as any)?.role
+      if (appMetadataRole === 'admin') {
+        role = 'admin'
+        console.log('✅ Rol encontrado en app_metadata:', appMetadataRole)
+      }
     }
     
-    // 3. Si aún no está, consultar la tabla profiles
+    // 3. Si aún no está, intentar leer directamente desde raw_user_meta_data usando una función SQL
+    // Esto requiere que el usuario tenga permisos para ejecutar funciones
+    if (role === 'user') {
+      try {
+        // Usar una función SQL que lea directamente desde auth.users
+        // Nota: Esto requiere permisos especiales, pero es más confiable
+        const { data: roleData, error: roleError } = await supabase.rpc('get_user_role', {
+          user_id: data.session.user.id
+        }).single()
+        
+        if (!roleError && roleData && roleData === 'admin') {
+          role = 'admin'
+          console.log('✅ Rol encontrado mediante función SQL:', roleData)
+        }
+      } catch (rpcErr) {
+        // Si la función no existe, continuar
+        console.log('Función get_user_role no disponible, usando metadatos')
+      }
+    }
+    
+    // 4. Último recurso: consultar la tabla profiles (si existe)
     if (role === 'user') {
       try {
         const { data: profileData, error: profileError } = await supabase
@@ -163,11 +189,22 @@ export const getSession = async () => {
         
         if (!profileError && profileData && profileData.role === 'admin') {
           role = 'admin'
+          console.log('✅ Rol encontrado en tabla profiles:', profileData.role)
         }
       } catch (profileErr) {
         // Si la tabla profiles no existe o hay error, continuar con el rol por defecto
         console.log('No se pudo consultar tabla profiles:', profileErr)
       }
+    }
+
+    // Log final para debugging
+    if (role === 'user') {
+      console.warn('⚠️ Rol no encontrado como admin, usando user por defecto')
+      console.log('Metadatos disponibles:', {
+        user_metadata: data.session.user.user_metadata,
+        app_metadata: data.session.user.app_metadata,
+        email: data.session.user.email
+      })
     }
 
     // Formatear la respuesta
@@ -186,6 +223,7 @@ export const getSession = async () => {
 
     return { data: { session }, error: null }
   } catch (err) {
+    console.error('Error en getSession:', err)
     return { data: { session: null }, error: null }
   }
 }
