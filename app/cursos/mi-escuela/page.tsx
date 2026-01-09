@@ -105,16 +105,6 @@ export default function MiEscuelaPage() {
     loadData()
   }, [router])
 
-  // Función helper para obtener el color según dificultad
-  const getColorByDifficulty = (difficulty: string) => {
-    switch (difficulty) {
-      case 'basico': return 'from-green-500 to-green-600'
-      case 'intermedio': return 'from-amber-500 to-amber-600'
-      case 'avanzado': return 'from-red-500 to-red-600'
-      default: return 'from-blue-500 to-blue-600'
-    }
-  }
-
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white pt-20 flex items-center justify-center">
@@ -202,59 +192,79 @@ export default function MiEscuelaPage() {
             ) : (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {cursosComprados.map((curso, index) => {
-                  const color = getColorByDifficulty(curso.difficulty)
+                  const difficultyColor = 
+                    curso.difficulty === 'basico' ? 'bg-green-100 text-green-700' :
+                    curso.difficulty === 'intermedio' ? 'bg-amber-100 text-amber-700' :
+                    'bg-red-100 text-red-700'
+                  
                   return (
                     <motion.div
                       key={curso.id}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: index * 0.1 }}
-                      className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all"
+                      className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all border border-gray-100"
                     >
-                      {/* Header */}
-                      <div className={`bg-gradient-to-r ${color} p-6 text-white relative`}>
-                        <div className="flex items-center justify-between mb-4">
-                          <span className="text-4xl">{curso.icon}</span>
-                          {curso.is_free && (
-                            <span className="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold">
-                              GRATUITO
+                      {/* Header con degradado suave */}
+                      <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-6 relative">
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="flex items-center space-x-3">
+                            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${difficultyColor} capitalize`}>
+                              {curso.difficulty}
                             </span>
-                          )}
+                            {curso.is_free && (
+                              <span className="bg-gold/20 text-gold px-3 py-1 rounded-full text-xs font-semibold">
+                                GRATUITO
+                              </span>
+                            )}
+                          </div>
                           {curso.progress === 100 && (
-                            <span className="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold flex items-center">
+                            <span className="bg-forest/20 text-forest px-3 py-1 rounded-full text-xs font-semibold flex items-center">
                               <CheckCircle className="w-3 h-3 mr-1" />
                               COMPLETADO
                             </span>
                           )}
                         </div>
-                        <h3 className="text-xl font-bold mb-2">{curso.title}</h3>
-                        <p className="text-white/90 text-sm mb-4">{curso.short_description}</p>
+                        
+                        <div className="flex items-start space-x-4 mb-4">
+                          <span className="text-4xl">{curso.icon}</span>
+                          <div className="flex-1">
+                            <h3 className="text-xl font-bold text-gray-900 mb-2">{curso.title}</h3>
+                            <p className="text-gray-600 text-sm line-clamp-2">{curso.short_description}</p>
+                          </div>
+                        </div>
                         
                         {/* Progress Bar */}
-                        <div className="mb-2">
-                          <div className="flex items-center justify-between text-xs mb-1">
-                            <span>Progreso</span>
-                            <span>{curso.progress}%</span>
+                        <div className="mt-4">
+                          <div className="flex items-center justify-between text-xs text-gray-600 mb-2">
+                            <span className="font-medium">Progreso</span>
+                            <span className="font-bold text-forest">{curso.progress}%</span>
                           </div>
-                          <div className="w-full bg-white/20 rounded-full h-2">
+                          <div className="w-full bg-gray-200 rounded-full h-2">
                             <div 
-                              className="bg-white rounded-full h-2 transition-all duration-500"
+                              className="bg-gradient-to-r from-forest to-sage rounded-full h-2 transition-all duration-500"
                               style={{ width: `${curso.progress}%` }}
                             />
                           </div>
                         </div>
                         
-                        <div className="flex items-center justify-between text-xs text-white/80">
-                          <span>{curso.completedLessons}/{curso.total_lessons} lecciones</span>
-                          <span>{curso.duration_minutes} min</span>
+                        <div className="flex items-center justify-between text-sm text-gray-500 mt-3">
+                          <span className="flex items-center">
+                            <BookOpen className="w-4 h-4 mr-1" />
+                            {curso.completedLessons}/{curso.total_lessons} lecciones
+                          </span>
+                          <span className="flex items-center">
+                            <Clock className="w-4 h-4 mr-1" />
+                            {curso.duration_minutes} min
+                          </span>
                         </div>
                       </div>
 
                       {/* Footer */}
-                      <div className="p-6">
+                      <div className="p-6 bg-white">
                         <Link
                           href={`/cursos/mi-escuela/${curso.slug}`}
-                          className={`w-full bg-gradient-to-r ${color} text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-all flex items-center justify-center whitespace-nowrap`}
+                          className="w-full bg-gradient-to-r from-forest to-sage text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-all flex items-center justify-center whitespace-nowrap"
                         >
                           <Play className="w-5 h-5 mr-2 flex-shrink-0" />
                           {curso.progress === 0 ? 'Comenzar Curso' : curso.progress === 100 ? 'Revisar Curso' : 'Continuar Curso'}
@@ -275,50 +285,65 @@ export default function MiEscuelaPage() {
           <div className="container mx-auto px-4">
             <div className="max-w-7xl mx-auto">
               <div className="flex items-center justify-between mb-8">
-                <h2 className="text-3xl font-bold text-gray-900">Cursos Disponibles para Comprar</h2>
+                <div>
+                  <h2 className="text-3xl font-bold text-gray-900 mb-2">Cursos Disponibles para Comprar</h2>
+                  <p className="text-gray-600">Amplía tus conocimientos con más cursos específicos</p>
+                </div>
                 <Link
                   href="/cursos"
-                  className="text-forest font-semibold hover:text-forest-dark transition flex items-center"
+                  className="text-forest font-semibold hover:text-forest-dark transition flex items-center whitespace-nowrap"
                 >
-                  Ver todos los cursos
+                  Ver todos
                   <ShoppingCart className="w-5 h-5 ml-2" />
                 </Link>
               </div>
 
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {cursosDisponibles.slice(0, 4).map((curso, index) => {
-                  const color = getColorByDifficulty(curso.difficulty)
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {cursosDisponibles.map((curso, index) => {
+                  const difficultyColor = 
+                    curso.difficulty === 'basico' ? 'bg-green-100 text-green-700' :
+                    curso.difficulty === 'intermedio' ? 'bg-amber-100 text-amber-700' :
+                    'bg-red-100 text-red-700'
+                  
                   return (
                     <motion.div
                       key={curso.id}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: index * 0.1 }}
-                      className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all"
+                      className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all border border-gray-100"
                     >
-                      <div className={`bg-gradient-to-r ${color} p-6 text-white`}>
-                        <div className="flex items-center justify-between mb-4">
-                          <span className="text-4xl">{curso.icon}</span>
-                          <Lock className="w-5 h-5 text-white/60" />
+                      <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-6 relative">
+                        <div className="flex items-start justify-between mb-4">
+                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${difficultyColor} capitalize`}>
+                            {curso.difficulty}
+                          </span>
+                          <Lock className="w-5 h-5 text-gray-400" />
                         </div>
-                        <h3 className="text-lg font-bold mb-2">{curso.title}</h3>
-                        <div className="flex items-center text-xs text-white/80 space-x-4 mb-4">
+                        
+                        <div className="flex items-start space-x-4 mb-4">
+                          <span className="text-4xl">{curso.icon}</span>
+                          <div className="flex-1">
+                            <h3 className="text-xl font-bold text-gray-900 mb-2">{curso.title}</h3>
+                            <p className="text-gray-600 text-sm line-clamp-2">{curso.short_description}</p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center justify-between text-sm text-gray-500">
                           <span className="flex items-center">
-                            <Clock className="w-3 h-3 mr-1" />
+                            <Clock className="w-4 h-4 mr-1" />
                             {curso.duration_minutes} min
                           </span>
-                          <span className="capitalize">{curso.difficulty}</span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-2xl font-bold">{curso.price.toFixed(2)}€</span>
+                          <span className="text-2xl font-bold text-gray-900">{curso.price.toFixed(2)}€</span>
                         </div>
                       </div>
-                      <div className="p-4">
+                      
+                      <div className="p-6 bg-white">
                         <Link
                           href={`/cursos/comprar/${curso.slug}`}
-                          className={`w-full bg-gradient-to-r ${color} text-white font-semibold py-2 px-4 rounded-lg hover:opacity-90 transition-all flex items-center justify-center text-sm whitespace-nowrap`}
+                          className="w-full bg-gradient-to-r from-forest to-sage text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-all flex items-center justify-center whitespace-nowrap"
                         >
-                          <ShoppingCart className="w-4 h-4 mr-2 flex-shrink-0" />
+                          <ShoppingCart className="w-5 h-5 mr-2 flex-shrink-0" />
                           Comprar Curso
                         </Link>
                       </div>
