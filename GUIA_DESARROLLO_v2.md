@@ -3,7 +3,7 @@
 **Versión Proyecto:** 1.0.0 PRODUCTION  
 **Última actualización:** Enero 2026  
 **Versión Guía:** 2.0 - Apps redefinidas  
-**Estado:** ✅ DESPLEGADO EN AWS AMPLIFY
+**Estado:** ✅ DESPLEGADO EN VERCEL
 
 ---
 

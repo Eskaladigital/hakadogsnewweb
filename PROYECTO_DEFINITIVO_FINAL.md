@@ -1,7 +1,7 @@
 # 🎉 HAKADOGS - PROYECTO DEFINITIVAMENTE COMPLETADO AL 100%
 **Versión**: 1.0.0 PRODUCTION  
 **Fecha Lanzamiento**: Enero 2026  
-**Estado**: ✅ **DESPLEGADO EN AWS AMPLIFY**
+**Estado**: ✅ **DESPLEGADO EN VERCEL**
 
 ---
 

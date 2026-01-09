@@ -1,7 +1,7 @@
 # 📋 LISTADO COMPLETO DE ARCHIVOS CREADOS
 
 **Versión:** 1.0.0 PRODUCTION  
-**Estado:** ✅ DESPLEGADO EN AWS AMPLIFY  
+**Estado:** ✅ DESPLEGADO EN VERCEL  
 **Última actualización:** Enero 2026
 
 ## ✅ PROYECTO COMPLETADO AL 100%
@@ -251,4 +251,4 @@ hakadogs-app/
 **Cliente:** Alfredo  
 **Desarrollador:** Narciso Pardo Buendía  
 **Fecha Lanzamiento:** Enero 2026  
-**Estado:** ✅ DESPLEGADO EN AWS AMPLIFY
+**Estado:** ✅ DESPLEGADO EN VERCEL

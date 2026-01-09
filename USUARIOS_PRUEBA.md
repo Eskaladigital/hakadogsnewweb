@@ -77,7 +77,7 @@ Luego commit y push a GitHub para que se despliegue automáticamente.
 
 ## 🔗 URLs Importantes (Producción)
 
-**⚠️ Reemplaza `tu-app.amplifyapp.com` con tu URL real de AWS Amplify**
+**⚠️ Reemplaza `tu-dominio.vercel.app` con tu URL real de Vercel**
 
 ### Autenticación
 - **Login:** https://tu-app.amplifyapp.com/auth/login
@@ -152,7 +152,7 @@ Cuando se configure Supabase, estos usuarios mock se reemplazarán por usuarios 
 
 **Pasos para migrar:**
 1. Configurar Supabase Auth
-2. Añadir variables de entorno en AWS Amplify
+2. Añadir variables de entorno en Vercel
 3. Descomentar código en `middleware.ts`
 4. Actualizar `lib/supabase/client.ts`
 5. Push a GitHub → Deploy automático
@@ -171,7 +171,7 @@ Cuando se configure Supabase, estos usuarios mock se reemplazarán por usuarios 
 - Se pierden al limpiar caché del navegador
 - Son específicas por navegador y dispositivo
 
-### En Producción (AWS)
+### En Producción (Vercel)
 - ✅ El sistema funciona igual que en local
 - ✅ Las sesiones persisten entre recargas
 - ✅ No requiere configuración adicional
@@ -208,5 +208,5 @@ Si tienes problemas con la autenticación en producción:
 **Versión:** 1.0.0 PRODUCTION  
 **Proyecto:** HakaDogs - Educación Canina Profesional  
 **Sistema:** Autenticación Mock Local (sin backend)  
-**Plataforma:** AWS Amplify (Producción)  
+**Plataforma:** Vercel (Producción)  
 **Lanzamiento:** Versión 1.0 - Enero 2026
