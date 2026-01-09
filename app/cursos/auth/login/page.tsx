@@ -23,7 +23,7 @@ export default function CursosLoginPage() {
       const { data, error: loginError } = authenticateLocal(email, password)
       
       if (loginError || !data) {
-        setError(loginError || 'Error al iniciar sesión')
+        setError(loginError?.message || 'Error al iniciar sesión')
         setLoading(false)
         return
       }
