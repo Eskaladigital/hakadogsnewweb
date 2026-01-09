@@ -102,9 +102,9 @@ export async function getCourseBySlug(slug: string) {
 }
 
 export async function createCourse(courseData: Partial<Course>) {
-  // @ts-ignore - Supabase types issue
   const { data, error } = await supabase
     .from('courses')
+    // @ts-ignore
     .insert([courseData])
     .select()
     .single()
@@ -114,9 +114,9 @@ export async function createCourse(courseData: Partial<Course>) {
 }
 
 export async function updateCourse(id: string, courseData: Partial<Course>) {
-  // @ts-ignore - Supabase types issue
   const { data, error } = await supabase
     .from('courses')
+    // @ts-ignore
     .update({ ...courseData, updated_at: new Date().toISOString() })
     .eq('id', id)
     .select()
@@ -161,9 +161,9 @@ export async function getLessonBySlug(courseId: string, lessonSlug: string) {
 }
 
 export async function createLesson(lessonData: Partial<Lesson>) {
-  // @ts-ignore - Supabase types issue
   const { data, error } = await supabase
     .from('course_lessons')
+    // @ts-ignore
     .insert([lessonData])
     .select()
     .single()
@@ -173,9 +173,9 @@ export async function createLesson(lessonData: Partial<Lesson>) {
 }
 
 export async function updateLesson(id: string, lessonData: Partial<Lesson>) {
-  // @ts-ignore - Supabase types issue
   const { data, error } = await supabase
     .from('course_lessons')
+    // @ts-ignore
     .update({ ...lessonData, updated_at: new Date().toISOString() })
     .eq('id', id)
     .select()
@@ -195,9 +195,9 @@ export async function deleteLesson(id: string) {
 }
 
 export async function bulkCreateLessons(lessons: Partial<Lesson>[]) {
-  // @ts-ignore - Supabase types issue
   const { data, error } = await supabase
     .from('course_lessons')
+    // @ts-ignore
     .insert(lessons)
     .select()
 
@@ -219,9 +219,9 @@ export async function getLessonResources(lessonId: string) {
 }
 
 export async function createResource(resourceData: Partial<Resource>) {
-  // @ts-ignore - Supabase types issue
   const { data, error } = await supabase
     .from('course_resources')
+    // @ts-ignore
     .insert([resourceData])
     .select()
     .single()
@@ -231,9 +231,9 @@ export async function createResource(resourceData: Partial<Resource>) {
 }
 
 export async function bulkCreateResources(resources: Partial<Resource>[]) {
-  // @ts-ignore - Supabase types issue
   const { data, error } = await supabase
     .from('course_resources')
+    // @ts-ignore
     .insert(resources)
     .select()
 
@@ -335,9 +335,9 @@ export async function hasPurchasedCourse(userId: string, courseId: string) {
 }
 
 export async function createPurchase(purchaseData: Partial<CoursePurchase>) {
-  // @ts-ignore - Supabase types issue
   const { data, error } = await supabase
     .from('course_purchases')
+    // @ts-ignore
     .insert([purchaseData])
     .select()
     .single()
