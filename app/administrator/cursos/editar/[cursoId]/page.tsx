@@ -1,10 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'
 import dynamic from 'next/dynamic'
-import { ArrowLeft, Save } from 'lucide-react'
+import { ArrowLeft, Save, Loader2 } from 'lucide-react'
+import { getCourseById, updateCourse, getCourseLessons, getLessonResources, updateLesson, deleteLesson, createLesson, deleteResource, createResource, bulkCreateResources, bulkCreateLessons } from '@/lib/supabase/courses'
+import type { Course, Lesson, Resource } from '@/lib/supabase/courses'
 
 const LessonsManager = dynamic(() => import('@/components/admin/LessonsManager'), {
   ssr: false,
@@ -13,20 +15,17 @@ const LessonsManager = dynamic(() => import('@/components/admin/LessonsManager')
   </div>
 })
 
-interface Lesson {
-  id: string
-  title: string
-  content: string
-  duration: number
-  videoUrl: string
-  videoProvider: string
-  isFreePreview: boolean
-  resources: any[]
+interface LessonWithResources extends Lesson {
+  resources: Resource[]
   isExpanded: boolean
 }
 
-export default function NuevoCursoPage() {
+export default function EditarCursoPage() {
   const router = useRouter()
+  const params = useParams()
+  const cursoId = params.cursoId as string
+  
+  const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [activeTab, setActiveTab] = useState<'info' | 'lessons'>('info')
   
@@ -44,7 +43,61 @@ export default function NuevoCursoPage() {
     whatYouLearn: ['', '', '', '']
   })
 
-  const [lessons, setLessons] = useState<Lesson[]>([])
+  const [lessons, setLessons] = useState<LessonWithResources[]>([])
+
+  useEffect(() => {
+    loadCourseData()
+  }, [cursoId])
+
+  const loadCourseData = async () => {
+    try {
+      // Cargar curso
+      const course = await getCourseById(cursoId)
+      if (!course) {
+        alert('Curso no encontrado')
+        router.push('/administrator')
+        return
+      }
+
+      setFormData({
+        title: course.title,
+        slug: course.slug,
+        shortDescription: course.short_description || '',
+        description: course.description || '',
+        icon: course.icon || '🎓',
+        price: course.price.toString(),
+        difficulty: course.difficulty,
+        isFree: course.is_free,
+        isPublished: course.is_published,
+        thumbnailUrl: course.thumbnail_url || '',
+        whatYouLearn: course.what_you_learn || ['', '', '', '']
+      })
+
+      // Cargar lecciones con recursos
+      const courseLessons = await getCourseLessons(cursoId)
+      const lessonsWithResources = await Promise.all(
+        courseLessons.map(async (lesson) => {
+          const resources = await getLessonResources(lesson.id)
+          return {
+            ...lesson,
+            resources,
+            isExpanded: false,
+            videoUrl: lesson.video_url || '',
+            videoProvider: lesson.video_provider || 'youtube',
+            isFreePreview: lesson.is_free_preview || false
+          } as LessonWithResources
+        })
+      )
+
+      setLessons(lessonsWithResources)
+    } catch (error) {
+      console.error('Error cargando curso:', error)
+      alert('Error al cargar el curso')
+      router.push('/administrator')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }))
@@ -74,16 +127,14 @@ export default function NuevoCursoPage() {
     e.preventDefault()
     
     if (lessons.length === 0) {
-      alert('Debes añadir al menos una lección al curso')
+      alert('Debes tener al menos una lección en el curso')
       return
     }
 
     setSaving(true)
 
     try {
-      // 1. Crear el curso
-      const { createCourse, bulkCreateLessons, bulkCreateResources } = await import('@/lib/supabase/courses')
-      
+      // 1. Actualizar el curso
       const courseData = {
         title: formData.title,
         slug: formData.slug,
@@ -98,50 +149,103 @@ export default function NuevoCursoPage() {
         thumbnail_url: formData.thumbnailUrl || null,
       }
 
-      const newCourse = await createCourse(courseData)
+      await updateCourse(cursoId, courseData)
 
-      // 2. Crear todas las lecciones
-      const lessonsData = lessons.map((lesson, index) => ({
-        course_id: newCourse.id,
-        title: lesson.title,
-        slug: lesson.title
-          .toLowerCase()
-          .replace(/[áàäâ]/g, 'a')
-          .replace(/[éèëê]/g, 'e')
-          .replace(/[íìïî]/g, 'i')
-          .replace(/[óòöô]/g, 'o')
-          .replace(/[úùüû]/g, 'u')
-          .replace(/ñ/g, 'n')
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/^-+|-+$/g, ''),
-        content: lesson.content,
-        order_index: index,
-        duration_minutes: lesson.duration,
-        video_url: lesson.videoUrl || null,
-        video_provider: lesson.videoUrl ? (lesson.videoProvider as any) : null,
-        is_free_preview: lesson.isFreePreview,
-      }))
+      // 2. Actualizar/crear/eliminar lecciones
+      const existingLessonIds = lessons.filter(l => l.id && !l.id.startsWith('lesson-')).map(l => l.id)
+      const newLessons = lessons.filter(l => l.id.startsWith('lesson-'))
+      const updatedLessons = lessons.filter(l => l.id && !l.id.startsWith('lesson-'))
 
-      const createdLessons = await bulkCreateLessons(lessonsData)
+      // Actualizar lecciones existentes
+      for (const lesson of updatedLessons) {
+        await updateLesson(lesson.id, {
+          title: lesson.title,
+          slug: lesson.title
+            .toLowerCase()
+            .replace(/[áàäâ]/g, 'a')
+            .replace(/[éèëê]/g, 'e')
+            .replace(/[íìïî]/g, 'i')
+            .replace(/[óòöô]/g, 'o')
+            .replace(/[úùüû]/g, 'u')
+            .replace(/ñ/g, 'n')
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, ''),
+          content: lesson.content,
+          order_index: lesson.order_index,
+          duration_minutes: lesson.duration_minutes,
+          video_url: lesson.videoUrl || null,
+          video_provider: lesson.videoUrl ? (lesson.videoProvider as any) : null,
+          is_free_preview: lesson.isFreePreview,
+        })
 
-      // 3. Crear todos los recursos
-      const allResources = lessons.flatMap((lesson, lessonIndex) => 
-        lesson.resources.map((resource, resourceIndex) => ({
-          lesson_id: createdLessons[lessonIndex].id,
-          title: resource.title,
-          description: null,
-          file_type: resource.fileType,
-          file_url: resource.fileUrl,
-          file_size: resource.fileSize || null,
-          order_index: resourceIndex,
-        }))
-      )
+        // Gestionar recursos de la lección
+        const existingResourceIds = lesson.resources.filter(r => r.id && !r.id.startsWith('resource-')).map(r => r.id)
+        const newResources = lesson.resources.filter(r => r.id.startsWith('resource-'))
+        const updatedResources = lesson.resources.filter(r => r.id && !r.id.startsWith('resource-'))
 
-      if (allResources.length > 0) {
-        await bulkCreateResources(allResources)
+        // Eliminar recursos que ya no existen
+        const allCurrentResourceIds = lesson.resources.map(r => r.id)
+        // TODO: Implementar eliminación de recursos si es necesario
+
+        // Crear nuevos recursos
+        if (newResources.length > 0) {
+          const resourcesToCreate = newResources.map((resource, index) => ({
+            lesson_id: lesson.id,
+            title: resource.title,
+            description: null,
+            file_type: resource.file_type,
+            file_url: resource.file_url,
+            file_size: resource.file_size || null,
+            order_index: updatedResources.length + index,
+          }))
+          await bulkCreateResources(resourcesToCreate)
+        }
       }
 
-      alert('✅ Curso creado exitosamente!')
+      // Crear nuevas lecciones
+      if (newLessons.length > 0) {
+        const lessonsToCreate = newLessons.map((lesson, index) => ({
+          course_id: cursoId,
+          title: lesson.title,
+          slug: lesson.title
+            .toLowerCase()
+            .replace(/[áàäâ]/g, 'a')
+            .replace(/[éèëê]/g, 'e')
+            .replace(/[íìïî]/g, 'i')
+            .replace(/[óòöô]/g, 'o')
+            .replace(/[úùüû]/g, 'u')
+            .replace(/ñ/g, 'n')
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, ''),
+          content: lesson.content,
+          order_index: updatedLessons.length + index,
+          duration_minutes: lesson.duration,
+          video_url: lesson.videoUrl || null,
+          video_provider: lesson.videoUrl ? (lesson.videoProvider as any) : null,
+          is_free_preview: lesson.isFreePreview,
+        }))
+
+        const createdLessons = await bulkCreateLessons(lessonsToCreate)
+
+        // Crear recursos para las nuevas lecciones
+        const allNewResources = newLessons.flatMap((lesson, lessonIndex) => 
+          lesson.resources.map((resource, resourceIndex) => ({
+            lesson_id: createdLessons[lessonIndex].id,
+            title: resource.title,
+            description: null,
+            file_type: resource.file_type,
+            file_url: resource.file_url,
+            file_size: resource.file_size || null,
+            order_index: resourceIndex,
+          }))
+        )
+
+        if (allNewResources.length > 0) {
+          await bulkCreateResources(allNewResources)
+        }
+      }
+
+      alert('✅ Curso actualizado exitosamente!')
       router.push('/administrator')
       
     } catch (error) {
@@ -158,7 +262,18 @@ export default function NuevoCursoPage() {
     { value: 'avanzado', label: 'Avanzado' }
   ]
 
-  const totalDuration = lessons.reduce((sum, lesson) => sum + lesson.duration, 0)
+  const totalDuration = lessons.reduce((sum, lesson) => sum + lesson.duration_minutes, 0)
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center pt-20">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 animate-spin text-forest mx-auto mb-4" />
+          <p className="text-gray-600">Cargando curso...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 pt-20">
@@ -172,7 +287,7 @@ export default function NuevoCursoPage() {
               <ArrowLeft className="w-4 h-4 mr-2" />
               Volver al Panel
             </Link>
-            <h1 className="text-3xl font-bold text-gray-900">Crear Nuevo Curso</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Editar Curso</h1>
           </div>
 
           <form onSubmit={handleSubmit}>
@@ -279,7 +394,62 @@ export default function NuevoCursoPage() {
                         </div>
                       </div>
                     ) : (
-                      <LessonsManager lessons={lessons} onChange={setLessons} />
+                      <LessonsManager 
+                        lessons={lessons.map(l => ({
+                          id: l.id,
+                          title: l.title,
+                          content: l.content || '',
+                          duration: l.duration_minutes,
+                          videoUrl: l.videoUrl || '',
+                          videoProvider: l.videoProvider || 'youtube',
+                          isFreePreview: l.isFreePreview || false,
+                          resources: l.resources.map(r => ({
+                            id: r.id,
+                            title: r.title,
+                            fileType: r.file_type,
+                            fileUrl: r.file_url,
+                            fileSize: r.file_size || 0
+                          })),
+                          isExpanded: l.isExpanded || false
+                        }))} 
+                        onChange={(updatedLessons) => {
+                          setLessons(updatedLessons.map((ul, index) => {
+                            const existingLesson = lessons.find(el => el.id === ul.id) || lessons[index]
+                            return {
+                              id: existingLesson?.id || ul.id,
+                              course_id: existingLesson?.course_id || cursoId,
+                              title: ul.title,
+                              slug: existingLesson?.slug || '',
+                              content: ul.content,
+                              order_index: existingLesson?.order_index ?? index,
+                              duration_minutes: ul.duration,
+                              video_url: ul.videoUrl || null,
+                              video_provider: ul.videoUrl ? (ul.videoProvider as any) : null,
+                              is_free_preview: ul.isFreePreview,
+                              created_at: existingLesson?.created_at || new Date().toISOString(),
+                              updated_at: new Date().toISOString(),
+                              resources: ul.resources.map((r, rIndex) => {
+                                const existingResource = existingLesson?.resources.find(er => er.id === r.id)
+                                return {
+                                  id: existingResource?.id || r.id,
+                                  lesson_id: existingLesson?.id || '',
+                                  title: r.title,
+                                  description: existingResource?.description || null,
+                                  file_type: r.fileType,
+                                  file_url: r.fileUrl,
+                                  file_size: r.fileSize || null,
+                                  order_index: rIndex,
+                                  created_at: existingResource?.created_at || new Date().toISOString()
+                                } as Resource
+                              }),
+                              isExpanded: ul.isExpanded,
+                              videoUrl: ul.videoUrl,
+                              videoProvider: ul.videoProvider,
+                              isFreePreview: ul.isFreePreview
+                            } as LessonWithResources
+                          }))
+                        }} 
+                      />
                     )}
                   </div>
                 </div>
@@ -388,7 +558,7 @@ export default function NuevoCursoPage() {
                     className="w-full bg-gradient-to-r from-forest to-sage text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                   >
                     <Save className="w-5 h-5 mr-2" />
-                    {saving ? 'Guardando...' : 'Guardar Curso'}
+                    {saving ? 'Guardando...' : 'Guardar Cambios'}
                   </button>
 
                   {lessons.length === 0 && (

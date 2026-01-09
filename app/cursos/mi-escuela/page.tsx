@@ -42,42 +42,46 @@ export default function MiEscuelaPage() {
         setUserName(sessionData.session.user.user_metadata.name || sessionData.session.user.email.split('@')[0])
 
         // Cargar todos los cursos
-        const allCourses = await getAllCourses()
+        const allCourses = await getAllCourses(false) // Solo publicados
         
         // Cargar cursos comprados
         const purchases = await getUserPurchases(userId)
-        const purchased = purchases.map((p: any) => p.courses).filter(Boolean)
+        const purchasedCourseIds = new Set(purchases.map((p: any) => p.course_id))
         
-        // Cargar progreso de cada curso comprado
-        const cursosConProgreso: CursoConProgreso[] = await Promise.all(
-          purchased.map(async (course: Course) => {
-            const progress = await getUserCourseProgress(userId, course.id)
-            return {
-              ...course,
-              progress: progress?.progress_percentage || 0,
-              completedLessons: progress?.completed_lessons || 0,
-              isPurchased: true
-            }
-          })
-        )
-
-        // Incluir el curso gratuito si está publicado y no está ya comprado
+        // Separar cursos: gratuitos y de pago
         const freeCourse = allCourses.find(c => c.is_free && c.is_published)
-        if (freeCourse && !cursosConProgreso.some(c => c.id === freeCourse.id)) {
+        const paidCourses = allCourses.filter(c => !c.is_free && c.is_published)
+        
+        // Cursos con progreso (gratuito + comprados)
+        const cursosConProgreso: CursoConProgreso[] = []
+        
+        // SIEMPRE incluir el curso gratuito si existe
+        if (freeCourse) {
           const progress = await getUserCourseProgress(userId, freeCourse.id)
-          cursosConProgreso.unshift({
+          cursosConProgreso.push({
             ...freeCourse,
             progress: progress?.progress_percentage || 0,
             completedLessons: progress?.completed_lessons || 0,
             isPurchased: true
           })
         }
+        
+        // Agregar cursos comprados (de pago)
+        for (const course of paidCourses) {
+          if (purchasedCourseIds.has(course.id)) {
+            const progress = await getUserCourseProgress(userId, course.id)
+            cursosConProgreso.push({
+              ...course,
+              progress: progress?.progress_percentage || 0,
+              completedLessons: progress?.completed_lessons || 0,
+              isPurchased: true
+            })
+          }
+        }
 
-        // Filtrar cursos disponibles (no comprados, no gratuitos, publicados)
-        const available = allCourses.filter(course => 
-          !course.is_free && 
-          course.is_published &&
-          !purchased.some(p => p.id === course.id)
+        // Cursos disponibles para comprar (de pago que NO están comprados)
+        const available = paidCourses.filter(course => 
+          !purchasedCourseIds.has(course.id)
         )
 
         setCursosComprados(cursosConProgreso)
@@ -289,7 +293,7 @@ export default function MiEscuelaPage() {
             <div className="max-w-7xl mx-auto">
               <div className="flex items-center justify-between mb-8">
                 <div>
-                  <h2 className="text-3xl font-bold text-gray-900 mb-2">Cursos Disponibles para Comprar</h2>
+                  <h2 className="text-3xl font-bold text-gray-900 mb-2">Cursos Disponibles</h2>
                   <p className="text-gray-600">Amplía tus conocimientos con más cursos específicos</p>
                 </div>
                 <Link
@@ -332,8 +336,23 @@ export default function MiEscuelaPage() {
                           </div>
                         </div>
                         
-                        <div className="flex items-center justify-between text-sm text-gray-500">
-                          <span className="flex items-center">
+                        {/* What you'll learn preview */}
+                        {curso.what_you_learn && curso.what_you_learn.length > 0 && (
+                          <div className="mb-4">
+                            <p className="text-xs font-semibold text-gray-700 mb-2">Qué aprenderás:</p>
+                            <ul className="space-y-1">
+                              {curso.what_you_learn.slice(0, 2).map((item, idx) => (
+                                <li key={idx} className="text-xs text-gray-600 flex items-start">
+                                  <CheckCircle className="w-3 h-3 mr-1 mt-0.5 text-forest flex-shrink-0" />
+                                  <span className="line-clamp-1">{item}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="flex items-center text-gray-500">
                             <Clock className="w-4 h-4 mr-1" />
                             {curso.duration_minutes} min
                           </span>

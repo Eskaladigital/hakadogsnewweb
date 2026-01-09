@@ -101,6 +101,17 @@ export async function getCourseBySlug(slug: string) {
   return data as Course
 }
 
+export async function getCourseById(id: string) {
+  const { data, error } = await supabase
+    .from('courses')
+    .select('*')
+    .eq('id', id)
+    .single()
+
+  if (error) throw error
+  return data as Course
+}
+
 export async function createCourse(courseData: Partial<Course>) {
   const { data, error } = await supabase
     .from('courses')

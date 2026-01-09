@@ -90,7 +90,7 @@ export default function AdministratorPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 pt-20">
-      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-12">
+      <div className="bg-gradient-to-r from-forest to-sage text-white py-12">
         <div className="container mx-auto px-4">
           <div className="max-w-7xl mx-auto">
             <h1 className="text-4xl font-bold mb-2">Panel de Administración</h1>
@@ -105,7 +105,7 @@ export default function AdministratorPage() {
           <div className="mb-8 flex items-center justify-end">
             <Link
               href="/administrator/cursos/nuevo"
-              className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-all flex items-center shadow-lg"
+              className="bg-gradient-to-r from-forest to-sage text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-all flex items-center shadow-lg"
             >
               <Plus className="w-5 h-5 mr-2" />
               Crear Nuevo Curso
@@ -114,10 +114,10 @@ export default function AdministratorPage() {
 
           {/* Stats */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div className="bg-white rounded-xl shadow-lg p-6">
+              <div className="bg-white rounded-xl shadow-lg p-6">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-gray-600">Total Cursos</p>
-                <BookOpen className="w-5 h-5 text-indigo-600" />
+                <BookOpen className="w-5 h-5 text-forest" />
               </div>
               <p className="text-3xl font-bold text-gray-900">{stats.totalCourses}</p>
               <p className="text-sm text-gray-500 mt-1">{stats.publishedCourses} publicados</p>
@@ -126,7 +126,7 @@ export default function AdministratorPage() {
             <div className="bg-white rounded-xl shadow-lg p-6">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-gray-600">Ventas Totales</p>
-                <TrendingUp className="w-5 h-5 text-green-600" />
+                <TrendingUp className="w-5 h-5 text-sage" />
               </div>
               <p className="text-3xl font-bold text-gray-900">{stats.totalSales}</p>
               <p className="text-sm text-gray-500 mt-1">En la plataforma</p>
@@ -135,7 +135,7 @@ export default function AdministratorPage() {
             <div className="bg-white rounded-xl shadow-lg p-6">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-gray-600">Ingresos</p>
-                <DollarSign className="w-5 h-5 text-blue-600" />
+                <DollarSign className="w-5 h-5 text-gold" />
               </div>
               <p className="text-3xl font-bold text-gray-900">{stats.totalRevenue.toFixed(2)}€</p>
               <p className="text-sm text-gray-500 mt-1">
@@ -146,7 +146,7 @@ export default function AdministratorPage() {
             <div className="bg-white rounded-xl shadow-lg p-6">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-gray-600">Lecciones</p>
-                <Users className="w-5 h-5 text-purple-600" />
+                <Users className="w-5 h-5 text-forest" />
               </div>
               <p className="text-3xl font-bold text-gray-900">
                 {courses.reduce((sum, course) => sum + course.total_lessons, 0)}
@@ -174,7 +174,7 @@ export default function AdministratorPage() {
                 </p>
                 <Link
                   href="/administrator/cursos/nuevo"
-                  className="inline-flex items-center bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition"
+                  className="inline-flex items-center bg-gradient-to-r from-forest to-sage text-white px-6 py-3 rounded-lg hover:opacity-90 transition"
                 >
                   <Plus className="w-5 h-5 mr-2" />
                   Crear Primer Curso

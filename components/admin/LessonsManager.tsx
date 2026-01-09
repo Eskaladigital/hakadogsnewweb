@@ -118,7 +118,7 @@ export default function LessonsManager({ lessons, onChange }: LessonsManagerProp
         <button
           type="button"
           onClick={addLesson}
-          className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold py-2 px-4 rounded-lg hover:opacity-90 transition-all flex items-center"
+          className="bg-gradient-to-r from-forest to-sage text-white font-semibold py-2 px-4 rounded-lg hover:opacity-90 transition-all flex items-center"
         >
           <Plus className="w-4 h-4 mr-2" />
           Añadir Lección
@@ -132,7 +132,7 @@ export default function LessonsManager({ lessons, onChange }: LessonsManagerProp
           <button
             type="button"
             onClick={addLesson}
-            className="text-indigo-600 font-semibold hover:text-indigo-700"
+            className="text-forest font-semibold hover:text-forest-dark"
           >
             Crear primera lección →
           </button>
@@ -223,7 +223,7 @@ export default function LessonsManager({ lessons, onChange }: LessonsManagerProp
                         type="checkbox"
                         checked={lesson.isFreePreview}
                         onChange={(e) => updateLesson(index, 'isFreePreview', e.target.checked)}
-                        className="w-4 h-4 text-indigo-600 border-gray-300 rounded"
+                        className="w-4 h-4 text-forest border-gray-300 rounded"
                       />
                       <span className="text-sm text-gray-700">Vista previa gratuita</span>
                     </label>
@@ -277,7 +277,7 @@ export default function LessonsManager({ lessons, onChange }: LessonsManagerProp
                     <button
                       type="button"
                       onClick={() => addResource(index)}
-                      className="text-sm text-indigo-600 hover:text-indigo-700 font-semibold flex items-center"
+                      className="text-sm text-forest hover:text-forest-dark font-semibold flex items-center"
                     >
                       <Plus className="w-4 h-4 mr-1" />
                       Añadir recurso
