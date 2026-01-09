@@ -104,7 +104,7 @@ export async function getCourseBySlug(slug: string) {
 export async function createCourse(courseData: Partial<Course>) {
   const { data, error } = await supabase
     .from('courses')
-    .insert([courseData])
+    .insert([courseData as any])
     .select()
     .single()
 
@@ -115,7 +115,7 @@ export async function createCourse(courseData: Partial<Course>) {
 export async function updateCourse(id: string, courseData: Partial<Course>) {
   const { data, error } = await supabase
     .from('courses')
-    .update({ ...courseData, updated_at: new Date().toISOString() })
+    .update({ ...courseData, updated_at: new Date().toISOString() } as any)
     .eq('id', id)
     .select()
     .single()
@@ -161,7 +161,7 @@ export async function getLessonBySlug(courseId: string, lessonSlug: string) {
 export async function createLesson(lessonData: Partial<Lesson>) {
   const { data, error } = await supabase
     .from('course_lessons')
-    .insert([lessonData])
+    .insert([lessonData as any])
     .select()
     .single()
 
@@ -172,7 +172,7 @@ export async function createLesson(lessonData: Partial<Lesson>) {
 export async function updateLesson(id: string, lessonData: Partial<Lesson>) {
   const { data, error } = await supabase
     .from('course_lessons')
-    .update({ ...lessonData, updated_at: new Date().toISOString() })
+    .update({ ...lessonData, updated_at: new Date().toISOString() } as any)
     .eq('id', id)
     .select()
     .single()
@@ -193,7 +193,7 @@ export async function deleteLesson(id: string) {
 export async function bulkCreateLessons(lessons: Partial<Lesson>[]) {
   const { data, error } = await supabase
     .from('course_lessons')
-    .insert(lessons)
+    .insert(lessons as any)
     .select()
 
   if (error) throw error
@@ -216,7 +216,7 @@ export async function getLessonResources(lessonId: string) {
 export async function createResource(resourceData: Partial<Resource>) {
   const { data, error } = await supabase
     .from('course_resources')
-    .insert([resourceData])
+    .insert([resourceData as any])
     .select()
     .single()
 
@@ -227,7 +227,7 @@ export async function createResource(resourceData: Partial<Resource>) {
 export async function bulkCreateResources(resources: Partial<Resource>[]) {
   const { data, error } = await supabase
     .from('course_resources')
-    .insert(resources)
+    .insert(resources as any)
     .select()
 
   if (error) throw error
@@ -330,7 +330,7 @@ export async function hasPurchasedCourse(userId: string, courseId: string) {
 export async function createPurchase(purchaseData: Partial<CoursePurchase>) {
   const { data, error } = await supabase
     .from('course_purchases')
-    .insert([purchaseData])
+    .insert([purchaseData as any])
     .select()
     .single()
 
