@@ -139,6 +139,37 @@ export const getSession = async () => {
       return { data: { session: null }, error: null }
     }
 
+    // Intentar obtener el rol desde múltiples fuentes
+    let role: 'admin' | 'user' = 'user'
+    
+    // 1. Primero desde user_metadata
+    if (data.session.user.user_metadata?.role === 'admin') {
+      role = 'admin'
+    }
+    
+    // 2. Si no está, intentar desde app_metadata (donde Supabase a veces guarda roles)
+    if (role === 'user' && (data.session.user.app_metadata as any)?.role === 'admin') {
+      role = 'admin'
+    }
+    
+    // 3. Si aún no está, consultar la tabla profiles
+    if (role === 'user') {
+      try {
+        const { data: profileData, error: profileError } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', data.session.user.id)
+          .single()
+        
+        if (!profileError && profileData && profileData.role === 'admin') {
+          role = 'admin'
+        }
+      } catch (profileErr) {
+        // Si la tabla profiles no existe o hay error, continuar con el rol por defecto
+        console.log('No se pudo consultar tabla profiles:', profileErr)
+      }
+    }
+
     // Formatear la respuesta
     const session: AuthSession = {
       user: {
@@ -146,7 +177,7 @@ export const getSession = async () => {
         email: data.session.user.email || '',
         user_metadata: {
           name: data.session.user.user_metadata?.name || data.session.user.email?.split('@')[0],
-          role: data.session.user.user_metadata?.role || 'user',
+          role: role,
         },
       },
       access_token: data.session.access_token,
