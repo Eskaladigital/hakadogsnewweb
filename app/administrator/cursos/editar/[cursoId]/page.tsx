@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useRouter, useParams } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { ArrowLeft, Save, Loader2 } from 'lucide-react'
-import { getCourseById, updateCourse, getCourseLessons, getLessonResources, updateLesson, deleteLesson, createLesson, deleteResource, createResource, bulkCreateResources, bulkCreateLessons } from '@/lib/supabase/courses'
+import { getCourseById, updateCourse, getCourseLessons, getLessonResources, updateLesson, deleteLesson, createLesson, createResource, bulkCreateResources, bulkCreateLessons } from '@/lib/supabase/courses'
 import type { Course, Lesson, Resource } from '@/lib/supabase/courses'
 
 const LessonsManager = dynamic(() => import('@/components/admin/LessonsManager'), {
@@ -47,6 +47,7 @@ export default function EditarCursoPage() {
 
   useEffect(() => {
     loadCourseData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cursoId])
 
   const loadCourseData = async () => {
