@@ -324,28 +324,34 @@ stripe: "^14.0.0"
 /app/community/mensajes              # Chat
 ```
 
-### 4.7 Dashboard Cliente
+### 4.7 Sistema de Cursos (PRODUCCIÓN)
 
 ```
-/cliente/dashboard
-/cliente/perfil
-/cliente/configuracion
+/cursos                          # Landing de cursos
+/cursos/auth/login              # Login de usuarios
+/cursos/auth/registro           # Registro de usuarios
+/cursos/mi-escuela              # Dashboard del alumno
+/cursos/mi-escuela/[cursoId]    # Vista de curso individual
+/cursos/comprar/[cursoId]       # Proceso de compra
 ```
 
-### 4.8 Admin Panel (Alfredo)
+### 4.8 Panel Administrativo (PRODUCCIÓN)
 
 ```
-/admin/dashboard
-/admin/clientes
-/admin/clientes/[id]
-/admin/sesiones
-/admin/calendario
-/admin/ejercicios                    # Gestión ejercicios
-/admin/juegos                        # Gestión juegos
-/admin/moderacion                    # Moderar comunidad
-/admin/eventos                       # Gestión eventos
-/admin/contenido                     # Blog y casos
-/admin/estadisticas
+/administrator                  # Dashboard admin
+/administrator/cursos/nuevo     # Crear nuevo curso
+```
+
+### 4.9 Apps (PRÓXIMAMENTE)
+
+Las apps están planificadas pero aún no implementadas:
+- HakaHealth 🚧 Próximamente
+- HakaTrainer 🚧 Próximamente  
+- HakaCommunity 🚧 Próximamente
+
+**Rutas actuales:**
+```
+/apps                           # Landing de apps (info)
 ```
 
 ---
