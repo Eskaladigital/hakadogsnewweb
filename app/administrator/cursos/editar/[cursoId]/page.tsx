@@ -208,26 +208,30 @@ export default function EditarCursoPage() {
 
       // Crear nuevas lecciones
       if (newLessons.length > 0) {
-        const lessonsToCreate = newLessons.map((lesson, index) => ({
-          course_id: cursoId,
-          title: lesson.title,
-          slug: lesson.title
-            .toLowerCase()
-            .replace(/[áàäâ]/g, 'a')
-            .replace(/[éèëê]/g, 'e')
-            .replace(/[íìïî]/g, 'i')
-            .replace(/[óòöô]/g, 'o')
-            .replace(/[úùüû]/g, 'u')
-            .replace(/ñ/g, 'n')
-            .replace(/[^a-z0-9]+/g, '-')
-            .replace(/^-+|-+$/g, ''),
-          content: lesson.content,
-          order_index: updatedLessons.length + index,
-          duration_minutes: lesson.duration,
-          video_url: lesson.videoUrl || null,
-          video_provider: lesson.videoUrl ? (lesson.videoProvider as any) : null,
-          is_free_preview: lesson.isFreePreview,
-        }))
+        const lessonsToCreate = newLessons.map((lesson, index) => {
+          // Las lecciones nuevas vienen del componente con 'duration', necesitamos extraerlo
+          const lessonDuration = (lesson as any).duration || lesson.duration_minutes || 5
+          return {
+            course_id: cursoId,
+            title: lesson.title,
+            slug: lesson.title
+              .toLowerCase()
+              .replace(/[áàäâ]/g, 'a')
+              .replace(/[éèëê]/g, 'e')
+              .replace(/[íìïî]/g, 'i')
+              .replace(/[óòöô]/g, 'o')
+              .replace(/[úùüû]/g, 'u')
+              .replace(/ñ/g, 'n')
+              .replace(/[^a-z0-9]+/g, '-')
+              .replace(/^-+|-+$/g, ''),
+            content: lesson.content,
+            order_index: updatedLessons.length + index,
+            duration_minutes: lessonDuration,
+            video_url: lesson.videoUrl || null,
+            video_provider: lesson.videoUrl ? (lesson.videoProvider as any) : null,
+            is_free_preview: lesson.isFreePreview,
+          }
+        })
 
         const createdLessons = await bulkCreateLessons(lessonsToCreate)
 
