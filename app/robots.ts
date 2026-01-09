@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = 'https://hakadogs.com' // Cambiar por tu dominio real
+  const baseUrl = 'https://hakadogsnewweb.vercel.app' // URL de producción
 
   return {
     rules: [
@@ -10,10 +10,9 @@ export default function robots(): MetadataRoute.Robots {
         allow: '/',
         disallow: [
           '/api/',
-          '/admin/',
-          '/cliente/',
-          '/app/health/historial/',
-          '/app/trainer/mi-progreso/',
+          '/administrator/',
+          '/cursos/mi-escuela/',
+          '/cursos/comprar/',
           '/_next/',
           '/qr/',
         ],

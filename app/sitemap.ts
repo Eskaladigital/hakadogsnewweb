@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next'
 import { cities } from '@/lib/cities'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://hakadogs.com' // Cambiar por tu dominio real
+  const baseUrl = 'https://hakadogsnewweb.vercel.app' // URL de producción
 
   // Páginas estáticas principales
   const staticPages = [
@@ -55,6 +55,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
+      url: `${baseUrl}/cursos`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.9,
+    },
+    {
       url: `${baseUrl}/metodologia`,
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
@@ -79,13 +85,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.3,
     },
     {
-      url: `${baseUrl}/auth/login`,
+      url: `${baseUrl}/cursos/auth/login`,
       lastModified: new Date(),
       changeFrequency: 'yearly' as const,
       priority: 0.3,
     },
     {
-      url: `${baseUrl}/auth/registro`,
+      url: `${baseUrl}/cursos/auth/registro`,
       lastModified: new Date(),
       changeFrequency: 'yearly' as const,
       priority: 0.3,
@@ -112,28 +118,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.85, // Alta prioridad para SEO local
   }))
 
-  // Apps específicas
-  const appPages = [
-    {
-      url: `${baseUrl}/app/health`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/app/trainer`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/app/community`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: 0.6,
-    },
-  ]
-
-  return [...staticPages, ...localidadPages, ...appPages]
+  return [...staticPages, ...localidadPages]
 }
 
