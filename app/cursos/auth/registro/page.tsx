@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Mail, Lock, User, ArrowRight, AlertCircle, CheckCircle } from 'lucide-react'
+import { signUp } from '@/lib/supabase/auth'
 
 export default function CursosRegistroPage() {
   const router = useRouter()
@@ -13,11 +14,13 @@ export default function CursosRegistroPage() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
 
   const handleRegistro = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError('')
+    setSuccess('')
 
     if (password !== confirmPassword) {
       setError('Las contraseñas no coinciden')
@@ -31,16 +34,30 @@ export default function CursosRegistroPage() {
       return
     }
 
-    // Mock registro - esto se conectará a Supabase después
-    setTimeout(() => {
-      // Guardar sesión en localStorage
-      localStorage.setItem('hakadogs_cursos_session', JSON.stringify({
-        email,
-        name,
-        loggedIn: true
-      }))
-      router.push('/cursos/mi-escuela')
-    }, 1000)
+    try {
+      const { data, error: signUpError } = await signUp(email, password, name)
+
+      if (signUpError) {
+        // Si el mensaje indica verificación de email, mostrar como éxito
+        if (signUpError.message.includes('verifica tu email')) {
+          setSuccess(signUpError.message)
+          setLoading(false)
+          return
+        }
+        setError(signUpError.message)
+        setLoading(false)
+        return
+      }
+
+      // Si hay data, el usuario se registró y autenticó automáticamente
+      if (data) {
+        router.push('/cursos/mi-escuela')
+      }
+    } catch (err) {
+      console.error('Error en registro:', err)
+      setError('Error al crear la cuenta. Inténtalo de nuevo.')
+      setLoading(false)
+    }
   }
 
   return (
@@ -60,6 +77,13 @@ export default function CursosRegistroPage() {
               <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 flex items-start">
                 <AlertCircle className="w-5 h-5 text-red-600 mr-2 flex-shrink-0 mt-0.5" />
                 <p className="text-sm text-red-800">{error}</p>
+              </div>
+            )}
+
+            {success && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 flex items-start">
+                <CheckCircle className="w-5 h-5 text-blue-600 mr-2 flex-shrink-0 mt-0.5" />
+                <p className="text-sm text-blue-800">{success}</p>
               </div>
             )}
 

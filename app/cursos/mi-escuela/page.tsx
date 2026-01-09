@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { BookOpen, ShoppingCart, Clock, CheckCircle, Lock, Award, TrendingUp, Play, Loader2 } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { getLocalSession } from '@/lib/auth/mockAuth'
+import { getSession } from '@/lib/supabase/auth'
 import { getUserPurchases, getAllCourses, getUserCourseProgress } from '@/lib/supabase/courses'
 import type { Course, UserCourseProgress } from '@/lib/supabase/courses'
 
@@ -31,13 +31,14 @@ export default function MiEscuelaPage() {
     async function loadData() {
       try {
         // Verificar autenticación
-        const { data: sessionData } = getLocalSession()
+        const { data: sessionData } = await getSession()
         if (!sessionData?.session) {
           router.push('/cursos/auth/login?redirect=/cursos/mi-escuela')
           return
         }
 
         const userId = sessionData.session.user.id
+        setUserName(sessionData.session.user.user_metadata.name || sessionData.session.user.email.split('@')[0])
 
         // Cargar todos los cursos
         const allCourses = await getAllCourses()

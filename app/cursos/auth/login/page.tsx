@@ -4,7 +4,7 @@ import { useState, Suspense } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Mail, Lock, User, ArrowRight, AlertCircle } from 'lucide-react'
-import { authenticateLocal } from '@/lib/auth/mockAuth'
+import { signIn } from '@/lib/supabase/auth'
 
 function LoginForm() {
   const router = useRouter()
@@ -20,7 +20,7 @@ function LoginForm() {
     setError('')
 
     try {
-      const { data, error: loginError } = authenticateLocal(email, password)
+      const { data, error: loginError } = await signIn(email, password)
       
       if (loginError || !data) {
         setError(loginError?.message || 'Error al iniciar sesión')
@@ -41,6 +41,7 @@ function LoginForm() {
       // Redirigir a la URL solicitada
       router.push(redirectUrl)
     } catch (err) {
+      console.error('Error en login:', err)
       setError('Error al iniciar sesión. Verifica tus credenciales.')
       setLoading(false)
     }
@@ -118,14 +119,6 @@ function LoginForm() {
                   Regístrate gratis
                 </Link>
               </p>
-            </div>
-
-            <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-sm text-blue-800 font-semibold mb-2">Usuarios de prueba:</p>
-              <div className="space-y-1 text-xs text-blue-700">
-                <p><strong>Admin:</strong> narciso.pardo@outlook.com / Hacka2016@</p>
-                <p><strong>Usuario:</strong> user@hakadogs.com / Hacka2016@</p>
-              </div>
             </div>
 
             <div className="mt-8 pt-6 border-t border-gray-200 text-center">

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Menu, X, User, LogOut } from 'lucide-react'
+import { getSession, signOut } from '@/lib/supabase/auth'
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
@@ -11,17 +12,19 @@ export default function Navigation() {
   const [userName, setUserName] = useState('')
 
   useEffect(() => {
-    // Verificar si hay sesión
-    const session = localStorage.getItem('hakadogs_cursos_session')
-    if (session) {
-      const data = JSON.parse(session)
-      setIsLoggedIn(data.loggedIn)
-      setUserName(data.name)
+    // Verificar si hay sesión de Supabase
+    const checkSession = async () => {
+      const { data } = await getSession()
+      if (data.session) {
+        setIsLoggedIn(true)
+        setUserName(data.session.user.user_metadata.name || data.session.user.email.split('@')[0])
+      }
     }
+    checkSession()
   }, [])
 
-  const handleLogout = () => {
-    localStorage.removeItem('hakadogs_cursos_session')
+  const handleLogout = async () => {
+    await signOut()
     setIsLoggedIn(false)
     setUserName('')
     window.location.href = '/cursos'
