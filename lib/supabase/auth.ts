@@ -24,7 +24,16 @@ export const signIn = async (email: string, password: string) => {
     })
 
     if (error) {
-      return { data: null, error: { message: error.message } }
+      // Mensaje personalizado según el tipo de error
+      let errorMessage = error.message
+      
+      if (error.message.includes('Email not confirmed')) {
+        errorMessage = '⚠️ Tu email aún no está confirmado. Revisa tu bandeja de entrada o contacta al administrador.'
+      } else if (error.message.includes('Invalid login credentials')) {
+        errorMessage = '❌ Email o contraseña incorrectos. Verifica tus credenciales.'
+      }
+      
+      return { data: null, error: { message: errorMessage } }
     }
 
     if (!data.session || !data.user) {
@@ -64,6 +73,7 @@ export const signUp = async (email: string, password: string, name: string) => {
           name,
           role: 'user',
         },
+        emailRedirectTo: `${window.location.origin}/cursos/mi-escuela`,
       },
     })
 
@@ -71,14 +81,24 @@ export const signUp = async (email: string, password: string, name: string) => {
       return { data: null, error: { message: error.message } }
     }
 
-    if (!data.session || !data.user) {
+    if (!data.user) {
       return { 
         data: null, 
-        error: { message: 'Registro exitoso. Por favor verifica tu email para activar tu cuenta.' } 
+        error: { message: 'Error al crear la cuenta' } 
       }
     }
 
-    // Formatear la respuesta
+    // Si el usuario fue creado pero no tiene sesión, necesita confirmar email
+    if (!data.session) {
+      return { 
+        data: null, 
+        error: { 
+          message: '✅ Cuenta creada exitosamente. Por favor, verifica tu email para activarla. Si no ves el email, revisa tu carpeta de spam o contacta al administrador para confirmar tu cuenta manualmente.' 
+        } 
+      }
+    }
+
+    // Formatear la respuesta si hay sesión (login automático)
     const session: AuthSession = {
       user: {
         id: data.user.id,
