@@ -34,7 +34,6 @@ export default function Navigation() {
     { href: '/metodologia', label: 'Metodología' },
     { href: '/blog', label: 'Blog' },
     { href: '/sobre-nosotros', label: 'Sobre Nosotros' },
-    { href: '/contacto', label: 'Contacto' },
   ]
 
   return (
@@ -99,6 +98,12 @@ export default function Navigation() {
               </>
             ) : (
               <>
+                <Link
+                  href="/contacto"
+                  className="text-gray-700 hover:text-forest font-medium transition-colors"
+                >
+                  Contacto
+                </Link>
                 <Link
                   href="/cursos/auth/login"
                   className="bg-gray-100 text-gray-700 hover:bg-gray-200 font-semibold px-6 py-2 rounded-lg transition-all"
@@ -165,6 +170,13 @@ export default function Navigation() {
                 </>
               ) : (
                 <>
+                  <Link
+                    href="/contacto"
+                    className="block py-2 text-gray-700 hover:text-forest font-medium transition-colors"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Contacto
+                  </Link>
                   <Link
                     href="/cursos/auth/login"
                     className="block w-full bg-gray-100 text-gray-700 hover:bg-gray-200 font-semibold px-6 py-2 rounded-lg transition-all text-center"
