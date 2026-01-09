@@ -35,10 +35,10 @@ export default function TinyMCEEditor({ value, onChange, height = 500 }: TinyMCE
         image_title: true,
         automatic_uploads: true,
         file_picker_types: 'image',
-        images_upload_handler: async (blobInfo) => {
+        images_upload_handler: async (blobInfo: any) => {
           // Aquí iría la lógica para subir imágenes a tu servidor
           // Por ahora retornamos un placeholder
-          return new Promise((resolve) => {
+          return new Promise((resolve: any) => {
             resolve('https://via.placeholder.com/800x400')
           })
         }
