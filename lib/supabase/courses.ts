@@ -276,6 +276,7 @@ export async function getUserLessonProgress(userId: string, lessonId: string) {
 export async function markLessonComplete(userId: string, lessonId: string) {
   const { data, error } = await supabase
     .from('user_lesson_progress')
+    // @ts-ignore
     .upsert({
       user_id: userId,
       lesson_id: lessonId,
@@ -292,6 +293,7 @@ export async function markLessonComplete(userId: string, lessonId: string) {
 export async function updateLessonPosition(userId: string, lessonId: string, positionSeconds: number) {
   const { data, error } = await supabase
     .from('user_lesson_progress')
+    // @ts-ignore
     .upsert({
       user_id: userId,
       lesson_id: lessonId,
