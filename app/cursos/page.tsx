@@ -313,7 +313,7 @@ export default function CursosPage() {
                         ))}
                       </div>
                       <p className="text-sm text-white/90 italic">
-                        "El mejor curso que he comprado. Mi perro ahora obedece perfectamente."
+                        &quot;El mejor curso que he comprado. Mi perro ahora obedece perfectamente.&quot;
                       </p>
                       <p className="text-xs text-white/70 mt-2">- María G.</p>
                     </div>
@@ -324,7 +324,7 @@ export default function CursosPage() {
                         ))}
                       </div>
                       <p className="text-sm text-white/90 italic">
-                        "Muy completo y fácil de seguir. Los videos son excelentes."
+                        &quot;Muy completo y fácil de seguir. Los videos son excelentes.&quot;
                       </p>
                       <p className="text-xs text-white/70 mt-2">- Juan P.</p>
                     </div>
