@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Mail, Lock, User, ArrowRight, AlertCircle } from 'lucide-react'
-import { login } from '@/lib/auth/mockAuth'
+import { authenticateLocal } from '@/lib/auth/mockAuth'
 
 export default function CursosLoginPage() {
   const router = useRouter()
@@ -20,7 +20,7 @@ export default function CursosLoginPage() {
     setError('')
 
     try {
-      const { data, error: loginError } = login(email, password)
+      const { data, error: loginError } = authenticateLocal(email, password)
       
       if (loginError || !data) {
         setError(loginError || 'Error al iniciar sesión')
