@@ -7,7 +7,7 @@ import Image from 'next/image'
 import { Phone, Mail, MapPin, AlertCircle, Heart } from 'lucide-react'
 import { calculateAge } from '@/lib/utils'
 
-// Mock data para perro
+// Mock data para perro (ejemplo)
 const mockDog = {
   id: '1',
   name: 'Max',
@@ -20,9 +20,9 @@ const mockDog = {
   special_characteristics: 'Muy amigable con niños',
   allergies: ['Polen', 'Algunos medicamentos'],
   profiles: {
-    full_name: 'Narciso Pardo',
-    phone: '685648241',
-    email: 'narciso.pardo@outlook.com'
+    full_name: 'Propietario',
+    phone: '600000000',
+    email: 'propietario@example.com'
   }
 }
 
