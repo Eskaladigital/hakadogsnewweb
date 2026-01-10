@@ -4,8 +4,8 @@ import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { getSession } from '@/lib/supabase/auth'
-import { getAllCourses, getAdminStats, deleteCourse, type Course } from '@/lib/supabase/courses'
-import { BookOpen, TrendingUp, DollarSign, Users, Plus, Edit, Trash2, Eye, Search, ChevronUp, ChevronDown } from 'lucide-react'
+import { getAllCourses, getAdminStats, deleteCourse, updateCourse, type Course } from '@/lib/supabase/courses'
+import { BookOpen, TrendingUp, DollarSign, Users, Plus, Edit, Trash2, Eye, Search, ChevronUp, ChevronDown, CheckCircle, XCircle } from 'lucide-react'
 
 type SortField = 'title' | 'total_lessons' | 'duration_minutes' | 'price' | 'is_published'
 type SortDirection = 'asc' | 'desc'
@@ -73,6 +73,25 @@ export default function AdministratorPage() {
     } catch (error) {
       console.error('Error eliminando curso:', error)
       alert('Error al eliminar el curso')
+    }
+  }
+
+  const handleTogglePublish = async (id: string, currentStatus: boolean, title: string) => {
+    const action = currentStatus ? 'despublicar' : 'publicar'
+    if (!confirm(`¿Estás seguro de ${action} el curso "${title}"?`)) {
+      return
+    }
+
+    try {
+      await updateCourse(id, { is_published: !currentStatus })
+      // Actualizar el estado local
+      setCourses(courses.map(c => 
+        c.id === id ? { ...c, is_published: !currentStatus } : c
+      ))
+      alert(`Curso ${currentStatus ? 'despublicado' : 'publicado'} exitosamente`)
+    } catch (error) {
+      console.error('Error actualizando estado:', error)
+      alert('Error al actualizar el estado del curso')
     }
   }
 
@@ -411,6 +430,21 @@ export default function AdministratorPage() {
                               >
                                 <Eye className="w-4 h-4" />
                               </Link>
+                              <button
+                                onClick={() => handleTogglePublish(course.id, course.is_published, course.title)}
+                                className={`p-2 transition ${
+                                  course.is_published 
+                                    ? 'text-orange-600 hover:text-orange-800' 
+                                    : 'text-green-600 hover:text-green-800'
+                                }`}
+                                title={course.is_published ? 'Despublicar' : 'Publicar'}
+                              >
+                                {course.is_published ? (
+                                  <XCircle className="w-4 h-4" />
+                                ) : (
+                                  <CheckCircle className="w-4 h-4" />
+                                )}
+                              </button>
                               <Link
                                 href={`/administrator/cursos/editar/${course.id}`}
                                 className="text-gray-600 hover:text-gray-800 p-2 transition"
