@@ -13,7 +13,7 @@ Todos los cambios importantes del proyecto Hakadogs documentados en orden cronol
 - ✅ Dominio propio configurado: `www.hakadogs.com`
 - ✅ DNS configurados en OVH apuntando a Vercel
 - ✅ SSL/HTTPS activo automáticamente
-- ✅ Google Analytics 4 implementado (G-FVPHYL582P)
+- ✅ Google Analytics 4 implementado (G-NXPT2KNYGJ)
 - ✅ Redirecciones automáticas (http→https, no-www→www)
 
 #### Archivos Nuevos

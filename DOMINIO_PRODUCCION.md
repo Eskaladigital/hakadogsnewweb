@@ -103,7 +103,7 @@ Ver: `AUDITORIA_SEGURIDAD.md` para detalles completos.
 ## 📊 ANALYTICS Y MONITOREO
 
 ### Google Analytics 4
-- **ID de seguimiento:** G-FVPHYL582P
+- **ID de seguimiento:** G-NXPT2KNYGJ
 - **Dashboard:** https://analytics.google.com
 - **Tracking activo desde:** 6 Enero 2026
 

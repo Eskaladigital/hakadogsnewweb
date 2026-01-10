@@ -385,7 +385,7 @@ async headers() {
 - [ ] Completar artículos de blog
 
 ### Fase 3: Marketing
-- [x] ✅ Google Analytics (G-FVPHYL582P)
+- [x] ✅ Google Analytics (G-NXPT2KNYGJ)
 - [ ] Facebook Pixel
 - [ ] Email marketing (Resend/Mailchimp)
 - [ ] Sistema de pagos real (Stripe/Redsys)
