@@ -163,6 +163,82 @@ export interface Database {
           updated_at?: string
         }
       }
+      contacts: {
+        Row: {
+          id: string
+          name: string
+          email: string
+          phone: string | null
+          subject: string | null
+          message: string
+          status: 'pending' | 'in_progress' | 'responded' | 'closed'
+          admin_notes: string | null
+          responded_by: string | null
+          responded_at: string | null
+          source: string
+          user_agent: string | null
+          ip_address: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          email: string
+          phone?: string | null
+          subject?: string | null
+          message: string
+          status?: 'pending' | 'in_progress' | 'responded' | 'closed'
+          admin_notes?: string | null
+          responded_by?: string | null
+          responded_at?: string | null
+          source?: string
+          user_agent?: string | null
+          ip_address?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          email?: string
+          phone?: string | null
+          subject?: string | null
+          message?: string
+          status?: 'pending' | 'in_progress' | 'responded' | 'closed'
+          admin_notes?: string | null
+          responded_by?: string | null
+          responded_at?: string | null
+          source?: string
+          user_agent?: string | null
+          ip_address?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      user_roles: {
+        Row: {
+          id: string
+          user_id: string
+          role: 'admin' | 'user' | 'instructor'
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          role?: 'admin' | 'user' | 'instructor'
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          role?: 'admin' | 'user' | 'instructor'
+          created_at?: string
+          updated_at?: string
+        }
+      }
       // Más tablas se añadirán según necesidad
     }
     Views: {
