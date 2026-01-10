@@ -7,7 +7,7 @@ import { ArrowLeft, Play, CheckCircle, Lock, Download, FileText, Clock, Loader2,
 import { motion } from 'framer-motion'
 import { getSession } from '@/lib/supabase/auth'
 import { getCourseBySlug, getCourseLessons, getUserCourseProgress, markLessonComplete, getLessonResources, getUserLessonProgress } from '@/lib/supabase/courses'
-import type { Course, Lesson, Resource } from '@/lib/supabase/courses'
+import type { Course, Lesson, Resource, UserLessonProgress } from '@/lib/supabase/courses'
 
 export default function CursoDetailPage({ params }: { params: { cursoId: string } }) {
   const router = useRouter()

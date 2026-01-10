@@ -269,7 +269,19 @@ export async function getUserCourseProgress(userId: string, courseId: string) {
   return data as UserCourseProgress
 }
 
-export async function getUserLessonProgress(userId: string, lessonId: string) {
+export interface UserLessonProgress {
+  id: string
+  user_id: string
+  lesson_id: string
+  completed: boolean
+  completed_at: string | null
+  time_spent_seconds: number
+  last_position_seconds: number
+  created_at: string
+  updated_at: string
+}
+
+export async function getUserLessonProgress(userId: string, lessonId: string): Promise<UserLessonProgress | null> {
   const { data, error } = await supabase
     .from('user_lesson_progress')
     .select('*')
@@ -281,7 +293,7 @@ export async function getUserLessonProgress(userId: string, lessonId: string) {
     if (error.code === 'PGRST116') return null
     throw error
   }
-  return data
+  return data as UserLessonProgress
 }
 
 export async function markLessonComplete(userId: string, lessonId: string) {
