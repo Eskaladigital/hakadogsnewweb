@@ -1,4 +1,7 @@
 import { supabase } from './client'
+import type { Database } from '@/types/database.types'
+
+type ContactInsert = Database['public']['Tables']['contacts']['Insert']
 
 // =====================================================
 // TIPOS DE DATOS
@@ -116,12 +119,20 @@ export async function getContactsByStatus(status: string): Promise<ContactWithDe
  * Crea un nuevo contacto (formulario público)
  */
 export async function createContact(contactData: CreateContactData): Promise<Contact> {
+  const insertData: ContactInsert = {
+    name: contactData.name,
+    email: contactData.email,
+    phone: contactData.phone || null,
+    subject: contactData.subject || null,
+    message: contactData.message,
+    source: contactData.source || 'web_form',
+    user_agent: contactData.user_agent || null,
+    ip_address: contactData.ip_address || null,
+  }
+  
   const { data, error } = await supabase
     .from('contacts')
-    .insert([{
-      ...contactData,
-      source: contactData.source || 'web_form'
-    }])
+    .insert([insertData])
     .select()
     .single()
   
