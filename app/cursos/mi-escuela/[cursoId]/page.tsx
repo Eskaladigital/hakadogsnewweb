@@ -1,13 +1,14 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Play, CheckCircle, Lock, Download, FileText, Clock, Loader2, AlertCircle, Video, Headphones } from 'lucide-react'
+import { ArrowLeft, Play, CheckCircle, Lock, Download, FileText, Clock, Loader2, AlertCircle, Video, Headphones, ChevronLeft, ChevronRight } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { getSession } from '@/lib/supabase/auth'
 import { getCourseBySlug, getCourseLessons, getUserCourseProgress, markLessonComplete, getLessonResources, getUserLessonProgress } from '@/lib/supabase/courses'
 import type { Course, Lesson, Resource, UserLessonProgress } from '@/lib/supabase/courses'
+import { useSwipe } from '@/lib/hooks/useSwipe'
 
 export default function CursoDetailPage({ params }: { params: { cursoId: string } }) {
   const router = useRouter()
@@ -22,6 +23,41 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
   const [activeTab, setActiveTab] = useState<'video' | 'audio' | 'content' | 'resources'>('content')
   const [completing, setCompleting] = useState(false)
   const [lessonProgress, setLessonProgress] = useState<Record<string, boolean>>({})
+  const contentRef = useRef<HTMLDivElement>(null)
+
+  // Funciones para navegación con gestos
+  const goToNextLesson = () => {
+    if (!leccionActual) return
+    
+    const currentIndex = lecciones.findIndex(l => l.id === leccionActual.id)
+    if (currentIndex < lecciones.length - 1) {
+      const nextLesson = lecciones[currentIndex + 1]
+      
+      // Verificar si está desbloqueada
+      if (currentIndex >= 0 && lessonProgress[leccionActual.id]) {
+        handleSelectLesson(nextLesson)
+      }
+    }
+  }
+
+  const goToPreviousLesson = () => {
+    if (!leccionActual) return
+    
+    const currentIndex = lecciones.findIndex(l => l.id === leccionActual.id)
+    if (currentIndex > 0) {
+      const previousLesson = lecciones[currentIndex - 1]
+      handleSelectLesson(previousLesson)
+    }
+  }
+
+  // Hook de gestos swipe
+  const { isSwiping } = useSwipe({
+    onSwipeLeft: goToNextLesson,
+    onSwipeRight: goToPreviousLesson,
+  }, {
+    threshold: 80, // Requiere 80px de swipe
+    timeout: 400,  // Máximo 400ms
+  })
 
   useEffect(() => {
     async function loadData() {
@@ -513,6 +549,41 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                     <div className="w-full mt-6 sm:mt-8 bg-green-50 border border-green-200 text-green-800 font-semibold py-3 sm:py-4 px-6 rounded-lg flex items-center justify-center text-sm sm:text-base">
                       <CheckCircle className="w-5 h-5 mr-2" />
                       Lección Completada
+                    </div>
+                  )}
+                  
+                  {/* Navegación entre lecciones (móvil) */}
+                  <div className="mt-6 flex items-center justify-between gap-4 lg:hidden">
+                    {/* Lección anterior */}
+                    {lecciones.findIndex(l => l.id === leccionActual.id) > 0 && (
+                      <button
+                        onClick={goToPreviousLesson}
+                        className="flex-1 flex items-center justify-center gap-2 bg-white border-2 border-forest text-forest font-semibold py-3 px-4 rounded-lg hover:bg-forest/5 transition-all"
+                      >
+                        <ChevronLeft className="w-5 h-5" />
+                        <span className="hidden sm:inline">Anterior</span>
+                      </button>
+                    )}
+                    
+                    {/* Lección siguiente */}
+                    {lecciones.findIndex(l => l.id === leccionActual.id) < lecciones.length - 1 && (
+                      <button
+                        onClick={goToNextLesson}
+                        disabled={!lessonProgress[leccionActual.id]}
+                        className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-forest to-sage text-white font-semibold py-3 px-4 rounded-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        <span className="hidden sm:inline">Siguiente</span>
+                        <ChevronRight className="w-5 h-5" />
+                      </button>
+                    )}
+                  </div>
+                  
+                  {/* Hint de swipe (solo móvil) */}
+                  {isSwiping && (
+                    <div className="fixed bottom-20 left-1/2 -translate-x-1/2 lg:hidden z-50">
+                      <div className="bg-black/75 text-white px-6 py-3 rounded-full text-sm font-medium backdrop-blur-sm">
+                        ← Desliza para navegar →
+                      </div>
                     </div>
                   )}
                 </div>

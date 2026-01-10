@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sin conexión - Hakadogs</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .container {
+      text-align: center;
+      max-width: 500px;
+    }
+    
+    .icon {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 30px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 60px;
+    }
+    
+    h1 {
+      font-size: 32px;
+      margin-bottom: 16px;
+      font-weight: 700;
+    }
+    
+    p {
+      font-size: 18px;
+      line-height: 1.6;
+      margin-bottom: 30px;
+      opacity: 0.9;
+    }
+    
+    .button {
+      display: inline-block;
+      background: white;
+      color: #059669;
+      padding: 14px 32px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 16px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .cached-message {
+      margin-top: 40px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      font-size: 14px;
+      opacity: 0.8;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    .pulse {
+      animation: pulse 2s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="icon pulse">
+      🐕
+    </div>
+    
+    <h1>Sin conexión a Internet</h1>
+    
+    <p>
+      Parece que no tienes conexión a Internet en este momento. 
+      Algunas funciones de Hakadogs requieren conexión para funcionar correctamente.
+    </p>
+    
+    <a href="/" class="button" onclick="location.reload(); return false;">
+      Reintentar
+    </a>
+    
+    <div class="cached-message">
+      💡 <strong>Tip:</strong> Cuando estés conectado, tus cursos se guardarán automáticamente para acceso offline.
+    </div>
+  </div>
+  
+  <script>
+    // Reintentar automáticamente cuando vuelva la conexión
+    window.addEventListener('online', () => {
+      console.log('Conexión restaurada, recargando...');
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    });
+    
+    // Verificar conexión cada 5 segundos
+    setInterval(() => {
+      if (navigator.onLine) {
+        fetch('/', { method: 'HEAD', cache: 'no-cache' })
+          .then(() => {
+            console.log('Conexión disponible, recargando...');
+            window.location.reload();
+          })
+          .catch(() => {
+            console.log('Aún sin conexión');
+          });
+      }
+    }, 5000);
+  </script>
+</body>
+</html>

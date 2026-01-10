@@ -56,6 +56,19 @@ export const metadata: Metadata = {
     apple: '/images/hakadogs-01.png',
   },
   
+  // PWA Manifest
+  manifest: '/manifest.json',
+  
+  // Theme Color (barra de navegación en móvil)
+  themeColor: '#059669',
+  
+  // Apple Web App
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Hakadogs',
+  },
+  
   // Otros metadatos
   robots: {
     index: true,
@@ -82,6 +95,14 @@ export default function RootLayout({
   return (
     <html lang="es">
       <head>
+        {/* PWA Meta Tags */}
+        <meta name="application-name" content="Hakadogs" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="Hakadogs" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="theme-color" content="#059669" />
+        
         {/* Preconnect a dominios externos para reducir latencia */}
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
@@ -99,6 +120,24 @@ export default function RootLayout({
             gtag('config', 'G-NXPT2KNYGJ', {
               page_path: window.location.pathname,
             });
+          `}
+        </Script>
+        
+        {/* Service Worker Registration */}
+        <Script id="sw-register" strategy="afterInteractive">
+          {`
+            if ('serviceWorker' in navigator) {
+              window.addEventListener('load', () => {
+                navigator.serviceWorker
+                  .register('/sw.js')
+                  .then((registration) => {
+                    console.log('✅ Service Worker registrado:', registration.scope);
+                  })
+                  .catch((error) => {
+                    console.error('❌ Error registrando Service Worker:', error);
+                  });
+              });
+            }
           `}
         </Script>
       </head>
