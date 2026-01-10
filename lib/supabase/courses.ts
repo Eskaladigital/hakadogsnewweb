@@ -31,6 +31,7 @@ export interface Lesson {
   video_url: string | null
   video_provider: 'youtube' | 'vimeo' | 'self-hosted' | null
   audio_url: string | null
+  audio_provider: 'self-hosted' | 'soundcloud' | 'spotify' | null
   is_free_preview: boolean
   created_at: string
   updated_at: string
