@@ -1,13 +1,16 @@
 import Hero from '@/components/Hero'
-import ServicesSection from '@/components/ServicesSection'
-import SessionsShowcase from '@/components/SessionsShowcase'
-import AppsSection from '@/components/AppsSection'
-import AboutSection from '@/components/AboutSection'
-import GallerySection from '@/components/GallerySection'
-import TestimonialsSection from '@/components/TestimonialsSection'
-import CTASection from '@/components/CTASection'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { GraduationCap, Play, CheckCircle, ArrowRight, BookOpen, Clock, Award } from 'lucide-react'
+
+// Lazy load componentes below-the-fold para mejorar FCP/LCP
+const ServicesSection = dynamic(() => import('@/components/ServicesSection'))
+const SessionsShowcase = dynamic(() => import('@/components/SessionsShowcase'))
+const AppsSection = dynamic(() => import('@/components/AppsSection'))
+const AboutSection = dynamic(() => import('@/components/AboutSection'))
+const GallerySection = dynamic(() => import('@/components/GallerySection'))
+const TestimonialsSection = dynamic(() => import('@/components/TestimonialsSection'))
+const CTASection = dynamic(() => import('@/components/CTASection'))
 
 export default function Home() {
   return (

@@ -107,12 +107,13 @@ export default function RootLayout({
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         
-        {/* Preload logo crítico para mejorar LCP */}
+        {/* Preload logo crítico para mejorar LCP con fetchpriority */}
         <link 
           rel="preload" 
           as="image" 
           href="/images/logo_definitivo_hakadogs.webp"
           type="image/webp"
+          fetchpriority="high"
         />
         
         {/* Google Analytics - estrategia lazyOnload para no bloquear renderizado */}

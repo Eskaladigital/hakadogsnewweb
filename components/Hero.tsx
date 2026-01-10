@@ -63,7 +63,7 @@ export default function Hero({
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
           >
             <div className="inline-block px-4 py-2 bg-forest/10 rounded-full mb-6">
               <span className="text-forest font-semibold text-sm">{badge}</span>
@@ -115,7 +115,7 @@ export default function Hero({
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            transition={{ duration: 0.5, delay: 0.1, ease: 'easeOut' }}
             className="relative"
           >
             <div className="relative rounded-3xl overflow-hidden shadow-2xl">
@@ -126,6 +126,7 @@ export default function Hero({
                   fill
                   className="object-cover"
                   priority
+                  fetchPriority="high"
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
               </div>

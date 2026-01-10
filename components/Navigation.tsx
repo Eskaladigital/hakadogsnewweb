@@ -47,26 +47,28 @@ export default function Navigation() {
           {/* Logo */}
           <Link href="/" className="flex items-center group">
             {/* Logo completo en desktop */}
-            <div className="hidden sm:block relative h-20 w-64 group-hover:scale-105 transition-transform">
-              <Image
-                src="/images/logo_definitivo_hakadogs.webp"
-                alt="Hakadogs - Educación Canina"
-                width={370}
-                height={104}
-                className="object-contain object-left"
-                priority
-                quality={95}
-              />
-            </div>
-            {/* Logo en móvil */}
-            <div className="sm:hidden relative h-16 w-48 group-hover:scale-105 transition-transform">
+            <div className="hidden sm:block relative h-20 w-56 py-3 group-hover:scale-105 transition-transform">
               <Image
                 src="/images/logo_definitivo_hakadogs.webp"
                 alt="Hakadogs - Educación Canina"
                 width={280}
-                height={78}
+                height={79}
                 className="object-contain object-left"
                 priority
+                fetchPriority="high"
+                quality={95}
+              />
+            </div>
+            {/* Logo en móvil */}
+            <div className="sm:hidden relative h-16 w-40 py-2 group-hover:scale-105 transition-transform">
+              <Image
+                src="/images/logo_definitivo_hakadogs.webp"
+                alt="Hakadogs - Educación Canina"
+                width={210}
+                height={59}
+                className="object-contain object-left"
+                priority
+                fetchPriority="high"
                 quality={95}
               />
             </div>

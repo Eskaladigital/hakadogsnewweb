@@ -11,21 +11,22 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo y descripción */}
           <div className="md:col-span-1">
-            <div className="mb-4">
-              {/* Logo en móvil y desktop - hakadogs_logo_cara_transparente_vf.webp */}
-              <div className="relative h-28 w-28 mx-auto md:mx-0">
+            {/* Logo */}
+            <div className="mb-6">
+              <div className="relative h-16 w-16 mx-auto md:mx-0 mb-3">
                 <Image
                   src="/images/hakadogs_logo_cara_transparente_vf.webp"
                   alt="Hakadogs"
-                  width={112}
-                  height={112}
+                  width={64}
+                  height={64}
                   className="object-contain brightness-0 invert"
                   quality={85}
                 />
               </div>
-              <div className="text-lg font-bold text-sage mt-3 text-center md:text-left">BE HAKA!</div>
+              <div className="text-lg font-bold text-sage text-center md:text-left">BE HAKA!</div>
             </div>
-            <p className="text-sm text-gray-300 mb-4">
+            
+            <p className="text-sm text-gray-300 mb-4 text-center md:text-left">
               Educación canina profesional con más de 15 años de experiencia.
             </p>
           </div>
