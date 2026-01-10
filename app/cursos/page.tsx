@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { BookOpen, Download, ShoppingCart, CheckCircle, Mail, Clock, Loader2, ChevronDown } from 'lucide-react'
+import { BookOpen, Download, ShoppingCart, CheckCircle, Mail, Clock, Loader2, ChevronDown, MapPin, Phone, Calendar, ArrowRight } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { getAllCourses } from '@/lib/supabase/courses'
 import type { Course } from '@/lib/supabase/courses'
@@ -363,6 +363,101 @@ export default function CursosPage() {
                   )}
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Banner CTA Servicios Presenciales */}
+      <section className="py-16 bg-gradient-to-br from-forest/5 via-sage/5 to-cream">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-gradient-to-br from-forest to-forest-dark rounded-3xl shadow-2xl overflow-hidden">
+            <div className="grid md:grid-cols-2 gap-8 items-center">
+              {/* Izquierda - Imagen/Decoración */}
+              <div className="relative h-full min-h-[400px] bg-gradient-to-br from-sage/30 to-forest-dark/30 p-12 flex items-center justify-center">
+                <div className="text-center">
+                  <div className="inline-flex items-center justify-center w-32 h-32 bg-white/20 backdrop-blur-sm rounded-full mb-6">
+                    <MapPin className="w-16 h-16 text-white" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4 max-w-sm">
+                    <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 text-center border border-white/20">
+                      <div className="text-3xl font-bold text-white mb-1">+8</div>
+                      <div className="text-xs text-white/90 font-medium">Años Experiencia</div>
+                    </div>
+                    <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 text-center border border-white/20">
+                      <div className="text-3xl font-bold text-white mb-1">+500</div>
+                      <div className="text-xs text-white/90 font-medium">Perros Educados</div>
+                    </div>
+                    <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 text-center border border-white/20">
+                      <div className="text-3xl font-bold text-white mb-1">100%</div>
+                      <div className="text-xs text-white/90 font-medium">Positivo</div>
+                    </div>
+                    <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 text-center border border-white/20">
+                      <div className="text-3xl font-bold text-white mb-1">1 a 1</div>
+                      <div className="text-xs text-white/90 font-medium">Personalizado</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Derecha - Contenido */}
+              <div className="p-8 md:p-12 text-white">
+                <div className="inline-flex items-center gap-2 bg-gold/20 px-4 py-2 rounded-full mb-4">
+                  <MapPin className="w-4 h-4 text-gold" />
+                  <span className="text-gold font-semibold text-sm">Servicios Presenciales</span>
+                </div>
+                
+                <h2 className="text-3xl md:text-4xl font-bold mb-4 leading-tight">
+                  ¿Vives cerca de Archena?
+                </h2>
+                
+                <p className="text-lg text-white/90 mb-6 leading-relaxed">
+                  Si te encuentras en <strong className="text-white">Archena, Murcia</strong> o localidades cercanas 
+                  (radio de 40 km), puedes optar por nuestros <strong className="text-white">servicios presenciales de educación canina</strong>. 
+                  Atención personalizada 1 a 1, en tu entorno o en exteriores.
+                </p>
+
+                <ul className="space-y-3 mb-8">
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="w-6 h-6 text-gold flex-shrink-0 mt-0.5" />
+                    <span className="text-white/95">Sesiones personalizadas adaptadas a tu perro</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="w-6 h-6 text-gold flex-shrink-0 mt-0.5" />
+                    <span className="text-white/95">Educación en tu hogar o en espacios exteriores</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="w-6 h-6 text-gold flex-shrink-0 mt-0.5" />
+                    <span className="text-white/95">Seguimiento continuo con resultados garantizados</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle className="w-6 h-6 text-gold flex-shrink-0 mt-0.5" />
+                    <span className="text-white/95">+8 años de experiencia y +500 perros educados</span>
+                  </li>
+                </ul>
+
+                <div className="flex flex-wrap gap-4">
+                  <Link
+                    href="/servicios"
+                    className="inline-flex items-center gap-2 bg-white hover:bg-white/90 text-forest px-6 py-3 rounded-xl font-bold transition-all shadow-lg hover:shadow-xl"
+                  >
+                    Ver Servicios Presenciales
+                    <ArrowRight className="w-5 h-5" />
+                  </Link>
+                  <Link
+                    href="/contacto"
+                    className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 border-2 border-white text-white px-6 py-3 rounded-xl font-bold transition-all backdrop-blur-sm"
+                  >
+                    <Phone className="w-5 h-5" />
+                    Contactar
+                  </Link>
+                </div>
+
+                <p className="text-sm text-white/70 mt-6 flex items-center gap-2">
+                  <MapPin className="w-4 h-4" />
+                  Zona de cobertura: Archena, Murcia y alrededores (40 km)
+                </p>
+              </div>
             </div>
           </div>
         </div>
