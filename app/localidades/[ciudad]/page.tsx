@@ -125,6 +125,72 @@ export default function LocalidadPage({ params }: { params: { ciudad: string } }
             <AboutSection />
           )}
 
+          {/* Sección adicional de Cursos Online (complementaria) */}
+          <section className="py-16 bg-gradient-to-br from-sage/10 to-cream">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12 border-2 border-forest/10">
+                <div className="grid md:grid-cols-2 gap-8 items-center">
+                  {/* Izquierda - Texto */}
+                  <div>
+                    <div className="inline-flex items-center gap-2 bg-gold/20 px-4 py-2 rounded-full mb-4">
+                      <span className="text-gold font-semibold">🎓 Formación Online</span>
+                    </div>
+                    <h2 className="text-3xl font-bold text-forest-dark mb-4">
+                      ¿Prefieres aprender desde casa?
+                    </h2>
+                    <p className="text-gray-600 mb-6 leading-relaxed">
+                      Además de nuestros servicios presenciales en {city.name}, también ofrecemos 
+                      <strong className="text-forest"> cursos online completos</strong> que puedes seguir 
+                      a tu ritmo. Perfectos si prefieres la flexibilidad del aprendizaje online o 
+                      quieres complementar tus sesiones presenciales.
+                    </p>
+                    <ul className="space-y-3 mb-6">
+                      <li className="flex items-center gap-2 text-gray-700">
+                        ✅ Mismo contenido profesional que sesiones presenciales
+                      </li>
+                      <li className="flex items-center gap-2 text-gray-700">
+                        ✅ Acceso 24/7 desde cualquier dispositivo
+                      </li>
+                      <li className="flex items-center gap-2 text-gray-700">
+                        ✅ Soporte directo del educador
+                      </li>
+                      <li className="flex items-center gap-2 text-gray-700">
+                        ✅ Complementa tus sesiones presenciales
+                      </li>
+                    </ul>
+                    <Link
+                      href="/cursos"
+                      className="inline-flex items-center gap-2 bg-forest hover:bg-forest-dark text-white px-6 py-3 rounded-xl font-semibold transition-all"
+                    >
+                      Explorar Cursos Online
+                      <ArrowRight className="w-5 h-5" />
+                    </Link>
+                  </div>
+
+                  {/* Derecha - Stats */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-gradient-to-br from-forest/10 to-forest/5 rounded-2xl p-6 text-center border-2 border-forest/20">
+                      <div className="text-4xl font-bold text-forest mb-2">11+</div>
+                      <div className="text-sm text-gray-600 font-medium">Cursos Disponibles</div>
+                    </div>
+                    <div className="bg-gradient-to-br from-gold/10 to-gold/5 rounded-2xl p-6 text-center border-2 border-gold/20">
+                      <div className="text-4xl font-bold text-gold mb-2">24/7</div>
+                      <div className="text-sm text-gray-600 font-medium">Acceso Total</div>
+                    </div>
+                    <div className="bg-gradient-to-br from-forest/10 to-forest/5 rounded-2xl p-6 text-center border-2 border-forest/20">
+                      <div className="text-4xl font-bold text-forest mb-2">HD</div>
+                      <div className="text-sm text-gray-600 font-medium">Vídeos Calidad</div>
+                    </div>
+                    <div className="bg-gradient-to-br from-gold/10 to-gold/5 rounded-2xl p-6 text-center border-2 border-gold/20">
+                      <div className="text-4xl font-bold text-gold mb-2">100%</div>
+                      <div className="text-sm text-gray-600 font-medium">Online Flexible</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
           <CTASection />
         </>
       )}
