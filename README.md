@@ -102,9 +102,12 @@ hakadogs-app/
 │   │   ├── auth/             # Login/Registro cursos
 │   │   ├── mi-escuela/       # Dashboard alumno
 │   │   └── comprar/          # Proceso de compra
-│   ├── administrator/        # Panel admin ⭐
-│   │   ├── page.tsx          # Dashboard admin
-│   │   └── cursos/           # Gestión de cursos
+│   ├── administrator/        # Panel admin completo ⭐⭐⭐
+│   │   ├── layout.tsx        # Layout con pestañas y auth
+│   │   ├── page.tsx          # Dashboard principal
+│   │   ├── usuarios/         # Gestión de usuarios
+│   │   ├── cursos/           # Gestión de cursos
+│   │   └── contactos/        # Gestión de contactos
 │   ├── cliente/              # Área cliente (obsoleto)
 │   ├── legal/                # Términos y privacidad
 │   └── qr/[id]/             # QR público
@@ -120,7 +123,10 @@ hakadogs-app/
 │   ├── supabase/            # Cliente y funciones
 │   │   ├── client.ts
 │   │   ├── auth.ts          # Autenticación Supabase
-│   │   └── courses.ts       # API de cursos
+│   │   ├── courses.ts       # API de cursos
+│   │   ├── dashboard.ts     # API del dashboard admin
+│   │   ├── users.ts         # API de usuarios
+│   │   └── contacts.ts      # API de contactos
 │   ├── utils.ts
 │   └── cities.ts            # 56 ciudades
 └── public/
@@ -146,8 +152,23 @@ hakadogs-app/
 - ✅ Página `/cursos` con FAQ accordion
 - ✅ **Banner CTA cruzado**: cursos → servicios presenciales
 
-### 👨‍💼 Panel Administrativo
-- ✅ Dashboard con estadísticas reales
+### 👨‍💼 Panel Administrativo Completo
+#### **Dashboard Principal**
+- ✅ Dashboard con estadísticas en tiempo real
+- ✅ **6 tarjetas de KPIs**: Usuarios, Cursos, Ventas, Ingresos, Contactos, Progreso
+- ✅ **Actividad reciente**: Últimos usuarios, ventas y contactos
+- ✅ Navegación por pestañas sticky (Dashboard, Usuarios, Cursos, Contactos)
+- ✅ Layout unificado con header y logout
+
+#### **Gestión de Usuarios**
+- ✅ Listado completo de usuarios con búsqueda
+- ✅ Filtros por rol (admin, instructor, user)
+- ✅ **Cambiar rol de usuario desde modal**
+- ✅ Estadísticas de usuarios por rol
+- ✅ Ver fecha de registro y último acceso
+- ✅ Toast de confirmación en cambios
+
+#### **Gestión de Cursos**
 - ✅ **Tabla de cursos con ordenación, paginación y búsqueda**
 - ✅ **Selector de items por página**
 - ✅ Crear cursos con múltiples lecciones
@@ -163,6 +184,19 @@ hakadogs-app/
 - ✅ **Modales y toasts personalizados** (sin alerts nativos)
 - ✅ Vista previa gratuita por lección
 - ✅ Estadísticas de ventas e ingresos
+
+#### **Gestión de Contactos**
+- ✅ **Sistema completo de workflow** de mensajes
+- ✅ **Estados editables directamente desde tabla**: Pendiente, En Progreso, Respondido, Cerrado
+- ✅ Búsqueda por nombre, email o asunto
+- ✅ Filtros por estado con contador
+- ✅ **Modal de detalles** con info completa
+- ✅ Notas internas para admins
+- ✅ **Marcar como respondido** (registra quién y cuándo)
+- ✅ Indicador de tiempo desde creación (< 24h en ámbar)
+- ✅ Eliminar con confirmación
+- ✅ Estadísticas de contactos por estado
+- ✅ Colores distintivos por estado (rojo, ámbar, verde, gris)
 
 ### 🎓 Metodología BE HAKA
 - ✅ **Página `/metodologia` completamente renovada**
@@ -229,6 +263,19 @@ hakadogs-app/
 4. **user_lesson_progress** - Progreso por lección
 5. **user_course_progress** - Progreso general
 6. **course_purchases** - Compras de cursos
+
+### Tablas del Panel Admin
+7. **user_roles** - Roles de usuarios (admin, instructor, user)
+8. **contacts** - Mensajes del formulario de contacto
+
+### Funciones RPC del Dashboard
+- `get_dashboard_stats()` - Estadísticas generales completas
+- `get_recent_users(limit)` - Usuarios más recientes
+- `get_recent_sales(limit)` - Ventas más recientes
+- `get_recent_contacts(limit)` - Contactos más recientes
+- `get_sales_chart_data()` - Datos para gráficas
+- `get_top_selling_courses(limit)` - Cursos más vendidos
+- `get_conversion_metrics()` - Métricas de conversión
 
 ### Seguridad
 - ✅ Row Level Security (RLS)
@@ -315,6 +362,12 @@ Deploy automático
 - `SEO_LOCAL_Y_LEGAL.md` - Legal + localidades
 - `supabase/schema_cursos.sql` - Esquema de base de datos de cursos
 - `supabase/storage_setup.sql` - Configuración de Storage y RLS
+
+### Panel de Administración
+- `ADMIN_PANEL_COMPLETE.md` - Arquitectura completa del panel admin
+- `ADMIN_SETUP_GUIDE.md` - Guía de instalación paso a paso
+- `supabase/EJECUTAR_ESTO_PARA_DASHBOARD.sql` - Script SQL consolidado
+- `supabase/VERIFICAR_FUNCIONES_DASHBOARD.sql` - Script de verificación
 
 ### Performance & Optimization
 - `LCP_OPTIMIZATION_REPORT.md` - Optimización LCP (5.3s → < 2.3s)
