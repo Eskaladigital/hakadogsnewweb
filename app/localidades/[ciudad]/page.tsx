@@ -155,10 +155,16 @@ export default function LocalidadPage({ params }: { params: { ciudad: string } }
                   </p>
                 )}
                 <div className="flex flex-wrap gap-4 justify-center">
-                  <Link href="/cursos" className="btn-primary">
+                  <Link 
+                    href="/cursos" 
+                    className="inline-flex items-center gap-2 bg-forest hover:bg-forest-dark text-white px-8 py-4 rounded-xl font-semibold transition-all"
+                  >
                     Ver Cursos Online
                   </Link>
-                  <Link href="/servicios" className="btn-secondary">
+                  <Link 
+                    href="/servicios" 
+                    className="inline-flex items-center gap-2 bg-white hover:bg-gray-50 text-forest border-2 border-forest px-8 py-4 rounded-xl font-semibold transition-all"
+                  >
                     Info Servicios Presenciales
                   </Link>
                 </div>

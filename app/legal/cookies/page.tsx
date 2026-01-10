@@ -1,11 +1,7 @@
-import { Metadata } from 'next'
+'use client'
+
 import Link from 'next/link'
 import { Cookie, Shield, ChevronRight } from 'lucide-react'
-
-export const metadata: Metadata = {
-  title: 'Política de Cookies - Hakadogs',
-  description: 'Información sobre el uso de cookies en Hakadogs - Educación Canina Profesional',
-}
 
 export default function CookiesPage() {
   return (
