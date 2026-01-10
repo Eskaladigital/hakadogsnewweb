@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Plus, GripVertical, Trash2, Video, FileText, ChevronDown, ChevronUp } from 'lucide-react'
+import { Plus, GripVertical, Trash2, Video, Headphones, FileText, ChevronDown, ChevronUp } from 'lucide-react'
 import dynamic from 'next/dynamic'
 
 const TinyMCEEditor = dynamic(() => import('@/components/admin/TinyMCEEditor'), {
@@ -16,6 +16,7 @@ interface Lesson {
   duration: number
   videoUrl: string
   videoProvider: string
+  audioUrl: string
   isFreePreview: boolean
   resources: Resource[]
   isExpanded: boolean
@@ -43,6 +44,7 @@ export default function LessonsManager({ lessons, onChange }: LessonsManagerProp
       duration: 5,
       videoUrl: '',
       videoProvider: 'youtube',
+      audioUrl: '',
       isFreePreview: false,
       resources: [],
       isExpanded: true
@@ -254,6 +256,24 @@ export default function LessonsManager({ lessons, onChange }: LessonsManagerProp
                       className="col-span-3 px-3 py-2 border border-gray-300 rounded-lg"
                     />
                   </div>
+                </div>
+
+                {/* Audio */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
+                    <Headphones className="w-4 h-4 mr-2" />
+                    Audio de la lección (opcional)
+                  </label>
+                  <input
+                    type="text"
+                    value={lesson.audioUrl || ''}
+                    onChange={(e) => updateLesson(index, 'audioUrl', e.target.value)}
+                    placeholder="URL del archivo de audio (MP3, etc.)"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Puedes subir el audio a tu servidor o usar un servicio como Soundcloud, Google Drive, etc.
+                  </p>
                 </div>
 
                 {/* Contenido */}

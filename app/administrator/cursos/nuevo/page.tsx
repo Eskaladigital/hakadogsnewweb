@@ -21,6 +21,7 @@ interface Lesson {
   duration: number
   videoUrl: string
   videoProvider: string
+  audioUrl: string
   isFreePreview: boolean
   resources: any[]
   isExpanded: boolean
@@ -173,6 +174,7 @@ export default function NuevoCursoPage() {
         duration_minutes: lesson.duration,
         video_url: lesson.videoUrl || null,
         video_provider: lesson.videoUrl ? (lesson.videoProvider as any) : null,
+        audio_url: lesson.audioUrl || null,
         is_free_preview: lesson.isFreePreview,
       }))
 

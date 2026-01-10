@@ -21,6 +21,7 @@ interface LessonWithResources extends Lesson {
   isExpanded: boolean
   videoUrl?: string
   videoProvider?: string
+  audioUrl?: string
   isFreePreview?: boolean
 }
 
@@ -91,6 +92,7 @@ export default function EditarCursoPage() {
             isExpanded: false,
             videoUrl: lesson.video_url || '',
             videoProvider: lesson.video_provider || 'youtube',
+            audioUrl: lesson.audio_url || '',
             isFreePreview: lesson.is_free_preview || false
           } as LessonWithResources
         })
@@ -233,6 +235,7 @@ export default function EditarCursoPage() {
           duration_minutes: lesson.duration_minutes,
           video_url: lesson.videoUrl || null,
           video_provider: lesson.videoUrl ? (lesson.videoProvider as any) : null,
+          audio_url: lesson.audioUrl || null,
           is_free_preview: lesson.isFreePreview,
         })
 
@@ -280,6 +283,7 @@ export default function EditarCursoPage() {
           duration_minutes: lesson.duration_minutes,
           video_url: lesson.videoUrl || null,
           video_provider: lesson.videoUrl ? (lesson.videoProvider as any) : null,
+          audio_url: lesson.audioUrl || null,
           is_free_preview: lesson.isFreePreview,
         }))
 
@@ -493,6 +497,7 @@ export default function EditarCursoPage() {
                               duration_minutes: ul.duration,
                               video_url: ul.videoUrl || null,
                               video_provider: ul.videoUrl ? (ul.videoProvider as any) : null,
+                              audio_url: ul.audioUrl || null,
                               is_free_preview: ul.isFreePreview,
                               created_at: existingLesson?.created_at || new Date().toISOString(),
                               updated_at: new Date().toISOString(),
