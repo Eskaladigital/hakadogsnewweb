@@ -82,17 +82,23 @@ export default function RootLayout({
   return (
     <html lang="es">
       <head>
-        {/* Google Analytics */}
+        {/* Preconnect a dominios externos para reducir latencia */}
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        
+        {/* Google Analytics - estrategia lazyOnload para no bloquear renderizado */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-NXPT2KNYGJ"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
-        <Script id="google-analytics" strategy="afterInteractive">
+        <Script id="google-analytics" strategy="lazyOnload">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-NXPT2KNYGJ');
+            gtag('config', 'G-NXPT2KNYGJ', {
+              page_path: window.location.pathname,
+            });
           `}
         </Script>
       </head>
