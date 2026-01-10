@@ -14,6 +14,11 @@ const LessonsManager = dynamic(() => import('@/components/admin/LessonsManager')
   </div>
 })
 
+const TinyMCEEditor = dynamic(() => import('@/components/admin/TinyMCEEditor'), {
+  ssr: false,
+  loading: () => <div className="w-full h-32 bg-gray-100 rounded-lg animate-pulse" />
+})
+
 interface Lesson {
   id: string
   title: string
@@ -100,7 +105,14 @@ export default function NuevoCursoPage() {
 
       const data = await response.json()
       if (data.description) {
-        handleInputChange('shortDescription', data.description)
+        // Convertir saltos de línea en párrafos HTML
+        const htmlDescription = data.description
+          .split('\n\n')
+          .filter((p: string) => p.trim())
+          .map((p: string) => `<p>${p.trim()}</p>`)
+          .join('\n')
+        
+        handleInputChange('shortDescription', htmlDescription)
       }
     } catch (error) {
       console.error('Error generando descripción:', error)
@@ -309,12 +321,10 @@ export default function NuevoCursoPage() {
                               {generatingDescription ? 'Generando...' : 'Generar con IA'}
                             </button>
                           </div>
-                          <textarea
+                          <TinyMCEEditor
                             value={formData.shortDescription}
-                            onChange={(e) => handleInputChange('shortDescription', e.target.value)}
-                            rows={3}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest"
-                            required
+                            onChange={(content) => handleInputChange('shortDescription', content)}
+                            height={200}
                           />
                         </div>
 
