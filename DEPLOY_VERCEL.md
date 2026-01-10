@@ -6,20 +6,42 @@
 **Fecha:** Enero 2026  
 **Plataforma:** Vercel + GitHub  
 **Framework:** Next.js 14  
-**Estado:** ✅ DESPLEGADO Y FUNCIONANDO
+**Estado:** ✅ DESPLEGADO EN HAKADOGS.COM
+
+**🎉 DOMINIO PROPIO CONFIGURADO Y FUNCIONANDO**
+
+---
+
+## 🌐 URLs EN PRODUCCIÓN
+
+### URLs Oficiales:
+- **Principal:** https://www.hakadogs.com 🎯
+- **Sin www:** https://hakadogs.com (redirige a www)
+- **Vercel (backup):** https://hakadogsnewweb.vercel.app
+
+### URLs Administrativas:
+- **Panel Admin:** https://www.hakadogs.com/administrator
+- **Login:** https://www.hakadogs.com/cursos/auth/login
+- **Mi Escuela:** https://www.hakadogs.com/cursos/mi-escuela
 
 ---
 
 ## ✅ PREREQUISITOS
 
 ### 1. Cuenta Vercel
-- [ ] Cuenta de Vercel creada (https://vercel.com)
-- [ ] Cuenta conectada con GitHub
+- [x] ✅ Cuenta de Vercel creada (https://vercel.com)
+- [x] ✅ Cuenta conectada con GitHub
 
 ### 2. Repositorio GitHub
-- [x] ✅ Código subido a https://github.com/Eskaladigital/HACKADOGS.git
+- [x] ✅ Código subido a https://github.com/Eskaladigital/hakadogsnewweb.git
 - [x] ✅ 150+ archivos, ~35,000 líneas
 - [x] ✅ Rama `main` activa
+
+### 3. Dominio Configurado
+- [x] ✅ hakadogs.com adquirido en OVH
+- [x] ✅ DNS configurados correctamente
+- [x] ✅ SSL activo (HTTPS)
+- [x] ✅ Correo funcionando sin interrupciones
 
 ---
 
@@ -62,14 +84,18 @@ Vercel detectará automáticamente que es Next.js.
 
 ```bash
 # Supabase (Base de datos)
-NEXT_PUBLIC_SUPABASE_URL=tu_url_supabase
-NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_anon_key
+NEXT_PUBLIC_SUPABASE_URL=https://jfmqkjoffagjmavmgk.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=[configurada]
+SUPABASE_SERVICE_ROLE_KEY=[configurada]
 
 # TinyMCE (Editor de contenido para cursos)
-NEXT_PUBLIC_TINYMCE_API_KEY=tu_tinymce_api_key
+NEXT_PUBLIC_TINYMCE_API_KEY=[configurada]
 
-# App URL (Opcional)
-NEXT_PUBLIC_APP_URL=https://tu-dominio.vercel.app
+# OpenAI (Generación de descripciones con IA)
+OPENAI_API_KEY=[configurada]
+
+# App URL (Dominio propio)
+NEXT_PUBLIC_SITE_URL=https://www.hakadogs.com
 ```
 
 **Dónde obtener las API keys:**
@@ -86,43 +112,38 @@ NEXT_PUBLIC_APP_URL=https://tu-dominio.vercel.app
 
 ## 🌐 CONFIGURAR DOMINIO PERSONALIZADO
 
-### Paso 1: Añadir Dominio
+### ✅ DOMINIO YA CONFIGURADO
 
-1. En Vercel, ir a tu proyecto
-2. Click en "**Settings**" → "**Domains**"
-3. Click "**Add**"
-4. Ingresar tu dominio: `hakadogs.com`
-5. Click "**Add**"
+**Dominio:** hakadogs.com  
+**Proveedor DNS:** OVH  
+**Estado:** 🟢 ACTIVO Y FUNCIONANDO
 
-### Paso 2: Configurar DNS
+### Configuración DNS aplicada:
 
-Vercel te dará los registros DNS a añadir:
+```dns
+# Registro A para dominio raíz
+hakadogs.com          A      216.198.7.91
 
-**Opción A: CNAME (Recomendado)**
-```
-Type    Name    Value
-CNAME   www     cname.vercel-dns.com
-A       @       76.76.21.21
+# Registro CNAME para www
+www.hakadogs.com      CNAME  8e570a4155edc2da.vercel-dns-017.com.
 ```
 
-**Opción B: Nameservers**
-Si usas nameservers de Vercel:
-```
-ns1.vercel-dns.com
-ns2.vercel-dns.com
-```
+### ✅ Verificación completada:
+- [x] DNS propagados correctamente
+- [x] SSL activo (certificado automático de Vercel)
+- [x] HTTPS forzado en todas las páginas
+- [x] Redirecciones funcionando (http→https, no-www→www)
+- [x] Correo electrónico funcionando (registros MX intactos)
 
-### Paso 3: Verificar
+### 📧 Correo electrónico protegido:
 
-1. Añadir los registros en tu proveedor de dominio
-2. Volver a Vercel y click "**Refresh**"
-3. Esperar propagación DNS (5 minutos - 48 horas)
-4. Vercel configurará automáticamente SSL
+Los siguientes registros **NO fueron modificados** y el correo sigue funcionando:
+- ✅ MX records (mx1, mx2, mx3.mail.ovh.net)
+- ✅ SPF record (v=spf1 include:mx.ovh.com ~all)
+- ✅ DKIM records (ovhmo4473789-selector)
+- ✅ Autoconfig/autodiscover
 
-### Dominios Sugeridos
-- `hakadogs.com` (principal)
-- `www.hakadogs.com` (alternativo)
-- `app.hakadogs.com` (si separas las apps)
+**El cambio de DNS solo afectó al sitio web, no al correo.** ✅
 
 ---
 
@@ -347,24 +368,28 @@ async headers() {
 
 ## 📈 PRÓXIMOS PASOS
 
-### Fase 1: MVP Live (AHORA)
-- [x] Código en GitHub
-- [x] Deploy en Vercel
-- [ ] Dominio configurado
-- [ ] SSL activo
-- [ ] Supabase configurado
+### ✅ FASE 1: MVP LIVE - COMPLETADO
+- [x] ✅ Código en GitHub
+- [x] ✅ Deploy en Vercel
+- [x] ✅ Dominio hakadogs.com configurado
+- [x] ✅ SSL activo
+- [x] ✅ Supabase configurado
+- [x] ✅ Google Analytics implementado
+- [x] ✅ Sistema de seguridad RLS activado
 
-### Fase 2: Contenido
+### Fase 2: Contenido (ACTUAL)
 - [ ] Crear cursos reales con TinyMCE
 - [ ] Subir videos a YouTube/Vimeo
 - [ ] Crear recursos descargables (PDFs)
 - [ ] Testimonios reales de clientes
+- [ ] Completar artículos de blog
 
 ### Fase 3: Marketing
-- [ ] Google Analytics
+- [x] ✅ Google Analytics (G-FVPHYL582P)
 - [ ] Facebook Pixel
 - [ ] Email marketing (Resend/Mailchimp)
-- [ ] Sistema de pagos (Stripe)
+- [ ] Sistema de pagos real (Stripe/Redsys)
+- [ ] Campañas de publicidad
 
 ---
 
@@ -407,8 +432,8 @@ async headers() {
 
 ---
 
-**Última actualización:** Enero 2026  
-**Estado:** Listo para deploy  
-**Siguiente paso:** Importar proyecto en Vercel
+**Última actualización:** 6 Enero 2026  
+**Estado:** ✅ LIVE EN HAKADOGS.COM  
+**Siguiente paso:** Crear contenido real de cursos
 
-**¡Hakadogs en Vercel es más rápido y fácil que nunca! 🚀🐕**
+**🎉 ¡Hakadogs en producción con dominio propio! 🚀🐕**

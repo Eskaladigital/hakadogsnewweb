@@ -29,14 +29,16 @@ Hakadogs es una plataforma web completa para educación canina profesional que i
 ## 🚀 ACCESO A LA APLICACIÓN
 
 ### 🌐 URL de Producción
-**La aplicación está desplegada en Vercel**
+**✅ DOMINIO PROPIO CONFIGURADO - APLICACIÓN EN VIVO**
 
-- **URL Principal:** https://[tu-dominio].vercel.app
-- **Repositorio GitHub:** https://github.com/Eskaladigital/HACKADOGS.git
+- **URL Principal:** https://www.hakadogs.com 🎉
+- **Dominio Alternativo:** https://hakadogs.com
+- **URL Vercel:** https://hakadogsnewweb.vercel.app
+- **Repositorio GitHub:** https://github.com/Eskaladigital/hakadogsnewweb.git
 - **Versión:** 1.0.0 PRODUCTION
 
-### ⚠️ IMPORTANTE
-**Esta aplicación se despliega automáticamente en Vercel**. Cada push a la rama `main` desencadena un deploy automático.
+### 🎯 HITO ALCANZADO
+**La aplicación está completamente desplegada con dominio propio** configurado mediante OVH + Vercel. DNS correctamente configurados, SSL activo, y correo electrónico funcionando sin interrupciones.
 
 ---
 
@@ -227,7 +229,7 @@ SUPABASE_SERVICE_ROLE_KEY=tu_service_role_key_aqui
 NEXT_PUBLIC_TINYMCE_API_KEY=tu_api_key_aqui
 
 # URL de la app
-NEXT_PUBLIC_SITE_URL=https://tu-dominio.vercel.app
+NEXT_PUBLIC_SITE_URL=https://www.hakadogs.com
 ```
 
 ### CI/CD Automático
@@ -315,9 +317,11 @@ Este proyecto es propiedad privada de Hakadogs y no puede ser reproducido, distr
 
 ### 🚀 Deploy
 
-**Plataforma:** ✅ Vercel  
+**Plataforma:** ✅ Vercel + Dominio Propio (hakadogs.com)  
 **Versión:** 1.0.0 PRODUCTION  
 **CI/CD:** Activo (push → build → deploy automático)  
+**DNS:** Configurado con OVH  
+**SSL:** Activo (HTTPS)  
 **Última actualización:** Enero 2026
 
 ---
@@ -333,9 +337,10 @@ Para cualquier duda o problema:
 
 **Última actualización**: Enero 2026  
 **Versión**: 1.0.0 PRODUCTION  
-**Estado**: ✅ DESPLEGADO EN VERCEL  
+**Estado**: ✅ LIVE EN HAKADOGS.COM  
+**Dominio**: https://www.hakadogs.com  
 **Lanzamiento**: Versión 1.0 - Enero 2026
 
 ---
 
-# 🏆 ¡Hakadogs está listo para cambiar la educación canina en España! 🐕
+# 🏆 ¡Hakadogs está LIVE y listo para cambiar la educación canina en España! 🐕 🚀

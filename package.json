@@ -1,6 +1,12 @@
 {
   "name": "hakadogs-app",
   "version": "1.0.0",
+  "description": "Plataforma de educación canina profesional con sistema de cursos online",
+  "homepage": "https://www.hakadogs.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Eskaladigital/hakadogsnewweb.git"
+  },
   "private": true,
   "scripts": {
     "dev": "next dev",
