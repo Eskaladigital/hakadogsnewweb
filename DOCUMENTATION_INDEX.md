@@ -116,6 +116,36 @@
 
 ---
 
+## 👨‍💼 ADMINISTRACIÓN
+
+### 16. [ADMIN_PANEL_COMPLETE.md](./ADMIN_PANEL_COMPLETE.md)
+**Panel de administración completo**
+- Dashboard con estadísticas
+- Gestión de usuarios y roles
+- Gestión de cursos
+- Gestión de contactos
+- Arquitectura SQL + TypeScript + React
+
+### 17. [ADMIN_SETUP_GUIDE.md](./ADMIN_SETUP_GUIDE.md)
+**Guía de configuración del panel admin**
+- Instalación paso a paso
+- Scripts SQL a ejecutar
+- Asignación de roles admin
+- Troubleshooting común
+
+---
+
+## 🐛 FIXES & TROUBLESHOOTING
+
+### 18. [FIX_BUILD_TYPESCRIPT.md](./FIX_BUILD_TYPESCRIPT.md)
+**Fix: Error de build por tipos faltantes**
+- Error TypeScript en contacts.ts
+- Solución: Tipos DB para contacts y user_roles
+- Guía para futuras tablas
+- Build exitoso en Vercel
+
+---
+
 ## 🗄️ BASE DE DATOS
 
 ### 14. [supabase/README.md](./supabase/README.md)
