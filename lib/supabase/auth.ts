@@ -164,7 +164,7 @@ export const getSession = async () => {
       try {
         // Usar una función SQL que lea directamente desde auth.users
         // Nota: Esto requiere permisos especiales, pero es más confiable
-        const { data: roleData, error: roleError } = await supabase.rpc('get_user_role', {
+        const { data: roleData, error: roleError } = await (supabase.rpc as any)('get_user_role', {
           user_id: data.session.user.id
         }).single()
         
@@ -187,9 +187,9 @@ export const getSession = async () => {
           .eq('id', data.session.user.id)
           .single()
         
-        if (!profileError && profileData && profileData.role === 'admin') {
+        if (!profileError && profileData && (profileData as any).role === 'admin') {
           role = 'admin'
-          console.log('✅ Rol encontrado en tabla profiles:', profileData.role)
+          console.log('✅ Rol encontrado en tabla profiles:', (profileData as any).role)
         }
       } catch (profileErr) {
         // Si la tabla profiles no existe o hay error, continuar con el rol por defecto
