@@ -106,6 +106,22 @@ export default function NuevoCursoPage() {
     }
   }
 
+  const addWhatYouLearnPoint = () => {
+    setFormData(prev => ({
+      ...prev,
+      whatYouLearn: [...prev.whatYouLearn, '']
+    }))
+  }
+
+  const removeWhatYouLearnPoint = (index: number) => {
+    if (formData.whatYouLearn.length <= 1) {
+      alert('Debe haber al menos un punto en "Qué aprenderás"')
+      return
+    }
+    const newArray = formData.whatYouLearn.filter((_, i) => i !== index)
+    setFormData(prev => ({ ...prev, whatYouLearn: newArray }))
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
