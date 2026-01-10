@@ -98,12 +98,9 @@ export default function ComprarCursoPage({ params }: { params: { cursoId: string
             <div className="lg:col-span-2">
               <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
                 <div className={`bg-gradient-to-r ${curso.color} rounded-xl p-8 text-white mb-8`}>
-                  <div className="flex items-center mb-6">
-                    <span className="text-6xl mr-4">{curso.icon}</span>
-                    <div>
-                      <h1 className="text-3xl font-bold mb-2">{curso.title}</h1>
-                      <p className="text-white/90 text-lg">{curso.description}</p>
-                    </div>
+                  <div className="mb-6">
+                    <h1 className="text-3xl font-bold mb-2">{curso.title}</h1>
+                    <p className="text-white/90 text-lg">{curso.description}</p>
                   </div>
                   <div className="flex items-center space-x-6 text-sm">
                     <span className="flex items-center">

@@ -233,12 +233,9 @@ export default function MiEscuelaPage() {
                           )}
                         </div>
                         
-                        <div className="flex items-start space-x-4 mb-4">
-                          <span className="text-4xl">{curso.icon}</span>
-                          <div className="flex-1">
-                            <h3 className="text-xl font-bold text-gray-900 mb-2">{curso.title}</h3>
-                            <p className="text-gray-600 text-sm line-clamp-2">{curso.short_description}</p>
-                          </div>
+                        <div className="mb-4">
+                          <h3 className="text-xl font-bold text-gray-900 mb-2">{curso.title}</h3>
+                          <p className="text-gray-600 text-sm line-clamp-2">{curso.short_description}</p>
                         </div>
                         
                         {/* Progress Bar */}
@@ -328,12 +325,9 @@ export default function MiEscuelaPage() {
                           <Lock className="w-5 h-5 text-gray-400" />
                         </div>
                         
-                        <div className="flex items-start space-x-4 mb-4">
-                          <span className="text-4xl">{curso.icon}</span>
-                          <div className="flex-1">
-                            <h3 className="text-xl font-bold text-gray-900 mb-2">{curso.title}</h3>
-                            <p className="text-gray-600 text-sm line-clamp-2">{curso.short_description}</p>
-                          </div>
+                        <div className="mb-4">
+                          <h3 className="text-xl font-bold text-gray-900 mb-2">{curso.title}</h3>
+                          <p className="text-gray-600 text-sm line-clamp-2">{curso.short_description}</p>
                         </div>
                         
                         {/* What you'll learn preview */}

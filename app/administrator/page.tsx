@@ -209,12 +209,9 @@ export default function AdministratorPage() {
                     {courses.map((course) => (
                       <tr key={course.id} className="hover:bg-gray-50 transition">
                         <td className="px-6 py-4">
-                          <div className="flex items-center">
-                            <span className="text-2xl mr-3">{course.icon}</span>
-                            <div>
-                              <p className="text-sm font-medium text-gray-900">{course.title}</p>
-                              <p className="text-xs text-gray-500">{course.slug}</p>
-                            </div>
+                          <div>
+                            <p className="text-sm font-medium text-gray-900">{course.title}</p>
+                            <p className="text-xs text-gray-500">{course.slug}</p>
                           </div>
                         </td>
                         <td className="px-6 py-4">

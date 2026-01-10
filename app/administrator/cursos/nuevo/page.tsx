@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
-import { ArrowLeft, Save } from 'lucide-react'
+import { ArrowLeft, Save, Sparkles, Plus, X } from 'lucide-react'
 
 const LessonsManager = dynamic(() => import('@/components/admin/LessonsManager'), {
   ssr: false,
@@ -28,6 +28,7 @@ interface Lesson {
 export default function NuevoCursoPage() {
   const router = useRouter()
   const [saving, setSaving] = useState(false)
+  const [generatingDescription, setGeneratingDescription] = useState(false)
   const [activeTab, setActiveTab] = useState<'info' | 'lessons'>('info')
   
   const [formData, setFormData] = useState({
@@ -35,7 +36,7 @@ export default function NuevoCursoPage() {
     slug: '',
     shortDescription: '',
     description: '',
-    icon: '🎓',
+    icon: '',
     price: '0',
     difficulty: 'basico',
     isFree: false,
@@ -70,6 +71,41 @@ export default function NuevoCursoPage() {
     setFormData(prev => ({ ...prev, whatYouLearn: newArray }))
   }
 
+  const handleGenerateDescription = async () => {
+    if (!formData.title.trim()) {
+      alert('Por favor, introduce primero el título del curso')
+      return
+    }
+
+    setGeneratingDescription(true)
+    try {
+      const response = await fetch('/api/generate-description', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: formData.title,
+          whatYouLearn: formData.whatYouLearn.filter(item => item.trim() !== '')
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error('Error al generar la descripción')
+      }
+
+      const data = await response.json()
+      if (data.description) {
+        handleInputChange('shortDescription', data.description)
+      }
+    } catch (error) {
+      console.error('Error generando descripción:', error)
+      alert('Error al generar la descripción. Por favor, inténtalo de nuevo.')
+    } finally {
+      setGeneratingDescription(false)
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
@@ -92,7 +128,7 @@ export default function NuevoCursoPage() {
         icon: formData.icon,
         price: parseFloat(formData.price),
         difficulty: formData.difficulty as 'basico' | 'intermedio' | 'avanzado',
-        what_you_learn: formData.whatYouLearn.filter(item => item.trim() !== ''),
+        what_you_learn: formData.whatYouLearn.filter(item => item.trim() !== '') || [],
         is_free: formData.isFree,
         is_published: formData.isPublished,
         thumbnail_url: formData.thumbnailUrl || null,
@@ -237,9 +273,20 @@ export default function NuevoCursoPage() {
                         </div>
 
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">
-                            Descripción Corta *
-                          </label>
+                          <div className="flex items-center justify-between mb-2">
+                            <label className="block text-sm font-semibold text-gray-700">
+                              Descripción Corta *
+                            </label>
+                            <button
+                              type="button"
+                              onClick={handleGenerateDescription}
+                              disabled={generatingDescription || !formData.title.trim()}
+                              className="text-xs bg-gradient-to-r from-forest to-sage text-white font-semibold py-1.5 px-3 rounded-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                            >
+                              <Sparkles className="w-3 h-3 mr-1.5" />
+                              {generatingDescription ? 'Generando...' : 'Generar con IA'}
+                            </button>
+                          </div>
                           <textarea
                             value={formData.shortDescription}
                             onChange={(e) => handleInputChange('shortDescription', e.target.value)}
@@ -250,20 +297,41 @@ export default function NuevoCursoPage() {
                         </div>
 
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-3">
-                            Qué aprenderás (4 puntos)
-                          </label>
+                          <div className="flex items-center justify-between mb-3">
+                            <label className="block text-sm font-semibold text-gray-700">
+                              Qué aprenderás ({formData.whatYouLearn.length} {formData.whatYouLearn.length === 1 ? 'punto' : 'puntos'})
+                            </label>
+                            <button
+                              type="button"
+                              onClick={addWhatYouLearnPoint}
+                              className="text-xs bg-forest text-white font-semibold py-1.5 px-3 rounded-lg hover:opacity-90 transition-all flex items-center"
+                            >
+                              <Plus className="w-3 h-3 mr-1.5" />
+                              Añadir punto
+                            </button>
+                          </div>
                           <div className="space-y-3">
                             {formData.whatYouLearn.map((item, index) => (
-                              <input
-                                key={index}
-                                type="text"
-                                value={item}
-                                onChange={(e) => handleWhatYouLearnChange(index, e.target.value)}
-                                placeholder={`Punto ${index + 1}`}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                                required
-                              />
+                              <div key={index} className="flex items-center gap-2">
+                                <input
+                                  type="text"
+                                  value={item}
+                                  onChange={(e) => handleWhatYouLearnChange(index, e.target.value)}
+                                  placeholder={`Punto ${index + 1}`}
+                                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg"
+                                  required
+                                />
+                                {formData.whatYouLearn.length > 1 && (
+                                  <button
+                                    type="button"
+                                    onClick={() => removeWhatYouLearnPoint(index)}
+                                    className="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition"
+                                    title="Eliminar punto"
+                                  >
+                                    <X className="w-4 h-4" />
+                                  </button>
+                                )}
+                              </div>
                             ))}
                           </div>
                         </div>
@@ -292,28 +360,6 @@ export default function NuevoCursoPage() {
                     <h3 className="text-lg font-bold text-gray-900 mb-4">Configuración</h3>
                     
                     <div className="space-y-4">
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
-                          Icono
-                        </label>
-                        <div className="grid grid-cols-4 gap-2">
-                          {iconOptions.slice(0, 8).map((icon) => (
-                            <button
-                              key={icon}
-                              type="button"
-                              onClick={() => handleInputChange('icon', icon)}
-                              className={`text-2xl p-2 rounded-lg border-2 transition ${
-                                formData.icon === icon
-                                  ? 'border-forest bg-forest/10'
-                                  : 'border-gray-200'
-                              }`}
-                            >
-                              {icon}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
                       <div>
                         <label className="block text-sm font-semibold text-gray-700 mb-2">
                           Precio (€)

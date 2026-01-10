@@ -53,12 +53,9 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
             </Link>
             <div className="flex items-start justify-between">
               <div>
-                <div className="flex items-center mb-4">
-                  <span className="text-5xl mr-4">{curso.icon}</span>
-                  <div>
-                    <h1 className="text-3xl md:text-4xl font-bold mb-2">{curso.title}</h1>
-                    <p className="text-white/90">{curso.description}</p>
-                  </div>
+                <div className="mb-4">
+                  <h1 className="text-3xl md:text-4xl font-bold mb-2">{curso.title}</h1>
+                  <p className="text-white/90">{curso.description}</p>
                 </div>
                 <div className="flex items-center space-x-6 text-sm">
                   <span className="flex items-center">

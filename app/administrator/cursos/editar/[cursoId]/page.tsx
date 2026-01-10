@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter, useParams } from 'next/navigation'
 import dynamic from 'next/dynamic'
-import { ArrowLeft, Save, Loader2 } from 'lucide-react'
+import { ArrowLeft, Save, Loader2, Sparkles } from 'lucide-react'
 import { getCourseById, updateCourse, getCourseLessons, getLessonResources, updateLesson, deleteLesson, createLesson, createResource, bulkCreateResources, bulkCreateLessons } from '@/lib/supabase/courses'
 import type { Course, Lesson, Resource } from '@/lib/supabase/courses'
 
@@ -30,6 +30,7 @@ export default function EditarCursoPage() {
   
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [generatingDescription, setGeneratingDescription] = useState(false)
   const [activeTab, setActiveTab] = useState<'info' | 'lessons'>('info')
   
   const [formData, setFormData] = useState({
@@ -37,7 +38,7 @@ export default function EditarCursoPage() {
     slug: '',
     shortDescription: '',
     description: '',
-    icon: '🎓',
+    icon: '',
     price: '0',
     difficulty: 'basico',
     isFree: false,
@@ -68,7 +69,7 @@ export default function EditarCursoPage() {
         slug: course.slug,
         shortDescription: course.short_description || '',
         description: course.description || '',
-        icon: course.icon || '🎓',
+        icon: course.icon || '',
         price: course.price.toString(),
         difficulty: course.difficulty,
         isFree: course.is_free,
@@ -127,6 +128,22 @@ export default function EditarCursoPage() {
     setFormData(prev => ({ ...prev, whatYouLearn: newArray }))
   }
 
+  const addWhatYouLearnPoint = () => {
+    setFormData(prev => ({
+      ...prev,
+      whatYouLearn: [...prev.whatYouLearn, '']
+    }))
+  }
+
+  const removeWhatYouLearnPoint = (index: number) => {
+    if (formData.whatYouLearn.length <= 1) {
+      alert('Debe haber al menos un punto en "Qué aprenderás"')
+      return
+    }
+    const newArray = formData.whatYouLearn.filter((_, i) => i !== index)
+    setFormData(prev => ({ ...prev, whatYouLearn: newArray }))
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
@@ -147,7 +164,7 @@ export default function EditarCursoPage() {
         icon: formData.icon,
         price: parseFloat(formData.price),
         difficulty: formData.difficulty as 'basico' | 'intermedio' | 'avanzado',
-        what_you_learn: formData.whatYouLearn.filter(item => item.trim() !== ''),
+        what_you_learn: formData.whatYouLearn.filter(item => item.trim() !== '') || [],
         is_free: formData.isFree,
         is_published: formData.isPublished,
         thumbnail_url: formData.thumbnailUrl || null,
@@ -259,7 +276,6 @@ export default function EditarCursoPage() {
     }
   }
 
-  const iconOptions = ['🎓', '🎯', '📢', '🚶', '🦷', '🦘', '🚽', '✋', '🔊', '🍽️', '🐕', '📚', '🏆', '💡']
   const difficultyOptions = [
     { value: 'basico', label: 'Básico' },
     { value: 'intermedio', label: 'Intermedio' },
@@ -356,9 +372,20 @@ export default function EditarCursoPage() {
                         </div>
 
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">
-                            Descripción Corta *
-                          </label>
+                          <div className="flex items-center justify-between mb-2">
+                            <label className="block text-sm font-semibold text-gray-700">
+                              Descripción Corta *
+                            </label>
+                            <button
+                              type="button"
+                              onClick={handleGenerateDescription}
+                              disabled={generatingDescription || !formData.title.trim()}
+                              className="text-xs bg-gradient-to-r from-forest to-sage text-white font-semibold py-1.5 px-3 rounded-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                            >
+                              <Sparkles className="w-3 h-3 mr-1.5" />
+                              {generatingDescription ? 'Generando...' : 'Generar con IA'}
+                            </button>
+                          </div>
                           <textarea
                             value={formData.shortDescription}
                             onChange={(e) => handleInputChange('shortDescription', e.target.value)}
@@ -466,28 +493,6 @@ export default function EditarCursoPage() {
                     <h3 className="text-lg font-bold text-gray-900 mb-4">Configuración</h3>
                     
                     <div className="space-y-4">
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
-                          Icono
-                        </label>
-                        <div className="grid grid-cols-4 gap-2">
-                          {iconOptions.slice(0, 8).map((icon) => (
-                            <button
-                              key={icon}
-                              type="button"
-                              onClick={() => handleInputChange('icon', icon)}
-                              className={`text-2xl p-2 rounded-lg border-2 transition ${
-                                formData.icon === icon
-                                  ? 'border-forest bg-forest/10'
-                                  : 'border-gray-200'
-                              }`}
-                            >
-                              {icon}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
                       <div>
                         <label className="block text-sm font-semibold text-gray-700 mb-2">
                           Precio (€)
