@@ -57,7 +57,7 @@ export async function getAllUsers(): Promise<User[]> {
  */
 export async function getUserWithStats(userId: string): Promise<UserWithStats | null> {
   // Primero obtenemos el usuario básico
-  const { data: userData, error: userError } = await supabase
+  const { data: userData, error: userError } = await (supabase as any)
     .from('user_roles')
     .select(`
       *,
@@ -72,22 +72,22 @@ export async function getUserWithStats(userId: string): Promise<UserWithStats | 
   }
   
   // Obtenemos estadísticas de cursos
-  const { data: coursesData } = await supabase
+  const { data: coursesData } = await (supabase as any)
     .from('user_courses')
     .select('price_paid')
     .eq('user_id', userId)
     .not('purchase_date', 'is', null)
   
-  const { data: progressData } = await supabase
+  const { data: progressData } = await (supabase as any)
     .from('user_course_progress')
     .select('progress_percentage')
     .eq('user_id', userId)
   
-  const coursesCompleted = progressData?.filter(p => p.progress_percentage === 100).length || 0
+  const coursesCompleted = progressData?.filter((p: any) => p.progress_percentage === 100).length || 0
   const avgProgress = progressData && progressData.length > 0
-    ? progressData.reduce((acc, p) => acc + p.progress_percentage, 0) / progressData.length
+    ? progressData.reduce((acc: number, p: any) => acc + p.progress_percentage, 0) / progressData.length
     : 0
-  const totalSpent = coursesData?.reduce((acc, c) => acc + (c.price_paid || 0), 0) || 0
+  const totalSpent = coursesData?.reduce((acc: number, c: any) => acc + (c.price_paid || 0), 0) || 0
   
   return {
     id: userId,
@@ -198,7 +198,7 @@ export async function getUsersByRole(role: string): Promise<User[]> {
  */
 export async function deleteUser(userId: string): Promise<void> {
   // Primero eliminamos el rol del usuario
-  const { error: roleError } = await supabase
+  const { error: roleError } = await (supabase as any)
     .from('user_roles')
     .delete()
     .eq('user_id', userId)
@@ -213,8 +213,8 @@ export async function deleteUser(userId: string): Promise<void> {
   // Por ahora solo eliminamos el rol y los datos relacionados
   
   // Eliminar datos del usuario de otras tablas
-  await supabase.from('user_courses').delete().eq('user_id', userId)
-  await supabase.from('user_course_progress').delete().eq('user_id', userId)
+  await (supabase as any).from('user_courses').delete().eq('user_id', userId)
+  await (supabase as any).from('user_course_progress').delete().eq('user_id', userId)
   
   console.warn('Usuario desvinculado de datos, pero aún existe en auth.users')
 }
@@ -223,27 +223,27 @@ export async function deleteUser(userId: string): Promise<void> {
  * Obtiene estadísticas de actividad de un usuario
  */
 export async function getUserActivityStats(userId: string) {
-  const { data: purchases } = await supabase
+  const { data: purchases } = await (supabase as any)
     .from('user_courses')
     .select('purchase_date')
     .eq('user_id', userId)
     .not('purchase_date', 'is', null)
     .order('purchase_date', { ascending: false })
   
-  const { data: progress } = await supabase
+  const { data: progress } = await (supabase as any)
     .from('user_course_progress')
     .select('*')
     .eq('user_id', userId)
   
   const lastPurchase = purchases && purchases.length > 0 ? purchases[0].purchase_date : null
-  const coursesInProgress = progress?.filter(p => p.progress_percentage > 0 && p.progress_percentage < 100).length || 0
+  const coursesInProgress = progress?.filter((p: any) => p.progress_percentage > 0 && p.progress_percentage < 100).length || 0
   
   return {
     total_purchases: purchases?.length || 0,
     last_purchase: lastPurchase,
     courses_in_progress: coursesInProgress,
     last_activity: progress && progress.length > 0 
-      ? progress.reduce((latest, p) => 
+      ? progress.reduce((latest: string, p: any) => 
           new Date(p.updated_at) > new Date(latest) ? p.updated_at : latest, 
           progress[0].updated_at
         )
