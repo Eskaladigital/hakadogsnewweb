@@ -426,7 +426,7 @@ export default function AdministratorPage() {
                               {/* Botón Ver curso - Solo funciona si está publicado */}
                               {course.is_published ? (
                                 <Link
-                                  href={`/cursos/mi-escuela/${course.id}`}
+                                  href={`/cursos/mi-escuela/${course.slug}`}
                                   className="text-blue-600 hover:text-blue-800 p-2 transition"
                                   title="Ver curso como usuario"
                                 >
