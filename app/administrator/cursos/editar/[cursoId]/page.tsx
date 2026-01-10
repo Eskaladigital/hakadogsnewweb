@@ -535,10 +535,18 @@ export default function EditarCursoPage() {
                         <input
                           type="number"
                           step="0.01"
-                          value={formData.price}
+                          value={formData.isFree ? '0' : formData.price}
                           onChange={(e) => handleInputChange('price', e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                          disabled={formData.isFree}
+                          className={`w-full px-3 py-2 border border-gray-300 rounded-lg ${
+                            formData.isFree ? 'bg-gray-100 text-gray-500 cursor-not-allowed' : ''
+                          }`}
                         />
+                        {formData.isFree && (
+                          <p className="text-xs text-gray-500 mt-1">
+                            El curso gratuito no tiene precio
+                          </p>
+                        )}
                       </div>
 
                       <div>
