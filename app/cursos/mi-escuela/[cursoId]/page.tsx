@@ -90,6 +90,20 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
   }, [cursoId, router])
 
   const handleSelectLesson = async (lesson: Lesson) => {
+    // Verificar si la lección está desbloqueada
+    const leccionIndex = lecciones.findIndex(l => l.id === lesson.id)
+    
+    // La primera lección siempre está disponible
+    if (leccionIndex > 0) {
+      // Verificar si la lección anterior está completada
+      const previousLesson = lecciones[leccionIndex - 1]
+      if (!lessonProgress[previousLesson.id]) {
+        // Lección bloqueada - no hacer nada
+        return
+      }
+    }
+    
+    // Lección desbloqueada
     setLeccionActual(lesson)
     
     // Determinar pestaña según contenido disponible
@@ -125,11 +139,16 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
         setProgreso(progressData)
       }
 
-      // Mensaje de éxito (opcional)
-      alert('¡Lección marcada como completada!')
+      // Verificar si hay una siguiente lección para desbloquear
+      const currentIndex = lecciones.findIndex(l => l.id === leccionActual.id)
+      const hasNextLesson = currentIndex < lecciones.length - 1
+      
+      if (hasNextLesson) {
+        // Pequeña notificación visual de que la siguiente lección se desbloqueó
+        console.log('¡Siguiente lección desbloqueada!')
+      }
     } catch (error) {
       console.error('Error marcando lección:', error)
-      alert('Error al marcar la lección como completada')
     } finally {
       setCompleting(false)
     }
@@ -491,39 +510,64 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
               <div className="bg-white rounded-xl shadow-lg p-6 sticky top-24">
                 <h3 className="text-xl font-bold text-gray-900 mb-6">Contenido del Curso</h3>
                 <div className="space-y-2">
-                  {lecciones.map((leccion, index) => (
-                    <motion.button
-                      key={leccion.id}
-                      onClick={() => handleSelectLesson(leccion)}
-                      className={`w-full text-left p-4 rounded-lg transition-all ${
-                        leccionActual.id === leccion.id
-                          ? 'bg-forest/10 border-2 border-forest'
-                          : 'bg-gray-50 hover:bg-gray-100'
-                      }`}
-                      whileHover={{ scale: 1.02 }}
-                    >
-                      <div className="flex items-start">
-                        <div className="mr-3 mt-0.5">
-                          {lessonProgress[leccion.id] ? (
-                            <CheckCircle className="w-5 h-5 text-green-600" />
-                          ) : (
-                            <Play className="w-5 h-5 text-forest" />
-                          )}
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between mb-1">
-                            <span className="text-xs font-semibold text-gray-500">Lección {index + 1}</span>
-                            <span className="text-xs text-gray-500">{leccion.duration_minutes} min</span>
+                  {lecciones.map((leccion, index) => {
+                    // Determinar si la lección está bloqueada
+                    const isLocked = index > 0 && !lessonProgress[lecciones[index - 1].id]
+                    const isCompleted = lessonProgress[leccion.id]
+                    const isActive = leccionActual.id === leccion.id
+                    
+                    return (
+                      <motion.button
+                        key={leccion.id}
+                        onClick={() => handleSelectLesson(leccion)}
+                        disabled={isLocked}
+                        className={`w-full text-left p-4 rounded-lg transition-all ${
+                          isActive
+                            ? 'bg-forest/10 border-2 border-forest'
+                            : isLocked
+                            ? 'bg-gray-100 opacity-60 cursor-not-allowed'
+                            : 'bg-gray-50 hover:bg-gray-100'
+                        }`}
+                        whileHover={isLocked ? {} : { scale: 1.02 }}
+                      >
+                        <div className="flex items-start">
+                          <div className="mr-3 mt-0.5">
+                            {isLocked ? (
+                              <Lock className="w-5 h-5 text-gray-400" />
+                            ) : isCompleted ? (
+                              <CheckCircle className="w-5 h-5 text-green-600" />
+                            ) : (
+                              <Play className="w-5 h-5 text-forest" />
+                            )}
                           </div>
-                          <p className={`font-semibold ${
-                            leccionActual.id === leccion.id ? 'text-forest' : 'text-gray-900'
-                          }`}>
-                            {leccion.title}
-                          </p>
+                          <div className="flex-1">
+                            <div className="flex items-center justify-between mb-1">
+                              <span className={`text-xs font-semibold ${
+                                isLocked ? 'text-gray-400' : 'text-gray-500'
+                              }`}>
+                                Lección {index + 1}
+                                {isLocked && ' • Bloqueada'}
+                              </span>
+                              <span className={`text-xs ${
+                                isLocked ? 'text-gray-400' : 'text-gray-500'
+                              }`}>
+                                {leccion.duration_minutes} min
+                              </span>
+                            </div>
+                            <p className={`font-semibold ${
+                              isActive 
+                                ? 'text-forest' 
+                                : isLocked 
+                                ? 'text-gray-400' 
+                                : 'text-gray-900'
+                            }`}>
+                              {leccion.title}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    </motion.button>
-                  ))}
+                      </motion.button>
+                    )
+                  })}
                 </div>
               </div>
             </div>
