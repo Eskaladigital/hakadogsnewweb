@@ -174,9 +174,10 @@ export default function CursosPage() {
                       </div>
                     </div>
 
-                    <p className="text-lg mb-6 text-white/95">
-                      {curso.short_description || curso.description}
-                    </p>
+                    <div 
+                      className="text-lg mb-6 text-white/95 prose prose-invert max-w-none prose-p:text-white/95 prose-strong:text-white prose-ul:text-white/95 prose-li:text-white/95"
+                      dangerouslySetInnerHTML={{ __html: curso.short_description || curso.description || '' }}
+                    />
 
                     {curso.what_you_learn && curso.what_you_learn.length > 0 && (
                       <div className="grid md:grid-cols-2 gap-6 mb-8">
@@ -275,7 +276,10 @@ export default function CursosPage() {
                         </span>
                       </div>
                       <h3 className="text-xl font-bold mb-2 text-gray-900">{curso.title}</h3>
-                      <p className="text-gray-600 text-sm">{curso.short_description || curso.description}</p>
+                      <div 
+                        className="text-gray-600 text-sm prose prose-sm max-w-none prose-p:text-gray-600 prose-strong:text-gray-900 prose-ul:text-gray-600 prose-li:text-gray-600"
+                        dangerouslySetInnerHTML={{ __html: curso.short_description || curso.description || '' }}
+                      />
                     </div>
 
                     {/* Contenido */}
