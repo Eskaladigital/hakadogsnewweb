@@ -86,7 +86,7 @@ export default function ModificacionConductaPage() {
             </div>
           </div>
 
-          <div className="max-w-4xl mx-auto prose prose-lg max-w-none">
+          <div className="mx-auto prose prose-lg max-w-none">
             <div className="bg-terracotta/10 border-l-4 border-terracotta rounded-lg p-6 mb-12">
               <div className="flex items-start space-x-3">
                 <AlertCircle className="text-terracotta flex-shrink-0 mt-1" size={24} />

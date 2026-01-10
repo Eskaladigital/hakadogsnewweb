@@ -90,7 +90,7 @@ export default function EducacionBasicaPage() {
             </div>
           </div>
 
-          <div className="max-w-4xl mx-auto prose prose-lg max-w-none">
+          <div className="mx-auto prose prose-lg max-w-none">
             <h2 className="text-3xl font-bold text-forest-dark mb-6">
               ¿Qué Incluye el Programa?
             </h2>

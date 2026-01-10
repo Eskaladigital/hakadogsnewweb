@@ -1,9 +1,6 @@
 import { supabase } from './client'
 import type { Database } from '@/types/database.types'
 
-type ContactInsert = Database['public']['Tables']['contacts']['Insert']
-type ContactUpdate = Database['public']['Tables']['contacts']['Update']
-
 // =====================================================
 // TIPOS DE DATOS
 // =====================================================
@@ -120,7 +117,7 @@ export async function getContactsByStatus(status: string): Promise<ContactWithDe
  * Crea un nuevo contacto (formulario público)
  */
 export async function createContact(contactData: CreateContactData): Promise<Contact> {
-  const insertData: ContactInsert = {
+  const insertData = {
     name: contactData.name,
     email: contactData.email,
     phone: contactData.phone || null,
@@ -131,9 +128,9 @@ export async function createContact(contactData: CreateContactData): Promise<Con
     ip_address: contactData.ip_address || null,
   }
   
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('contacts')
-    .insert([insertData as any])
+    .insert([insertData])
     .select()
     .single()
   
@@ -152,14 +149,14 @@ export async function updateContact(
   id: string,
   updates: UpdateContactData
 ): Promise<Contact> {
-  const updateData: ContactUpdate = {
+  const updateData = {
     status: updates.status,
     admin_notes: updates.admin_notes,
   }
   
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('contacts')
-    .update(updateData as any)
+    .update(updateData)
     .eq('id', id)
     .select()
     .single()

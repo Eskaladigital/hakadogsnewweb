@@ -238,7 +238,7 @@ export default function LessonsManager({ lessons, onChange }: LessonsManagerProp
 
                 {/* Video */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
+                  <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
                     <Video className="w-4 h-4 mr-2" />
                     Video de la lección (opcional)
                   </label>
@@ -266,7 +266,7 @@ export default function LessonsManager({ lessons, onChange }: LessonsManagerProp
 
                 {/* Audio */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
+                  <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
                     <Headphones className="w-4 h-4 mr-2" />
                     Audio de la lección (opcional)
                   </label>
