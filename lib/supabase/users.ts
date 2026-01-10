@@ -1,4 +1,7 @@
 import { supabase } from './client'
+import type { Database } from '@/types/database.types'
+
+type UserRoleUpdate = Database['public']['Tables']['user_roles']['Update']
 
 // =====================================================
 // TIPOS DE DATOS
@@ -142,9 +145,13 @@ export async function updateUserRole(
   userId: string,
   newRole: 'admin' | 'user' | 'instructor'
 ): Promise<UserRole> {
+  const updateData: UserRoleUpdate = {
+    role: newRole
+  }
+  
   const { data, error } = await supabase
     .from('user_roles')
-    .update({ role: newRole })
+    .update(updateData)
     .eq('user_id', userId)
     .select()
     .single()

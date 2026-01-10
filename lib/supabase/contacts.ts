@@ -2,6 +2,7 @@ import { supabase } from './client'
 import type { Database } from '@/types/database.types'
 
 type ContactInsert = Database['public']['Tables']['contacts']['Insert']
+type ContactUpdate = Database['public']['Tables']['contacts']['Update']
 
 // =====================================================
 // TIPOS DE DATOS
@@ -151,9 +152,14 @@ export async function updateContact(
   id: string,
   updates: UpdateContactData
 ): Promise<Contact> {
+  const updateData: ContactUpdate = {
+    status: updates.status,
+    admin_notes: updates.admin_notes,
+  }
+  
   const { data, error } = await supabase
     .from('contacts')
-    .update(updates)
+    .update(updateData)
     .eq('id', id)
     .select()
     .single()
