@@ -133,7 +133,7 @@ export async function createContact(contactData: CreateContactData): Promise<Con
   
   const { data, error } = await supabase
     .from('contacts')
-    .insert([insertData])
+    .insert([insertData as any])
     .select()
     .single()
   
@@ -159,7 +159,7 @@ export async function updateContact(
   
   const { data, error } = await supabase
     .from('contacts')
-    .update(updateData)
+    .update(updateData as any)
     .eq('id', id)
     .select()
     .single()

@@ -34,6 +34,7 @@ export default function ContactosPage() {
 
   useEffect(() => {
     filterContacts()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contacts, searchTerm, statusFilter])
 
   const loadCurrentUser = async () => {

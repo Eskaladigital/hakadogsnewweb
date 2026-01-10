@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { Heart, MapPin, Users } from 'lucide-react'
 
 interface DogCardProps {
@@ -38,7 +39,13 @@ export default function DogCard({ dog, href, showActions, onLike }: DogCardProps
     <>
       <div className="aspect-[4/3] bg-gradient-to-br from-green-200 to-emerald-200 flex items-center justify-center relative overflow-hidden">
         {dog.photo_url ? (
-          <img src={dog.photo_url} alt={dog.name} className="w-full h-full object-cover" />
+          <Image 
+            src={dog.photo_url} 
+            alt={dog.name} 
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
         ) : (
           <span className="text-6xl">🐕</span>
         )}

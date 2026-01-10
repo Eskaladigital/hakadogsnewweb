@@ -23,6 +23,7 @@ export default function UsuariosPage() {
 
   useEffect(() => {
     filterUsers()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [users, searchTerm, roleFilter])
 
   const loadUsers = async () => {
