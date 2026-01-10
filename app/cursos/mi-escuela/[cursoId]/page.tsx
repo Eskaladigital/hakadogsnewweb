@@ -174,12 +174,13 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
     )
   }
 
-  if (!curso || !leccionActual) {
+  if (!curso) {
     return (
       <div className="min-h-screen bg-gray-50 pt-20 flex items-center justify-center">
         <div className="text-center max-w-md">
           <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Curso no encontrado</h1>
+          <p className="text-gray-600 mb-6">No se pudo cargar el curso solicitado</p>
           <Link
             href="/cursos/mi-escuela"
             className="inline-block bg-gradient-to-r from-forest to-sage text-white font-bold py-3 px-8 rounded-lg hover:opacity-90 transition-all"
@@ -189,6 +190,51 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
         </div>
       </div>
     )
+  }
+
+  // Si el curso existe pero no tiene lecciones
+  if (lecciones.length === 0) {
+    return (
+      <div className="min-h-screen bg-gray-50 pt-20">
+        <div className={`bg-gradient-to-r ${getDifficultyColor(curso.difficulty)} text-white py-8`}>
+          <div className="container mx-auto px-4">
+            <div className="max-w-7xl mx-auto">
+              <Link
+                href="/cursos/mi-escuela"
+                className="inline-flex items-center text-white/80 hover:text-white transition mb-4"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Volver a Mi Escuela
+              </Link>
+              <h1 className="text-3xl md:text-4xl font-bold mb-2">{curso.title}</h1>
+              <p className="text-white/90">{curso.short_description || curso.description}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="container mx-auto px-4 py-16">
+          <div className="max-w-2xl mx-auto text-center">
+            <AlertCircle className="w-16 h-16 text-amber-500 mx-auto mb-6" />
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              Este curso aún no tiene contenido
+            </h2>
+            <p className="text-gray-600 mb-8">
+              Las lecciones de este curso están siendo preparadas. Por favor, vuelve más tarde.
+            </p>
+            <Link
+              href="/cursos/mi-escuela"
+              className="inline-block bg-gradient-to-r from-forest to-sage text-white font-bold py-3 px-8 rounded-lg hover:opacity-90 transition-all"
+            >
+              Volver a Mi Escuela
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (!leccionActual) {
+    return null // No debería llegar aquí si hay lecciones
   }
 
   const colorGradient = getDifficultyColor(curso.difficulty)
