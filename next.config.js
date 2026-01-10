@@ -17,6 +17,11 @@ const nextConfig = {
     removeConsole: process.env.NODE_ENV === 'production',
   },
   
+  // Optimización experimental para reducir CSS bloqueante
+  experimental: {
+    optimizeCss: true,
+  },
+  
   // Optimizar chunks para mejor caché
   webpack: (config, { isServer }) => {
     if (!isServer) {

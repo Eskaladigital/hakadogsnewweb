@@ -107,6 +107,14 @@ export default function RootLayout({
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         
+        {/* Preload logo crítico para mejorar LCP */}
+        <link 
+          rel="preload" 
+          as="image" 
+          href="/images/hakadogs_logo_texto_transparente.webp"
+          type="image/webp"
+        />
+        
         {/* Google Analytics - estrategia lazyOnload para no bloquear renderizado */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-NXPT2KNYGJ"
@@ -123,7 +131,8 @@ export default function RootLayout({
           `}
         </Script>
         
-        {/* Service Worker Registration */}
+        {/* Service Worker Registration - DESHABILITADO para mejorar LCP */}
+        {/* 
         <Script id="sw-register" strategy="afterInteractive">
           {`
             if ('serviceWorker' in navigator) {
@@ -140,6 +149,7 @@ export default function RootLayout({
             }
           `}
         </Script>
+        */}
       </head>
       <body>
         {/* Skip to main content link (accesibilidad) */}
