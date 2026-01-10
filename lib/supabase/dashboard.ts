@@ -102,7 +102,7 @@ export interface ConversionMetrics {
  * Obtiene todas las estadísticas principales del dashboard
  */
 export async function getDashboardStats(): Promise<DashboardStats> {
-  const { data, error } = await supabase.rpc('get_dashboard_stats')
+  const { data, error } = await (supabase as any).rpc('get_dashboard_stats')
   
   if (error) {
     console.error('Error getting dashboard stats:', error)
@@ -116,7 +116,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
  * Obtiene los usuarios más recientes
  */
 export async function getRecentUsers(limit: number = 10): Promise<RecentUser[]> {
-  const { data, error } = await supabase.rpc('get_recent_users', {
+  const { data, error } = await (supabase as any).rpc('get_recent_users', {
     limit_count: limit
   })
   
@@ -132,7 +132,7 @@ export async function getRecentUsers(limit: number = 10): Promise<RecentUser[]> 
  * Obtiene las ventas más recientes
  */
 export async function getRecentSales(limit: number = 10): Promise<RecentSale[]> {
-  const { data, error } = await supabase.rpc('get_recent_sales', {
+  const { data, error } = await (supabase as any).rpc('get_recent_sales', {
     limit_count: limit
   })
   
@@ -148,7 +148,7 @@ export async function getRecentSales(limit: number = 10): Promise<RecentSale[]> 
  * Obtiene los contactos más recientes
  */
 export async function getRecentContacts(limit: number = 10): Promise<RecentContact[]> {
-  const { data, error } = await supabase.rpc('get_recent_contacts', {
+  const { data, error } = await (supabase as any).rpc('get_recent_contacts', {
     limit_count: limit
   })
   
@@ -164,7 +164,7 @@ export async function getRecentContacts(limit: number = 10): Promise<RecentConta
  * Obtiene datos para la gráfica de ventas por mes
  */
 export async function getSalesChartData(): Promise<SalesChartData[]> {
-  const { data, error } = await supabase.rpc('get_sales_chart_data')
+  const { data, error } = await (supabase as any).rpc('get_sales_chart_data')
   
   if (error) {
     console.error('Error getting sales chart data:', error)
@@ -178,7 +178,7 @@ export async function getSalesChartData(): Promise<SalesChartData[]> {
  * Obtiene los cursos más vendidos
  */
 export async function getTopSellingCourses(limit: number = 5): Promise<TopCourse[]> {
-  const { data, error } = await supabase.rpc('get_top_selling_courses', {
+  const { data, error } = await (supabase as any).rpc('get_top_selling_courses', {
     limit_count: limit
   })
   
@@ -194,7 +194,7 @@ export async function getTopSellingCourses(limit: number = 5): Promise<TopCourse
  * Obtiene métricas de conversión
  */
 export async function getConversionMetrics(): Promise<ConversionMetrics> {
-  const { data, error } = await supabase.rpc('get_conversion_metrics')
+  const { data, error } = await (supabase as any).rpc('get_conversion_metrics')
   
   if (error) {
     console.error('Error getting conversion metrics:', error)

@@ -176,7 +176,7 @@ export async function markContactAsResponded(
   contactId: string,
   adminUserId: string
 ): Promise<void> {
-  const { error } = await supabase.rpc('mark_contact_responded', {
+  const { error } = await (supabase as any).rpc('mark_contact_responded', {
     contact_id: contactId,
     admin_user_id: adminUserId
   })
@@ -206,7 +206,7 @@ export async function deleteContact(id: string): Promise<void> {
  * Obtiene estadísticas de contactos
  */
 export async function getContactsStats(): Promise<ContactStats> {
-  const { data, error } = await supabase.rpc('get_contacts_stats')
+  const { data, error } = await (supabase as any).rpc('get_contacts_stats')
   
   if (error) {
     console.error('Error getting contacts stats:', error)

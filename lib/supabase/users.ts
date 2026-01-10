@@ -40,7 +40,7 @@ export interface UserRole {
 export async function getAllUsers(): Promise<User[]> {
   // Supabase Admin SDK necesitaría acceso privilegiado
   // Por ahora, usamos una función RPC que ya creamos
-  const { data, error } = await supabase.rpc('get_recent_users', {
+  const { data, error } = await (supabase as any).rpc('get_recent_users', {
     limit_count: 1000 // Límite alto para obtener todos
   })
   
@@ -108,7 +108,7 @@ export async function getUserWithStats(userId: string): Promise<UserWithStats | 
  * Obtiene el rol de un usuario
  */
 export async function getUserRole(userId: string): Promise<string> {
-  const { data, error } = await supabase.rpc('get_user_role', {
+  const { data, error } = await (supabase as any).rpc('get_user_role', {
     user_uuid: userId
   })
   
@@ -124,7 +124,7 @@ export async function getUserRole(userId: string): Promise<string> {
  * Verifica si un usuario es admin
  */
 export async function isAdmin(userId: string): Promise<boolean> {
-  const { data, error } = await supabase.rpc('is_admin', {
+  const { data, error } = await (supabase as any).rpc('is_admin', {
     user_uuid: userId
   })
   
@@ -166,7 +166,7 @@ export async function updateUserRole(
  * Busca usuarios por email o nombre
  */
 export async function searchUsers(query: string): Promise<User[]> {
-  const { data, error } = await supabase.rpc('get_recent_users', {
+  const { data, error } = await (supabase as any).rpc('get_recent_users', {
     limit_count: 1000
   })
   
