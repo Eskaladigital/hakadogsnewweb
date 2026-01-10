@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { BookOpen, Download, ShoppingCart, CheckCircle, Mail, Clock, Loader2 } from 'lucide-react'
+import { BookOpen, Download, ShoppingCart, CheckCircle, Mail, Clock, Loader2, ChevronDown } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { getAllCourses } from '@/lib/supabase/courses'
 import type { Course } from '@/lib/supabase/courses'
@@ -13,6 +13,7 @@ export default function CursosPage() {
   const [loading, setLoading] = useState(true)
   const [cursosGratuitos, setCursosGratuitos] = useState<Course[]>([])
   const [cursosPago, setCursosPago] = useState<Course[]>([])
+  const [openFaq, setOpenFaq] = useState<number | null>(null)
 
   useEffect(() => {
     async function loadCursos() {
@@ -90,6 +91,33 @@ export default function CursosPage() {
     // Si no está logueado, ir a registro
     window.location.href = '/cursos/auth/registro'
   }
+
+  const toggleFaq = (index: number) => {
+    setOpenFaq(openFaq === index ? null : index)
+  }
+
+  const faqs = [
+    {
+      question: '¿Cómo accedo al curso gratuito?',
+      answer: 'Simplemente regístrate con tu email arriba y tendrás acceso inmediato al curso gratuito en tu panel "Mi Escuela".'
+    },
+    {
+      question: '¿Cuántos cursos hay disponibles?',
+      answer: 'Actualmente tenemos más de 10 cursos específicos disponibles, cada uno enfocado en un problema concreto. Seguimos añadiendo nuevos cursos regularmente.'
+    },
+    {
+      question: '¿Los cursos de pago son para siempre?',
+      answer: 'Sí, una vez comprado cualquier curso, tendrás acceso de por vida a todo el contenido y futuras actualizaciones de ese curso específico.'
+    },
+    {
+      question: '¿Puedo comprar varios cursos?',
+      answer: '¡Por supuesto! Puedes comprar todos los cursos que necesites. Cada uno es independiente y se enfoca en un problema específico. Compra solo los que necesites según tu situación.'
+    },
+    {
+      question: '¿Hay garantía de devolución?',
+      answer: 'No, una vez comprado un curso, el dinero no puede ser reembolsado, puesto que ya se ha tenido acceso completo al contenido del curso de forma inmediata. Al tratarse de contenido digital con acceso instantáneo, todas las compras son finales.'
+    }
+  ]
 
   if (loading) {
     return (
@@ -305,37 +333,32 @@ export default function CursosPage() {
             <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
               Preguntas Frecuentes
             </h2>
-            <div className="space-y-6">
-              <div className="bg-white rounded-xl p-6 shadow-md">
-                <h3 className="font-bold text-gray-900 mb-2">¿Cómo accedo al curso gratuito?</h3>
-                <p className="text-gray-600">
-                  Simplemente suscríbete con tu email arriba y recibirás el enlace de descarga del PDF en tu bandeja de entrada.
-                </p>
-              </div>
-              <div className="bg-white rounded-xl p-6 shadow-md">
-                <h3 className="font-bold text-gray-900 mb-2">¿Cuántos cursos hay disponibles?</h3>
-                <p className="text-gray-600">
-                  Actualmente tenemos más de 10 cursos específicos disponibles, cada uno enfocado en un problema concreto. Seguimos añadiendo nuevos cursos regularmente.
-                </p>
-              </div>
-              <div className="bg-white rounded-xl p-6 shadow-md">
-                <h3 className="font-bold text-gray-900 mb-2">¿Los cursos de pago son para siempre?</h3>
-                <p className="text-gray-600">
-                  Sí, una vez comprado cualquier curso, tendrás acceso de por vida a todo el contenido y futuras actualizaciones de ese curso específico.
-                </p>
-              </div>
-              <div className="bg-white rounded-xl p-6 shadow-md">
-                <h3 className="font-bold text-gray-900 mb-2">¿Puedo comprar varios cursos?</h3>
-                <p className="text-gray-600">
-                  ¡Por supuesto! Puedes comprar todos los cursos que necesites. Cada uno es independiente y se enfoca en un problema específico. Compra solo los que necesites según tu situación.
-                </p>
-              </div>
-              <div className="bg-white rounded-xl p-6 shadow-md">
-                <h3 className="font-bold text-gray-900 mb-2">¿Hay garantía de devolución?</h3>
-                <p className="text-gray-600">
-                  No, una vez comprado un curso, el dinero no puede ser reembolsado, puesto que ya se ha tenido acceso completo al contenido del curso de forma inmediata. Al tratarse de contenido digital con acceso instantáneo, todas las compras son finales.
-                </p>
-              </div>
+            <div className="space-y-4">
+              {faqs.map((faq, index) => (
+                <div 
+                  key={index}
+                  className="bg-white rounded-xl shadow-md overflow-hidden transition-all"
+                >
+                  <button
+                    onClick={() => toggleFaq(index)}
+                    className="w-full p-6 flex items-center justify-between text-left hover:bg-gray-50 transition"
+                  >
+                    <h3 className="font-bold text-gray-900 pr-4">{faq.question}</h3>
+                    <ChevronDown 
+                      className={`w-5 h-5 text-gray-600 flex-shrink-0 transition-transform duration-200 ${
+                        openFaq === index ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </button>
+                  {openFaq === index && (
+                    <div className="px-6 pb-6">
+                      <p className="text-gray-600 leading-relaxed">
+                        {faq.answer}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
         </div>
