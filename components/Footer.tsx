@@ -199,6 +199,22 @@ export default function Footer() {
               </Link>
             </div>
           </div>
+
+          {/* Créditos de desarrollo */}
+          <div className="mt-6 pt-6 border-t border-white/10">
+            <p className="text-xs text-gray-500 text-center">
+              Hecho con Amor en Murcia, web desarrollada por{' '}
+              <a 
+                href="https://www.scala.es" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-gold transition underline"
+              >
+                Scala
+              </a>
+              , agencia de marketing digital
+            </p>
+          </div>
         </div>
       </div>
     </footer>
