@@ -146,9 +146,9 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
 
   const getDifficultyColor = (difficulty: string) => {
     const colors: Record<string, string> = {
-      basico: 'from-green-500 to-green-600',
-      intermedio: 'from-amber-500 to-amber-600',
-      avanzado: 'from-red-500 to-red-600'
+      basico: 'from-forest/80 to-sage/80',
+      intermedio: 'from-amber-600 to-amber-700',
+      avanzado: 'from-red-600 to-red-700'
     }
     return colors[difficulty] || colors.basico
   }
