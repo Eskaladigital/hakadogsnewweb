@@ -48,10 +48,14 @@ export default function ContactosPage() {
     try {
       setLoading(true)
       const data = await getAllContacts()
-      setContacts(data)
+      setContacts(data || [])
+      if (!data || data.length === 0) {
+        console.warn('⚠️ No se encontraron contactos o la tabla no existe')
+      }
     } catch (error) {
-      console.error('Error cargando contactos:', error)
-      setToast({ message: 'Error al cargar contactos', type: 'error' })
+      console.warn('⚠️ Error cargando contactos:', error)
+      setToast({ message: 'Error al cargar contactos. Verifica que la tabla contacts esté creada.', type: 'error' })
+      setContacts([])
     } finally {
       setLoading(false)
     }

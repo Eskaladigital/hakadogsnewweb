@@ -45,11 +45,11 @@ export async function getAllUsers(): Promise<User[]> {
   })
   
   if (error) {
-    console.error('Error getting all users:', error)
-    throw error
+    console.warn('⚠️ Error getting all users:', error.message || error)
+    return [] // Devolver array vacío en lugar de lanzar error
   }
   
-  return data as User[]
+  return (data || []) as User[]
 }
 
 /**
@@ -73,7 +73,7 @@ export async function getUserWithStats(userId: string): Promise<UserWithStats | 
   
   // Obtenemos estadísticas de cursos
   const { data: coursesData } = await (supabase as any)
-    .from('user_courses')
+    .from('course_purchases')
     .select('price_paid')
     .eq('user_id', userId)
     .not('purchase_date', 'is', null)
@@ -224,7 +224,7 @@ export async function deleteUser(userId: string): Promise<void> {
  */
 export async function getUserActivityStats(userId: string) {
   const { data: purchases } = await (supabase as any)
-    .from('user_courses')
+    .from('course_purchases')
     .select('purchase_date')
     .eq('user_id', userId)
     .not('purchase_date', 'is', null)

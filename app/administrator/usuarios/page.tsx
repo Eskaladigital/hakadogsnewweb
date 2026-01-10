@@ -30,10 +30,14 @@ export default function UsuariosPage() {
     try {
       setLoading(true)
       const data = await getAllUsers()
-      setUsers(data)
+      setUsers(data || [])
+      if (!data || data.length === 0) {
+        console.warn('⚠️ No se encontraron usuarios o la función RPC no está disponible')
+      }
     } catch (error) {
-      console.error('Error cargando usuarios:', error)
-      setToast({ message: 'Error al cargar usuarios', type: 'error' })
+      console.warn('⚠️ Error cargando usuarios:', error)
+      setToast({ message: 'Error al cargar usuarios. Verifica que las funciones SQL estén ejecutadas.', type: 'error' })
+      setUsers([])
     } finally {
       setLoading(false)
     }
