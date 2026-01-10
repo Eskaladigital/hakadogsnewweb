@@ -490,8 +490,16 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                           prose-a:text-forest prose-a:underline hover:prose-a:text-sage
                           prose-blockquote:border-l-4 prose-blockquote:border-forest prose-blockquote:pl-4 prose-blockquote:italic
                           prose-code:bg-gray-100 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm
-                          prose-pre:bg-gray-900 prose-pre:text-white prose-pre:p-4 prose-pre:rounded-lg
-                          prose-img:rounded-lg prose-img:shadow-lg"
+                          prose-pre:bg-gray-900 prose-pre:text-white prose-pre:p-4 prose-pre:rounded-lg prose-pre:overflow-x-auto
+                          prose-img:rounded-lg prose-img:shadow-lg prose-img:max-w-full prose-img:h-auto
+                          prose-table:w-full prose-table:overflow-x-auto
+                          [&>*]:max-w-full [&_img]:max-w-full [&_table]:max-w-full
+                          overflow-hidden"
+                        style={{ 
+                          wordWrap: 'break-word', 
+                          overflowWrap: 'break-word',
+                          width: '100%'
+                        }}
                         dangerouslySetInnerHTML={{ __html: leccionActual.content }}
                       />
                     </div>
