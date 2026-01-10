@@ -124,7 +124,7 @@ export default function MetodologiaPage() {
               </div>
               <p className="text-gray-700 mb-4 leading-relaxed">
                 Cada episodio de juego tiene <strong>inicio, cuerpo, pausa, reenganche y cierre</strong>. 
-                No es "jugar sin control". Es entrenar activación funcional (energía con foco) y pasividad funcional (calma sin apagarse).
+                No es &quot;jugar sin control&quot;. Es entrenar activación funcional (energía con foco) y pasividad funcional (calma sin apagarse).
               </p>
               <ul className="space-y-2 text-sm text-gray-700">
                 <li className="flex items-start gap-2">
