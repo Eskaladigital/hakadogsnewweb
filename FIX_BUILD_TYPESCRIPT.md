@@ -21,17 +21,25 @@ Type error: No overload matches this call.
 
 ## 🔍 Diagnóstico
 
-### Causa Raíz:
+### Causa Raíz (2 problemas identificados):
+
+**Problema 1:** Tipos faltantes en `database.types.ts`
 - Las tablas `contacts` y `user_roles` fueron creadas en Supabase (via SQL scripts)
 - El archivo `types/database.types.ts` **NO** incluía las definiciones TypeScript
 - TypeScript no reconocía estas tablas → trataba `insert()` como tipo `never`
+
+**Problema 2:** Cliente Supabase no conectado a los tipos
+- El cliente de Supabase (`lib/supabase/client.ts`) no estaba usando el tipo `Database`
+- `createSupabaseClient()` se llamaba sin genérico `<Database>`
+- Aunque los tipos existían, el cliente no los reconocía
 
 ### Archivos SQL Creados Anteriormente:
 - ✅ `supabase/contacts_table.sql` → Tabla para formulario de contacto
 - ✅ `supabase/user_roles_table.sql` → Tabla para gestión de roles de usuarios
 
-### Archivo Faltante:
-- ❌ `types/database.types.ts` → Tipos TypeScript para las nuevas tablas
+### Archivos Faltantes/Incompletos:
+- ❌ `types/database.types.ts` → Tipos TypeScript para las nuevas tablas (FIX 1)
+- ❌ `lib/supabase/client.ts` → Conexión del cliente a los tipos (FIX 2)
 
 ---
 
@@ -123,6 +131,46 @@ user_roles: {
 
 ---
 
+#### 3. **Cliente Supabase con Tipos** (`lib/supabase/client.ts`)
+
+**ANTES** (sin tipos):
+```typescript
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
+
+let supabaseInstance: ReturnType<typeof createSupabaseClient> | null = null
+
+export const createClient = () => {
+  if (!supabaseInstance) {
+    supabaseInstance = createSupabaseClient(supabaseUrl, supabaseAnonKey)
+  }
+  return supabaseInstance
+}
+```
+
+**DESPUÉS** (con tipos Database):
+```typescript
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
+import type { Database } from '@/types/database.types'
+
+let supabaseInstance: ReturnType<typeof createSupabaseClient<Database>> | null = null
+
+export const createClient = () => {
+  if (!supabaseInstance) {
+    supabaseInstance = createSupabaseClient<Database>(supabaseUrl, supabaseAnonKey)
+  }
+  return supabaseInstance
+}
+```
+
+**Cambios clave:**
+- ✅ Importar tipo `Database` desde `@/types/database.types`
+- ✅ Agregar genérico `<Database>` a `createSupabaseClient<Database>()`
+- ✅ Actualizar tipo de `supabaseInstance` para incluir el genérico
+
+**Resultado:** El cliente ahora reconoce automáticamente todas las tablas definidas en `Database`, incluyendo `contacts` y `user_roles`.
+
+---
+
 ## 🎯 Resultado
 
 | Antes | Después |
@@ -143,12 +191,20 @@ user_roles: {
 - Arregla contenido más ancho que menú/footer en móvil
 - Agrega overflow controls y estilos globales
 
-### Commit 2: TypeScript Types Fix (ACTUAL)
+### Commit 2: TypeScript Types Fix (FIX 1)
 ```
 9b211ba - Fix TypeScript error: agregar tipos de DB para contacts y user_roles
 ```
-- Agrega tipos TypeScript para nuevas tablas
-- Permite build exitoso en Vercel
+- Agrega tipos TypeScript para nuevas tablas en `database.types.ts`
+- Define Row/Insert/Update para `contacts` y `user_roles`
+
+### Commit 3: Cliente Supabase con Tipos (FIX 2) ⭐ ACTUAL
+```
+2b09298 - Fix: cliente Supabase ahora usa tipos Database correctos
+```
+- Conecta cliente Supabase a los tipos de `Database`
+- Agrega genérico `<Database>` a `createSupabaseClient()`
+- **Este es el fix crítico que resuelve el error de build**
 
 ---
 
@@ -173,14 +229,22 @@ Una vez que hagas `git push origin main` manualmente (cuando la red lo permita),
 
 **Cada vez que crees una nueva tabla en Supabase:**
 
-1. Crear el SQL script en `supabase/`
-2. Ejecutar el script en Supabase Dashboard
-3. **⚠️ IMPORTANTE**: Actualizar `types/database.types.ts`
-   - Agregar definición de Row
-   - Agregar definición de Insert
-   - Agregar definición de Update
+1. ✅ Crear el SQL script en `supabase/`
+2. ✅ Ejecutar el script en Supabase Dashboard
+3. ✅ **CRÍTICO**: Actualizar `types/database.types.ts`
+   - Agregar definición de `Row`
+   - Agregar definición de `Insert`
+   - Agregar definición de `Update`
+4. ✅ **VERIFICAR**: `lib/supabase/client.ts` debe tener:
+   ```typescript
+   import type { Database } from '@/types/database.types'
+   createSupabaseClient<Database>(...)
+   ```
 
-**Sin este último paso, el build fallará en Vercel.**
+**⚠️ IMPORTANTE:** 
+- Sin el paso 3, TypeScript no reconocerá la tabla
+- Sin el paso 4, el cliente no usará los tipos (aunque existan)
+- **Ambos pasos son necesarios para que el build funcione**
 
 ---
 
