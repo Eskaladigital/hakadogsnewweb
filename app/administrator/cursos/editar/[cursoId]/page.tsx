@@ -144,6 +144,41 @@ export default function EditarCursoPage() {
     setFormData(prev => ({ ...prev, whatYouLearn: newArray }))
   }
 
+  const handleGenerateDescription = async () => {
+    if (!formData.title.trim()) {
+      alert('Por favor, introduce primero el título del curso')
+      return
+    }
+
+    setGeneratingDescription(true)
+    try {
+      const response = await fetch('/api/generate-description', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: formData.title,
+          whatYouLearn: formData.whatYouLearn.filter(item => item.trim() !== '')
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error('Error al generar la descripción')
+      }
+
+      const data = await response.json()
+      if (data.description) {
+        handleInputChange('shortDescription', data.description)
+      }
+    } catch (error) {
+      console.error('Error generando descripción:', error)
+      alert('Error al generar la descripción. Por favor, inténtalo de nuevo.')
+    } finally {
+      setGeneratingDescription(false)
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
