@@ -101,6 +101,12 @@ export default function AdministratorPage() {
         bValue = b.is_published ? 1 : 0
       }
 
+      // Para el campo price, tratar cursos gratuitos como 0
+      if (sortField === 'price') {
+        aValue = a.is_free ? 0 : a.price
+        bValue = b.is_free ? 0 : b.price
+      }
+
       if (typeof aValue === 'string') {
         return sortDirection === 'asc'
           ? aValue.localeCompare(bValue)
