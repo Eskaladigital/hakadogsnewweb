@@ -1,0 +1,18 @@
+# Navegadores modernos (elimina polyfills innecesarios)
+# Esto reduce JavaScript antiguo y mejora PageSpeed
+
+# Chrome, Edge, Firefox, Safari modernos
+last 2 Chrome versions
+last 2 Edge versions
+last 2 Firefox versions
+last 2 Safari versions
+
+# iOS Safari moderno
+iOS >= 14
+
+# Android moderno
+Android >= 10
+
+# No soportar IE11 ni navegadores muy antiguos
+not IE 11
+not dead
