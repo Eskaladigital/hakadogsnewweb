@@ -49,21 +49,25 @@ export default function Navigation() {
             {/* Logo completo en desktop */}
             <div className="hidden sm:block relative h-20 w-64 group-hover:scale-105 transition-transform">
               <Image
-                src="/images/hakadogs-02.png"
+                src="/images/hakadogs-02.webp"
                 alt="Hakadogs - Educación Canina"
-                fill
+                width={256}
+                height={80}
                 className="object-contain object-left"
                 priority
+                quality={90}
               />
             </div>
             {/* Logo en móvil - hakadogs-04.png */}
             <div className="sm:hidden relative h-16 w-48 group-hover:scale-105 transition-transform">
               <Image
-                src="/images/hakadogs-04.png"
+                src="/images/hakadogs-04.webp"
                 alt="Hakadogs - Educación Canina"
-                fill
+                width={192}
+                height={64}
                 className="object-contain object-left"
                 priority
+                quality={90}
               />
             </div>
           </Link>

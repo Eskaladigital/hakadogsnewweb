@@ -12,14 +12,15 @@ export default function Footer() {
           {/* Logo y descripción */}
           <div className="md:col-span-1">
             <div className="mb-4">
-              {/* Logo en móvil y desktop - hakadogs_logo_cara_transparente_vf.png */}
+              {/* Logo en móvil y desktop - hakadogs_logo_cara_transparente_vf.webp */}
               <div className="relative h-28 w-28 mx-auto md:mx-0">
                 <Image
-                  src="/images/hakadogs_logo_cara_transparente_vf.png"
+                  src="/images/hakadogs_logo_cara_transparente_vf.webp"
                   alt="Hakadogs"
-                  fill
+                  width={112}
+                  height={112}
                   className="object-contain brightness-0 invert"
-                  priority
+                  quality={85}
                 />
               </div>
               <div className="text-lg font-bold text-sage mt-3 text-center md:text-left">BE HAKA!</div>
