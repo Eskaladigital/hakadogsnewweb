@@ -350,10 +350,30 @@ export default function ContactosPage() {
                       </p>
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(contact.status)}`}>
-                        {getStatusIcon(contact.status)}
-                        {getStatusLabel(contact.status)}
-                      </span>
+                      <select
+                        value={contact.status}
+                        onChange={async (e) => {
+                          const newStatus = e.target.value as 'pending' | 'in_progress' | 'responded' | 'closed'
+                          const updated = await updateContact(contact.id, { status: newStatus })
+                          if (updated) {
+                            setContacts(contacts.map(c => c.id === contact.id ? { ...c, status: newStatus } : c))
+                            setToast({ message: 'Estado actualizado correctamente', type: 'success' })
+                          } else {
+                            setToast({ message: 'Error al actualizar el estado', type: 'error' })
+                          }
+                        }}
+                        className={`text-xs font-semibold rounded-lg px-3 py-1.5 border-2 cursor-pointer transition ${
+                          contact.status === 'pending' ? 'bg-red-50 border-red-200 text-red-700' :
+                          contact.status === 'in_progress' ? 'bg-amber-50 border-amber-200 text-amber-700' :
+                          contact.status === 'responded' ? 'bg-green-50 border-green-200 text-green-700' :
+                          'bg-gray-50 border-gray-200 text-gray-700'
+                        }`}
+                      >
+                        <option value="pending">⏳ Pendiente</option>
+                        <option value="in_progress">🔄 En Progreso</option>
+                        <option value="responded">✅ Respondido</option>
+                        <option value="closed">🔒 Cerrado</option>
+                      </select>
                     </td>
                     <td className="px-6 py-4">
                       <div className="text-sm text-gray-600">
