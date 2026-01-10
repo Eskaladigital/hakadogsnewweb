@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation'
 import { getSession } from '@/lib/supabase/auth'
 import { getAllCourses, getAdminStats, deleteCourse, updateCourse, type Course } from '@/lib/supabase/courses'
 import { BookOpen, TrendingUp, DollarSign, Users, Plus, Edit, Trash2, Eye, Search, ChevronUp, ChevronDown, CheckCircle, XCircle } from 'lucide-react'
+import Toast from '@/components/ui/Toast'
+import ConfirmModal from '@/components/ui/ConfirmModal'
 
 type SortField = 'title' | 'total_lessons' | 'duration_minutes' | 'price' | 'is_published'
 type SortDirection = 'asc' | 'desc'
@@ -21,6 +23,17 @@ export default function AdministratorPage() {
     totalSales: 0,
     totalRevenue: 0
   })
+
+  // Toast y modal de confirmación
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null)
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean
+    title: string
+    message: string
+    confirmText: string
+    confirmColor: 'red' | 'orange' | 'green' | 'blue'
+    onConfirm: () => void
+  } | null>(null)
 
   // Filtros y paginación
   const [searchTerm, setSearchTerm] = useState('')
@@ -61,38 +74,53 @@ export default function AdministratorPage() {
   }
 
   const handleDelete = async (id: string, title: string) => {
-    if (!confirm(`¿Estás seguro de eliminar el curso "${title}"? Esta acción no se puede deshacer.`)) {
-      return
-    }
-
-    try {
-      await deleteCourse(id)
-      setCourses(courses.filter(c => c.id !== id))
-      alert('Curso eliminado exitosamente')
-      loadData()
-    } catch (error) {
-      console.error('Error eliminando curso:', error)
-      alert('Error al eliminar el curso')
-    }
+    setConfirmModal({
+      isOpen: true,
+      title: 'Eliminar Curso',
+      message: `¿Estás seguro de eliminar el curso "${title}"? Esta acción no se puede deshacer.`,
+      confirmText: 'Eliminar',
+      confirmColor: 'red',
+      onConfirm: async () => {
+        try {
+          await deleteCourse(id)
+          setCourses(courses.filter(c => c.id !== id))
+          setToast({ message: 'Curso eliminado exitosamente', type: 'success' })
+          loadData()
+        } catch (error) {
+          console.error('Error eliminando curso:', error)
+          setToast({ message: 'Error al eliminar el curso', type: 'error' })
+        }
+      }
+    })
   }
 
   const handleTogglePublish = async (id: string, currentStatus: boolean, title: string) => {
     const action = currentStatus ? 'despublicar' : 'publicar'
-    if (!confirm(`¿Estás seguro de ${action} el curso "${title}"?`)) {
-      return
-    }
-
-    try {
-      await updateCourse(id, { is_published: !currentStatus })
-      // Actualizar el estado local
-      setCourses(courses.map(c => 
-        c.id === id ? { ...c, is_published: !currentStatus } : c
-      ))
-      alert(`Curso ${currentStatus ? 'despublicado' : 'publicado'} exitosamente`)
-    } catch (error) {
-      console.error('Error actualizando estado:', error)
-      alert('Error al actualizar el estado del curso')
-    }
+    const actionCapitalized = currentStatus ? 'Despublicar' : 'Publicar'
+    
+    setConfirmModal({
+      isOpen: true,
+      title: `${actionCapitalized} Curso`,
+      message: `¿Estás seguro de ${action} el curso "${title}"?`,
+      confirmText: actionCapitalized,
+      confirmColor: currentStatus ? 'orange' : 'green',
+      onConfirm: async () => {
+        try {
+          await updateCourse(id, { is_published: !currentStatus })
+          // Actualizar el estado local
+          setCourses(courses.map(c => 
+            c.id === id ? { ...c, is_published: !currentStatus } : c
+          ))
+          setToast({ 
+            message: `Curso ${currentStatus ? 'despublicado' : 'publicado'} exitosamente`, 
+            type: 'success' 
+          })
+        } catch (error) {
+          console.error('Error actualizando estado:', error)
+          setToast({ message: 'Error al actualizar el estado del curso', type: 'error' })
+        }
+      }
+    })
   }
 
   const getDifficultyBadge = (difficulty: string) => {
@@ -520,6 +548,29 @@ export default function AdministratorPage() {
           </div>
         </div>
       </div>
+
+      {/* Toast de notificaciones */}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
+
+      {/* Modal de confirmación */}
+      {confirmModal && (
+        <ConfirmModal
+          isOpen={confirmModal.isOpen}
+          title={confirmModal.title}
+          message={confirmModal.message}
+          confirmText={confirmModal.confirmText}
+          cancelText="Cancelar"
+          confirmColor={confirmModal.confirmColor}
+          onConfirm={confirmModal.onConfirm}
+          onCancel={() => setConfirmModal(null)}
+        />
+      )}
     </div>
   )
 }
