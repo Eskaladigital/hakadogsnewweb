@@ -107,18 +107,25 @@
 - Implementación actual
 - Herramientas de verificación
 
+### 13. [OPEN_GRAPH_COMPLETE_AUDIT.md](./OPEN_GRAPH_COMPLETE_AUDIT.md)
+**Auditoría completa Open Graph URLs**
+- URLs absolutas en 18 páginas
+- Corrección localidades y apps
+- Validación Facebook Debugger
+- Template para nuevas páginas
+
 ---
 
 ## 🗄️ BASE DE DATOS
 
-### 13. [supabase/README.md](./supabase/README.md)
+### 14. [supabase/README.md](./supabase/README.md)
 **Guía Supabase completa**
 - Scripts de configuración
 - Estructura de tablas
 - Políticas RLS
 - Verificación y mantenimiento
 
-### 14. [supabase/setup_completo.sql](./supabase/setup_completo.sql)
+### 15. [supabase/setup_completo.sql](./supabase/setup_completo.sql)
 **Script principal de base de datos**
 - Tablas de cursos
 - Storage buckets
