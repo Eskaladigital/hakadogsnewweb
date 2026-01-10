@@ -219,7 +219,10 @@ export default function EditarCursoPage() {
       const updatedLessons = lessons.filter(l => l.id && !l.id.startsWith('lesson-'))
 
       // Actualizar lecciones existentes
-      for (const lesson of updatedLessons) {
+      for (let i = 0; i < updatedLessons.length; i++) {
+        const lesson = updatedLessons[i]
+        const lessonIndexInOriginalArray = lessons.findIndex(l => l.id === lesson.id)
+        
         await updateLesson(lesson.id, {
           title: lesson.title,
           slug: lesson.title
@@ -233,7 +236,7 @@ export default function EditarCursoPage() {
             .replace(/[^a-z0-9]+/g, '-')
             .replace(/^-+|-+$/g, ''),
           content: lesson.content,
-          order_index: lesson.order_index,
+          order_index: lessonIndexInOriginalArray,
           duration_minutes: lesson.duration_minutes,
           video_url: lesson.videoUrl || null,
           video_provider: lesson.videoUrl ? (lesson.videoProvider as any) : null,
@@ -499,7 +502,7 @@ export default function EditarCursoPage() {
                               title: ul.title,
                               slug: existingLesson?.slug || '',
                               content: ul.content,
-                              order_index: existingLesson?.order_index ?? index,
+                              order_index: index,
                               duration_minutes: ul.duration,
                               video_url: ul.videoUrl || null,
                               video_provider: ul.videoUrl ? (ul.videoProvider as any) : null,
