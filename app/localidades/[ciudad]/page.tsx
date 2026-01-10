@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
-import { getCityBySlug, getAllCitySlugs } from '@/lib/cities'
+import { getCityBySlug } from '@/lib/cities'
 import { getExtendedCityData } from '@/lib/extendedCityData'
 import Hero from '@/components/Hero'
 import ServicesSection from '@/components/ServicesSection'
@@ -15,12 +15,9 @@ import LocalTestimonialsSection from '@/components/LocalTestimonialsSection'
 import CTASection from '@/components/CTASection'
 import OnlineCoursesCtaSection from '@/components/OnlineCoursesCtaSection'
 
-export async function generateStaticParams() {
-  const slugs = getAllCitySlugs()
-  return slugs.map((slug) => ({
-    ciudad: slug,
-  }))
-}
+// NO generamos páginas estáticas - se renderizan dinámicamente
+// Esto reduce el build time de minutos a segundos
+export const dynamic = 'force-dynamic'
 
 export async function generateMetadata({ params }: { params: { ciudad: string } }): Promise<Metadata> {
   const city = getCityBySlug(params.ciudad)
