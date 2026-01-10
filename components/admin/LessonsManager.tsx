@@ -154,7 +154,7 @@ export default function LessonsManager({ lessons, onChange }: LessonsManagerProp
                     type="text"
                     value={lesson.title}
                     onChange={(e) => updateLesson(index, 'title', e.target.value)}
-                    className="w-full font-semibold text-gray-900 bg-transparent border-none focus:ring-0 p-0"
+                    className="w-full font-semibold text-gray-900 bg-white border border-gray-200 rounded px-3 py-1.5 focus:ring-2 focus:ring-forest focus:border-transparent"
                     placeholder="Título de la lección"
                   />
                 </div>
