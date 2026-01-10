@@ -24,7 +24,7 @@ export default function AdministratorPage() {
 
   // Filtros y paginación
   const [searchTerm, setSearchTerm] = useState('')
-  const [sortField, setSortField] = useState<SortField>('title')
+  const [sortField, setSortField] = useState<SortField>('price')
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
