@@ -2,7 +2,7 @@
 
 **Versión**: 1.0.0 PRODUCTION  
 **Fecha Lanzamiento**: Enero 2026  
-**Estado**: ✅ **DESPLEGADO EN VERCEL**
+**Estado**: ✅ **LIVE EN HAKADOGS.COM**
 
 ---
 
