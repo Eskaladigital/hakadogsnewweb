@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { ArrowLeft, Save, Sparkles, Plus, X } from 'lucide-react'
+import Toast from '@/components/ui/Toast'
 
 const LessonsManager = dynamic(() => import('@/components/admin/LessonsManager'), {
   ssr: false,
@@ -30,6 +31,7 @@ export default function NuevoCursoPage() {
   const [saving, setSaving] = useState(false)
   const [generatingDescription, setGeneratingDescription] = useState(false)
   const [activeTab, setActiveTab] = useState<'info' | 'lessons'>('info')
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null)
   
   const [formData, setFormData] = useState({
     title: '',
@@ -73,7 +75,7 @@ export default function NuevoCursoPage() {
 
   const handleGenerateDescription = async () => {
     if (!formData.title.trim()) {
-      alert('Por favor, introduce primero el título del curso')
+      setToast({ message: 'Por favor, introduce primero el título del curso', type: 'error' })
       return
     }
 
@@ -100,7 +102,7 @@ export default function NuevoCursoPage() {
       }
     } catch (error) {
       console.error('Error generando descripción:', error)
-      alert('Error al generar la descripción. Por favor, inténtalo de nuevo.')
+      setToast({ message: 'Error al generar la descripción. Por favor, inténtalo de nuevo.', type: 'error' })
     } finally {
       setGeneratingDescription(false)
     }
@@ -115,7 +117,7 @@ export default function NuevoCursoPage() {
 
   const removeWhatYouLearnPoint = (index: number) => {
     if (formData.whatYouLearn.length <= 1) {
-      alert('Debe haber al menos un punto en "Qué aprenderás"')
+      setToast({ message: 'Debe haber al menos un punto en "Qué aprenderás"', type: 'error' })
       return
     }
     const newArray = formData.whatYouLearn.filter((_, i) => i !== index)
@@ -126,7 +128,7 @@ export default function NuevoCursoPage() {
     e.preventDefault()
     
     if (lessons.length === 0) {
-      alert('Debes añadir al menos una lección al curso')
+      setToast({ message: 'Debes añadir al menos una lección al curso', type: 'error' })
       return
     }
 
@@ -193,12 +195,12 @@ export default function NuevoCursoPage() {
         await bulkCreateResources(allResources)
       }
 
-      alert('✅ Curso creado exitosamente!')
-      router.push('/administrator')
+      setToast({ message: 'Curso creado exitosamente!', type: 'success' })
+      setTimeout(() => router.push('/administrator'), 1500)
       
     } catch (error) {
       console.error('Error al guardar curso:', error)
-      alert('❌ Error al guardar el curso. Verifica la consola para más detalles.')
+      setToast({ message: 'Error al guardar el curso. Verifica la consola para más detalles.', type: 'error' })
       setSaving(false)
     }
   }
@@ -472,6 +474,15 @@ export default function NuevoCursoPage() {
           </form>
         </div>
       </div>
+
+      {/* Toast Notification */}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
     </div>
   )
 }

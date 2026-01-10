@@ -7,6 +7,7 @@ import dynamic from 'next/dynamic'
 import { ArrowLeft, Save, Loader2, Sparkles } from 'lucide-react'
 import { getCourseById, updateCourse, getCourseLessons, getLessonResources, updateLesson, deleteLesson, createLesson, createResource, bulkCreateResources, bulkCreateLessons } from '@/lib/supabase/courses'
 import type { Course, Lesson, Resource } from '@/lib/supabase/courses'
+import Toast from '@/components/ui/Toast'
 
 const LessonsManager = dynamic(() => import('@/components/admin/LessonsManager'), {
   ssr: false,
@@ -32,6 +33,7 @@ export default function EditarCursoPage() {
   const [saving, setSaving] = useState(false)
   const [generatingDescription, setGeneratingDescription] = useState(false)
   const [activeTab, setActiveTab] = useState<'info' | 'lessons'>('info')
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null)
   
   const [formData, setFormData] = useState({
     title: '',
@@ -59,7 +61,7 @@ export default function EditarCursoPage() {
       // Cargar curso
       const course = await getCourseById(cursoId)
       if (!course) {
-        alert('Curso no encontrado')
+        setToast({ message: 'Curso no encontrado', type: 'error' })
         router.push('/administrator')
         return
       }
@@ -97,7 +99,7 @@ export default function EditarCursoPage() {
       setLessons(lessonsWithResources)
     } catch (error) {
       console.error('Error cargando curso:', error)
-      alert('Error al cargar el curso')
+      setToast({ message: 'Error al cargar el curso', type: 'error' })
       router.push('/administrator')
     } finally {
       setLoading(false)
@@ -137,7 +139,7 @@ export default function EditarCursoPage() {
 
   const removeWhatYouLearnPoint = (index: number) => {
     if (formData.whatYouLearn.length <= 1) {
-      alert('Debe haber al menos un punto en "Qué aprenderás"')
+      setToast({ message: 'Debe haber al menos un punto en "Qué aprenderás"', type: 'error' })
       return
     }
     const newArray = formData.whatYouLearn.filter((_, i) => i !== index)
@@ -146,7 +148,7 @@ export default function EditarCursoPage() {
 
   const handleGenerateDescription = async () => {
     if (!formData.title.trim()) {
-      alert('Por favor, introduce primero el título del curso')
+      setToast({ message: 'Por favor, introduce primero el título del curso', type: 'error' })
       return
     }
 
@@ -173,7 +175,7 @@ export default function EditarCursoPage() {
       }
     } catch (error) {
       console.error('Error generando descripción:', error)
-      alert('Error al generar la descripción. Por favor, inténtalo de nuevo.')
+      setToast({ message: 'Error al generar la descripción. Por favor, inténtalo de nuevo.', type: 'error' })
     } finally {
       setGeneratingDescription(false)
     }
@@ -183,7 +185,7 @@ export default function EditarCursoPage() {
     e.preventDefault()
     
     if (lessons.length === 0) {
-      alert('Debes tener al menos una lección en el curso')
+      setToast({ message: 'Debes tener al menos una lección en el curso', type: 'error' })
       return
     }
 
@@ -301,12 +303,12 @@ export default function EditarCursoPage() {
         }
       }
 
-      alert('✅ Curso actualizado exitosamente!')
-      router.push('/administrator')
-      
+      setToast({ message: 'Curso actualizado exitosamente!', type: 'success' })
+      setTimeout(() => router.push('/administrator'), 1500)
+
     } catch (error) {
       console.error('Error al guardar curso:', error)
-      alert('❌ Error al guardar el curso. Verifica la consola para más detalles.')
+      setToast({ message: 'Error al guardar el curso. Verifica la consola para más detalles.', type: 'error' })
       setSaving(false)
     }
   }
@@ -624,6 +626,15 @@ export default function EditarCursoPage() {
           </form>
         </div>
       </div>
+
+      {/* Toast Notification */}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
     </div>
   )
 }
