@@ -8,15 +8,69 @@ import WhatsAppChat from '@/components/ui/WhatsAppChat'
 import CookieConsent from '@/components/ui/CookieConsent'
 
 export const metadata: Metadata = {
-  title: 'Hakadogs - Educación Canina Profesional',
-  description: 'Educación canina profesional con métodos positivos y respetuosos. +8 años de experiencia, +500 perros educados. BE HAKA!',
-  keywords: ['educador canino murcia', 'adiestrador perros archena', 'educación canina', 'adiestramiento positivo'],
+  metadataBase: new URL('https://www.hakadogs.com'),
+  title: {
+    default: 'Hakadogs - Educación Canina Profesional | Archena, Murcia',
+    template: '%s | Hakadogs'
+  },
+  description: 'Educación canina profesional con metodología BE HAKA. Servicios presenciales en Murcia y cursos online en toda España. +8 años de experiencia, +500 perros educados. Métodos 100% positivos.',
+  keywords: ['educador canino murcia', 'adiestrador perros archena', 'educación canina', 'adiestramiento positivo', 'cursos online perros', 'BE HAKA', 'hakadogs'],
+  authors: [{ name: 'Alfredo García - Hakadogs' }],
+  creator: 'Hakadogs',
+  publisher: 'Hakadogs',
+  
+  // Open Graph
+  openGraph: {
+    type: 'website',
+    locale: 'es_ES',
+    url: 'https://www.hakadogs.com',
+    siteName: 'Hakadogs - Educación Canina Profesional',
+    title: 'Hakadogs - Educación Canina Profesional | Archena, Murcia',
+    description: 'Educación canina profesional con metodología BE HAKA. Servicios presenciales en Murcia y cursos online en toda España. +8 años de experiencia, +500 perros educados.',
+    images: [
+      {
+        url: '/images/hakadogs-og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Hakadogs - Educación Canina Profesional',
+      }
+    ],
+  },
+  
+  // Twitter Card
+  twitter: {
+    card: 'summary_large_image',
+    site: '@hakadogs',
+    creator: '@hakadogs',
+    title: 'Hakadogs - Educación Canina Profesional',
+    description: 'Educación canina profesional con metodología BE HAKA. +8 años de experiencia, +500 perros educados.',
+    images: ['/images/hakadogs-og-image.jpg'],
+  },
+  
+  // Icons
   icons: {
     icon: [
       { url: '/icon.png', type: 'image/png' },
       { url: '/images/hakadogs-01.png', type: 'image/png', sizes: '32x32' },
     ],
     apple: '/images/hakadogs-01.png',
+  },
+  
+  // Otros metadatos
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  
+  verification: {
+    google: 'df6887502d2f32b6',
   },
 }
 
