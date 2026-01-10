@@ -333,7 +333,7 @@ export default function CursosPage() {
               <div className="bg-white rounded-xl p-6 shadow-md">
                 <h3 className="font-bold text-gray-900 mb-2">¿Hay garantía de devolución?</h3>
                 <p className="text-gray-600">
-                  Sí, ofrecemos garantía de 30 días. Si no estás satisfecho con un curso, te devolvemos el 100% de tu dinero.
+                  No, una vez comprado un curso, el dinero no puede ser reembolsado, puesto que ya se ha tenido acceso completo al contenido del curso de forma inmediata. Al tratarse de contenido digital con acceso instantáneo, todas las compras son finales.
                 </p>
               </div>
             </div>
