@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import ServicesHero from '@/components/services/ServicesHero'
 import ServicesGrid from '@/components/services/ServicesGrid'
+import OnlineCoursesSection from '@/components/services/OnlineCoursesSection'
 import ProcessSection from '@/components/services/ProcessSection'
 import PricingSection from '@/components/services/PricingSection'
 import CTASection from '@/components/CTASection'
@@ -15,6 +16,7 @@ export default function ServiciosPage() {
     <>
       <ServicesHero />
       <ServicesGrid />
+      <OnlineCoursesSection />
       <ProcessSection />
       <PricingSection />
       <CTASection />
