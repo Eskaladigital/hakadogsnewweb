@@ -172,25 +172,8 @@ export default function Home() {
       
       <SessionsShowcase />
       
-      {/* Apps Section - Actualizada con nota */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <h2 className="text-4xl font-bold text-forest-dark mb-4">
-              Próximamente: Ecosistema Digital Completo
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Estamos desarrollando 3 aplicaciones que complementarán nuestros servicios presenciales y cursos online
-            </p>
-          </div>
-          <AppsSection />
-          <div className="text-center mt-8">
-            <p className="inline-flex items-center gap-2 bg-sage/10 px-6 py-3 rounded-full text-sage font-semibold">
-              🚧 En desarrollo · Próximo lanzamiento 2026
-            </p>
-          </div>
-        </div>
-      </section>
+      {/* Apps Section - Solo contenido verde, full width */}
+      <AppsSection />
       
       <AboutSection />
       <GallerySection />
