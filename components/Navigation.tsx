@@ -82,21 +82,21 @@ export default function Navigation() {
           </div>
 
           {/* Auth Buttons Desktop */}
-          <div className="hidden lg:flex items-center space-x-4">
+          <div className="hidden lg:flex items-center space-x-3">
             {isLoggedIn ? (
               <>
                 <Link
                   href="/cursos/mi-escuela"
-                  className="flex items-center space-x-2 text-gray-700 hover:text-forest font-medium transition-colors"
+                  className="flex items-center space-x-2 bg-forest/10 text-forest hover:bg-forest/20 font-semibold px-5 py-2 rounded-lg transition-all"
                 >
-                  <User size={20} />
+                  <User size={18} />
                   <span>{userName}</span>
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center space-x-2 text-gray-700 hover:text-red-600 font-medium transition-colors"
+                  className="flex items-center space-x-2 bg-red-50 text-red-600 hover:bg-red-100 font-semibold px-5 py-2 rounded-lg transition-all"
                 >
-                  <LogOut size={20} />
+                  <LogOut size={18} />
                   <span>Salir</span>
                 </button>
               </>
@@ -144,15 +144,15 @@ export default function Navigation() {
             ))}
             
             {/* Auth Buttons Mobile */}
-            <div className="pt-4 border-t border-gray-200 space-y-2">
+            <div className="pt-4 border-t border-gray-200 space-y-3">
               {isLoggedIn ? (
                 <>
                   <Link
                     href="/cursos/mi-escuela"
-                    className="flex items-center space-x-2 py-2 text-gray-700 hover:text-forest font-medium transition-colors"
+                    className="flex items-center space-x-2 w-full bg-forest/10 text-forest hover:bg-forest/20 font-semibold px-5 py-3 rounded-lg transition-all"
                     onClick={() => setIsOpen(false)}
                   >
-                    <User size={20} />
+                    <User size={18} />
                     <span>{userName}</span>
                   </Link>
                   <button
@@ -160,9 +160,9 @@ export default function Navigation() {
                       handleLogout()
                       setIsOpen(false)
                     }}
-                    className="flex items-center space-x-2 w-full py-2 text-gray-700 hover:text-red-600 font-medium transition-colors"
+                    className="flex items-center space-x-2 w-full bg-red-50 text-red-600 hover:bg-red-100 font-semibold px-5 py-3 rounded-lg transition-all"
                   >
-                    <LogOut size={20} />
+                    <LogOut size={18} />
                     <span>Salir</span>
                   </button>
                 </>
