@@ -150,33 +150,32 @@ export default function LessonsManager({ lessons, onChange }: LessonsManagerProp
             className="bg-white border border-gray-200 rounded-lg overflow-hidden"
           >
             {/* Lesson Header */}
-            <div className="bg-gray-50 p-4 flex items-center justify-between border-b border-gray-200">
-              <div className="flex items-center flex-1">
-                <GripVertical className="w-5 h-5 text-gray-400 mr-3 cursor-move" />
-                <div className="flex-1">
+            <div className="bg-gray-50 p-3 sm:p-4 flex flex-wrap items-center justify-between gap-2 border-b border-gray-200">
+              <div className="flex items-center flex-1 min-w-0">
+                <GripVertical className="w-5 h-5 text-gray-400 mr-2 sm:mr-3 cursor-move flex-shrink-0" />
+                <div className="flex-1 min-w-0">
                   <input
                     type="text"
                     value={lesson.title}
                     onChange={(e) => updateLesson(index, 'title', e.target.value)}
-                    className="w-full font-semibold text-gray-900 bg-white border border-gray-200 rounded px-3 py-1.5 focus:ring-2 focus:ring-forest focus:border-transparent"
+                    className="w-full text-sm sm:text-base font-semibold text-gray-900 bg-white border border-gray-200 rounded px-2 sm:px-3 py-1.5 focus:ring-2 focus:ring-forest focus:border-transparent"
                     placeholder="Título de la lección"
                   />
                 </div>
-                <div className="flex items-center space-x-2 ml-4">
-                  <span className="text-sm text-gray-600">{lesson.duration} min</span>
-                  {lesson.isFreePreview && (
-                    <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
-                      Vista previa
-                    </span>
-                  )}
-                </div>
               </div>
-              <div className="flex items-center space-x-2 ml-4">
+              <div className="flex items-center space-x-2">
+                <span className="text-xs sm:text-sm text-gray-600 whitespace-nowrap">{lesson.duration} min</span>
+                {lesson.isFreePreview && (
+                  <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded whitespace-nowrap">
+                    Vista previa
+                  </span>
+                )}
                 <button
                   type="button"
                   onClick={() => moveLesson(index, 'up')}
                   disabled={index === 0}
                   className="p-1 text-gray-600 hover:text-gray-900 disabled:opacity-30"
+                  title="Subir"
                 >
                   ↑
                 </button>
@@ -185,6 +184,7 @@ export default function LessonsManager({ lessons, onChange }: LessonsManagerProp
                   onClick={() => moveLesson(index, 'down')}
                   disabled={index === lessons.length - 1}
                   className="p-1 text-gray-600 hover:text-gray-900 disabled:opacity-30"
+                  title="Bajar"
                 >
                   ↓
                 </button>
@@ -192,13 +192,15 @@ export default function LessonsManager({ lessons, onChange }: LessonsManagerProp
                   type="button"
                   onClick={() => toggleExpand(index)}
                   className="p-1 text-gray-600 hover:text-gray-900"
+                  title={lesson.isExpanded ? 'Contraer' : 'Expandir'}
                 >
-                  {lesson.isExpanded ? <ChevronUp /> : <ChevronDown />}
+                  {lesson.isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                 </button>
                 <button
                   type="button"
                   onClick={() => deleteLesson(index)}
                   className="p-1 text-red-600 hover:text-red-700"
+                  title="Eliminar"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -207,9 +209,9 @@ export default function LessonsManager({ lessons, onChange }: LessonsManagerProp
 
             {/* Lesson Content (expandible) */}
             {lesson.isExpanded && (
-              <div className="p-6 space-y-6">
+              <div className="p-4 sm:p-6 space-y-6">
                 {/* Configuración básica */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Duración (minutos)
@@ -218,11 +220,11 @@ export default function LessonsManager({ lessons, onChange }: LessonsManagerProp
                       type="number"
                       value={lesson.duration}
                       onChange={(e) => updateLesson(index, 'duration', parseInt(e.target.value))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                      className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-base"
                     />
                   </div>
                   <div>
-                    <label className="flex items-center space-x-2 mt-8">
+                    <label className="flex items-center space-x-2 mt-6 sm:mt-8">
                       <input
                         type="checkbox"
                         checked={lesson.isFreePreview}
@@ -240,11 +242,11 @@ export default function LessonsManager({ lessons, onChange }: LessonsManagerProp
                     <Video className="w-4 h-4 mr-2" />
                     Video de la lección (opcional)
                   </label>
-                  <div className="grid grid-cols-4 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
                     <select
                       value={lesson.videoProvider || ''}
                       onChange={(e) => updateLesson(index, 'videoProvider', e.target.value)}
-                      className="px-3 py-2 border border-gray-300 rounded-lg"
+                      className="px-3 py-2.5 border border-gray-300 rounded-lg text-base"
                     >
                       <option value="">Sin video</option>
                       <option value="youtube">YouTube</option>
@@ -257,7 +259,7 @@ export default function LessonsManager({ lessons, onChange }: LessonsManagerProp
                       onChange={(e) => updateLesson(index, 'videoUrl', e.target.value)}
                       placeholder="URL del video"
                       disabled={!lesson.videoProvider}
-                      className="col-span-3 px-3 py-2 border border-gray-300 rounded-lg disabled:bg-gray-100 disabled:cursor-not-allowed"
+                      className="sm:col-span-3 px-3 py-2.5 border border-gray-300 rounded-lg disabled:bg-gray-100 disabled:cursor-not-allowed text-base"
                     />
                   </div>
                 </div>
@@ -268,11 +270,11 @@ export default function LessonsManager({ lessons, onChange }: LessonsManagerProp
                     <Headphones className="w-4 h-4 mr-2" />
                     Audio de la lección (opcional)
                   </label>
-                  <div className="grid grid-cols-4 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
                     <select
                       value={lesson.audioProvider || ''}
                       onChange={(e) => updateLesson(index, 'audioProvider', e.target.value)}
-                      className="px-3 py-2 border border-gray-300 rounded-lg"
+                      className="px-3 py-2.5 border border-gray-300 rounded-lg text-base"
                     >
                       <option value="">Sin audio</option>
                       <option value="self-hosted">Self-hosted</option>
@@ -285,7 +287,7 @@ export default function LessonsManager({ lessons, onChange }: LessonsManagerProp
                       onChange={(e) => updateLesson(index, 'audioUrl', e.target.value)}
                       placeholder="URL del audio"
                       disabled={!lesson.audioProvider}
-                      className="col-span-3 px-3 py-2 border border-gray-300 rounded-lg disabled:bg-gray-100 disabled:cursor-not-allowed"
+                      className="sm:col-span-3 px-3 py-2.5 border border-gray-300 rounded-lg disabled:bg-gray-100 disabled:cursor-not-allowed text-base"
                     />
                   </div>
                   <p className="text-xs text-gray-500 mt-1">
@@ -326,11 +328,11 @@ export default function LessonsManager({ lessons, onChange }: LessonsManagerProp
                   ) : (
                     <div className="space-y-2">
                       {lesson.resources.map((resource, rIndex) => (
-                        <div key={resource.id} className="flex items-center space-x-2 bg-gray-50 p-3 rounded-lg">
+                        <div key={resource.id} className="flex flex-col sm:flex-row items-start sm:items-center gap-2 bg-gray-50 p-3 rounded-lg">
                           <select
                             value={resource.fileType}
                             onChange={(e) => updateResource(index, rIndex, 'fileType', e.target.value)}
-                            className="px-2 py-1 border border-gray-300 rounded text-sm"
+                            className="w-full sm:w-auto px-2 py-2 border border-gray-300 rounded text-sm"
                           >
                             <option value="pdf">PDF</option>
                             <option value="doc">DOC</option>
@@ -342,19 +344,20 @@ export default function LessonsManager({ lessons, onChange }: LessonsManagerProp
                             value={resource.title}
                             onChange={(e) => updateResource(index, rIndex, 'title', e.target.value)}
                             placeholder="Nombre del recurso"
-                            className="flex-1 px-2 py-1 border border-gray-300 rounded text-sm"
+                            className="flex-1 w-full px-2 py-2 border border-gray-300 rounded text-sm"
                           />
                           <input
                             type="text"
                             value={resource.fileUrl}
                             onChange={(e) => updateResource(index, rIndex, 'fileUrl', e.target.value)}
                             placeholder="URL del archivo"
-                            className="flex-1 px-2 py-1 border border-gray-300 rounded text-sm"
+                            className="flex-1 w-full px-2 py-2 border border-gray-300 rounded text-sm"
                           />
                           <button
                             type="button"
                             onClick={() => deleteResource(index, rIndex)}
-                            className="p-1 text-red-600 hover:text-red-700"
+                            className="p-2 text-red-600 hover:text-red-700 self-end sm:self-auto"
+                            title="Eliminar recurso"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>

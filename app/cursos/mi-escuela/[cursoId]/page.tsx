@@ -270,42 +270,42 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
   return (
     <div className="min-h-screen bg-gray-50 pt-20">
       {/* Header */}
-      <div className={`bg-gradient-to-r ${colorGradient} text-white py-8`}>
+      <div className={`bg-gradient-to-r ${colorGradient} text-white py-6 sm:py-8`}>
         <div className="container mx-auto px-4">
           <div className="max-w-7xl mx-auto">
             <Link
               href="/cursos/mi-escuela"
-              className="inline-flex items-center text-white/80 hover:text-white transition mb-4"
+              className="inline-flex items-center text-white/80 hover:text-white transition mb-4 text-sm sm:text-base"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Volver a Mi Escuela
             </Link>
-            <div className="flex items-start justify-between">
-              <div>
-                <div className="mb-4">
-                  <h1 className="text-3xl md:text-4xl font-bold mb-2">{curso.title}</h1>
-                  <p className="text-white/90">{curso.short_description || curso.description}</p>
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+              <div className="flex-1">
+                <div className="mb-3 sm:mb-4">
+                  <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">{curso.title}</h1>
+                  <p className="text-white/90 text-sm sm:text-base">{curso.short_description || curso.description}</p>
                 </div>
-                <div className="flex items-center space-x-6 text-sm">
+                <div className="flex flex-wrap items-center gap-3 sm:gap-6 text-xs sm:text-sm">
                   <span className="flex items-center">
                     <Clock className="w-4 h-4 mr-2" />
                     {curso.duration_minutes} min
                   </span>
                   <span>{getDifficultyLabel(curso.difficulty)}</span>
-                  <span>{completedCount}/{lecciones.length} lecciones completadas</span>
+                  <span>{completedCount}/{lecciones.length} completadas</span>
                 </div>
               </div>
             </div>
 
             {/* Progress Bar */}
-            <div className="mt-6">
-              <div className="flex items-center justify-between text-sm mb-2">
+            <div className="mt-4 sm:mt-6">
+              <div className="flex items-center justify-between text-xs sm:text-sm mb-2">
                 <span>Progreso del curso</span>
                 <span className="font-bold">{progressPercentage}%</span>
               </div>
-              <div className="w-full bg-white/20 rounded-full h-3">
+              <div className="w-full bg-white/20 rounded-full h-2 sm:h-3">
                 <div 
-                  className="bg-white rounded-full h-3 transition-all duration-500"
+                  className="bg-white rounded-full h-2 sm:h-3 transition-all duration-500"
                   style={{ width: `${progressPercentage}%` }}
                 />
               </div>
@@ -315,11 +315,11 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
       </div>
 
       {/* Content */}
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-6 sm:py-8">
         <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="grid lg:grid-cols-3 gap-6 sm:gap-8">
             {/* Main Content */}
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-2 order-2 lg:order-1">
               <div className="bg-white rounded-xl shadow-lg overflow-hidden">
                 {/* Video/Audio/Content Area */}
                 {activeTab === 'video' && leccionActual.video_url && (
@@ -368,57 +368,57 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
 
                 {/* Tabs - Solo mostrar si hay más de una opción */}
                 {availableTabs.length > 1 && (
-                  <div className="border-b border-gray-200">
-                    <div className="flex">
+                  <div className="border-b border-gray-200 overflow-x-auto">
+                    <div className="flex min-w-max">
                       {leccionActual.video_url && (
                         <button
                           onClick={() => setActiveTab('video')}
-                          className={`flex-1 py-4 px-6 font-semibold transition ${
+                          className={`flex-1 min-w-[120px] py-3 sm:py-4 px-4 sm:px-6 font-semibold transition text-sm sm:text-base ${
                             activeTab === 'video'
                               ? 'border-b-2 border-forest text-forest' 
                               : 'text-gray-600 hover:text-gray-900'
                           }`}
                         >
-                          <Video className="w-5 h-5 inline mr-2" />
+                          <Video className="w-4 sm:w-5 h-4 sm:h-5 inline mr-2" />
                           Video
                         </button>
                       )}
                       {leccionActual.audio_url && (
                         <button
                           onClick={() => setActiveTab('audio')}
-                          className={`flex-1 py-4 px-6 font-semibold transition ${
+                          className={`flex-1 min-w-[120px] py-3 sm:py-4 px-4 sm:px-6 font-semibold transition text-sm sm:text-base ${
                             activeTab === 'audio'
                               ? 'border-b-2 border-forest text-forest' 
                               : 'text-gray-600 hover:text-gray-900'
                           }`}
                         >
-                          <Headphones className="w-5 h-5 inline mr-2" />
+                          <Headphones className="w-4 sm:w-5 h-4 sm:h-5 inline mr-2" />
                           Audio
                         </button>
                       )}
                       {leccionActual.content && (
                         <button
                           onClick={() => setActiveTab('content')}
-                          className={`flex-1 py-4 px-6 font-semibold transition ${
+                          className={`flex-1 min-w-[120px] py-3 sm:py-4 px-4 sm:px-6 font-semibold transition text-sm sm:text-base ${
                             activeTab === 'content'
                               ? 'border-b-2 border-forest text-forest' 
                               : 'text-gray-600 hover:text-gray-900'
                           }`}
                         >
-                          <FileText className="w-5 h-5 inline mr-2" />
+                          <FileText className="w-4 sm:w-5 h-4 sm:h-5 inline mr-2" />
                           Contenido
                         </button>
                       )}
                       {recursos.length > 0 && (
                         <button
                           onClick={() => setActiveTab('resources')}
-                          className={`flex-1 py-4 px-6 font-semibold transition ${
+                          className={`flex-1 min-w-[120px] py-3 sm:py-4 px-4 sm:px-6 font-semibold transition text-sm sm:text-base ${
                             activeTab === 'resources'
                               ? 'border-b-2 border-forest text-forest' 
                               : 'text-gray-600 hover:text-gray-900'
                           }`}
                         >
-                          <Download className="w-5 h-5 inline mr-2" />
+                          <Download className="w-4 sm:w-5 h-4 sm:h-5 inline mr-2" />
                           Recursos
                         </button>
                       )}
@@ -427,7 +427,7 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                 )}
 
                 {/* Content Area */}
-                <div className="p-8">
+                <div className="p-4 sm:p-6 lg:p-8">
                   {activeTab === 'content' && leccionActual.content && (
                     <div>
                       <h2 className="text-2xl font-bold text-gray-900 mb-6">
@@ -493,7 +493,7 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                     <button
                       onClick={handleMarkComplete}
                       disabled={completing}
-                      className="w-full mt-8 bg-gradient-to-r from-forest to-sage text-white font-bold py-4 px-6 rounded-lg hover:opacity-90 transition-all flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full mt-6 sm:mt-8 bg-gradient-to-r from-forest to-sage text-white font-bold py-3 sm:py-4 px-6 rounded-lg hover:opacity-90 transition-all flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
                     >
                       {completing ? (
                         <>
@@ -510,7 +510,7 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                   )}
 
                   {lessonProgress[leccionActual.id] && (
-                    <div className="w-full mt-8 bg-green-50 border border-green-200 text-green-800 font-semibold py-4 px-6 rounded-lg flex items-center justify-center">
+                    <div className="w-full mt-6 sm:mt-8 bg-green-50 border border-green-200 text-green-800 font-semibold py-3 sm:py-4 px-6 rounded-lg flex items-center justify-center text-sm sm:text-base">
                       <CheckCircle className="w-5 h-5 mr-2" />
                       Lección Completada
                     </div>
@@ -520,9 +520,9 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
             </div>
 
             {/* Sidebar - Lecciones */}
-            <div className="lg:col-span-1">
-              <div className="bg-white rounded-xl shadow-lg p-6 sticky top-24">
-                <h3 className="text-xl font-bold text-gray-900 mb-6">Contenido del Curso</h3>
+            <div className="lg:col-span-1 order-1 lg:order-2">
+              <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 lg:sticky lg:top-24">
+                <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">Contenido del Curso</h3>
                 <div className="space-y-2">
                   {lecciones.map((leccion, index) => {
                     // Determinar si la lección está bloqueada
@@ -535,7 +535,7 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                         <motion.button
                           onClick={() => handleSelectLesson(leccion)}
                           disabled={isLocked}
-                          className={`w-full text-left p-4 rounded-lg transition-all ${
+                          className={`w-full text-left p-3 sm:p-4 rounded-lg transition-all ${
                             isActive
                               ? 'bg-forest/10 border-2 border-forest'
                               : isLocked
@@ -543,18 +543,19 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                               : 'bg-gray-50 hover:bg-gray-100'
                           }`}
                           whileHover={isLocked ? {} : { scale: 1.02 }}
+                          whileTap={isLocked ? {} : { scale: 0.98 }}
                         >
                           <div className="flex items-start">
-                            <div className="mr-3 mt-0.5">
+                            <div className="mr-2 sm:mr-3 mt-0.5 flex-shrink-0">
                               {isLocked ? (
-                                <Lock className="w-5 h-5 text-gray-400" />
+                                <Lock className="w-4 sm:w-5 h-4 sm:h-5 text-gray-400" />
                               ) : isCompleted ? (
-                                <CheckCircle className="w-5 h-5 text-green-600" />
+                                <CheckCircle className="w-4 sm:w-5 h-4 sm:h-5 text-green-600" />
                               ) : (
-                                <Play className="w-5 h-5 text-forest" />
+                                <Play className="w-4 sm:w-5 h-4 sm:h-5 text-forest" />
                               )}
                             </div>
-                            <div className="flex-1">
+                            <div className="flex-1 min-w-0">
                               <div className="flex items-center justify-between mb-1">
                                 <span className={`text-xs font-semibold ${
                                   isLocked ? 'text-gray-400' : 'text-gray-500'
@@ -562,13 +563,13 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                                   Lección {index + 1}
                                   {isLocked && ' • Bloqueada'}
                                 </span>
-                                <span className={`text-xs ${
+                                <span className={`text-xs whitespace-nowrap ml-2 ${
                                   isLocked ? 'text-gray-400' : 'text-gray-500'
                                 }`}>
                                   {leccion.duration_minutes} min
                                 </span>
                               </div>
-                              <p className={`font-semibold ${
+                              <p className={`text-sm sm:text-base font-semibold truncate ${
                                 isActive 
                                   ? 'text-forest' 
                                   : isLocked 
@@ -581,16 +582,29 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                           </div>
                         </motion.button>
                         
-                        {/* Tooltip para lecciones bloqueadas */}
+                        {/* Tooltip para lecciones bloqueadas - adaptativo */}
                         {isLocked && (
-                          <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                          <div className="hidden lg:block absolute left-full ml-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
                             <div className="bg-gray-900 text-white text-sm px-4 py-3 rounded-lg shadow-xl whitespace-nowrap">
                               <div className="flex items-center">
-                                <Lock className="w-4 h-4 mr-2" />
-                                <span>Completa la lección anterior para desbloquear</span>
+                                <Lock className="w-4 h-4 mr-2 flex-shrink-0" />
+                                <span>Completa la lección anterior</span>
                               </div>
                               {/* Flecha */}
                               <div className="absolute right-full top-1/2 -translate-y-1/2 border-8 border-transparent border-r-gray-900"></div>
+                            </div>
+                          </div>
+                        )}
+                        {/* Tooltip móvil - abajo */}
+                        {isLocked && (
+                          <div className="lg:hidden absolute top-full left-0 right-0 mt-2 opacity-0 group-active:opacity-100 transition-opacity pointer-events-none z-10">
+                            <div className="bg-gray-900 text-white text-xs px-3 py-2 rounded-lg shadow-xl text-center">
+                              <div className="flex items-center justify-center">
+                                <Lock className="w-3 h-3 mr-2" />
+                                <span>Completa la lección anterior</span>
+                              </div>
+                              {/* Flecha arriba */}
+                              <div className="absolute bottom-full left-1/2 -translate-x-1/2 border-4 border-transparent border-b-gray-900"></div>
                             </div>
                           </div>
                         )}

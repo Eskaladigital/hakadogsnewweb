@@ -228,8 +228,8 @@ export default function AdministratorPage() {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-              <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
+              <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-gray-600">Total Cursos</p>
                 <BookOpen className="w-5 h-5 text-forest" />
@@ -280,7 +280,7 @@ export default function AdministratorPage() {
               </div>
 
               {/* Búsqueda y filtros */}
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col gap-4">
                 <div className="flex-1 relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
@@ -291,20 +291,20 @@ export default function AdministratorPage() {
                       setSearchTerm(e.target.value)
                       setCurrentPage(1)
                     }}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent text-base"
                   />
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center justify-between gap-2">
                   <span className="text-sm text-gray-600 whitespace-nowrap">Mostrar:</span>
                   <select
                     value={itemsPerPage}
                     onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
-                    className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-forest focus:border-transparent"
+                    className="border border-gray-300 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-forest focus:border-transparent text-base flex-1 sm:flex-initial"
                   >
-                    <option value={5}>5</option>
-                    <option value={10}>10</option>
-                    <option value={25}>25</option>
-                    <option value={50}>50</option>
+                    <option value={5}>5 por página</option>
+                    <option value={10}>10 por página</option>
+                    <option value={25}>25 por página</option>
+                    <option value={50}>50 por página</option>
                   </select>
                 </div>
               </div>
@@ -508,35 +508,42 @@ export default function AdministratorPage() {
 
                 {/* Paginación */}
                 {totalPages > 1 && (
-                  <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
-                    <div className="text-sm text-gray-600">
-                      Mostrando {((currentPage - 1) * itemsPerPage) + 1} - {Math.min(currentPage * itemsPerPage, filteredAndSortedCourses.length)} de {filteredAndSortedCourses.length} cursos
+                  <div className="px-4 sm:px-6 py-4 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div className="text-sm text-gray-600 text-center sm:text-left">
+                      Mostrando {((currentPage - 1) * itemsPerPage) + 1} - {Math.min(currentPage * itemsPerPage, filteredAndSortedCourses.length)} de {filteredAndSortedCourses.length}
                     </div>
                     <div className="flex items-center space-x-2">
                       <button
                         onClick={() => setCurrentPage(currentPage - 1)}
                         disabled={currentPage === 1}
-                        className="px-3 py-1 border border-gray-300 rounded-lg text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition"
+                        className="px-3 py-2 border border-gray-300 rounded-lg text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition"
                       >
                         Anterior
                       </button>
-                      {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                        <button
-                          key={page}
-                          onClick={() => setCurrentPage(page)}
-                          className={`px-3 py-1 rounded-lg text-sm transition ${
-                            page === currentPage
-                              ? 'bg-forest text-white'
-                              : 'border border-gray-300 hover:bg-gray-50'
-                          }`}
-                        >
-                          {page}
-                        </button>
-                      ))}
+                      {/* Mostrar solo algunas páginas en móvil */}
+                      <div className="hidden sm:flex items-center space-x-2">
+                        {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                          <button
+                            key={page}
+                            onClick={() => setCurrentPage(page)}
+                            className={`px-3 py-2 rounded-lg text-sm transition ${
+                              page === currentPage
+                                ? 'bg-forest text-white'
+                                : 'border border-gray-300 hover:bg-gray-50'
+                            }`}
+                          >
+                            {page}
+                          </button>
+                        ))}
+                      </div>
+                      {/* Solo página actual en móvil */}
+                      <div className="sm:hidden px-4 py-2 bg-forest text-white rounded-lg text-sm font-semibold">
+                        {currentPage} / {totalPages}
+                      </div>
                       <button
                         onClick={() => setCurrentPage(currentPage + 1)}
                         disabled={currentPage === totalPages}
-                        className="px-3 py-1 border border-gray-300 rounded-lg text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition"
+                        className="px-3 py-2 border border-gray-300 rounded-lg text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition"
                       >
                         Siguiente
                       </button>
