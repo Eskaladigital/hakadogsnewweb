@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: { params: { ciudad: string } 
       locale: 'es_ES',
       images: [
         {
-          url: '/images/logo_facebook_1200_630.jpg',
+          url: 'https://www.hakadogs.com/images/logo_facebook_1200_630.jpg',
           width: 1200,
           height: 630,
           alt: `Hakadogs - Educación Canina en ${city.name}`,
@@ -51,7 +51,7 @@ export async function generateMetadata({ params }: { params: { ciudad: string } 
       card: 'summary_large_image',
       title: `Educación Canina en ${city.name} | Hakadogs`,
       description: city.description,
-      images: ['/images/logo_facebook_1200_630.jpg'],
+      images: ['https://www.hakadogs.com/images/logo_facebook_1200_630.jpg'],
     },
   }
 }

@@ -10,7 +10,7 @@ export const metadata = {
     url: 'https://www.hakadogs.com/apps',
     images: [
       {
-        url: '/images/logo_facebook_1200_630.jpg',
+        url: 'https://www.hakadogs.com/images/logo_facebook_1200_630.jpg',
         width: 1200,
         height: 630,
         alt: 'Hakadogs - Apps de Educación Canina',
@@ -21,7 +21,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: 'Apps de Educación Canina | Hakadogs',
     description: 'HakaHealth, HakaTrainer y HakaCommunity - Próximamente',
-    images: ['/images/logo_facebook_1200_630.jpg'],
+    images: ['https://www.hakadogs.com/images/logo_facebook_1200_630.jpg'],
   },
 }
 
