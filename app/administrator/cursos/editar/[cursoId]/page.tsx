@@ -444,20 +444,39 @@ export default function EditarCursoPage() {
                         </div>
 
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-3">
-                            Qué aprenderás (4 puntos)
-                          </label>
+                          <div className="flex items-center justify-between mb-3">
+                            <label className="block text-sm font-semibold text-gray-700">
+                              Qué aprenderás ({formData.whatYouLearn.length} {formData.whatYouLearn.length === 1 ? 'punto' : 'puntos'})
+                            </label>
+                            <button
+                              type="button"
+                              onClick={addWhatYouLearnPoint}
+                              className="text-sm bg-forest/10 text-forest font-semibold px-3 py-1.5 rounded-lg hover:bg-forest/20 transition flex items-center"
+                            >
+                              <Plus className="w-4 h-4 mr-1" />
+                              Añadir punto
+                            </button>
+                          </div>
                           <div className="space-y-3">
                             {formData.whatYouLearn.map((item, index) => (
-                              <input
-                                key={index}
-                                type="text"
-                                value={item}
-                                onChange={(e) => handleWhatYouLearnChange(index, e.target.value)}
-                                placeholder={`Punto ${index + 1}`}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                                required
-                              />
+                              <div key={index} className="flex items-center gap-2">
+                                <input
+                                  type="text"
+                                  value={item}
+                                  onChange={(e) => handleWhatYouLearnChange(index, e.target.value)}
+                                  placeholder={`Punto ${index + 1}`}
+                                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
+                                  required
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => removeWhatYouLearnPoint(index)}
+                                  className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
+                                  title="Eliminar punto"
+                                >
+                                  <X className="w-5 h-5" />
+                                </button>
+                              </div>
                             ))}
                           </div>
                         </div>
