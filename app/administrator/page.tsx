@@ -23,19 +23,48 @@ export default function DashboardPage() {
   const loadDashboardData = async () => {
     try {
       setLoading(true)
-      const [statsData, usersData, salesData, contactsData] = await Promise.all([
+      
+      // Ejecutar todas las llamadas en paralelo pero manejar errores individualmente
+      const results = await Promise.allSettled([
         getDashboardStats(),
         getRecentUsers(5),
         getRecentSales(5),
         getRecentContacts(5)
       ])
       
-      setStats(statsData)
-      setRecentUsers(usersData)
-      setRecentSales(salesData)
-      setRecentContacts(contactsData)
+      // Procesar resultados individualmente
+      if (results[0].status === 'fulfilled') {
+        setStats(results[0].value)
+      } else {
+        console.warn('⚠️ Error cargando estadísticas del dashboard:', results[0].reason)
+      }
+      
+      if (results[1].status === 'fulfilled') {
+        setRecentUsers(results[1].value)
+      } else {
+        console.warn('⚠️ Error cargando usuarios recientes:', results[1].reason)
+      }
+      
+      if (results[2].status === 'fulfilled') {
+        setRecentSales(results[2].value)
+      } else {
+        console.warn('⚠️ Error cargando ventas recientes:', results[2].reason)
+      }
+      
+      if (results[3].status === 'fulfilled') {
+        setRecentContacts(results[3].value)
+      } else {
+        console.warn('⚠️ Error cargando contactos recientes:', results[3].reason)
+      }
+      
+      // Si al menos las estadísticas principales se cargaron, mostrar el dashboard
+      if (results[0].status === 'fulfilled') {
+        // Dashboard funcionando
+      } else {
+        console.error('❌ No se pudieron cargar las estadísticas principales del dashboard')
+      }
     } catch (error) {
-      console.error('Error cargando dashboard:', error)
+      console.error('Error crítico cargando dashboard:', error)
     } finally {
       setLoading(false)
     }

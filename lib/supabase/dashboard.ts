@@ -105,8 +105,15 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   const { data, error } = await (supabase as any).rpc('get_dashboard_stats')
   
   if (error) {
-    console.error('Error getting dashboard stats:', error)
-    throw error
+    console.warn('⚠️ Error getting dashboard stats:', error.message || error)
+    // Devolver estadísticas por defecto en lugar de lanzar error
+    return {
+      users: { total: 0, today: 0, this_week: 0, this_month: 0, admins: 0 },
+      courses: { total: 0, published: 0, draft: 0, free: 0, paid: 0 },
+      sales: { total: 0, today: 0, this_week: 0, this_month: 0, revenue_total: 0, revenue_today: 0, revenue_month: 0 },
+      contacts: { total: 0, pending: 0, in_progress: 0, responded: 0, today: 0, this_week: 0 },
+      progress: { completed_courses: 0, in_progress: 0, avg_completion: 0 }
+    }
   }
   
   return data as DashboardStats
@@ -121,11 +128,11 @@ export async function getRecentUsers(limit: number = 10): Promise<RecentUser[]> 
   })
   
   if (error) {
-    console.error('Error getting recent users:', error)
-    throw error
+    console.warn('⚠️ Error getting recent users:', error.message || error)
+    return [] // Devolver array vacío en lugar de lanzar error
   }
   
-  return data as RecentUser[]
+  return (data || []) as RecentUser[]
 }
 
 /**
@@ -137,11 +144,11 @@ export async function getRecentSales(limit: number = 10): Promise<RecentSale[]> 
   })
   
   if (error) {
-    console.error('Error getting recent sales:', error)
-    throw error
+    console.warn('⚠️ Error getting recent sales:', error.message || error)
+    return [] // Devolver array vacío en lugar de lanzar error
   }
   
-  return data as RecentSale[]
+  return (data || []) as RecentSale[]
 }
 
 /**
@@ -153,11 +160,11 @@ export async function getRecentContacts(limit: number = 10): Promise<RecentConta
   })
   
   if (error) {
-    console.error('Error getting recent contacts:', error)
-    throw error
+    console.warn('⚠️ Error getting recent contacts:', error.message || error)
+    return [] // Devolver array vacío en lugar de lanzar error
   }
   
-  return data as RecentContact[]
+  return (data || []) as RecentContact[]
 }
 
 /**
@@ -167,11 +174,11 @@ export async function getSalesChartData(): Promise<SalesChartData[]> {
   const { data, error } = await (supabase as any).rpc('get_sales_chart_data')
   
   if (error) {
-    console.error('Error getting sales chart data:', error)
-    throw error
+    console.warn('⚠️ Error getting sales chart data:', error.message || error)
+    return [] // Devolver array vacío en lugar de lanzar error
   }
   
-  return data as SalesChartData[]
+  return (data || []) as SalesChartData[]
 }
 
 /**
@@ -183,11 +190,11 @@ export async function getTopSellingCourses(limit: number = 5): Promise<TopCourse
   })
   
   if (error) {
-    console.error('Error getting top selling courses:', error)
-    throw error
+    console.warn('⚠️ Error getting top selling courses:', error.message || error)
+    return [] // Devolver array vacío en lugar de lanzar error
   }
   
-  return data as TopCourse[]
+  return (data || []) as TopCourse[]
 }
 
 /**
@@ -197,8 +204,14 @@ export async function getConversionMetrics(): Promise<ConversionMetrics> {
   const { data, error } = await (supabase as any).rpc('get_conversion_metrics')
   
   if (error) {
-    console.error('Error getting conversion metrics:', error)
-    throw error
+    console.warn('⚠️ Error getting conversion metrics:', error.message || error)
+    // Devolver métricas por defecto
+    return {
+      total_users: 0,
+      users_with_purchases: 0,
+      conversion_rate: 0,
+      avg_purchases_per_user: 0
+    }
   }
   
   return data as ConversionMetrics
