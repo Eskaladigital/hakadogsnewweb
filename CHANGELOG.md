@@ -4,6 +4,144 @@ Todos los cambios importantes del proyecto Hakadogs documentados en orden cronol
 
 ---
 
+## [1.0.5] - 2026-01-09 🎓 METODOLOGÍA BE HAKA
+
+### 📚 PÁGINA DE METODOLOGÍA RENOVADA
+
+#### Añadido
+- ✅ Página `/metodologia` completamente reescrita con filosofía BE HAKA
+- ✅ Enfoque en **binomio perro-guía** como sistema completo
+- ✅ Explicación de **juego estructurado** como herramienta técnica
+- ✅ **Principio de Premack** (entorno como reforzador gestionado)
+- ✅ **Triangulación guía-perro-entorno** con diagrama visual
+- ✅ **KPIs medibles**: recuperación, latencia, tasa de éxito
+- ✅ Construcción de hábitos y escalado progresivo
+- ✅ Sección "Por qué funciona" con base científica
+- ✅ Diseño visual mejorado con iconos y colores corporativos
+
+#### Modificado
+- `app/metodologia/page.tsx` - Reescritura completa (312 líneas → contenido adaptado del manual técnico)
+
+#### Contenido Destacado
+- Menos ejercicios, mejor ejecutados
+- La estructura protege el aprendizaje
+- Si no hay recuperación, el diseño falla
+- Datos reales, no sensaciones
+
+---
+
+## [1.0.4] - 2026-01-09 🎯 SEO BIDIRECCIONAL
+
+### 🔄 ESTRATEGIA CTA CRUZADA
+
+#### Añadido
+- ✅ **Banner de servicios presenciales en `/cursos`**
+  - Dirigido a usuarios cercanos a Archena (< 40km)
+  - Gradiente verde corporativo con estadísticas
+  - CTA dual: "Ver Servicios Presenciales" + "Contactar"
+  - Info sobre zona de cobertura geográfica
+
+- ✅ **Sección de cursos online en páginas de localidades cercanas**
+  - Complementaria a servicios presenciales
+  - Diseño sutil y no invasivo
+  - Stats: 11+ cursos, 24/7 acceso, HD, 100% flexible
+  - CTA: "Explorar Cursos Online"
+
+#### Modificado
+- `app/cursos/page.tsx` - Banner presencial al final (96 líneas añadidas)
+- `app/localidades/[ciudad]/page.tsx` - Sección cursos online para mercado local (66 líneas)
+
+#### Estrategia Completada
+```
+Usuario en Murcia → Visita /localidades/murcia → Ve presencial + online
+                  ↓
+                  O
+                  ↓
+Usuario busca cursos → Visita /cursos → Ve online + banner presencial
+```
+
+---
+
+## [1.0.3] - 2026-01-09 🌍 SEO LOCAL DIFERENCIADO
+
+### 📍 PÁGINAS DINÁMICAS CON ESTRATEGIA DUAL
+
+#### Añadido
+- ✅ **Páginas de localidades ahora son dinámicas** (`export const dynamic = 'force-dynamic'`)
+- ✅ **Estrategia SEO diferenciada por distancia:**
+  - **< 40km de Archena**: Prioriza servicios presenciales + cursos como complemento
+  - **> 40km de Archena**: Prioriza cursos online + info servicios como referencia
+
+- ✅ **Componente OnlineCoursesCtaSection** para mercados remotos
+  - Diseño atractivo con grid de beneficios
+  - Stats destacadas
+  - Testimonial ficticio
+  - Sin animaciones framer-motion (optimizado para build)
+
+- ✅ **Data actualizada en `lib/cities.ts`:**
+  - Campo `distanceFromArchena` añadido (12 ciudades Murcia)
+  - Campo `isRemoteMarket` (true/false según distancia)
+  - 54 ciudades totales
+
+#### Modificado
+- `app/localidades/[ciudad]/page.tsx` - Lógica condicional por mercado
+- `lib/cities.ts` - Distancias y clasificación de mercados
+- `components/OnlineCoursesCtaSection.tsx` - Creado y optimizado (sin framer-motion)
+
+#### Archivos Temporales (eliminados)
+- `update_cities.js` - Script temporal para actualizar ciudades
+
+#### Optimización de Build
+- ❌ `generateStaticParams()` eliminado
+- ✅ Páginas renderizadas dinámicamente on-demand
+- ⚡ Build time reducido de 43 min a ~2 min
+- 🎯 Sin timeouts en Vercel
+
+---
+
+## [1.0.2] - 2026-01-09 🎨 UX Y ERRORES
+
+### 🚫 PÁGINA 404 PERSONALIZADA
+
+#### Añadido
+- ✅ Página `/not-found.tsx` personalizada y atractiva
+- ✅ Diseño coherente con la web (verde corporativo)
+- ✅ Mensaje claro: "Página no encontrada"
+- ✅ 4 quick links principales con iconos
+- ✅ Grid de páginas populares
+- ✅ Información de contacto completa
+- ✅ Animación del icono de perro
+
+#### Modificado
+- `app/not-found.tsx` - Creado desde cero
+
+---
+
+## [1.0.1] - 2026-01-09 🍪 LEGAL Y COOKIES
+
+### 🔒 GDPR Y COOKIES
+
+#### Añadido
+- ✅ Banner de consentimiento de cookies (GDPR compliant)
+- ✅ Gestión de preferencias: necesarias, analíticas, marketing
+- ✅ Página `/legal/cookies` completa y detallada
+- ✅ Link "Configurar Cookies" en footer
+- ✅ Almacenamiento en localStorage de preferencias
+
+#### Archivos Nuevos
+- `components/ui/CookieConsent.tsx` - Banner de cookies
+- `app/legal/cookies/page.tsx` - Política de cookies
+
+#### Modificado
+- `components/Footer.tsx` - Botón "Configurar Cookies"
+- `app/layout.tsx` - Integración del banner
+
+#### Fixes
+- ✅ Escapado de comillas en textos HTML (`&quot;`)
+- ✅ Directiva `'use client'` añadida donde necesario
+
+---
+
 ## [1.0.0] - 2026-01-06 🎉 LANZAMIENTO OFICIAL
 
 ### 🌐 DOMINIO EN PRODUCCIÓN

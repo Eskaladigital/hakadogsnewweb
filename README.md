@@ -13,15 +13,17 @@ Hakadogs es una plataforma web completa para educación canina profesional que i
 ### 📊 Estadísticas del Proyecto
 
 ```
-📦 Archivos creados:        150+
-📄 Líneas de código:        ~35,000
-🎨 Componentes React:       30+
-📱 Páginas completas:       60+
+📦 Archivos creados:        160+
+📄 Líneas de código:        ~40,000
+🎨 Componentes React:       35+
+📱 Páginas completas:       65+
 🗄️ Tablas SQL:              20+
-⚙️ Funciones utilidad:      70+
+⚙️ Funciones utilidad:      75+
 📝 Posts blog:              6 (2 completos)
-🌍 Páginas localidades:     56 ciudades
-📚 Sistema de cursos:       Completo con lecciones
+🌍 Páginas localidades:     54 ciudades (dinámicas)
+📚 Sistema de cursos:       11+ cursos con lecciones
+🎓 Metodología BE HAKA:     Completa y documentada
+🤖 IA Integrada:            OpenAI para descripciones
 ```
 
 ---
@@ -36,9 +38,10 @@ Hakadogs es una plataforma web completa para educación canina profesional que i
 - **URL Vercel:** https://hakadogsnewweb.vercel.app
 - **Repositorio GitHub:** https://github.com/Eskaladigital/hakadogsnewweb.git
 - **Versión:** 1.0.0 PRODUCTION
+- **Google Analytics:** Integrado (G-NXPT2KNYGJ)
 
 ### 🎯 HITO ALCANZADO
-**La aplicación está completamente desplegada con dominio propio** configurado mediante OVH + Vercel. DNS correctamente configurados, SSL activo, y correo electrónico funcionando sin interrupciones.
+**La aplicación está completamente desplegada con dominio propio** configurado mediante OVH + Vercel. DNS correctamente configurados, SSL activo, correo electrónico funcionando sin interrupciones, y Google Analytics integrado para seguimiento de tráfico.
 
 ---
 
@@ -113,28 +116,48 @@ hakadogs-app/
 
 ## ✨ FUNCIONALIDADES PRINCIPALES
 
-### 📚 Sistema de Cursos (NUEVO)
+### 📚 Sistema de Cursos
 - ✅ Curso gratuito descargable
-- ✅ 10+ cursos específicos de pago
+- ✅ 11+ cursos específicos de pago por problema concreto
 - ✅ Cada curso con múltiples lecciones
-- ✅ Video por lección (YouTube/Vimeo/Self-hosted)
-- ✅ Contenido HTML enriquecido (TinyMCE)
+- ✅ **Video por lección** (YouTube/Vimeo/Self-hosted)
+- ✅ **Audio por lección** (Soundcloud/Spotify/Self-hosted)
+- ✅ **Contenido HTML enriquecido** (TinyMCE con prose styling)
 - ✅ Recursos descargables por lección
-- ✅ Sistema de progreso por lección
+- ✅ **Sistema de progreso secuencial** (desbloqueo progresivo)
 - ✅ Dashboard "Mi Escuela" para alumnos
 - ✅ Carrito de compra
 - ✅ Proceso de pago
+- ✅ Página `/cursos` con FAQ accordion
+- ✅ **Banner CTA cruzado**: cursos → servicios presenciales
 
-### 👨‍💼 Panel Administrativo (NUEVO)
+### 👨‍💼 Panel Administrativo
 - ✅ Dashboard con estadísticas reales
+- ✅ **Tabla de cursos con ordenación, paginación y búsqueda**
+- ✅ **Selector de items por página**
 - ✅ Crear cursos con múltiples lecciones
-- ✅ Editor TinyMCE para contenido HTML
-- ✅ Gestor de lecciones con drag & drop
-- ✅ Configuración de videos por lección
+- ✅ **Editor TinyMCE para descripción corta y contenido**
+- ✅ **Botón "Generar descripción" con IA (OpenAI)**
+- ✅ **Campo precio deshabilitado si curso marcado como gratuito**
+- ✅ **"Qué aprenderás" dinámico** (añadir/quitar puntos)
+- ✅ Gestor de lecciones con reordenamiento persistente
+- ✅ Configuración de videos y audios por lección
 - ✅ Recursos descargables por lección
+- ✅ **Publicar/Despublicar cursos desde tabla**
+- ✅ **Ver Curso solo si está publicado**
+- ✅ **Modales y toasts personalizados** (sin alerts nativos)
 - ✅ Vista previa gratuita por lección
-- ✅ Ver, editar, eliminar cursos
 - ✅ Estadísticas de ventas e ingresos
+
+### 🎓 Metodología BE HAKA
+- ✅ **Página `/metodologia` completamente renovada**
+- ✅ Enfoque en **binomio perro-guía** como sistema
+- ✅ Explicación de **juego estructurado** como herramienta técnica
+- ✅ **Principio de Premack** (entorno como reforzador)
+- ✅ **Triangulación guía-perro-entorno**
+- ✅ **KPIs medibles**: recuperación, latencia, tasa de éxito
+- ✅ Construcción de hábitos y escalado progresivo
+- ✅ Contenido adaptado del manual técnico para público general
 
 ### 📝 Blog
 - ✅ Lista de artículos
@@ -144,11 +167,26 @@ hakadogs-app/
 - ✅ Compartir en redes
 - ✅ 6 artículos de ejemplo
 
-### 🌍 SEO Local
-- ✅ 56 páginas de localidades
+### 🌍 SEO Local Diferenciado
+- ✅ **54 páginas de localidades (dinámicas, no estáticas)**
+- ✅ **Estrategia dual basada en distancia desde Archena:**
+  - **< 40km**: Prioriza servicios presenciales + sección cursos online
+  - **> 40km**: Prioriza cursos online + info servicios presenciales
 - ✅ Contenido único por ciudad
-- ✅ Sitemap dinámico
+- ✅ **Hero, CTAs y mensajes personalizados según mercado**
+- ✅ **Componente OnlineCoursesCtaSection para mercados remotos**
+- ✅ Sitemap dinámico XML
+- ✅ **Página secreta `/sitemap-html`** para admin
 - ✅ Robots.txt optimizado
+- ✅ **Página 404 personalizada y atractiva**
+
+### 🍪 Legal y Cookies
+- ✅ Banner de consentimiento de cookies (GDPR)
+- ✅ Gestión de preferencias (necesarias, analíticas, marketing)
+- ✅ Página `/legal/cookies` completa
+- ✅ Link "Configurar Cookies" en footer
+- ✅ Términos y condiciones
+- ✅ Política de privacidad
 
 ### 🔐 Sistema de Autenticación
 - ✅ Registro de usuarios con Supabase
@@ -225,11 +263,17 @@ NEXT_PUBLIC_SUPABASE_URL=https://tu-proyecto.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_anon_key_aqui
 SUPABASE_SERVICE_ROLE_KEY=tu_service_role_key_aqui
 
+# OpenAI (REQUERIDO para generación IA de descripciones)
+OPENAI_API_KEY=sk-proj-...
+
 # TinyMCE (Editor de contenido - REQUERIDO para admin)
 NEXT_PUBLIC_TINYMCE_API_KEY=tu_api_key_aqui
 
 # URL de la app
 NEXT_PUBLIC_SITE_URL=https://www.hakadogs.com
+
+# Google Analytics
+NEXT_PUBLIC_GA_ID=G-NXPT2KNYGJ
 ```
 
 ### CI/CD Automático
@@ -285,6 +329,21 @@ Deploy automático
 - [ ] API pública
 - [ ] Webinars en vivo
 
+### ✅ Completado Recientemente (Enero 2026)
+- [x] Metodología BE HAKA completa
+- [x] SEO local diferenciado (presencial vs online)
+- [x] Páginas de localidades dinámicas
+- [x] Generación IA de descripciones (OpenAI)
+- [x] Sistema de progreso secuencial en cursos
+- [x] Audio + Video en lecciones
+- [x] Panel admin con ordenación y búsqueda
+- [x] Publicar/Despublicar cursos
+- [x] Banner CTA cruzado (cursos ↔ servicios)
+- [x] Página 404 personalizada
+- [x] Cookie consent (GDPR)
+- [x] Google Analytics integrado
+- [x] Sitemap HTML secreto para admin
+
 ---
 
 ## 👥 EQUIPO
@@ -307,12 +366,15 @@ Este proyecto es propiedad privada de Hakadogs y no puede ser reproducido, distr
 
 ### ✅ COMPLETADO AL 100%
 
-**150+ archivos creados**  
-**~35,000 líneas de código**  
-**60+ páginas funcionales**  
-**56 páginas de localidades**  
-**Sistema completo de cursos con lecciones**  
-**Panel administrativo funcional**  
+**160+ archivos creados**  
+**~40,000 líneas de código**  
+**65+ páginas funcionales**  
+**54 páginas de localidades (dinámicas)**  
+**11+ cursos con lecciones y progreso secuencial**  
+**Panel administrativo con IA integrada**  
+**Metodología BE HAKA documentada**  
+**SEO local diferenciado (presencial/online)**  
+**Google Analytics integrado**  
 **Todo listo para producción**
 
 ### 🚀 Deploy

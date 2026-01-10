@@ -1,7 +1,9 @@
 # 🌐 HAKADOGS.COM - DOMINIO EN PRODUCCIÓN
 
 **Fecha de lanzamiento:** 6 de Enero 2026  
-**Estado:** ✅ **LIVE Y FUNCIONANDO**
+**Última actualización:** 9 de Enero 2026  
+**Estado:** ✅ **LIVE Y FUNCIONANDO**  
+**Versión:** 1.0.5 PRODUCTION
 
 ---
 

@@ -2,8 +2,9 @@
 
 ## 📋 GUÍA COMPLETA DE DEPLOYMENT
 
-**Versión:** 1.0.0 PRODUCTION  
-**Fecha:** Enero 2026  
+**Versión:** 1.0.5 PRODUCTION  
+**Fecha Inicial:** Enero 2026  
+**Última Actualización:** 9 Enero 2026  
 **Plataforma:** Vercel + GitHub  
 **Framework:** Next.js 14  
 **Estado:** ✅ DESPLEGADO EN HAKADOGS.COM
@@ -34,7 +35,7 @@
 
 ### 2. Repositorio GitHub
 - [x] ✅ Código subido a https://github.com/Eskaladigital/hakadogsnewweb.git
-- [x] ✅ 150+ archivos, ~35,000 líneas
+- [x] ✅ 160+ archivos, ~40,000 líneas
 - [x] ✅ Rama `main` activa
 
 ### 3. Dominio Configurado
@@ -93,6 +94,9 @@ NEXT_PUBLIC_TINYMCE_API_KEY=[configurada]
 
 # OpenAI (Generación de descripciones con IA)
 OPENAI_API_KEY=[configurada]
+
+# Google Analytics
+NEXT_PUBLIC_GA_ID=G-NXPT2KNYGJ
 
 # App URL (Dominio propio)
 NEXT_PUBLIC_SITE_URL=https://www.hakadogs.com
