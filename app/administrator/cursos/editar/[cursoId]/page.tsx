@@ -474,6 +474,7 @@ export default function EditarCursoPage() {
                           duration: l.duration_minutes,
                           videoUrl: l.videoUrl || '',
                           videoProvider: l.videoProvider || 'youtube',
+                          audioUrl: l.audioUrl || '',
                           isFreePreview: l.isFreePreview || false,
                           resources: l.resources.map(r => ({
                             id: r.id,
