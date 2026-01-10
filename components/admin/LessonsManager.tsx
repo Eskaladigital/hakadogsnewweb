@@ -17,6 +17,7 @@ interface Lesson {
   videoUrl: string
   videoProvider: string
   audioUrl: string
+  audioProvider: string
   isFreePreview: boolean
   resources: Resource[]
   isExpanded: boolean
@@ -45,6 +46,7 @@ export default function LessonsManager({ lessons, onChange }: LessonsManagerProp
       videoUrl: '',
       videoProvider: 'youtube',
       audioUrl: '',
+      audioProvider: 'self-hosted',
       isFreePreview: false,
       resources: [],
       isExpanded: true
@@ -264,15 +266,26 @@ export default function LessonsManager({ lessons, onChange }: LessonsManagerProp
                     <Headphones className="w-4 h-4 mr-2" />
                     Audio de la lección (opcional)
                   </label>
-                  <input
-                    type="text"
-                    value={lesson.audioUrl || ''}
-                    onChange={(e) => updateLesson(index, 'audioUrl', e.target.value)}
-                    placeholder="URL del archivo de audio (MP3, etc.)"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                  />
+                  <div className="grid grid-cols-4 gap-3">
+                    <select
+                      value={lesson.audioProvider || 'self-hosted'}
+                      onChange={(e) => updateLesson(index, 'audioProvider', e.target.value)}
+                      className="px-3 py-2 border border-gray-300 rounded-lg"
+                    >
+                      <option value="self-hosted">Self-hosted</option>
+                      <option value="soundcloud">Soundcloud</option>
+                      <option value="spotify">Spotify</option>
+                    </select>
+                    <input
+                      type="text"
+                      value={lesson.audioUrl || ''}
+                      onChange={(e) => updateLesson(index, 'audioUrl', e.target.value)}
+                      placeholder="URL del audio"
+                      className="col-span-3 px-3 py-2 border border-gray-300 rounded-lg"
+                    />
+                  </div>
                   <p className="text-xs text-gray-500 mt-1">
-                    Puedes subir el audio a tu servidor o usar un servicio como Soundcloud, Google Drive, etc.
+                    Self-hosted: MP3, WAV, OGG. Soundcloud/Spotify: URL del embed.
                   </p>
                 </div>
 

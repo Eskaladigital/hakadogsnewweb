@@ -22,6 +22,7 @@ interface LessonWithResources extends Lesson {
   videoUrl?: string
   videoProvider?: string
   audioUrl?: string
+  audioProvider?: string
   isFreePreview?: boolean
 }
 
@@ -93,6 +94,7 @@ export default function EditarCursoPage() {
             videoUrl: lesson.video_url || '',
             videoProvider: lesson.video_provider || 'youtube',
             audioUrl: lesson.audio_url || '',
+            audioProvider: lesson.audio_provider || 'self-hosted',
             isFreePreview: lesson.is_free_preview || false
           } as LessonWithResources
         })
@@ -236,6 +238,7 @@ export default function EditarCursoPage() {
           video_url: lesson.videoUrl || null,
           video_provider: lesson.videoUrl ? (lesson.videoProvider as any) : null,
           audio_url: lesson.audioUrl || null,
+          audio_provider: lesson.audioUrl ? (lesson.audioProvider as any) : null,
           is_free_preview: lesson.isFreePreview,
         })
 
@@ -284,6 +287,7 @@ export default function EditarCursoPage() {
           video_url: lesson.videoUrl || null,
           video_provider: lesson.videoUrl ? (lesson.videoProvider as any) : null,
           audio_url: lesson.audioUrl || null,
+          audio_provider: lesson.audioUrl ? (lesson.audioProvider as any) : null,
           is_free_preview: lesson.isFreePreview,
         }))
 
@@ -475,6 +479,7 @@ export default function EditarCursoPage() {
                           videoUrl: l.videoUrl || '',
                           videoProvider: l.videoProvider || 'youtube',
                           audioUrl: l.audioUrl || '',
+                          audioProvider: l.audioProvider || 'self-hosted',
                           isFreePreview: l.isFreePreview || false,
                           resources: l.resources.map(r => ({
                             id: r.id,
@@ -499,6 +504,7 @@ export default function EditarCursoPage() {
                               video_url: ul.videoUrl || null,
                               video_provider: ul.videoUrl ? (ul.videoProvider as any) : null,
                               audio_url: ul.audioUrl || null,
+                              audio_provider: ul.audioUrl ? (ul.audioProvider as any) : null,
                               is_free_preview: ul.isFreePreview,
                               created_at: existingLesson?.created_at || new Date().toISOString(),
                               updated_at: new Date().toISOString(),

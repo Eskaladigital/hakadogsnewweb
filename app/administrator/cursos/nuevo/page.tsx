@@ -22,6 +22,7 @@ interface Lesson {
   videoUrl: string
   videoProvider: string
   audioUrl: string
+  audioProvider: string
   isFreePreview: boolean
   resources: any[]
   isExpanded: boolean
@@ -175,6 +176,7 @@ export default function NuevoCursoPage() {
         video_url: lesson.videoUrl || null,
         video_provider: lesson.videoUrl ? (lesson.videoProvider as any) : null,
         audio_url: lesson.audioUrl || null,
+        audio_provider: lesson.audioUrl ? (lesson.audioProvider as any) : null,
         is_free_preview: lesson.isFreePreview,
       }))
 
