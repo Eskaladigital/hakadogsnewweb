@@ -6,13 +6,16 @@ import { Baby, CheckCircle, Clock, ArrowRight } from 'lucide-react'
 export const metadata: Metadata = {
   title: 'Educación de Cachorros - Socialización Temprana | Hakadogs',
   description: 'Programa especializado para cachorros de 2 a 6 meses. Socialización temprana y bases sólidas desde el principio. Métodos positivos en Archena y Murcia.',
+  alternates: {
+    canonical: 'https://www.hakadogs.com/servicios/cachorros',
+  },
   openGraph: {
     title: 'Educación de Cachorros - Socialización Temprana | Hakadogs',
     description: 'Programa especializado para cachorros de 2 a 6 meses. Socialización temprana y bases sólidas con métodos positivos.',
     url: 'https://www.hakadogs.com/servicios/cachorros',
     images: [
       {
-        url: '/images/logo_facebook_1200_630.jpg',
+        url: 'https://www.hakadogs.com/images/logo_facebook_1200_630.jpg',
         width: 1200,
         height: 630,
         alt: 'Hakadogs - Educación de Cachorros',
@@ -23,7 +26,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Educación de Cachorros | Hakadogs',
     description: 'Programa especializado para cachorros de 2 a 6 meses en Murcia.',
-    images: ['/images/logo_facebook_1200_630.jpg'],
+    images: ['https://www.hakadogs.com/images/logo_facebook_1200_630.jpg'],
   },
 }
 

@@ -7,13 +7,16 @@ export const metadata: Metadata = {
   title: 'Modificación de Conducta Canina | Hakadogs',
   description: 'Soluciones profesionales para problemas de agresividad, ansiedad, miedos y conductas no deseadas. Especialistas en modificación de conducta en Murcia.',
   keywords: ['modificación conducta perros', 'perro agresivo murcia', 'ansiedad separación perros'],
+  alternates: {
+    canonical: 'https://www.hakadogs.com/servicios/modificacion-conducta',
+  },
   openGraph: {
     title: 'Modificación de Conducta Canina | Hakadogs',
     description: 'Soluciones profesionales para agresividad, ansiedad, miedos y conductas no deseadas. Especialistas en Murcia.',
     url: 'https://www.hakadogs.com/servicios/modificacion-conducta',
     images: [
       {
-        url: '/images/logo_facebook_1200_630.jpg',
+        url: 'https://www.hakadogs.com/images/logo_facebook_1200_630.jpg',
         width: 1200,
         height: 630,
         alt: 'Hakadogs - Modificación de Conducta Canina',
@@ -24,7 +27,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Modificación de Conducta Canina | Hakadogs',
     description: 'Soluciones para agresividad, ansiedad y miedos. Especialistas en Murcia.',
-    images: ['/images/logo_facebook_1200_630.jpg'],
+    images: ['https://www.hakadogs.com/images/logo_facebook_1200_630.jpg'],
   },
 }
 

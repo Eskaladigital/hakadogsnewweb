@@ -9,13 +9,16 @@ import CTASection from '@/components/CTASection'
 export const metadata: Metadata = {
   title: 'Servicios de Educación Canina - Presencial en Murcia | Hakadogs',
   description: 'Educación básica, modificación de conducta, cachorros y clases grupales. Servicios presenciales en Archena y Murcia. Métodos positivos y personalizados. +8 años de experiencia.',
+  alternates: {
+    canonical: 'https://www.hakadogs.com/servicios',
+  },
   openGraph: {
     title: 'Servicios de Educación Canina - Presencial en Murcia | Hakadogs',
     description: 'Educación básica, modificación de conducta, cachorros y clases grupales. Servicios presenciales en Archena y Murcia con métodos positivos.',
     url: 'https://www.hakadogs.com/servicios',
     images: [
       {
-        url: '/images/logo_facebook_1200_630.jpg',
+        url: 'https://www.hakadogs.com/images/logo_facebook_1200_630.jpg',
         width: 1200,
         height: 630,
         alt: 'Hakadogs - Servicios de Educación Canina',
@@ -26,7 +29,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Servicios de Educación Canina | Hakadogs',
     description: 'Educación básica, modificación de conducta, cachorros y clases grupales en Murcia.',
-    images: ['/images/logo_facebook_1200_630.jpg'],
+    images: ['https://www.hakadogs.com/images/logo_facebook_1200_630.jpg'],
   },
 }
 

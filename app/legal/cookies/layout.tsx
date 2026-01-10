@@ -3,13 +3,16 @@ import { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Política de Cookies - GDPR | Hakadogs',
   description: 'Información sobre el uso de cookies en Hakadogs. Cumplimiento GDPR. Cookies necesarias, analíticas y de marketing. Gestiona tus preferencias.',
+  alternates: {
+    canonical: 'https://www.hakadogs.com/legal/cookies',
+  },
   openGraph: {
     title: 'Política de Cookies | Hakadogs',
     description: 'Información sobre el uso de cookies en Hakadogs. Cumplimiento GDPR. Gestiona tus preferencias.',
     url: 'https://www.hakadogs.com/legal/cookies',
     images: [
       {
-        url: '/images/logo_facebook_1200_630.jpg',
+        url: 'https://www.hakadogs.com/images/logo_facebook_1200_630.jpg',
         width: 1200,
         height: 630,
         alt: 'Hakadogs - Política de Cookies',
@@ -20,7 +23,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Política de Cookies | Hakadogs',
     description: 'Información sobre cookies y GDPR.',
-    images: ['/images/logo_facebook_1200_630.jpg'],
+    images: ['https://www.hakadogs.com/images/logo_facebook_1200_630.jpg'],
   },
 }
 

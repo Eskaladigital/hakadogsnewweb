@@ -5,13 +5,16 @@ import { ArrowLeft, Shield } from 'lucide-react'
 export const metadata: Metadata = {
   title: 'Política de Privacidad - RGPD | Hakadogs',
   description: 'Política de privacidad y protección de datos de Hakadogs conforme al RGPD (UE) 2016/679 y LOPDGDD 3/2018. Tus datos están seguros.',
+  alternates: {
+    canonical: 'https://www.hakadogs.com/legal/privacidad',
+  },
   openGraph: {
     title: 'Política de Privacidad | Hakadogs',
     description: 'Política de privacidad y protección de datos conforme al RGPD. Tus datos están seguros.',
     url: 'https://www.hakadogs.com/legal/privacidad',
     images: [
       {
-        url: '/images/logo_facebook_1200_630.jpg',
+        url: 'https://www.hakadogs.com/images/logo_facebook_1200_630.jpg',
         width: 1200,
         height: 630,
         alt: 'Hakadogs - Política de Privacidad',
@@ -22,7 +25,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Política de Privacidad | Hakadogs',
     description: 'Protección de datos conforme al RGPD.',
-    images: ['/images/logo_facebook_1200_630.jpg'],
+    images: ['https://www.hakadogs.com/images/logo_facebook_1200_630.jpg'],
   },
 }
 
