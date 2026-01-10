@@ -1,7 +1,51 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@supabase/supabase-js'
 
 export async function POST(request: NextRequest) {
   try {
+    // 🔒 PASO 1: VERIFICAR AUTENTICACIÓN
+    const authHeader = request.headers.get('authorization')
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json(
+        { error: 'No autorizado - Token requerido' },
+        { status: 401 }
+      )
+    }
+
+    // Crear cliente de Supabase con el token del usuario
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    const token = authHeader.replace('Bearer ', '')
+
+    const supabase = createClient(supabaseUrl, supabaseKey, {
+      global: {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    })
+
+    // Verificar sesión
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    
+    if (authError || !user) {
+      return NextResponse.json(
+        { error: 'No autorizado - Sesión inválida' },
+        { status: 401 }
+      )
+    }
+
+    // 🔒 PASO 2: VERIFICAR ROL DE ADMIN
+    const userRole = user.user_metadata?.role
+    if (userRole !== 'admin') {
+      console.warn(`⚠️ Usuario ${user.email} intentó usar API de OpenAI sin ser admin`)
+      return NextResponse.json(
+        { error: 'Prohibido - Solo administradores pueden generar descripciones' },
+        { status: 403 }
+      )
+    }
+
+    // 🔒 PASO 3: VALIDAR DATOS DE ENTRADA
     const { title, whatYouLearn } = await request.json()
 
     if (!title) {
@@ -11,10 +55,19 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Limitar longitud del título para evitar abusos
+    if (title.length > 200) {
+      return NextResponse.json(
+        { error: 'El título es demasiado largo (máximo 200 caracteres)' },
+        { status: 400 }
+      )
+    }
+
     const openaiApiKey = process.env.OPENAI_API_KEY
     if (!openaiApiKey) {
+      console.error('❌ OpenAI API key no configurada')
       return NextResponse.json(
-        { error: 'OpenAI API key no configurada' },
+        { error: 'Servicio no disponible' },
         { status: 500 }
       )
     }
@@ -35,6 +88,9 @@ La descripción debe ser:
 - Máximo 150 palabras
 - Sin usar emojis
 - Directa y clara`
+
+    // Log para auditoría
+    console.log(`✅ Admin ${user.email} generando descripción para curso: "${title}"`)
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -80,7 +136,7 @@ La descripción debe ser:
 
     return NextResponse.json({ description })
   } catch (error) {
-    console.error('Error generando descripción:', error)
+    console.error('❌ Error generando descripción:', error)
     return NextResponse.json(
       { error: 'Error interno del servidor' },
       { status: 500 }

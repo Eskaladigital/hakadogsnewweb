@@ -163,10 +163,20 @@ export default function EditarCursoPage() {
 
     setGeneratingDescription(true)
     try {
+      // Obtener el token de sesión para autenticación
+      const supabase = (await import('@/lib/supabase/client')).supabase
+      const { data: { session } } = await supabase.auth.getSession()
+      
+      if (!session) {
+        setToast({ message: 'Sesión expirada. Por favor, inicia sesión de nuevo.', type: 'error' })
+        return
+      }
+
       const response = await fetch('/api/generate-description', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`
         },
         body: JSON.stringify({
           title: formData.title,
@@ -175,7 +185,8 @@ export default function EditarCursoPage() {
       })
 
       if (!response.ok) {
-        throw new Error('Error al generar la descripción')
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Error al generar la descripción')
       }
 
       const data = await response.json()
@@ -188,10 +199,11 @@ export default function EditarCursoPage() {
           .join('\n')
         
         handleInputChange('shortDescription', htmlDescription)
+        setToast({ message: 'Descripción generada exitosamente', type: 'success' })
       }
     } catch (error) {
       console.error('Error generando descripción:', error)
-      setToast({ message: 'Error al generar la descripción. Por favor, inténtalo de nuevo.', type: 'error' })
+      setToast({ message: error instanceof Error ? error.message : 'Error al generar la descripción. Por favor, inténtalo de nuevo.', type: 'error' })
     } finally {
       setGeneratingDescription(false)
     }
