@@ -49,10 +49,10 @@ export default function Navigation() {
             {/* Logo completo en desktop */}
             <div className="hidden sm:block relative h-20 w-64 group-hover:scale-105 transition-transform">
               <Image
-                src="/images/hakadogs_logo_texto_transparente.webp"
+                src="/images/logo_definitivo_hakadogs.webp"
                 alt="Hakadogs - Educación Canina"
-                width={256}
-                height={80}
+                width={370}
+                height={104}
                 className="object-contain object-left"
                 priority
                 quality={95}
@@ -61,10 +61,10 @@ export default function Navigation() {
             {/* Logo en móvil */}
             <div className="sm:hidden relative h-16 w-48 group-hover:scale-105 transition-transform">
               <Image
-                src="/images/hakadogs_logo_texto_transparente.webp"
+                src="/images/logo_definitivo_hakadogs.webp"
                 alt="Hakadogs - Educación Canina"
-                width={192}
-                height={60}
+                width={280}
+                height={78}
                 className="object-contain object-left"
                 priority
                 quality={95}

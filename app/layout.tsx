@@ -111,7 +111,7 @@ export default function RootLayout({
         <link 
           rel="preload" 
           as="image" 
-          href="/images/hakadogs_logo_texto_transparente.webp"
+          href="/images/logo_definitivo_hakadogs.webp"
           type="image/webp"
         />
         
