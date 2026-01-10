@@ -174,7 +174,7 @@ export default function CookiesPage() {
               <ul className="space-y-2 text-gray-700">
                 <li className="flex items-start gap-2">
                   <ChevronRight className="text-forest mt-1 flex-shrink-0" size={16} />
-                  <span><strong>En este sitio:</strong> Usa el botón "Modificar cookies" en la parte superior para cambiar tus preferencias</span>
+                  <span><strong>En este sitio:</strong> Usa el botón &quot;Modificar cookies&quot; en la parte superior para cambiar tus preferencias</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <ChevronRight className="text-forest mt-1 flex-shrink-0" size={16} />
@@ -249,7 +249,7 @@ export default function CookiesPage() {
             </h2>
             <p className="text-gray-700 leading-relaxed mb-4">
               Podemos actualizar nuestra política de cookies ocasionalmente. Te notificaremos cualquier 
-              cambio publicando la nueva política en esta página y actualizando la fecha de "última actualización".
+              cambio publicando la nueva política en esta página y actualizando la fecha de &quot;última actualización&quot;.
             </p>
             <p className="text-gray-700 leading-relaxed">
               Te recomendamos revisar esta política periódicamente para estar informado sobre cómo 
