@@ -3,8 +3,27 @@ import Link from 'next/link'
 import { Users, Gamepad2, TrendingUp, Brain, Heart, Target, CheckCircle, ArrowRight, Zap, Pause, BarChart3 } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Hakadogs - Metodología de Educación Canina',
-  description: 'Conoce nuestra metodología basada en el binomio perro-guía, juego estructurado y bienestar emocional. Métodos probados con más de 500 perros.',
+  title: 'Metodología BE HAKA - Educación Canina | Hakadogs',
+  description: 'Conoce nuestra metodología basada en el binomio perro-guía, juego estructurado y bienestar emocional. Métodos probados con más de 500 perros. Principio de Premack, KPIs medibles.',
+  openGraph: {
+    title: 'Metodología BE HAKA - Educación Canina | Hakadogs',
+    description: 'Metodología basada en el binomio perro-guía, juego estructurado y bienestar emocional. Principio de Premack, KPIs medibles, resultados comprobados.',
+    url: 'https://www.hakadogs.com/metodologia',
+    images: [
+      {
+        url: '/images/logo_facebook_1200_630.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Hakadogs - Metodología BE HAKA',
+      }
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Metodología BE HAKA | Hakadogs',
+    description: 'Binomio perro-guía, juego estructurado y resultados medibles. +500 perros educados.',
+    images: ['/images/logo_facebook_1200_630.jpg'],
+  },
 }
 
 export default function MetodologiaPage() {

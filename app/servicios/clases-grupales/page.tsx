@@ -4,8 +4,27 @@ import Image from 'next/image'
 import { Users, CheckCircle, Calendar, ArrowRight } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Hakadogs - Clases Grupales para Perros',
-  description: 'Clases de socialización y obediencia en grupo. Aprende mientras tu perro socializa con otros perros.',
+  title: 'Clases Grupales para Perros - Socialización | Hakadogs',
+  description: 'Clases de socialización y obediencia en grupo. Aprende mientras tu perro socializa con otros perros. Métodos positivos en Archena y Murcia.',
+  openGraph: {
+    title: 'Clases Grupales para Perros - Socialización | Hakadogs',
+    description: 'Clases de socialización y obediencia en grupo. Aprende mientras tu perro socializa con otros perros en Murcia.',
+    url: 'https://www.hakadogs.com/servicios/clases-grupales',
+    images: [
+      {
+        url: '/images/logo_facebook_1200_630.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Hakadogs - Clases Grupales Caninas',
+      }
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Clases Grupales para Perros | Hakadogs',
+    description: 'Clases de socialización y obediencia en grupo en Murcia.',
+    images: ['/images/logo_facebook_1200_630.jpg'],
+  },
 }
 
 export default function ClasesGrupalesPage() {

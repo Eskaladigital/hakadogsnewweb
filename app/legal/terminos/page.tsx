@@ -3,8 +3,27 @@ import Link from 'next/link'
 import { ArrowLeft, FileText } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Hakadogs - Términos y Condiciones',
-  description: 'Términos y condiciones de uso de los servicios de Hakadogs',
+  title: 'Términos y Condiciones de Uso | Hakadogs',
+  description: 'Términos y condiciones de uso de los servicios de Hakadogs. Información sobre servicios presenciales, cursos online, cancelaciones y políticas.',
+  openGraph: {
+    title: 'Términos y Condiciones | Hakadogs',
+    description: 'Términos y condiciones de uso de los servicios de Hakadogs. Servicios presenciales y cursos online.',
+    url: 'https://www.hakadogs.com/legal/terminos',
+    images: [
+      {
+        url: '/images/logo_facebook_1200_630.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Hakadogs - Términos y Condiciones',
+      }
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Términos y Condiciones | Hakadogs',
+    description: 'Términos de uso de servicios Hakadogs.',
+    images: ['/images/logo_facebook_1200_630.jpg'],
+  },
 }
 
 export default function TerminosPage() {

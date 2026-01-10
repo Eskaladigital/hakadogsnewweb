@@ -2,8 +2,27 @@ import Link from 'next/link'
 import { Heart, Target, Users, ArrowRight, CheckCircle, Sparkles } from 'lucide-react'
 
 export const metadata = {
-  title: 'Hakadogs - Apps de Educación Canina',
-  description: 'Herramientas digitales para seguimiento de salud, adiestramiento y comunidad canina.',
+  title: 'Apps de Educación Canina - HakaHealth, HakaTrainer, HakaCommunity | Hakadogs',
+  description: 'Herramientas digitales para seguimiento de salud, adiestramiento y comunidad canina. Próximamente: HakaHealth, HakaTrainer y HakaCommunity.',
+  openGraph: {
+    title: 'Apps de Educación Canina | Hakadogs',
+    description: 'Herramientas digitales para salud, adiestramiento y comunidad canina. Próximamente: HakaHealth, HakaTrainer y HakaCommunity.',
+    url: 'https://www.hakadogs.com/apps',
+    images: [
+      {
+        url: '/images/logo_facebook_1200_630.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Hakadogs - Apps de Educación Canina',
+      }
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Apps de Educación Canina | Hakadogs',
+    description: 'HakaHealth, HakaTrainer y HakaCommunity - Próximamente',
+    images: ['/images/logo_facebook_1200_630.jpg'],
+  },
 }
 
 export default function AppsPage() {

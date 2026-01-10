@@ -4,8 +4,27 @@ import Image from 'next/image'
 import { Award, Heart, TrendingUp, Users, Target, BookOpen, ArrowRight, Gamepad2, BarChart3, MapPin, GraduationCap, Zap } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Hakadogs - Sobre Nosotros | Metodología BE HAKA',
+  title: 'Sobre Nosotros - Alfredo García | Hakadogs',
   description: 'Conoce a Alfredo y la metodología BE HAKA: binomio perro-guía, juego estructurado y resultados medibles. +8 años de experiencia, +500 perros educados. Servicios presenciales y cursos online.',
+  openGraph: {
+    title: 'Sobre Nosotros - Alfredo García | Hakadogs',
+    description: 'Conoce a Alfredo y la metodología BE HAKA: binomio perro-guía, juego estructurado y resultados medibles. +8 años de experiencia, +500 perros educados.',
+    url: 'https://www.hakadogs.com/sobre-nosotros',
+    images: [
+      {
+        url: '/images/logo_facebook_1200_630.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Hakadogs - Alfredo García - Educador Canino Profesional',
+      }
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Sobre Nosotros - Alfredo García | Hakadogs',
+    description: 'Conoce a Alfredo y la metodología BE HAKA. +8 años de experiencia, +500 perros educados.',
+    images: ['/images/logo_facebook_1200_630.jpg'],
+  },
 }
 
 export default function SobreNosotrosPage() {

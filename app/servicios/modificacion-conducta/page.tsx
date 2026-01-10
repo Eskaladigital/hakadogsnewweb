@@ -4,9 +4,28 @@ import Image from 'next/image'
 import { Heart, CheckCircle, Clock, AlertCircle, ArrowRight } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Hakadogs - Modificación de Conducta Canina',
+  title: 'Modificación de Conducta Canina | Hakadogs',
   description: 'Soluciones profesionales para problemas de agresividad, ansiedad, miedos y conductas no deseadas. Especialistas en modificación de conducta en Murcia.',
   keywords: ['modificación conducta perros', 'perro agresivo murcia', 'ansiedad separación perros'],
+  openGraph: {
+    title: 'Modificación de Conducta Canina | Hakadogs',
+    description: 'Soluciones profesionales para agresividad, ansiedad, miedos y conductas no deseadas. Especialistas en Murcia.',
+    url: 'https://www.hakadogs.com/servicios/modificacion-conducta',
+    images: [
+      {
+        url: '/images/logo_facebook_1200_630.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Hakadogs - Modificación de Conducta Canina',
+      }
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Modificación de Conducta Canina | Hakadogs',
+    description: 'Soluciones para agresividad, ansiedad y miedos. Especialistas en Murcia.',
+    images: ['/images/logo_facebook_1200_630.jpg'],
+  },
 }
 
 export default function ModificacionConductaPage() {

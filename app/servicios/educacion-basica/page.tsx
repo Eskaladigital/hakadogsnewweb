@@ -4,9 +4,28 @@ import Image from 'next/image'
 import { GraduationCap, CheckCircle, Clock, Users as UsersIcon, ArrowRight } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Hakadogs - Educación Básica para Perros',
+  title: 'Educación Básica para Perros | Hakadogs',
   description: 'Programa completo de educación canina básica. Comandos esenciales, obediencia y control. Métodos positivos en Archena y Murcia.',
   keywords: ['educación canina básica', 'adiestramiento perros murcia', 'comandos básicos perros'],
+  openGraph: {
+    title: 'Educación Básica para Perros | Hakadogs',
+    description: 'Programa completo de educación canina básica. Comandos esenciales, obediencia y control con métodos positivos.',
+    url: 'https://www.hakadogs.com/servicios/educacion-basica',
+    images: [
+      {
+        url: '/images/logo_facebook_1200_630.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Hakadogs - Educación Básica Canina',
+      }
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Educación Básica para Perros | Hakadogs',
+    description: 'Programa completo de educación canina básica en Murcia.',
+    images: ['/images/logo_facebook_1200_630.jpg'],
+  },
 }
 
 export default function EducacionBasicaPage() {

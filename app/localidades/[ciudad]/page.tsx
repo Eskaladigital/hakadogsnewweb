@@ -33,10 +33,25 @@ export async function generateMetadata({ params }: { params: { ciudad: string } 
     description: city.description,
     keywords: city.keywords.join(', '),
     openGraph: {
-      title: `Educación Canina Profesional en ${city.name}`,
+      title: `Educación Canina Profesional en ${city.name} | Hakadogs`,
       description: city.description,
+      url: `https://www.hakadogs.com/localidades/${city.slug}`,
       type: 'website',
       locale: 'es_ES',
+      images: [
+        {
+          url: '/images/logo_facebook_1200_630.jpg',
+          width: 1200,
+          height: 630,
+          alt: `Hakadogs - Educación Canina en ${city.name}`,
+        }
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `Educación Canina en ${city.name} | Hakadogs`,
+      description: city.description,
+      images: ['/images/logo_facebook_1200_630.jpg'],
     },
   }
 }
