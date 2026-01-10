@@ -30,6 +30,7 @@ export interface Lesson {
   duration_minutes: number
   video_url: string | null
   video_provider: 'youtube' | 'vimeo' | 'self-hosted' | null
+  audio_url: string | null
   is_free_preview: boolean
   created_at: string
   updated_at: string
