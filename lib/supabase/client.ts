@@ -1,4 +1,5 @@
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
+import type { Database } from '@/types/database.types'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
@@ -16,7 +17,7 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 // Singleton: crear una sola instancia del cliente
-let supabaseInstance: ReturnType<typeof createSupabaseClient> | null = null
+let supabaseInstance: ReturnType<typeof createSupabaseClient<Database>> | null = null
 
 // Para uso en componentes del cliente
 export const createClient = () => {
@@ -24,7 +25,7 @@ export const createClient = () => {
     if (!supabaseUrl || !supabaseAnonKey) {
       throw new Error('Variables de entorno de Supabase no configuradas. Verifica NEXT_PUBLIC_SUPABASE_URL y NEXT_PUBLIC_SUPABASE_ANON_KEY en Vercel.')
     }
-    supabaseInstance = createSupabaseClient(supabaseUrl, supabaseAnonKey)
+    supabaseInstance = createSupabaseClient<Database>(supabaseUrl, supabaseAnonKey)
   }
   return supabaseInstance
 }
