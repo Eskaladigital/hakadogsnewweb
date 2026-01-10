@@ -109,12 +109,14 @@ export default function Footer() {
               <li>
                 <button
                   onClick={() => {
-                    localStorage.removeItem('hakadogs_cookie_consent')
-                    window.location.reload()
+                    // Llamar a la función global para abrir el panel
+                    if (typeof window !== 'undefined' && (window as any).openCookieSettings) {
+                      (window as any).openCookieSettings()
+                    }
                   }}
                   className="text-gray-300 hover:text-gold transition text-left"
                 >
-                  Configurar Cookies
+                  ⚙️ Configurar Cookies
                 </button>
               </li>
             </ul>

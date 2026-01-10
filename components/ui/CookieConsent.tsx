@@ -20,7 +20,24 @@ export default function CookieConsent() {
     marketing: false,
   })
 
+  // Función global para abrir el panel de configuración
+  const openCookieSettings = () => {
+    // Cargar preferencias actuales si existen
+    const consent = localStorage.getItem('hakadogs_cookie_consent')
+    if (consent) {
+      const savedPreferences = JSON.parse(consent)
+      setPreferences(savedPreferences)
+    }
+    setShowBanner(true)
+    setShowSettings(true)
+  }
+
   useEffect(() => {
+    // Exponer función global para que el Footer pueda abrirla
+    if (typeof window !== 'undefined') {
+      (window as any).openCookieSettings = openCookieSettings
+    }
+
     // Verificar si el usuario ya ha dado su consentimiento
     const consent = localStorage.getItem('hakadogs_cookie_consent')
     if (!consent) {
@@ -34,6 +51,13 @@ export default function CookieConsent() {
       // Si se aceptaron analytics, cargar Google Analytics
       if (savedPreferences.analytics) {
         loadGoogleAnalytics()
+      }
+    }
+
+    // Cleanup: eliminar función global al desmontar
+    return () => {
+      if (typeof window !== 'undefined') {
+        delete (window as any).openCookieSettings
       }
     }
   }, [])
