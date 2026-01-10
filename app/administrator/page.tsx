@@ -423,13 +423,24 @@ export default function AdministratorPage() {
                           </td>
                           <td className="px-6 py-4 text-right">
                             <div className="flex items-center justify-end space-x-2">
-                              <Link
-                                href={`/cursos/mi-escuela/${course.id}`}
-                                className="text-blue-600 hover:text-blue-800 p-2 transition"
-                                title="Ver curso"
-                              >
-                                <Eye className="w-4 h-4" />
-                              </Link>
+                              {/* Botón Ver curso - Solo funciona si está publicado */}
+                              {course.is_published ? (
+                                <Link
+                                  href={`/cursos/mi-escuela/${course.id}`}
+                                  className="text-blue-600 hover:text-blue-800 p-2 transition"
+                                  title="Ver curso como usuario"
+                                >
+                                  <Eye className="w-4 h-4" />
+                                </Link>
+                              ) : (
+                                <button
+                                  disabled
+                                  className="text-gray-300 p-2 cursor-not-allowed"
+                                  title="Publica el curso para verlo en el front"
+                                >
+                                  <Eye className="w-4 h-4" />
+                                </button>
+                              )}
                               <button
                                 onClick={() => handleTogglePublish(course.id, course.is_published, course.title)}
                                 className={`p-2 transition ${
