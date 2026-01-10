@@ -31,12 +31,12 @@ export default function Navigation() {
   }
 
   const navLinks = [
+    { href: '/', label: 'Inicio' },
+    { href: '/sobre-nosotros', label: 'Sobre Nosotros' },
+    { href: '/metodologia', label: 'Metodología' },
     { href: '/servicios', label: 'Servicios' },
     { href: '/apps', label: 'Apps' },
     { href: '/cursos', label: 'Cursos' },
-    { href: '/metodologia', label: 'Metodología' },
-    { href: '/blog', label: 'Blog' },
-    { href: '/sobre-nosotros', label: 'Sobre Nosotros' },
     { href: '/contacto', label: 'Contacto' },
   ]
 

@@ -32,18 +32,13 @@ export default function Footer() {
             <h3 className="font-bold text-lg mb-4">Navegación</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/servicios" className="text-gray-300 hover:text-gold transition">
-                  Servicios
+                <Link href="/" className="text-gray-300 hover:text-gold transition">
+                  Inicio
                 </Link>
               </li>
               <li>
-                <Link href="/apps" className="text-gray-300 hover:text-gold transition">
-                  Apps
-                </Link>
-              </li>
-              <li>
-                <Link href="/blog" className="text-gray-300 hover:text-gold transition">
-                  Blog
+                <Link href="/sobre-nosotros" className="text-gray-300 hover:text-gold transition">
+                  Sobre Nosotros
                 </Link>
               </li>
               <li>
@@ -52,8 +47,13 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/sobre-nosotros" className="text-gray-300 hover:text-gold transition">
-                  Sobre Nosotros
+                <Link href="/servicios" className="text-gray-300 hover:text-gold transition">
+                  Servicios
+                </Link>
+              </li>
+              <li>
+                <Link href="/apps" className="text-gray-300 hover:text-gold transition">
+                  Apps
                 </Link>
               </li>
               <li>
