@@ -44,9 +44,9 @@ export default function LessonsManager({ lessons, onChange }: LessonsManagerProp
       content: '',
       duration: 5,
       videoUrl: '',
-      videoProvider: 'youtube',
+      videoProvider: '',
       audioUrl: '',
-      audioProvider: 'self-hosted',
+      audioProvider: '',
       isFreePreview: false,
       resources: [],
       isExpanded: true
@@ -238,14 +238,15 @@ export default function LessonsManager({ lessons, onChange }: LessonsManagerProp
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
                     <Video className="w-4 h-4 mr-2" />
-                    Video de la lección
+                    Video de la lección (opcional)
                   </label>
                   <div className="grid grid-cols-4 gap-3">
                     <select
-                      value={lesson.videoProvider}
+                      value={lesson.videoProvider || ''}
                       onChange={(e) => updateLesson(index, 'videoProvider', e.target.value)}
                       className="px-3 py-2 border border-gray-300 rounded-lg"
                     >
+                      <option value="">Sin video</option>
                       <option value="youtube">YouTube</option>
                       <option value="vimeo">Vimeo</option>
                       <option value="self-hosted">Self-hosted</option>
@@ -255,7 +256,8 @@ export default function LessonsManager({ lessons, onChange }: LessonsManagerProp
                       value={lesson.videoUrl}
                       onChange={(e) => updateLesson(index, 'videoUrl', e.target.value)}
                       placeholder="URL del video"
-                      className="col-span-3 px-3 py-2 border border-gray-300 rounded-lg"
+                      disabled={!lesson.videoProvider}
+                      className="col-span-3 px-3 py-2 border border-gray-300 rounded-lg disabled:bg-gray-100 disabled:cursor-not-allowed"
                     />
                   </div>
                 </div>
@@ -268,10 +270,11 @@ export default function LessonsManager({ lessons, onChange }: LessonsManagerProp
                   </label>
                   <div className="grid grid-cols-4 gap-3">
                     <select
-                      value={lesson.audioProvider || 'self-hosted'}
+                      value={lesson.audioProvider || ''}
                       onChange={(e) => updateLesson(index, 'audioProvider', e.target.value)}
                       className="px-3 py-2 border border-gray-300 rounded-lg"
                     >
+                      <option value="">Sin audio</option>
                       <option value="self-hosted">Self-hosted</option>
                       <option value="soundcloud">Soundcloud</option>
                       <option value="spotify">Spotify</option>
@@ -281,7 +284,8 @@ export default function LessonsManager({ lessons, onChange }: LessonsManagerProp
                       value={lesson.audioUrl || ''}
                       onChange={(e) => updateLesson(index, 'audioUrl', e.target.value)}
                       placeholder="URL del audio"
-                      className="col-span-3 px-3 py-2 border border-gray-300 rounded-lg"
+                      disabled={!lesson.audioProvider}
+                      className="col-span-3 px-3 py-2 border border-gray-300 rounded-lg disabled:bg-gray-100 disabled:cursor-not-allowed"
                     />
                   </div>
                   <p className="text-xs text-gray-500 mt-1">

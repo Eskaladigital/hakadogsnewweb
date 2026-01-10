@@ -2,7 +2,7 @@
 -- Ejecuta este script en el SQL Editor de Supabase
 
 ALTER TABLE course_lessons 
-ADD COLUMN IF NOT EXISTS audio_provider TEXT DEFAULT 'self-hosted';
+ADD COLUMN IF NOT EXISTS audio_provider TEXT DEFAULT NULL;
 
 -- Verificar que se añadió correctamente
 SELECT column_name, data_type, column_default

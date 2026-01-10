@@ -92,9 +92,9 @@ export default function EditarCursoPage() {
             resources,
             isExpanded: false,
             videoUrl: lesson.video_url || '',
-            videoProvider: lesson.video_provider || 'youtube',
+            videoProvider: lesson.video_provider || '',
             audioUrl: lesson.audio_url || '',
-            audioProvider: lesson.audio_provider || 'self-hosted',
+            audioProvider: lesson.audio_provider || '',
             isFreePreview: lesson.is_free_preview || false
           } as LessonWithResources
         })
@@ -480,9 +480,9 @@ export default function EditarCursoPage() {
                           content: l.content || '',
                           duration: l.duration_minutes,
                           videoUrl: l.videoUrl || '',
-                          videoProvider: l.videoProvider || 'youtube',
+                          videoProvider: l.videoProvider || '',
                           audioUrl: l.audioUrl || '',
-                          audioProvider: l.audioProvider || 'self-hosted',
+                          audioProvider: l.audioProvider || '',
                           isFreePreview: l.isFreePreview || false,
                           resources: l.resources.map(r => ({
                             id: r.id,
