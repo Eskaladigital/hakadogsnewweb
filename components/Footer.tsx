@@ -12,8 +12,8 @@ export default function Footer() {
           {/* Logo y descripción */}
           <div className="md:col-span-1">
             {/* Logo */}
-            <div className="mb-6">
-              <div className="relative h-16 w-16 mx-auto md:mx-0 mb-3">
+            <div className="flex flex-col items-center md:items-start mb-6">
+              <div className="relative h-16 w-16 mb-4">
                 <Image
                   src="/images/hakadogs_logo_cara_transparente_vf.webp"
                   alt="Hakadogs"
@@ -23,7 +23,7 @@ export default function Footer() {
                   quality={85}
                 />
               </div>
-              <div className="text-lg font-bold text-sage text-center md:text-left">BE HAKA!</div>
+              <div className="text-lg font-bold text-sage">BE HAKA!</div>
             </div>
             
             <p className="text-sm text-gray-300 mb-4 text-center md:text-left">
