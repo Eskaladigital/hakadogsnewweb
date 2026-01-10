@@ -1,47 +1,211 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Play, CheckCircle, Lock, Download, FileText, Clock } from 'lucide-react'
+import { ArrowLeft, Play, CheckCircle, Lock, Download, FileText, Clock, Loader2, AlertCircle, Video, Headphones } from 'lucide-react'
 import { motion } from 'framer-motion'
-
-interface Leccion {
-  id: string
-  title: string
-  duration: string
-  isCompleted: boolean
-  isLocked: boolean
-}
+import { getSession } from '@/lib/supabase/auth'
+import { getCourseBySlug, getCourseLessons, getUserCourseProgress, markLessonComplete, getLessonResources, getUserLessonProgress } from '@/lib/supabase/courses'
+import type { Course, Lesson, Resource } from '@/lib/supabase/courses'
 
 export default function CursoDetailPage({ params }: { params: { cursoId: string } }) {
+  const router = useRouter()
   const { cursoId } = params
+  const [loading, setLoading] = useState(true)
+  const [curso, setCurso] = useState<Course | null>(null)
+  const [lecciones, setLecciones] = useState<Lesson[]>([])
+  const [leccionActual, setLeccionActual] = useState<Lesson | null>(null)
+  const [recursos, setRecursos] = useState<Resource[]>([])
+  const [progreso, setProgreso] = useState<any>(null)
+  const [userId, setUserId] = useState<string | null>(null)
+  const [activeTab, setActiveTab] = useState<'video' | 'audio' | 'content' | 'resources'>('content')
+  const [completing, setCompleting] = useState(false)
+  const [lessonProgress, setLessonProgress] = useState<Record<string, boolean>>({})
 
-  // Mock data - esto vendrá de Supabase
-  const curso = {
-    id: cursoId,
-    title: 'Cómo Enseñar a tu Perro a Sentarse',
-    description: 'Aprende el comando más básico y fundamental de la educación canina. Perfecto para empezar.',
-    icon: '🎯',
-    color: 'from-blue-500 to-blue-600',
-    duration: '30 min',
-    difficulty: 'Básico',
-    progress: 50,
-    lecciones: [
-      { id: '1', title: 'Introducción: Por qué enseñar a sentarse', duration: '5 min', isCompleted: true, isLocked: false },
-      { id: '2', title: 'Preparación: Materiales necesarios', duration: '3 min', isCompleted: true, isLocked: false },
-      { id: '3', title: 'Técnica paso a paso', duration: '10 min', isCompleted: false, isLocked: false },
-      { id: '4', title: 'Errores comunes y cómo evitarlos', duration: '7 min', isCompleted: false, isLocked: true },
-      { id: '5', title: 'Práctica y refuerzo', duration: '5 min', isCompleted: false, isLocked: true }
-    ]
+  useEffect(() => {
+    async function loadData() {
+      try {
+        // Verificar autenticación
+        const { data: sessionData } = await getSession()
+        if (!sessionData?.session) {
+          router.push(`/cursos/auth/login?redirect=/cursos/mi-escuela/${cursoId}`)
+          return
+        }
+
+        const uid = sessionData.session.user.id
+        setUserId(uid)
+
+        // Cargar curso
+        const courseData = await getCourseBySlug(cursoId)
+        if (!courseData) {
+          setLoading(false)
+          return
+        }
+        setCurso(courseData)
+
+        // Cargar lecciones
+        const lessonsData = await getCourseLessons(courseData.id)
+        setLecciones(lessonsData)
+
+        // Cargar progreso del curso
+        const progressData = await getUserCourseProgress(uid, courseData.id)
+        setProgreso(progressData)
+
+        // Cargar progreso de cada lección
+        const progressMap: Record<string, boolean> = {}
+        for (const lesson of lessonsData) {
+          const lessonProg = await getUserLessonProgress(uid, lesson.id)
+          progressMap[lesson.id] = lessonProg?.completed || false
+        }
+        setLessonProgress(progressMap)
+
+        // Seleccionar primera lección
+        if (lessonsData.length > 0) {
+          const firstLesson = lessonsData[0]
+          setLeccionActual(firstLesson)
+          
+          // Determinar pestaña inicial según contenido disponible
+          if (firstLesson.video_url) {
+            setActiveTab('video')
+          } else if (firstLesson.audio_url) {
+            setActiveTab('audio')
+          } else {
+            setActiveTab('content')
+          }
+
+          // Cargar recursos de la primera lección
+          const resourcesData = await getLessonResources(firstLesson.id)
+          setRecursos(resourcesData)
+        }
+
+      } catch (error) {
+        console.error('Error cargando datos:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadData()
+  }, [cursoId, router])
+
+  const handleSelectLesson = async (lesson: Lesson) => {
+    setLeccionActual(lesson)
+    
+    // Determinar pestaña según contenido disponible
+    if (lesson.video_url) {
+      setActiveTab('video')
+    } else if (lesson.audio_url) {
+      setActiveTab('audio')
+    } else {
+      setActiveTab('content')
+    }
+
+    // Cargar recursos de esta lección
+    const resourcesData = await getLessonResources(lesson.id)
+    setRecursos(resourcesData)
   }
 
-  const [leccionActual, setLeccionActual] = useState(curso.lecciones[2])
-  const [showContent, setShowContent] = useState(true)
+  const handleMarkComplete = async () => {
+    if (!leccionActual || !userId) return
+
+    setCompleting(true)
+    try {
+      await markLessonComplete(userId, leccionActual.id)
+      
+      // Actualizar estado local
+      setLessonProgress(prev => ({
+        ...prev,
+        [leccionActual.id]: true
+      }))
+
+      // Recargar progreso del curso
+      if (curso) {
+        const progressData = await getUserCourseProgress(userId, curso.id)
+        setProgreso(progressData)
+      }
+
+      // Mensaje de éxito (opcional)
+      alert('¡Lección marcada como completada!')
+    } catch (error) {
+      console.error('Error marcando lección:', error)
+      alert('Error al marcar la lección como completada')
+    } finally {
+      setCompleting(false)
+    }
+  }
+
+  const getDifficultyLabel = (difficulty: string) => {
+    const labels: Record<string, string> = {
+      basico: 'Básico',
+      intermedio: 'Intermedio',
+      avanzado: 'Avanzado'
+    }
+    return labels[difficulty] || difficulty
+  }
+
+  const getDifficultyColor = (difficulty: string) => {
+    const colors: Record<string, string> = {
+      basico: 'from-green-500 to-green-600',
+      intermedio: 'from-amber-500 to-amber-600',
+      avanzado: 'from-red-500 to-red-600'
+    }
+    return colors[difficulty] || colors.basico
+  }
+
+  const getYouTubeEmbedUrl = (url: string) => {
+    const videoId = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/)?.[1]
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : url
+  }
+
+  const getVimeoEmbedUrl = (url: string) => {
+    const videoId = url.match(/vimeo\.com\/(\d+)/)?.[1]
+    return videoId ? `https://player.vimeo.com/video/${videoId}` : url
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 pt-20 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 animate-spin text-forest mx-auto mb-4" />
+          <p className="text-gray-600">Cargando curso...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!curso || !leccionActual) {
+    return (
+      <div className="min-h-screen bg-gray-50 pt-20 flex items-center justify-center">
+        <div className="text-center max-w-md">
+          <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Curso no encontrado</h1>
+          <Link
+            href="/cursos/mi-escuela"
+            className="inline-block bg-gradient-to-r from-forest to-sage text-white font-bold py-3 px-8 rounded-lg hover:opacity-90 transition-all"
+          >
+            Volver a Mi Escuela
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
+  const colorGradient = getDifficultyColor(curso.difficulty)
+  const completedCount = Object.values(lessonProgress).filter(Boolean).length
+  const progressPercentage = lecciones.length > 0 ? Math.round((completedCount / lecciones.length) * 100) : 0
+
+  // Determinar qué pestañas mostrar
+  const availableTabs = []
+  if (leccionActual.video_url) availableTabs.push('video')
+  if (leccionActual.audio_url) availableTabs.push('audio')
+  if (leccionActual.content) availableTabs.push('content')
+  if (recursos.length > 0) availableTabs.push('resources')
 
   return (
     <div className="min-h-screen bg-gray-50 pt-20">
       {/* Header */}
-      <div className={`bg-gradient-to-r ${curso.color} text-white py-8`}>
+      <div className={`bg-gradient-to-r ${colorGradient} text-white py-8`}>
         <div className="container mx-auto px-4">
           <div className="max-w-7xl mx-auto">
             <Link
@@ -55,15 +219,15 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
               <div>
                 <div className="mb-4">
                   <h1 className="text-3xl md:text-4xl font-bold mb-2">{curso.title}</h1>
-                  <p className="text-white/90">{curso.description}</p>
+                  <p className="text-white/90">{curso.short_description || curso.description}</p>
                 </div>
                 <div className="flex items-center space-x-6 text-sm">
                   <span className="flex items-center">
                     <Clock className="w-4 h-4 mr-2" />
-                    {curso.duration}
+                    {curso.duration_minutes} min
                   </span>
-                  <span>{curso.difficulty}</span>
-                  <span>{curso.lecciones.filter(l => l.isCompleted).length}/{curso.lecciones.length} lecciones completadas</span>
+                  <span>{getDifficultyLabel(curso.difficulty)}</span>
+                  <span>{completedCount}/{lecciones.length} lecciones completadas</span>
                 </div>
               </div>
             </div>
@@ -72,12 +236,12 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
             <div className="mt-6">
               <div className="flex items-center justify-between text-sm mb-2">
                 <span>Progreso del curso</span>
-                <span className="font-bold">{curso.progress}%</span>
+                <span className="font-bold">{progressPercentage}%</span>
               </div>
               <div className="w-full bg-white/20 rounded-full h-3">
                 <div 
                   className="bg-white rounded-full h-3 transition-all duration-500"
-                  style={{ width: `${curso.progress}%` }}
+                  style={{ width: `${progressPercentage}%` }}
                 />
               </div>
             </div>
@@ -92,133 +256,184 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
             {/* Main Content */}
             <div className="lg:col-span-2">
               <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-                {/* Video/Content Area */}
-                <div className="bg-gray-900 aspect-video flex items-center justify-center">
-                  <div className="text-center text-white">
-                    <Play className="w-20 h-20 mx-auto mb-4 opacity-80" />
-                    <p className="text-xl font-semibold mb-2">{leccionActual.title}</p>
-                    <p className="text-white/60">Duración: {leccionActual.duration}</p>
+                {/* Video/Audio/Content Area */}
+                {activeTab === 'video' && leccionActual.video_url && (
+                  <div className="aspect-video bg-gray-900">
+                    {leccionActual.video_provider === 'youtube' ? (
+                      <iframe
+                        src={getYouTubeEmbedUrl(leccionActual.video_url)}
+                        className="w-full h-full"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      />
+                    ) : leccionActual.video_provider === 'vimeo' ? (
+                      <iframe
+                        src={getVimeoEmbedUrl(leccionActual.video_url)}
+                        className="w-full h-full"
+                        allow="autoplay; fullscreen; picture-in-picture"
+                        allowFullScreen
+                      />
+                    ) : (
+                      <video
+                        src={leccionActual.video_url}
+                        controls
+                        className="w-full h-full"
+                      />
+                    )}
                   </div>
-                </div>
+                )}
 
-                {/* Tabs */}
-                <div className="border-b border-gray-200">
-                  <div className="flex">
-                    <button
-                      onClick={() => setShowContent(true)}
-                      className={`flex-1 py-4 px-6 font-semibold transition ${
-                        showContent 
-                          ? 'border-b-2 border-blue-500 text-blue-600' 
-                          : 'text-gray-600 hover:text-gray-900'
-                      }`}
-                    >
-                      <FileText className="w-5 h-5 inline mr-2" />
-                      Contenido
-                    </button>
-                    <button
-                      onClick={() => setShowContent(false)}
-                      className={`flex-1 py-4 px-6 font-semibold transition ${
-                        !showContent 
-                          ? 'border-b-2 border-blue-500 text-blue-600' 
-                          : 'text-gray-600 hover:text-gray-900'
-                      }`}
-                    >
-                      <Download className="w-5 h-5 inline mr-2" />
-                      Recursos
-                    </button>
+                {activeTab === 'audio' && leccionActual.audio_url && (
+                  <div className="bg-gradient-to-br from-forest/10 to-sage/10 p-12 flex items-center justify-center">
+                    <div className="w-full max-w-2xl">
+                      <div className="flex items-center justify-center mb-6">
+                        <div className="w-20 h-20 bg-forest/20 rounded-full flex items-center justify-center">
+                          <Headphones className="w-10 h-10 text-forest" />
+                        </div>
+                      </div>
+                      <audio
+                        src={leccionActual.audio_url}
+                        controls
+                        className="w-full"
+                      />
+                      <p className="text-center text-gray-600 mt-4">{leccionActual.title}</p>
+                    </div>
                   </div>
-                </div>
+                )}
+
+                {/* Tabs - Solo mostrar si hay más de una opción */}
+                {availableTabs.length > 1 && (
+                  <div className="border-b border-gray-200">
+                    <div className="flex">
+                      {leccionActual.video_url && (
+                        <button
+                          onClick={() => setActiveTab('video')}
+                          className={`flex-1 py-4 px-6 font-semibold transition ${
+                            activeTab === 'video'
+                              ? 'border-b-2 border-forest text-forest' 
+                              : 'text-gray-600 hover:text-gray-900'
+                          }`}
+                        >
+                          <Video className="w-5 h-5 inline mr-2" />
+                          Video
+                        </button>
+                      )}
+                      {leccionActual.audio_url && (
+                        <button
+                          onClick={() => setActiveTab('audio')}
+                          className={`flex-1 py-4 px-6 font-semibold transition ${
+                            activeTab === 'audio'
+                              ? 'border-b-2 border-forest text-forest' 
+                              : 'text-gray-600 hover:text-gray-900'
+                          }`}
+                        >
+                          <Headphones className="w-5 h-5 inline mr-2" />
+                          Audio
+                        </button>
+                      )}
+                      {leccionActual.content && (
+                        <button
+                          onClick={() => setActiveTab('content')}
+                          className={`flex-1 py-4 px-6 font-semibold transition ${
+                            activeTab === 'content'
+                              ? 'border-b-2 border-forest text-forest' 
+                              : 'text-gray-600 hover:text-gray-900'
+                          }`}
+                        >
+                          <FileText className="w-5 h-5 inline mr-2" />
+                          Contenido
+                        </button>
+                      )}
+                      {recursos.length > 0 && (
+                        <button
+                          onClick={() => setActiveTab('resources')}
+                          className={`flex-1 py-4 px-6 font-semibold transition ${
+                            activeTab === 'resources'
+                              ? 'border-b-2 border-forest text-forest' 
+                              : 'text-gray-600 hover:text-gray-900'
+                          }`}
+                        >
+                          <Download className="w-5 h-5 inline mr-2" />
+                          Recursos
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
 
                 {/* Content Area */}
                 <div className="p-8">
-                  {showContent ? (
-                    <div className="prose max-w-none">
-                      <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                  {activeTab === 'content' && leccionActual.content && (
+                    <div>
+                      <h2 className="text-2xl font-bold text-gray-900 mb-6">
                         {leccionActual.title}
                       </h2>
-                      <p className="text-gray-700 mb-6">
-                        En esta lección aprenderás la técnica completa paso a paso para enseñar a tu perro el comando &quot;Sentado&quot;. 
-                        Este es uno de los comandos más importantes y será la base para muchos otros comportamientos.
-                      </p>
-
-                      <h3 className="text-xl font-bold text-gray-900 mb-3">Lo que aprenderás:</h3>
-                      <ul className="list-disc list-inside space-y-2 mb-6 text-gray-700">
-                        <li>La posición correcta para enseñar el comando</li>
-                        <li>Cómo usar el premio de forma efectiva</li>
-                        <li>Señales verbales y gestuales</li>
-                        <li>Timing correcto del refuerzo</li>
-                        <li>Cómo aumentar la dificultad progresivamente</li>
-                      </ul>
-
-                      <h3 className="text-xl font-bold text-gray-900 mb-3">Paso a paso:</h3>
-                      <div className="space-y-4 mb-6">
-                        <div className="bg-blue-50 border-l-4 border-blue-500 p-4">
-                          <h4 className="font-bold text-gray-900 mb-2">Paso 1: Preparación</h4>
-                          <p className="text-gray-700">
-                            Prepara premios pequeños y muy apetecibles. Busca un lugar tranquilo sin distracciones.
-                          </p>
-                        </div>
-                        <div className="bg-blue-50 border-l-4 border-blue-500 p-4">
-                          <h4 className="font-bold text-gray-900 mb-2">Paso 2: Captar la atención</h4>
-                          <p className="text-gray-700">
-                            Sostén el premio cerca de la nariz de tu perro para asegurarte de que lo ve y huele.
-                          </p>
-                        </div>
-                        <div className="bg-blue-50 border-l-4 border-blue-500 p-4">
-                          <h4 className="font-bold text-gray-900 mb-2">Paso 3: Guiar el movimiento</h4>
-                          <p className="text-gray-700">
-                            Mueve lentamente tu mano hacia arriba y ligeramente hacia atrás sobre la cabeza del perro.
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mb-6">
-                        <h4 className="font-bold text-gray-900 mb-2 flex items-center">
-                          <span className="text-2xl mr-2">💡</span>
-                          Consejo profesional
-                        </h4>
-                        <p className="text-gray-700">
-                          El timing es crucial. Debes dar el premio JUSTO cuando el trasero toca el suelo, 
-                          no antes ni después. Esto ayuda al perro a asociar correctamente el comportamiento con la recompensa.
-                        </p>
-                      </div>
-
-                      <button className="w-full bg-blue-600 text-white font-bold py-4 px-6 rounded-lg hover:bg-blue-700 transition-all flex items-center justify-center">
-                        <CheckCircle className="w-5 h-5 mr-2" />
-                        Marcar como Completada
-                      </button>
+                      {/* Renderizar HTML de TinyMCE */}
+                      <div 
+                        className="prose max-w-none"
+                        dangerouslySetInnerHTML={{ __html: leccionActual.content }}
+                      />
                     </div>
-                  ) : (
+                  )}
+
+                  {activeTab === 'resources' && recursos.length > 0 && (
                     <div>
                       <h2 className="text-2xl font-bold text-gray-900 mb-6">Recursos Descargables</h2>
                       <div className="space-y-4">
-                        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
-                          <div className="flex items-center">
-                            <FileText className="w-8 h-8 text-blue-600 mr-4" />
-                            <div>
-                              <h3 className="font-semibold text-gray-900">Guía PDF - Sentado</h3>
-                              <p className="text-sm text-gray-600">Resumen completo de la técnica</p>
+                        {recursos.map((recurso) => (
+                          <div 
+                            key={recurso.id}
+                            className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition"
+                          >
+                            <div className="flex items-center">
+                              <FileText className="w-8 h-8 text-forest mr-4" />
+                              <div>
+                                <h3 className="font-semibold text-gray-900">{recurso.title}</h3>
+                                {recurso.description && (
+                                  <p className="text-sm text-gray-600">{recurso.description}</p>
+                                )}
+                              </div>
                             </div>
+                            <a
+                              href={recurso.file_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="bg-gradient-to-r from-forest to-sage text-white px-4 py-2 rounded-lg hover:opacity-90 transition flex items-center"
+                            >
+                              <Download className="w-4 h-4 mr-2" />
+                              Descargar
+                            </a>
                           </div>
-                          <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition flex items-center">
-                            <Download className="w-4 h-4 mr-2" />
-                            Descargar
-                          </button>
-                        </div>
-                        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
-                          <div className="flex items-center">
-                            <FileText className="w-8 h-8 text-blue-600 mr-4" />
-                            <div>
-                              <h3 className="font-semibold text-gray-900">Checklist de Progreso</h3>
-                              <p className="text-sm text-gray-600">Marca tu avance día a día</p>
-                            </div>
-                          </div>
-                          <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition flex items-center">
-                            <Download className="w-4 h-4 mr-2" />
-                            Descargar
-                          </button>
-                        </div>
+                        ))}
                       </div>
+                    </div>
+                  )}
+
+                  {/* Botón Marcar como Completada */}
+                  {!lessonProgress[leccionActual.id] && (
+                    <button
+                      onClick={handleMarkComplete}
+                      disabled={completing}
+                      className="w-full mt-8 bg-gradient-to-r from-forest to-sage text-white font-bold py-4 px-6 rounded-lg hover:opacity-90 transition-all flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {completing ? (
+                        <>
+                          <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                          Guardando...
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircle className="w-5 h-5 mr-2" />
+                          Marcar como Completada
+                        </>
+                      )}
+                    </button>
+                  )}
+
+                  {lessonProgress[leccionActual.id] && (
+                    <div className="w-full mt-8 bg-green-50 border border-green-200 text-green-800 font-semibold py-4 px-6 rounded-lg flex items-center justify-center">
+                      <CheckCircle className="w-5 h-5 mr-2" />
+                      Lección Completada
                     </div>
                   )}
                 </div>
@@ -230,37 +445,32 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
               <div className="bg-white rounded-xl shadow-lg p-6 sticky top-24">
                 <h3 className="text-xl font-bold text-gray-900 mb-6">Contenido del Curso</h3>
                 <div className="space-y-2">
-                  {curso.lecciones.map((leccion, index) => (
+                  {lecciones.map((leccion, index) => (
                     <motion.button
                       key={leccion.id}
-                      onClick={() => !leccion.isLocked && setLeccionActual(leccion)}
-                      disabled={leccion.isLocked}
+                      onClick={() => handleSelectLesson(leccion)}
                       className={`w-full text-left p-4 rounded-lg transition-all ${
                         leccionActual.id === leccion.id
-                          ? 'bg-blue-50 border-2 border-blue-500'
-                          : leccion.isLocked
-                          ? 'bg-gray-50 opacity-50 cursor-not-allowed'
+                          ? 'bg-forest/10 border-2 border-forest'
                           : 'bg-gray-50 hover:bg-gray-100'
                       }`}
-                      whileHover={!leccion.isLocked ? { scale: 1.02 } : {}}
+                      whileHover={{ scale: 1.02 }}
                     >
                       <div className="flex items-start">
                         <div className="mr-3 mt-0.5">
-                          {leccion.isCompleted ? (
+                          {lessonProgress[leccion.id] ? (
                             <CheckCircle className="w-5 h-5 text-green-600" />
-                          ) : leccion.isLocked ? (
-                            <Lock className="w-5 h-5 text-gray-400" />
                           ) : (
-                            <Play className="w-5 h-5 text-blue-600" />
+                            <Play className="w-5 h-5 text-forest" />
                           )}
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-1">
                             <span className="text-xs font-semibold text-gray-500">Lección {index + 1}</span>
-                            <span className="text-xs text-gray-500">{leccion.duration}</span>
+                            <span className="text-xs text-gray-500">{leccion.duration_minutes} min</span>
                           </div>
                           <p className={`font-semibold ${
-                            leccionActual.id === leccion.id ? 'text-blue-600' : 'text-gray-900'
+                            leccionActual.id === leccion.id ? 'text-forest' : 'text-gray-900'
                           }`}>
                             {leccion.title}
                           </p>
