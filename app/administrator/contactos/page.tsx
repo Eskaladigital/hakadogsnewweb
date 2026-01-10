@@ -49,8 +49,24 @@ export default function ContactosPage() {
       setLoading(true)
       // Usar la función RPC que sí funciona en lugar de getAllContacts
       const data = await getRecentContacts(1000) // límite alto para obtener todos
-      setContacts(data || [])
-      if (!data || data.length === 0) {
+      
+      // Mapear RecentContact a ContactWithDetails
+      const mappedData: ContactWithDetails[] = (data || []).map(contact => ({
+        ...contact,
+        status: contact.status as 'pending' | 'in_progress' | 'responded' | 'closed',
+        admin_notes: null,
+        responded_by: null,
+        responded_at: null,
+        responded_by_email: null,
+        responded_by_name: null,
+        source: 'web_form',
+        user_agent: null,
+        ip_address: null,
+        updated_at: contact.created_at
+      }))
+      
+      setContacts(mappedData)
+      if (mappedData.length === 0) {
         console.warn('⚠️ No se encontraron contactos')
       }
     } catch (error) {
