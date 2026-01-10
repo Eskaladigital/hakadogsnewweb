@@ -531,55 +531,70 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                     const isActive = leccionActual.id === leccion.id
                     
                     return (
-                      <motion.button
-                        key={leccion.id}
-                        onClick={() => handleSelectLesson(leccion)}
-                        disabled={isLocked}
-                        className={`w-full text-left p-4 rounded-lg transition-all ${
-                          isActive
-                            ? 'bg-forest/10 border-2 border-forest'
-                            : isLocked
-                            ? 'bg-gray-100 opacity-60 cursor-not-allowed'
-                            : 'bg-gray-50 hover:bg-gray-100'
-                        }`}
-                        whileHover={isLocked ? {} : { scale: 1.02 }}
-                      >
-                        <div className="flex items-start">
-                          <div className="mr-3 mt-0.5">
-                            {isLocked ? (
-                              <Lock className="w-5 h-5 text-gray-400" />
-                            ) : isCompleted ? (
-                              <CheckCircle className="w-5 h-5 text-green-600" />
-                            ) : (
-                              <Play className="w-5 h-5 text-forest" />
-                            )}
-                          </div>
-                          <div className="flex-1">
-                            <div className="flex items-center justify-between mb-1">
-                              <span className={`text-xs font-semibold ${
-                                isLocked ? 'text-gray-400' : 'text-gray-500'
-                              }`}>
-                                Lección {index + 1}
-                                {isLocked && ' • Bloqueada'}
-                              </span>
-                              <span className={`text-xs ${
-                                isLocked ? 'text-gray-400' : 'text-gray-500'
-                              }`}>
-                                {leccion.duration_minutes} min
-                              </span>
+                      <div key={leccion.id} className="relative group">
+                        <motion.button
+                          onClick={() => handleSelectLesson(leccion)}
+                          disabled={isLocked}
+                          className={`w-full text-left p-4 rounded-lg transition-all ${
+                            isActive
+                              ? 'bg-forest/10 border-2 border-forest'
+                              : isLocked
+                              ? 'bg-gray-100 opacity-60 cursor-not-allowed'
+                              : 'bg-gray-50 hover:bg-gray-100'
+                          }`}
+                          whileHover={isLocked ? {} : { scale: 1.02 }}
+                        >
+                          <div className="flex items-start">
+                            <div className="mr-3 mt-0.5">
+                              {isLocked ? (
+                                <Lock className="w-5 h-5 text-gray-400" />
+                              ) : isCompleted ? (
+                                <CheckCircle className="w-5 h-5 text-green-600" />
+                              ) : (
+                                <Play className="w-5 h-5 text-forest" />
+                              )}
                             </div>
-                            <p className={`font-semibold ${
-                              isActive 
-                                ? 'text-forest' 
-                                : isLocked 
-                                ? 'text-gray-400' 
-                                : 'text-gray-900'
-                            }`}>
-                              {leccion.title}
-                            </p>
+                            <div className="flex-1">
+                              <div className="flex items-center justify-between mb-1">
+                                <span className={`text-xs font-semibold ${
+                                  isLocked ? 'text-gray-400' : 'text-gray-500'
+                                }`}>
+                                  Lección {index + 1}
+                                  {isLocked && ' • Bloqueada'}
+                                </span>
+                                <span className={`text-xs ${
+                                  isLocked ? 'text-gray-400' : 'text-gray-500'
+                                }`}>
+                                  {leccion.duration_minutes} min
+                                </span>
+                              </div>
+                              <p className={`font-semibold ${
+                                isActive 
+                                  ? 'text-forest' 
+                                  : isLocked 
+                                  ? 'text-gray-400' 
+                                  : 'text-gray-900'
+                              }`}>
+                                {leccion.title}
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      </motion.button>
+                        </motion.button>
+                        
+                        {/* Tooltip para lecciones bloqueadas */}
+                        {isLocked && (
+                          <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                            <div className="bg-gray-900 text-white text-sm px-4 py-3 rounded-lg shadow-xl whitespace-nowrap">
+                              <div className="flex items-center">
+                                <Lock className="w-4 h-4 mr-2" />
+                                <span>Completa la lección anterior para desbloquear</span>
+                              </div>
+                              {/* Flecha */}
+                              <div className="absolute right-full top-1/2 -translate-y-1/2 border-8 border-transparent border-r-gray-900"></div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     )
                   })}
                 </div>
