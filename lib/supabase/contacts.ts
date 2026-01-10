@@ -95,18 +95,28 @@ export async function getAllContacts(): Promise<ContactWithDetails[]> {
  * Obtiene un contacto por ID
  */
 export async function getContactById(id: string): Promise<ContactWithDetails | null> {
-  const { data, error } = await supabase
-    .from('contacts_admin_view')
+  const { data, error } = await (supabase as any)
+    .from('contacts')
     .select('*')
     .eq('id', id)
     .single()
   
   if (error) {
-    console.error('Error getting contact:', error)
-    throw error
+    console.warn('⚠️ Error getting contact:', error.message || error)
+    return null
   }
   
-  return data as ContactWithDetails
+  // Calcular hours_since_created
+  const created = new Date(data.created_at)
+  const now = new Date()
+  const hoursSinceCreated = (now.getTime() - created.getTime()) / (1000 * 60 * 60)
+  
+  return {
+    ...data,
+    hours_since_created: hoursSinceCreated,
+    responded_by_email: null,
+    responded_by_name: null
+  } as ContactWithDetails
 }
 
 /**
@@ -259,16 +269,29 @@ export async function getContactsStats(): Promise<ContactStats> {
  * Busca contactos por email o nombre
  */
 export async function searchContacts(query: string): Promise<ContactWithDetails[]> {
-  const { data, error } = await supabase
-    .from('contacts_admin_view')
+  const { data, error } = await (supabase as any)
+    .from('contacts')
     .select('*')
     .or(`name.ilike.%${query}%,email.ilike.%${query}%`)
     .order('created_at', { ascending: false })
   
   if (error) {
-    console.error('Error searching contacts:', error)
-    throw error
+    console.warn('⚠️ Error searching contacts:', error.message || error)
+    return []
   }
   
-  return data as ContactWithDetails[]
+  const contacts = (data || []).map((contact: any) => {
+    const created = new Date(contact.created_at)
+    const now = new Date()
+    const hoursSinceCreated = (now.getTime() - created.getTime()) / (1000 * 60 * 60)
+    
+    return {
+      ...contact,
+      hours_since_created: hoursSinceCreated,
+      responded_by_email: null,
+      responded_by_name: null
+    }
+  })
+  
+  return contacts as ContactWithDetails[]
 }
