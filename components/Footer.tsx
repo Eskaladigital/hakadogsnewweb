@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link'
 import Image from 'next/image'
 import { Facebook, Instagram, Mail, Phone, MapPin } from 'lucide-react'
@@ -99,6 +101,22 @@ export default function Footer() {
                   Términos y Condiciones
                 </Link>
               </li>
+              <li>
+                <Link href="/legal/cookies" className="text-gray-300 hover:text-gold transition">
+                  Política de Cookies
+                </Link>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    localStorage.removeItem('hakadogs_cookie_consent')
+                    window.location.reload()
+                  }}
+                  className="text-gray-300 hover:text-gold transition text-left"
+                >
+                  Configurar Cookies
+                </button>
+              </li>
             </ul>
           </div>
 
@@ -156,6 +174,9 @@ export default function Footer() {
               </Link>
               <Link href="/legal/terminos" className="text-gray-400 hover:text-gold transition">
                 Términos y Condiciones
+              </Link>
+              <Link href="/legal/cookies" className="text-gray-400 hover:text-gold transition">
+                Política de Cookies
               </Link>
               <Link href="/sitemap" className="text-gray-400 hover:text-gold transition">
                 Mapa del Sitio

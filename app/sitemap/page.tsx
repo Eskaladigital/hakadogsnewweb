@@ -195,6 +195,11 @@ export default function SitemapPage() {
                   <span className="mr-2">→</span> Términos y Condiciones
                 </Link>
               </li>
+              <li>
+                <Link href="/legal/cookies" className="text-gray-700 hover:text-forest transition flex items-center">
+                  <span className="mr-2">→</span> Política de Cookies
+                </Link>
+              </li>
             </ul>
           </div>
 

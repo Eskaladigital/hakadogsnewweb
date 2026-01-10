@@ -5,6 +5,7 @@ import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import BackToTop from '@/components/ui/BackToTop'
 import WhatsAppChat from '@/components/ui/WhatsAppChat'
+import CookieConsent from '@/components/ui/CookieConsent'
 
 export const metadata: Metadata = {
   title: 'Hakadogs - Educación Canina Profesional',
@@ -47,6 +48,7 @@ export default function RootLayout({
         <Footer />
         <BackToTop />
         <WhatsAppChat />
+        <CookieConsent />
       </body>
     </html>
   )
