@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from 'react'
 import { 
-  getAllContacts, 
   getContactsByStatus, 
   updateContact, 
   markContactAsResponded,
   deleteContact,
   type ContactWithDetails 
 } from '@/lib/supabase/contacts'
+import { getRecentContacts } from '@/lib/supabase/dashboard'
 import { getSession } from '@/lib/supabase/auth'
 import { Mail, Search, Eye, Trash2, Clock, CheckCircle, AlertCircle, MessageSquare, Phone, Calendar, X } from 'lucide-react'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
@@ -47,14 +47,15 @@ export default function ContactosPage() {
   const loadContacts = async () => {
     try {
       setLoading(true)
-      const data = await getAllContacts()
+      // Usar la función RPC que sí funciona en lugar de getAllContacts
+      const data = await getRecentContacts(1000) // límite alto para obtener todos
       setContacts(data || [])
       if (!data || data.length === 0) {
-        console.warn('⚠️ No se encontraron contactos o la tabla no existe')
+        console.warn('⚠️ No se encontraron contactos')
       }
     } catch (error) {
       console.warn('⚠️ Error cargando contactos:', error)
-      setToast({ message: 'Error al cargar contactos. Verifica que la tabla contacts esté creada.', type: 'error' })
+      setToast({ message: 'Error al cargar contactos. Verifica que las funciones SQL estén ejecutadas.', type: 'error' })
       setContacts([])
     } finally {
       setLoading(false)
