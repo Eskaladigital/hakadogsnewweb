@@ -151,10 +151,22 @@ export default function Footer() {
             <div className="mt-6">
               <h3 className="font-bold text-lg mb-3">Síguenos</h3>
               <div className="flex space-x-4">
-                <a href="https://facebook.com/hakadogs" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-gold transition">
+                <a 
+                  href="https://facebook.com/hakadogs" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-gray-300 hover:text-gold transition"
+                  aria-label="Visitar página de Facebook de Hakadogs"
+                >
                   <Facebook size={24} />
                 </a>
-                <a href="https://instagram.com/hakadogs" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-gold transition">
+                <a 
+                  href="https://instagram.com/hakadogs" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-gray-300 hover:text-gold transition"
+                  aria-label="Visitar perfil de Instagram de Hakadogs"
+                >
                   <Instagram size={24} />
                 </a>
               </div>

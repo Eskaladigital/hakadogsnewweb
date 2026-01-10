@@ -126,6 +126,8 @@ export default function Navigation() {
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            aria-label={isOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación"}
+            aria-expanded={isOpen}
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>

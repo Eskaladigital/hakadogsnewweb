@@ -55,6 +55,7 @@ export default function WhatsAppChat() {
             <button
               onClick={() => setIsOpen(false)}
               className="text-white hover:text-white/80 transition"
+              aria-label="Cerrar chat de WhatsApp"
             >
               <X size={20} />
             </button>
