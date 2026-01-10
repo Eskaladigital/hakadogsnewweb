@@ -1,583 +1,281 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { getSession } from '@/lib/supabase/auth'
-import { getAllCourses, getAdminStats, deleteCourse, updateCourse, type Course } from '@/lib/supabase/courses'
-import { BookOpen, TrendingUp, DollarSign, Users, Plus, Edit, Trash2, Eye, Search, ChevronUp, ChevronDown, CheckCircle, XCircle } from 'lucide-react'
-import Toast from '@/components/ui/Toast'
-import ConfirmModal from '@/components/ui/ConfirmModal'
+import { 
+  Users, BookOpen, Mail, TrendingUp, DollarSign, 
+  CheckCircle, Clock, AlertCircle, Eye, ArrowRight 
+} from 'lucide-react'
+import { getDashboardStats, getRecentUsers, getRecentSales, getRecentContacts, type DashboardStats } from '@/lib/supabase/dashboard'
+import LoadingSpinner from '@/components/ui/LoadingSpinner'
 
-type SortField = 'title' | 'total_lessons' | 'duration_minutes' | 'price' | 'is_published'
-type SortDirection = 'asc' | 'desc'
-
-export default function AdministratorPage() {
-  const router = useRouter()
-  const [isAdmin, setIsAdmin] = useState(false)
+export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
-  const [courses, setCourses] = useState<Course[]>([])
-  const [stats, setStats] = useState({
-    totalCourses: 0,
-    publishedCourses: 0,
-    totalSales: 0,
-    totalRevenue: 0
-  })
-
-  // Toast y modal de confirmación
-  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null)
-  const [confirmModal, setConfirmModal] = useState<{
-    isOpen: boolean
-    title: string
-    message: string
-    confirmText: string
-    confirmColor: 'red' | 'orange' | 'green' | 'blue'
-    onConfirm: () => void
-  } | null>(null)
-
-  // Filtros y paginación
-  const [searchTerm, setSearchTerm] = useState('')
-  const [sortField, setSortField] = useState<SortField>('price')
-  const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
-  const [currentPage, setCurrentPage] = useState(1)
-  const [itemsPerPage, setItemsPerPage] = useState(10)
+  const [stats, setStats] = useState<DashboardStats | null>(null)
+  const [recentUsers, setRecentUsers] = useState<any[]>([])
+  const [recentSales, setRecentSales] = useState<any[]>([])
+  const [recentContacts, setRecentContacts] = useState<any[]>([])
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const { data } = await getSession()
-      const session = data?.session
-      
-      if (!session || session.user?.user_metadata?.role !== 'admin') {
-        router.push('/cursos/auth/login?redirect=/administrator')
-      } else {
-        setIsAdmin(true)
-        loadData()
-      }
-    }
-    
-    checkAuth()
-  }, [router])
+    loadDashboardData()
+  }, [])
 
-  const loadData = async () => {
+  const loadDashboardData = async () => {
     try {
-      const [coursesData, statsData] = await Promise.all([
-        getAllCourses(true),
-        getAdminStats()
+      setLoading(true)
+      const [statsData, usersData, salesData, contactsData] = await Promise.all([
+        getDashboardStats(),
+        getRecentUsers(5),
+        getRecentSales(5),
+        getRecentContacts(5)
       ])
-      setCourses(coursesData)
+      
       setStats(statsData)
+      setRecentUsers(usersData)
+      setRecentSales(salesData)
+      setRecentContacts(contactsData)
     } catch (error) {
-      console.error('Error cargando datos:', error)
+      console.error('Error cargando dashboard:', error)
     } finally {
       setLoading(false)
     }
   }
 
-  const handleDelete = async (id: string, title: string) => {
-    setConfirmModal({
-      isOpen: true,
-      title: 'Eliminar Curso',
-      message: `¿Estás seguro de eliminar el curso "${title}"? Esta acción no se puede deshacer.`,
-      confirmText: 'Eliminar',
-      confirmColor: 'red',
-      onConfirm: async () => {
-        try {
-          await deleteCourse(id)
-          setCourses(courses.filter(c => c.id !== id))
-          setToast({ message: 'Curso eliminado exitosamente', type: 'success' })
-          loadData()
-        } catch (error) {
-          console.error('Error eliminando curso:', error)
-          setToast({ message: 'Error al eliminar el curso', type: 'error' })
-        }
-      }
-    })
-  }
-
-  const handleTogglePublish = async (id: string, currentStatus: boolean, title: string) => {
-    const action = currentStatus ? 'despublicar' : 'publicar'
-    const actionCapitalized = currentStatus ? 'Despublicar' : 'Publicar'
-    
-    setConfirmModal({
-      isOpen: true,
-      title: `${actionCapitalized} Curso`,
-      message: `¿Estás seguro de ${action} el curso "${title}"?`,
-      confirmText: actionCapitalized,
-      confirmColor: currentStatus ? 'orange' : 'green',
-      onConfirm: async () => {
-        try {
-          await updateCourse(id, { is_published: !currentStatus })
-          // Actualizar el estado local
-          setCourses(courses.map(c => 
-            c.id === id ? { ...c, is_published: !currentStatus } : c
-          ))
-          setToast({ 
-            message: `Curso ${currentStatus ? 'despublicado' : 'publicado'} exitosamente`, 
-            type: 'success' 
-          })
-        } catch (error) {
-          console.error('Error actualizando estado:', error)
-          setToast({ message: 'Error al actualizar el estado del curso', type: 'error' })
-        }
-      }
-    })
-  }
-
-  const getDifficultyBadge = (difficulty: string) => {
-    const badges = {
-      basico: 'bg-green-100 text-green-700',
-      intermedio: 'bg-yellow-100 text-yellow-700',
-      avanzado: 'bg-red-100 text-red-700'
-    }
-    return badges[difficulty as keyof typeof badges] || badges.basico
-  }
-
-  // Filtrado y ordenación
-  const filteredAndSortedCourses = useMemo(() => {
-    let filtered = courses.filter(course =>
-      course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      course.slug.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-
-    filtered.sort((a, b) => {
-      let aValue: any = a[sortField]
-      let bValue: any = b[sortField]
-
-      if (sortField === 'is_published') {
-        aValue = a.is_published ? 1 : 0
-        bValue = b.is_published ? 1 : 0
-      }
-
-      // Para el campo price, tratar cursos gratuitos como 0
-      if (sortField === 'price') {
-        aValue = a.is_free ? 0 : a.price
-        bValue = b.is_free ? 0 : b.price
-      }
-
-      if (typeof aValue === 'string') {
-        return sortDirection === 'asc'
-          ? aValue.localeCompare(bValue)
-          : bValue.localeCompare(aValue)
-      }
-
-      return sortDirection === 'asc' ? aValue - bValue : bValue - aValue
-    })
-
-    return filtered
-  }, [courses, searchTerm, sortField, sortDirection])
-
-  // Paginación
-  const totalPages = Math.ceil(filteredAndSortedCourses.length / itemsPerPage)
-  const paginatedCourses = useMemo(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage
-    return filteredAndSortedCourses.slice(startIndex, startIndex + itemsPerPage)
-  }, [filteredAndSortedCourses, currentPage, itemsPerPage])
-
-  // Cambiar ordenación
-  const handleSort = (field: SortField) => {
-    if (sortField === field) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
-    } else {
-      setSortField(field)
-      setSortDirection('asc')
-    }
-    setCurrentPage(1)
-  }
-
-  // Cambiar items por página
-  const handleItemsPerPageChange = (value: number) => {
-    setItemsPerPage(value)
-    setCurrentPage(1)
-  }
-
-  if (loading) {
+  if (loading || !stats) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Cargando panel...</p>
-        </div>
+      <div className="flex items-center justify-center py-20">
+        <LoadingSpinner />
       </div>
     )
   }
 
-  if (!isAdmin) return null
+  const statCards = [
+    {
+      title: 'Usuarios Totales',
+      value: stats.users.total,
+      change: `+${stats.users.today} hoy`,
+      icon: Users,
+      color: 'bg-blue-500',
+      href: '/administrator/usuarios'
+    },
+    {
+      title: 'Cursos Publicados',
+      value: stats.courses.published,
+      change: `${stats.courses.total} total`,
+      icon: BookOpen,
+      color: 'bg-green-500',
+      href: '/administrator/cursos'
+    },
+    {
+      title: 'Ventas del Mes',
+      value: stats.sales.this_month,
+      change: `+${stats.sales.today} hoy`,
+      icon: TrendingUp,
+      color: 'bg-purple-500',
+      href: '/administrator/cursos'
+    },
+    {
+      title: 'Ingresos del Mes',
+      value: `${stats.sales.revenue_month.toFixed(2)}€`,
+      change: `${stats.sales.revenue_total.toFixed(2)}€ total`,
+      icon: DollarSign,
+      color: 'bg-amber-500',
+      href: '/administrator/cursos'
+    },
+    {
+      title: 'Contactos Pendientes',
+      value: stats.contacts.pending,
+      change: `${stats.contacts.total} total`,
+      icon: Mail,
+      color: 'bg-red-500',
+      href: '/administrator/contactos'
+    },
+    {
+      title: 'Cursos Completados',
+      value: stats.progress.completed_courses,
+      change: `${stats.progress.avg_completion.toFixed(1)}% promedio`,
+      icon: CheckCircle,
+      color: 'bg-teal-500',
+      href: '/administrator/cursos'
+    }
+  ]
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('es-ES', {
+      day: 'numeric',
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+  }
+
+  const getContactStatusColor = (status: string) => {
+    switch (status) {
+      case 'pending': return 'text-red-600 bg-red-50'
+      case 'in_progress': return 'text-amber-600 bg-amber-50'
+      case 'responded': return 'text-green-600 bg-green-50'
+      case 'closed': return 'text-gray-600 bg-gray-50'
+      default: return 'text-gray-600 bg-gray-50'
+    }
+  }
+
+  const getContactStatusLabel = (status: string) => {
+    switch (status) {
+      case 'pending': return 'Pendiente'
+      case 'in_progress': return 'En Progreso'
+      case 'responded': return 'Respondido'
+      case 'closed': return 'Cerrado'
+      default: return status
+    }
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-20">
-      <div className="bg-gradient-to-r from-forest to-sage text-white py-12">
-        <div className="container mx-auto px-4">
-          <div className="max-w-7xl mx-auto">
-            <h1 className="text-4xl font-bold mb-2">Panel de Administración</h1>
-            <p className="text-white/90">Gestión completa de cursos</p>
-          </div>
+    <div className="space-y-8">
+      {/* Tarjetas de Estadísticas */}
+      <div>
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">Estadísticas Generales</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {statCards.map((card, index) => {
+            const Icon = card.icon
+            return (
+              <Link
+                key={index}
+                href={card.href}
+                className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition group"
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-gray-600 mb-1">{card.title}</p>
+                    <p className="text-3xl font-bold text-gray-900 mb-2">{card.value}</p>
+                    <p className="text-sm text-gray-500">{card.change}</p>
+                  </div>
+                  <div className={`${card.color} w-12 h-12 rounded-lg flex items-center justify-center`}>
+                    <Icon className="w-6 h-6 text-white" />
+                  </div>
+                </div>
+                <div className="mt-4 flex items-center text-sm text-forest group-hover:text-forest-dark">
+                  Ver detalles
+                  <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
+            )
+          })}
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-7xl mx-auto">
-          {/* Quick Actions */}
-          <div className="mb-8 flex items-center justify-end">
-            <Link
-              href="/administrator/cursos/nuevo"
-              className="bg-gradient-to-r from-forest to-sage text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-all flex items-center shadow-lg"
-            >
-              <Plus className="w-5 h-5 mr-2" />
-              Crear Nuevo Curso
+      {/* Sección de actividad reciente */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Usuarios Recientes */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-lg font-bold text-gray-900">Usuarios Recientes</h3>
+            <Link href="/administrator/usuarios" className="text-sm text-forest hover:text-forest-dark font-semibold">
+              Ver todos →
             </Link>
           </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
-              <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-gray-600">Total Cursos</p>
-                <BookOpen className="w-5 h-5 text-forest" />
-              </div>
-              <p className="text-3xl font-bold text-gray-900">{stats.totalCourses}</p>
-              <p className="text-sm text-gray-500 mt-1">{stats.publishedCourses} publicados</p>
-            </div>
-
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-gray-600">Ventas Totales</p>
-                <TrendingUp className="w-5 h-5 text-sage" />
-              </div>
-              <p className="text-3xl font-bold text-gray-900">{stats.totalSales}</p>
-              <p className="text-sm text-gray-500 mt-1">En la plataforma</p>
-            </div>
-
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-gray-600">Ingresos</p>
-                <DollarSign className="w-5 h-5 text-gold" />
-              </div>
-              <p className="text-3xl font-bold text-gray-900">{stats.totalRevenue.toFixed(2)}€</p>
-              <p className="text-sm text-gray-500 mt-1">
-                {stats.totalSales > 0 ? `Promedio: ${(stats.totalRevenue / stats.totalSales).toFixed(2)}€` : 'Sin ventas aún'}
-              </p>
-            </div>
-
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-gray-600">Lecciones</p>
-                <Users className="w-5 h-5 text-forest" />
-              </div>
-              <p className="text-3xl font-bold text-gray-900">
-                {courses.reduce((sum, course) => sum + course.total_lessons, 0)}
-              </p>
-              <p className="text-sm text-gray-500 mt-1">En todos los cursos</p>
-            </div>
-          </div>
-
-          {/* Courses Table */}
-          <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-            <div className="p-6 border-b border-gray-200">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-bold text-gray-900">
-                  Cursos Creados ({filteredAndSortedCourses.length})
-                </h2>
-              </div>
-
-              {/* Búsqueda y filtros */}
-              <div className="flex flex-col gap-4">
-                <div className="flex-1 relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <input
-                    type="text"
-                    placeholder="Buscar por título o slug..."
-                    value={searchTerm}
-                    onChange={(e) => {
-                      setSearchTerm(e.target.value)
-                      setCurrentPage(1)
-                    }}
-                    className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent text-base"
-                  />
-                </div>
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-sm text-gray-600 whitespace-nowrap">Mostrar:</span>
-                  <select
-                    value={itemsPerPage}
-                    onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
-                    className="border border-gray-300 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-forest focus:border-transparent text-base flex-1 sm:flex-initial"
-                  >
-                    <option value={5}>5 por página</option>
-                    <option value={10}>10 por página</option>
-                    <option value={25}>25 por página</option>
-                    <option value={50}>50 por página</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            
-            {filteredAndSortedCourses.length === 0 ? (
-              <div className="p-12 text-center">
-                {searchTerm ? (
-                  <>
-                    <Search className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                      No se encontraron cursos
-                    </h3>
-                    <p className="text-gray-600 mb-6">
-                      Intenta con otros términos de búsqueda
-                    </p>
-                    <button
-                      onClick={() => setSearchTerm('')}
-                      className="text-forest hover:text-forest-dark font-semibold"
-                    >
-                      Limpiar búsqueda
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <BookOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                      No hay cursos creados
-                    </h3>
-                    <p className="text-gray-600 mb-6">
-                      Crea tu primer curso para empezar a vender
-                    </p>
-                    <Link
-                      href="/administrator/cursos/nuevo"
-                      className="inline-flex items-center bg-gradient-to-r from-forest to-sage text-white px-6 py-3 rounded-lg hover:opacity-90 transition"
-                    >
-                      <Plus className="w-5 h-5 mr-2" />
-                      Crear Primer Curso
-                    </Link>
-                  </>
-                )}
-              </div>
+          <div className="space-y-4">
+            {recentUsers.length === 0 ? (
+              <p className="text-gray-500 text-center py-8">No hay usuarios recientes</p>
             ) : (
-              <>
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th
-                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition"
-                          onClick={() => handleSort('title')}
-                        >
-                          <div className="flex items-center">
-                            Curso
-                            {sortField === 'title' && (
-                              sortDirection === 'asc' ? <ChevronUp className="w-4 h-4 ml-1" /> : <ChevronDown className="w-4 h-4 ml-1" />
-                            )}
-                          </div>
-                        </th>
-                        <th
-                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition"
-                          onClick={() => handleSort('total_lessons')}
-                        >
-                          <div className="flex items-center">
-                            Lecciones
-                            {sortField === 'total_lessons' && (
-                              sortDirection === 'asc' ? <ChevronUp className="w-4 h-4 ml-1" /> : <ChevronDown className="w-4 h-4 ml-1" />
-                            )}
-                          </div>
-                        </th>
-                        <th
-                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition"
-                          onClick={() => handleSort('duration_minutes')}
-                        >
-                          <div className="flex items-center">
-                            Duración
-                            {sortField === 'duration_minutes' && (
-                              sortDirection === 'asc' ? <ChevronUp className="w-4 h-4 ml-1" /> : <ChevronDown className="w-4 h-4 ml-1" />
-                            )}
-                          </div>
-                        </th>
-                        <th
-                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition"
-                          onClick={() => handleSort('price')}
-                        >
-                          <div className="flex items-center">
-                            Precio
-                            {sortField === 'price' && (
-                              sortDirection === 'asc' ? <ChevronUp className="w-4 h-4 ml-1" /> : <ChevronDown className="w-4 h-4 ml-1" />
-                            )}
-                          </div>
-                        </th>
-                        <th
-                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition"
-                          onClick={() => handleSort('is_published')}
-                        >
-                          <div className="flex items-center">
-                            Estado
-                            {sortField === 'is_published' && (
-                              sortDirection === 'asc' ? <ChevronUp className="w-4 h-4 ml-1" /> : <ChevronDown className="w-4 h-4 ml-1" />
-                            )}
-                          </div>
-                        </th>
-                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Acciones
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                      {paginatedCourses.map((course) => (
-                        <tr key={course.id} className="hover:bg-gray-50 transition">
-                          <td className="px-6 py-4">
-                            <div>
-                              <p className="text-sm font-medium text-gray-900">{course.title}</p>
-                              <p className="text-xs text-gray-500">{course.slug}</p>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4">
-                            <p className="text-sm text-gray-600">{course.total_lessons}</p>
-                          </td>
-                          <td className="px-6 py-4">
-                            <p className="text-sm text-gray-600">{course.duration_minutes} min</p>
-                          </td>
-                          <td className="px-6 py-4">
-                            <p className="text-sm font-semibold text-gray-900">
-                              {course.is_free ? 'Gratis' : `${course.price}€`}
-                            </p>
-                          </td>
-                          <td className="px-6 py-4">
-                            <div className="flex flex-col space-y-1">
-                              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                course.is_published 
-                                  ? 'bg-green-100 text-green-800' 
-                                  : 'bg-gray-100 text-gray-800'
-                              }`}>
-                                {course.is_published ? 'Publicado' : 'Borrador'}
-                              </span>
-                              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                getDifficultyBadge(course.difficulty)
-                              }`}>
-                                {course.difficulty}
-                              </span>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 text-right">
-                            <div className="flex items-center justify-end space-x-2">
-                              {/* Botón Ver curso - Solo funciona si está publicado */}
-                              {course.is_published ? (
-                                <Link
-                                  href={`/cursos/mi-escuela/${course.slug}`}
-                                  className="text-blue-600 hover:text-blue-800 p-2 transition"
-                                  title="Ver curso como usuario"
-                                >
-                                  <Eye className="w-4 h-4" />
-                                </Link>
-                              ) : (
-                                <button
-                                  disabled
-                                  className="text-gray-300 p-2 cursor-not-allowed"
-                                  title="Publica el curso para verlo en el front"
-                                >
-                                  <Eye className="w-4 h-4" />
-                                </button>
-                              )}
-                              <button
-                                onClick={() => handleTogglePublish(course.id, course.is_published, course.title)}
-                                className={`p-2 transition ${
-                                  course.is_published 
-                                    ? 'text-orange-600 hover:text-orange-800' 
-                                    : 'text-green-600 hover:text-green-800'
-                                }`}
-                                title={course.is_published ? 'Despublicar' : 'Publicar'}
-                              >
-                                {course.is_published ? (
-                                  <XCircle className="w-4 h-4" />
-                                ) : (
-                                  <CheckCircle className="w-4 h-4" />
-                                )}
-                              </button>
-                              <Link
-                                href={`/administrator/cursos/editar/${course.id}`}
-                                className="text-gray-600 hover:text-gray-800 p-2 transition"
-                                title="Editar"
-                              >
-                                <Edit className="w-4 h-4" />
-                              </Link>
-                              <button
-                                onClick={() => handleDelete(course.id, course.title)}
-                                className="text-red-600 hover:text-red-800 p-2 transition"
-                                title="Eliminar"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-
-                {/* Paginación */}
-                {totalPages > 1 && (
-                  <div className="px-4 sm:px-6 py-4 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <div className="text-sm text-gray-600 text-center sm:text-left">
-                      Mostrando {((currentPage - 1) * itemsPerPage) + 1} - {Math.min(currentPage * itemsPerPage, filteredAndSortedCourses.length)} de {filteredAndSortedCourses.length}
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <button
-                        onClick={() => setCurrentPage(currentPage - 1)}
-                        disabled={currentPage === 1}
-                        className="px-3 py-2 border border-gray-300 rounded-lg text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition"
-                      >
-                        Anterior
-                      </button>
-                      {/* Mostrar solo algunas páginas en móvil */}
-                      <div className="hidden sm:flex items-center space-x-2">
-                        {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                          <button
-                            key={page}
-                            onClick={() => setCurrentPage(page)}
-                            className={`px-3 py-2 rounded-lg text-sm transition ${
-                              page === currentPage
-                                ? 'bg-forest text-white'
-                                : 'border border-gray-300 hover:bg-gray-50'
-                            }`}
-                          >
-                            {page}
-                          </button>
-                        ))}
-                      </div>
-                      {/* Solo página actual en móvil */}
-                      <div className="sm:hidden px-4 py-2 bg-forest text-white rounded-lg text-sm font-semibold">
-                        {currentPage} / {totalPages}
-                      </div>
-                      <button
-                        onClick={() => setCurrentPage(currentPage + 1)}
-                        disabled={currentPage === totalPages}
-                        className="px-3 py-2 border border-gray-300 rounded-lg text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition"
-                      >
-                        Siguiente
-                      </button>
-                    </div>
+              recentUsers.map((user) => (
+                <div key={user.id} className="flex items-center justify-between pb-4 border-b border-gray-100 last:border-0">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-gray-900 truncate">
+                      {user.name || user.email}
+                    </p>
+                    <p className="text-xs text-gray-500 truncate">{user.email}</p>
                   </div>
-                )}
-              </>
+                  <div className="ml-4 text-right">
+                    <span className={`
+                      inline-block px-2 py-1 text-xs font-semibold rounded-full
+                      ${user.role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-700'}
+                    `}>
+                      {user.role}
+                    </span>
+                    <p className="text-xs text-gray-500 mt-1">{formatDate(user.created_at)}</p>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        {/* Ventas Recientes */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-lg font-bold text-gray-900">Ventas Recientes</h3>
+            <Link href="/administrator/cursos" className="text-sm text-forest hover:text-forest-dark font-semibold">
+              Ver todos →
+            </Link>
+          </div>
+          <div className="space-y-4">
+            {recentSales.length === 0 ? (
+              <p className="text-gray-500 text-center py-8">No hay ventas recientes</p>
+            ) : (
+              recentSales.map((sale) => (
+                <div key={sale.id} className="flex items-center justify-between pb-4 border-b border-gray-100 last:border-0">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-gray-900 truncate">{sale.course_title}</p>
+                    <p className="text-xs text-gray-500 truncate">{sale.user_name || sale.user_email}</p>
+                  </div>
+                  <div className="ml-4 text-right">
+                    <p className="text-sm font-bold text-green-600">{sale.price_paid.toFixed(2)}€</p>
+                    <p className="text-xs text-gray-500">{formatDate(sale.purchase_date)}</p>
+                  </div>
+                </div>
+              ))
             )}
           </div>
         </div>
       </div>
 
-      {/* Toast de notificaciones */}
-      {toast && (
-        <Toast
-          message={toast.message}
-          type={toast.type}
-          onClose={() => setToast(null)}
-        />
-      )}
-
-      {/* Modal de confirmación */}
-      {confirmModal && (
-        <ConfirmModal
-          isOpen={confirmModal.isOpen}
-          title={confirmModal.title}
-          message={confirmModal.message}
-          confirmText={confirmModal.confirmText}
-          cancelText="Cancelar"
-          confirmColor={confirmModal.confirmColor}
-          onConfirm={confirmModal.onConfirm}
-          onCancel={() => setConfirmModal(null)}
-        />
-      )}
+      {/* Contactos Recientes */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-lg font-bold text-gray-900">Contactos Recientes</h3>
+          <Link href="/administrator/contactos" className="text-sm text-forest hover:text-forest-dark font-semibold">
+            Ver todos →
+          </Link>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-gray-200">
+                <th className="text-left text-xs font-semibold text-gray-600 uppercase tracking-wider pb-3">Nombre</th>
+                <th className="text-left text-xs font-semibold text-gray-600 uppercase tracking-wider pb-3">Email</th>
+                <th className="text-left text-xs font-semibold text-gray-600 uppercase tracking-wider pb-3">Asunto</th>
+                <th className="text-left text-xs font-semibold text-gray-600 uppercase tracking-wider pb-3">Estado</th>
+                <th className="text-left text-xs font-semibold text-gray-600 uppercase tracking-wider pb-3">Fecha</th>
+              </tr>
+            </thead>
+            <tbody>
+              {recentContacts.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="text-center py-8 text-gray-500">
+                    No hay contactos recientes
+                  </td>
+                </tr>
+              ) : (
+                recentContacts.map((contact) => (
+                  <tr key={contact.id} className="border-b border-gray-100 last:border-0">
+                    <td className="py-4 text-sm font-medium text-gray-900">{contact.name}</td>
+                    <td className="py-4 text-sm text-gray-600 truncate max-w-xs">{contact.email}</td>
+                    <td className="py-4 text-sm text-gray-600 truncate max-w-xs">
+                      {contact.subject || 'Sin asunto'}
+                    </td>
+                    <td className="py-4">
+                      <span className={`inline-block px-2 py-1 text-xs font-semibold rounded-full ${getContactStatusColor(contact.status)}`}>
+                        {getContactStatusLabel(contact.status)}
+                      </span>
+                    </td>
+                    <td className="py-4 text-sm text-gray-500">{formatDate(contact.created_at)}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   )
 }
