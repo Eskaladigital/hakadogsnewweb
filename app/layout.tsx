@@ -113,7 +113,7 @@ export default function RootLayout({
           as="image" 
           href="/images/logo_definitivo_hakadogs.webp"
           type="image/webp"
-          fetchpriority="high"
+          fetchPriority="high"
         />
         
         {/* Google Analytics - estrategia lazyOnload para no bloquear renderizado */}
