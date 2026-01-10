@@ -262,7 +262,10 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                 Volver a Mi Escuela
               </Link>
               <h1 className="text-3xl md:text-4xl font-bold mb-2">{curso.title}</h1>
-              <p className="text-white/90">{curso.short_description || curso.description}</p>
+              <div 
+                className="text-white/90"
+                dangerouslySetInnerHTML={{ __html: curso.short_description || curso.description || '' }}
+              />
             </div>
           </div>
         </div>
@@ -320,7 +323,10 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
               <div className="flex-1">
                 <div className="mb-3 sm:mb-4">
                   <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">{curso.title}</h1>
-                  <p className="text-white/90 text-sm sm:text-base">{curso.short_description || curso.description}</p>
+                  <div 
+                    className="text-white/90 text-sm sm:text-base"
+                    dangerouslySetInnerHTML={{ __html: curso.short_description || curso.description || '' }}
+                  />
                 </div>
                 <div className="flex flex-wrap items-center gap-3 sm:gap-6 text-xs sm:text-sm">
                   <span className="flex items-center">

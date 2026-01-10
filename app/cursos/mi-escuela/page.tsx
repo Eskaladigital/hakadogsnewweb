@@ -235,7 +235,10 @@ export default function MiEscuelaPage() {
                         
                         <div className="mb-4">
                           <h3 className="text-xl font-bold text-gray-900 mb-2">{curso.title}</h3>
-                          <p className="text-gray-600 text-sm line-clamp-2">{curso.short_description}</p>
+                          <div 
+                            className="text-gray-600 text-sm line-clamp-2"
+                            dangerouslySetInnerHTML={{ __html: curso.short_description || '' }}
+                          />
                         </div>
                         
                         {/* Progress Bar */}
@@ -327,7 +330,10 @@ export default function MiEscuelaPage() {
                         
                         <div className="mb-4">
                           <h3 className="text-xl font-bold text-gray-900 mb-2">{curso.title}</h3>
-                          <p className="text-gray-600 text-sm line-clamp-2">{curso.short_description}</p>
+                          <div 
+                            className="text-gray-600 text-sm line-clamp-2"
+                            dangerouslySetInnerHTML={{ __html: curso.short_description || '' }}
+                          />
                         </div>
                         
                         {/* What you'll learn preview */}
