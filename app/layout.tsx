@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     description: 'Educación canina profesional con metodología BE HAKA. Servicios presenciales en Murcia y cursos online en toda España. +8 años de experiencia, +500 perros educados.',
     images: [
       {
-        url: '/images/logo_facebook_1200_630.jpg',
+        url: 'https://www.hakadogs.com/images/logo_facebook_1200_630.jpg',
         width: 1200,
         height: 630,
         alt: 'Hakadogs - Educación Canina Profesional',
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     creator: '@hakadogs',
     title: 'Hakadogs - Educación Canina Profesional',
     description: 'Educación canina profesional con metodología BE HAKA. +8 años de experiencia, +500 perros educados.',
-    images: ['/images/logo_facebook_1200_630.jpg'],
+    images: ['https://www.hakadogs.com/images/logo_facebook_1200_630.jpg'],
   },
   
   // Icons
