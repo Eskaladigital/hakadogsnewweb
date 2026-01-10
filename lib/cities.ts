@@ -422,7 +422,7 @@ export const cities: CityData[] = [
     population: 31000,
     description: 'Adiestramiento canino en Hellín. Educación profesional para perros con método positivo.',
     keywords: ['adiestrador hellin', 'educacion canina hellin'],
-    nearbyParks: ['Minateda', 'Parque del Rosario'],,
+    nearbyParks: ['Minateda', 'Parque del Rosario'],
 
     isRemoteMarket: true
   },
@@ -434,7 +434,7 @@ export const cities: CityData[] = [
     population: 26000,
     description: 'Educación canina en Villarrobledo. Adiestramiento respetuoso con tecnología de seguimiento.',
     keywords: ['adiestrador villarrobledo', 'educacion canina villarrobledo'],
-    nearbyParks: ['Parque de la Constitución'],,
+    nearbyParks: ['Parque de la Constitución'],
 
     isRemoteMarket: true
   },
@@ -461,7 +461,7 @@ export const cities: CityData[] = [
     population: 95000,
     description: 'Educación canina en Roquetas de Mar. Adiestramiento especializado para convivencia costera.',
     keywords: ['adiestrador roquetas', 'educacion canina roquetas'],
-    nearbyParks: ['Parque Natural Punta Entinas', 'Playa Serena'],,
+    nearbyParks: ['Parque Natural Punta Entinas', 'Playa Serena'],
 
     isRemoteMarket: true
   },
@@ -473,7 +473,7 @@ export const cities: CityData[] = [
     population: 85000,
     description: 'Adiestramiento canino en El Ejido. Educador profesional con método positivo y científico.',
     keywords: ['adiestrador el ejido', 'educacion canina el ejido'],
-    nearbyParks: ['Parque Municipal', 'Playas de El Ejido'],,
+    nearbyParks: ['Parque Municipal', 'Playas de El Ejido'],
 
     isRemoteMarket: true
   },
@@ -485,7 +485,7 @@ export const cities: CityData[] = [
     population: 232000,
     description: 'Educación canina profesional en Granada. Adiestramiento con tecnología exclusiva HakaDogs.',
     keywords: ['adiestrador granada', 'educacion canina granada', 'adiestramiento perros granada'],
-    nearbyParks: ['Parque Federico García Lorca', 'Sierra Nevada'],,
+    nearbyParks: ['Parque Federico García Lorca', 'Sierra Nevada'],
 
     isRemoteMarket: true
   },
@@ -497,7 +497,7 @@ export const cities: CityData[] = [
     population: 114000,
     description: 'Adiestramiento canino en Jaén. Educación positiva y respetuosa para perros.',
     keywords: ['adiestrador jaen', 'educacion canina jaen'],
-    nearbyParks: ['Parque del Seminario', 'Cerro de Santa Catalina'],,
+    nearbyParks: ['Parque del Seminario', 'Cerro de Santa Catalina'],
 
     isRemoteMarket: true
   },
@@ -551,7 +551,7 @@ export const cities: CityData[] = [
     population: 688000,
     description: 'Educación canina profesional en Sevilla. Adiestramiento con método científico y respetuoso.',
     keywords: ['adiestrador sevilla', 'educacion canina sevilla', 'adiestramiento perros sevilla'],
-    nearbyParks: ['Parque de María Luisa', 'Alamillo', 'Parque del Guadalquivir'],,
+    nearbyParks: ['Parque de María Luisa', 'Alamillo', 'Parque del Guadalquivir'],
 
     isRemoteMarket: true
   },
@@ -563,7 +563,7 @@ export const cities: CityData[] = [
     population: 578000,
     description: 'Adiestramiento canino en Málaga. Educación especializada para convivencia urbana y costera.',
     keywords: ['adiestrador malaga', 'educacion canina malaga', 'adiestramiento perros malaga'],
-    nearbyParks: ['Parque de Málaga', 'Montes de Málaga', 'Playas de Málaga'],,
+    nearbyParks: ['Parque de Málaga', 'Montes de Málaga', 'Playas de Málaga'],
 
     isRemoteMarket: true
   },
@@ -575,7 +575,7 @@ export const cities: CityData[] = [
     population: 326000,
     description: 'Educación canina en Córdoba. Adiestramiento profesional con tecnología HakaDogs.',
     keywords: ['adiestrador cordoba', 'educacion canina cordoba'],
-    nearbyParks: ['Jardines de la Victoria', 'Sotos de la Albolafia'],,
+    nearbyParks: ['Jardines de la Victoria', 'Sotos de la Albolafia'],
 
     isRemoteMarket: true
   },
@@ -589,7 +589,7 @@ export const cities: CityData[] = [
     population: 675000,
     description: 'Educación canina profesional en Zaragoza. Adiestramiento con método positivo y apps exclusivas.',
     keywords: ['adiestrador zaragoza', 'educacion canina zaragoza', 'adiestramiento perros zaragoza'],
-    nearbyParks: ['Parque Grande', 'Parque del Agua', 'Ribera del Ebro'],,
+    nearbyParks: ['Parque Grande', 'Parque del Agua', 'Ribera del Ebro'],
 
     isRemoteMarket: true
   },
@@ -603,7 +603,7 @@ export const cities: CityData[] = [
     population: 416000,
     description: 'Adiestramiento canino en Palma de Mallorca. Educación especializada para perros en entorno insular.',
     keywords: ['adiestrador palma mallorca', 'educacion canina palma'],
-    nearbyParks: ['Parc de la Mar', 'Bellver', 'Son Quint'],,
+    nearbyParks: ['Parc de la Mar', 'Bellver', 'Son Quint'],
 
     isRemoteMarket: true
   },
@@ -617,7 +617,7 @@ export const cities: CityData[] = [
     population: 379000,
     description: 'Educación canina en Las Palmas. Adiestramiento profesional con tecnología innovadora.',
     keywords: ['adiestrador las palmas', 'educacion canina las palmas', 'gran canaria'],
-    nearbyParks: ['Parque Doramas', 'Parque Santa Catalina', 'Las Canteras'],,
+    nearbyParks: ['Parque Doramas', 'Parque Santa Catalina', 'Las Canteras'],
 
     isRemoteMarket: true
   },
@@ -631,7 +631,7 @@ export const cities: CityData[] = [
     population: 347000,
     description: 'Adiestramiento canino en Bilbao. Educación positiva con método científico.',
     keywords: ['adiestrador bilbao', 'educacion canina bilbao', 'adiestramiento perros bilbao'],
-    nearbyParks: ['Doña Casilda Iturrizar', 'Etxebarria', 'Artxanda'],,
+    nearbyParks: ['Doña Casilda Iturrizar', 'Etxebarria', 'Artxanda'],
 
     isRemoteMarket: true
   },
@@ -643,7 +643,7 @@ export const cities: CityData[] = [
     population: 253000,
     description: 'Educación canina en Vitoria. Adiestramiento profesional en la ciudad más verde de Europa.',
     keywords: ['adiestrador vitoria', 'educacion canina vitoria'],
-    nearbyParks: ['Anillo Verde', 'Parque de la Florida', 'Armentia'],,
+    nearbyParks: ['Anillo Verde', 'Parque de la Florida', 'Armentia'],
 
     isRemoteMarket: true
   },
@@ -657,7 +657,7 @@ export const cities: CityData[] = [
     population: 298000,
     description: 'Adiestramiento canino en Valladolid. Educación profesional con tecnología HakaDogs.',
     keywords: ['adiestrador valladolid', 'educacion canina valladolid'],
-    nearbyParks: ['Campo Grande', 'Parque Ribera de Castilla', 'Pisuerga'],,
+    nearbyParks: ['Campo Grande', 'Parque Ribera de Castilla', 'Pisuerga'],
 
     isRemoteMarket: true
   },
@@ -671,7 +671,7 @@ export const cities: CityData[] = [
     population: 296000,
     description: 'Educación canina en Vigo. Adiestramiento especializado para convivencia costera y urbana.',
     keywords: ['adiestrador vigo', 'educacion canina vigo'],
-    nearbyParks: ['Parque de Castrelos', 'Monte del Castro', 'Samil'],,
+    nearbyParks: ['Parque de Castrelos', 'Monte del Castro', 'Samil'],
 
     isRemoteMarket: true
   },
@@ -683,7 +683,7 @@ export const cities: CityData[] = [
     population: 246000,
     description: 'Adiestramiento canino en A Coruña. Educación positiva y respetuosa.',
     keywords: ['adiestrador coruña', 'educacion canina coruña', 'a coruña'],
-    nearbyParks: ['Parque de Santa Margarita', 'Monte de San Pedro', 'Paseo Marítimo'],,
+    nearbyParks: ['Parque de Santa Margarita', 'Monte de San Pedro', 'Paseo Marítimo'],
 
     isRemoteMarket: true
   },
@@ -697,7 +697,7 @@ export const cities: CityData[] = [
     population: 273000,
     description: 'Educación canina profesional en Gijón. Adiestramiento con método científico.',
     keywords: ['adiestrador gijon', 'educacion canina gijon'],
-    nearbyParks: ['Parque de Isabel la Católica', 'Cerro de Santa Catalina', 'Playa de San Lorenzo'],,
+    nearbyParks: ['Parque de Isabel la Católica', 'Cerro de Santa Catalina', 'Playa de San Lorenzo'],
 
     isRemoteMarket: true
   },

@@ -125,7 +125,7 @@ export default function OnlineCoursesSection() {
         {/* Nota adicional */}
         <div className="text-center mt-8">
           <p className="text-gray-600 text-sm">
-            💚 <strong>La misma metodología "BE HAKA"</strong> que utilizamos en sesiones presenciales, 
+            💚 <strong>La misma metodología &quot;BE HAKA&quot;</strong> que utilizamos en sesiones presenciales, 
             ahora disponible online para todo el mundo
           </p>
         </div>
