@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next'
 import { cities } from '@/lib/cities'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://hakadogsnewweb.vercel.app' // URL de producción
+  const baseUrl = 'https://www.hakadogs.com' // URL de producción
 
   // Páginas estáticas principales
   const staticPages = [
