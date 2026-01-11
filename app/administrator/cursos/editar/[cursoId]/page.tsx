@@ -414,17 +414,6 @@ export default function EditarCursoPage() {
                     </button>
                     <button
                       type="button"
-                      onClick={() => setActiveTab('lessons')}
-                      className={`flex-1 py-4 px-6 font-semibold transition ${
-                        activeTab === 'lessons'
-                          ? 'bg-forest/10 text-forest border-b-2 border-forest'
-                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                      }`}
-                    >
-                      2. Lecciones ({lessons.length})
-                    </button>
-                    <button
-                      type="button"
                       onClick={() => setActiveTab('modules')}
                       className={`flex-1 py-4 px-6 font-semibold transition ${
                         activeTab === 'modules'
@@ -432,7 +421,18 @@ export default function EditarCursoPage() {
                           : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                       }`}
                     >
-                      3. Módulos ({modules.length})
+                      2. Módulos ({modules.length})
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('lessons')}
+                      className={`flex-1 py-4 px-6 font-semibold transition ${
+                        activeTab === 'lessons'
+                          ? 'bg-forest/10 text-forest border-b-2 border-forest'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                      }`}
+                    >
+                      3. Lecciones ({lessons.length})
                     </button>
                   </div>
 
@@ -529,10 +529,10 @@ export default function EditarCursoPage() {
                         <div className="flex justify-end pt-6 border-t">
                           <button
                             type="button"
-                            onClick={() => setActiveTab('lessons')}
+                            onClick={() => setActiveTab('modules')}
                             className="bg-gradient-to-r from-forest to-sage text-white font-semibold px-6 py-3 rounded-lg hover:opacity-90 transition"
                           >
-                            Continuar a Lecciones →
+                            Continuar a Módulos →
                           </button>
                         </div>
                       </div>
