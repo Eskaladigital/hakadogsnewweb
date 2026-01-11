@@ -42,6 +42,7 @@ const nextConfig = {
   // Headers de seguridad y performance
   async headers() {
     return [
+      // Solo imágenes y assets estáticos tienen caché larga
       {
         source: '/:all*(svg|jpg|jpeg|png|webp|avif|gif|ico)',
         headers: [
@@ -60,13 +61,13 @@ const nextConfig = {
           },
         ],
       },
-      // Caché corta para páginas dinámicas (Blog, Cursos, etc.)
+      // CACHÉ MÍNIMA PARA DESARROLLO: Sin caché para todas las páginas HTML
       {
         source: '/blog/:path*',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, s-maxage=60, stale-while-revalidate=120',
+            value: 'no-cache, no-store, must-revalidate, max-age=0',
           },
         ],
       },
@@ -75,7 +76,16 @@ const nextConfig = {
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, s-maxage=60, stale-while-revalidate=120',
+            value: 'no-cache, no-store, must-revalidate, max-age=0',
+          },
+        ],
+      },
+      {
+        source: '/servicios/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-cache, no-store, must-revalidate, max-age=0',
           },
         ],
       },
@@ -84,13 +94,17 @@ const nextConfig = {
         headers: [
           {
             key: 'Cache-Control',
-            value: 'no-cache, no-store, must-revalidate',
+            value: 'no-cache, no-store, must-revalidate, max-age=0',
           },
         ],
       },
       {
         source: '/:path*',
         headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-cache, no-store, must-revalidate, max-age=0',
+          },
           {
             key: 'X-DNS-Prefetch-Control',
             value: 'on'
