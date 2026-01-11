@@ -126,9 +126,9 @@ export default function MiEscuelaPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white pt-20">
       {/* Header */}
-      <section className="bg-gradient-to-r from-forest to-sage text-white py-12">
-        <div className="container mx-auto px-4">
-          <div className="max-w-7xl mx-auto">
+      <section className="bg-gradient-to-r from-forest to-sage text-white py-8 sm:py-12">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="max-w-full lg:max-w-7xl mx-auto">
             <div className="flex items-center mb-6">
               <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mr-4">
                 <BookOpen className="w-8 h-8" />
@@ -175,9 +175,9 @@ export default function MiEscuelaPage() {
       </section>
 
       {/* Mis Cursos */}
-      <section className="py-12">
-        <div className="container mx-auto px-4">
-          <div className="max-w-7xl mx-auto">
+      <section className="py-8 sm:py-12">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="max-w-full lg:max-w-7xl mx-auto">
             <h2 className="text-3xl font-bold text-gray-900 mb-8">Mis Cursos</h2>
 
             {cursosComprados.length === 0 ? (
@@ -288,9 +288,9 @@ export default function MiEscuelaPage() {
 
       {/* Cursos Disponibles */}
       {cursosDisponibles.length > 0 && (
-        <section className="py-12 bg-gray-50">
-          <div className="container mx-auto px-4">
-            <div className="max-w-7xl mx-auto">
+        <section className="py-8 sm:py-12 bg-gray-50">
+          <div className="container mx-auto px-4 sm:px-6">
+            <div className="max-w-full lg:max-w-7xl mx-auto">
               <div className="flex items-center justify-between mb-8">
                 <div>
                   <h2 className="text-3xl font-bold text-gray-900 mb-2">Cursos Disponibles</h2>
@@ -379,9 +379,9 @@ export default function MiEscuelaPage() {
       )}
 
       {/* CTA Section */}
-      <section className="py-12">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto bg-gradient-to-r from-forest to-sage rounded-2xl p-8 md:p-12 text-white text-center">
+      <section className="py-8 sm:py-12">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="max-w-full sm:max-w-4xl mx-auto bg-gradient-to-r from-forest to-sage rounded-2xl p-6 sm:p-8 md:p-12 text-white text-center">
             <Award className="w-16 h-16 mx-auto mb-6" />
             <h2 className="text-3xl font-bold mb-4">
               ¿Necesitas ayuda personalizada?

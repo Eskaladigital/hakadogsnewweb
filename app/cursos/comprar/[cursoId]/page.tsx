@@ -213,8 +213,8 @@ export default function ComprarCursoPage({ params }: { params: { cursoId: string
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white pt-20">
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-6xl mx-auto">
+      <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        <div className="max-w-full lg:max-w-6xl mx-auto">
           <Link
             href="/cursos"
             className="inline-flex items-center text-gray-600 hover:text-gray-900 transition mb-8"
@@ -233,7 +233,7 @@ export default function ComprarCursoPage({ params }: { params: { cursoId: string
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Info del Curso */}
             <div className="lg:col-span-2">
-              <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
+              <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8">
                 <div className={`bg-gradient-to-r ${colorGradient} rounded-xl p-8 text-white mb-8`}>
                   <div className="mb-6">
                     <h1 className="text-3xl font-bold mb-2">{curso.title}</h1>

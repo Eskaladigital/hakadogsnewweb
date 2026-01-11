@@ -310,8 +310,8 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
     <div className="min-h-screen bg-gray-50 pt-20">
       {/* Header */}
       <div className={`bg-gradient-to-r ${colorGradient} text-white py-6 sm:py-8`}>
-        <div className="container mx-auto px-4">
-          <div className="max-w-7xl mx-auto">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="max-w-full lg:max-w-7xl mx-auto">
             <Link
               href="/cursos/mi-escuela"
               className="inline-flex items-center text-white/80 hover:text-white transition mb-4 text-sm sm:text-base"
@@ -357,9 +357,9 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
       </div>
 
       {/* Content */}
-      <div className="container mx-auto px-4 py-6 sm:py-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-3 gap-6 sm:gap-8">
+      <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        <div className="max-w-full lg:max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {/* Main Content */}
             <div className="lg:col-span-2 order-2 lg:order-1">
               <div className="bg-white rounded-xl shadow-lg overflow-hidden">
@@ -469,36 +469,38 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                 )}
 
                 {/* Content Area */}
-                <div className="p-4 sm:p-6 lg:p-8">
+                <div className="p-4 sm:p-6 lg:p-8 overflow-x-hidden">
                   {activeTab === 'content' && leccionActual.content && (
-                    <div>
-                      <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                    <div className="w-full max-w-full overflow-x-hidden">
+                      <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">
                         {leccionActual.title}
                       </h2>
                       {/* Renderizar HTML de TinyMCE */}
                       <div 
-                        className="prose prose-lg max-w-none
+                        className="prose prose-sm sm:prose-lg max-w-none w-full
                           prose-headings:text-gray-900 prose-headings:font-bold
-                          prose-h1:text-3xl prose-h1:mb-6 prose-h1:mt-8
-                          prose-h2:text-2xl prose-h2:mb-4 prose-h2:mt-6
-                          prose-h3:text-xl prose-h3:mb-3 prose-h3:mt-4
-                          prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4
+                          prose-h1:text-2xl sm:prose-h1:text-3xl prose-h1:mb-4 sm:prose-h1:mb-6 prose-h1:mt-6 sm:prose-h1:mt-8
+                          prose-h2:text-xl sm:prose-h2:text-2xl prose-h2:mb-3 sm:prose-h2:mb-4 prose-h2:mt-4 sm:prose-h2:mt-6
+                          prose-h3:text-lg sm:prose-h3:text-xl prose-h3:mb-2 sm:prose-h3:mb-3 prose-h3:mt-3 sm:prose-h3:mt-4
+                          prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-3 sm:prose-p:mb-4 prose-p:text-sm sm:prose-p:text-base
                           prose-strong:text-gray-900 prose-strong:font-bold
-                          prose-ul:list-disc prose-ul:ml-6 prose-ul:mb-4 prose-ul:space-y-2
-                          prose-ol:list-decimal prose-ol:ml-6 prose-ol:mb-4 prose-ol:space-y-2
-                          prose-li:text-gray-700
-                          prose-a:text-forest prose-a:underline hover:prose-a:text-sage
-                          prose-blockquote:border-l-4 prose-blockquote:border-forest prose-blockquote:pl-4 prose-blockquote:italic
-                          prose-code:bg-gray-100 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm
-                          prose-pre:bg-gray-900 prose-pre:text-white prose-pre:p-4 prose-pre:rounded-lg prose-pre:overflow-x-auto
-                          prose-img:rounded-lg prose-img:shadow-lg prose-img:max-w-full prose-img:h-auto
-                          prose-table:w-full prose-table:overflow-x-auto
-                          [&>*]:max-w-full [&_img]:max-w-full [&_table]:max-w-full
-                          overflow-hidden"
+                          prose-ul:list-disc prose-ul:ml-4 sm:prose-ul:ml-6 prose-ul:mb-3 sm:prose-ul:mb-4 prose-ul:space-y-1 sm:prose-ul:space-y-2
+                          prose-ol:list-decimal prose-ol:ml-4 sm:prose-ol:ml-6 prose-ol:mb-3 sm:prose-ol:mb-4 prose-ol:space-y-1 sm:prose-ol:space-y-2
+                          prose-li:text-gray-700 prose-li:text-sm sm:prose-li:text-base
+                          prose-a:text-forest prose-a:underline hover:prose-a:text-sage prose-a:break-words
+                          prose-blockquote:border-l-4 prose-blockquote:border-forest prose-blockquote:pl-3 sm:prose-blockquote:pl-4 prose-blockquote:italic
+                          prose-code:bg-gray-100 prose-code:px-1 sm:prose-code:px-2 prose-code:py-0.5 sm:prose-code:py-1 prose-code:rounded prose-code:text-xs sm:prose-code:text-sm prose-code:break-words
+                          prose-pre:bg-gray-900 prose-pre:text-white prose-pre:p-3 sm:prose-pre:p-4 prose-pre:rounded-lg prose-pre:overflow-x-auto prose-pre:text-xs sm:prose-pre:text-sm
+                          prose-img:rounded-lg prose-img:shadow-lg prose-img:max-w-full prose-img:h-auto prose-img:mx-auto prose-img:block
+                          prose-table:w-full prose-table:overflow-x-auto prose-table:block prose-table:text-xs sm:prose-table:text-sm
+                          [&>*]:max-w-full [&_img]:max-w-full [&_img]:h-auto [&_table]:max-w-full [&_table]:block [&_table]:overflow-x-auto
+                          [&_iframe]:max-w-full [&_iframe]:w-full [&_video]:max-w-full [&_video]:w-full
+                          overflow-hidden break-words"
                         style={{ 
                           wordWrap: 'break-word', 
                           overflowWrap: 'break-word',
-                          width: '100%'
+                          width: '100%',
+                          maxWidth: '100%'
                         }}
                         dangerouslySetInnerHTML={{ __html: leccionActual.content }}
                       />
@@ -606,7 +608,7 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
 
             {/* Sidebar - Lecciones */}
             <div className="lg:col-span-1 order-1 lg:order-2">
-              <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 lg:sticky lg:top-24">
+              <div className="bg-white rounded-xl shadow-lg p-3 sm:p-4 lg:p-6 lg:sticky lg:top-24">
                 <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">Contenido del Curso</h3>
                 <div className="space-y-2">
                   {lecciones.map((leccion, index) => {

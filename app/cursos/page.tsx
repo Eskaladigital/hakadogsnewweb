@@ -152,9 +152,9 @@ export default function CursosPage() {
 
       {/* Curso Gratuito Section */}
       {cursosGratuitos.length > 0 && (
-        <section className="py-16">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto">
+        <section className="py-8 sm:py-16">
+          <div className="container mx-auto px-4 sm:px-6">
+            <div className="max-w-full sm:max-w-4xl mx-auto">
               {cursosGratuitos.map((curso, index) => (
                 <motion.div
                   key={curso.id}
@@ -255,7 +255,7 @@ export default function CursosPage() {
               <p className="text-gray-600">Próximamente nuevos cursos disponibles</p>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-full lg:max-w-7xl mx-auto">
               {cursosPago.map((curso, index) => {
                 const difficultyColor = getDifficultyColor(curso.difficulty)
                 const difficultyLabel = getDifficultyLabel(curso.difficulty)
@@ -331,9 +331,9 @@ export default function CursosPage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto">
+      <section className="py-8 sm:py-16">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="max-w-full sm:max-w-3xl mx-auto">
             <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
               Preguntas Frecuentes
             </h2>
@@ -369,8 +369,8 @@ export default function CursosPage() {
       </section>
 
       {/* Banner CTA Servicios Presenciales */}
-      <section className="py-16 bg-gradient-to-br from-forest/5 via-sage/5 to-cream">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-8 sm:py-16 bg-gradient-to-br from-forest/5 via-sage/5 to-cream">
+        <div className="max-w-full lg:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-gradient-to-br from-forest to-forest-dark rounded-3xl shadow-2xl overflow-hidden">
             <div className="grid md:grid-cols-2 gap-8 items-center">
               {/* Izquierda - Imagen/Decoración */}
