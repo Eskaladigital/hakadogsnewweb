@@ -444,6 +444,32 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
         </div>
       </div>
 
+      {/* Breadcrumb - Indicador de ubicación */}
+      <div className="bg-gray-50 border-b border-gray-200">
+        <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
+          <div className="max-w-full lg:max-w-7xl mx-auto">
+            <div className="flex items-center text-xs sm:text-sm text-gray-600 overflow-x-auto">
+              <span className="font-semibold text-gray-900 whitespace-nowrap">{curso.title}</span>
+              {hasModules && leccionActual && (() => {
+                // Encontrar el módulo de la lección actual
+                const currentModule = modules.find(module => {
+                  const lessons = moduleLessons[module.id] || []
+                  return lessons.some(l => l.id === leccionActual.id)
+                })
+                return currentModule ? (
+                  <>
+                    <span className="mx-2 text-gray-400">/</span>
+                    <span className="text-forest font-medium whitespace-nowrap">{currentModule.title}</span>
+                  </>
+                ) : null
+              })()}
+              <span className="mx-2 text-gray-400">/</span>
+              <span className="text-gray-500 truncate">{leccionActual?.title || 'Cargando...'}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Content */}
       <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
         <div className="max-w-full lg:max-w-7xl mx-auto">
