@@ -499,6 +499,58 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
         </div>
       </div>
 
+      {/* Navegación rápida con flechas (debajo del breadcrumb) */}
+      <div className="bg-white border-b border-gray-100">
+        <div className="container mx-auto px-4 sm:px-6 py-3">
+          <div className="max-w-full lg:max-w-7xl mx-auto">
+            <div className="flex items-center justify-between">
+              {/* Flecha Anterior */}
+              {lecciones.findIndex(l => l.id === leccionActual.id) > 0 ? (
+                <button
+                  onClick={goToPreviousLesson}
+                  className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-forest hover:bg-gray-50 rounded-lg transition-all group"
+                >
+                  <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+                  <span className="text-sm font-medium">Anterior</span>
+                </button>
+              ) : (
+                <div></div>
+              )}
+              
+              {/* Flecha Siguiente */}
+              {(() => {
+                const currentIndex = lecciones.findIndex(l => l.id === leccionActual.id)
+                const canGoNext = currentIndex < lecciones.length - 1 && lessonProgress[leccionActual.id]
+                const isLastLesson = currentIndex >= lecciones.length - 1
+                
+                if (isLastLesson) {
+                  return <div></div>
+                }
+                
+                return (
+                  <button
+                    onClick={goToNextLesson}
+                    disabled={!canGoNext}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all group ${
+                      canGoNext 
+                        ? 'text-forest hover:bg-forest/5' 
+                        : 'text-gray-400 cursor-not-allowed'
+                    }`}
+                  >
+                    <span className="text-sm font-medium">Siguiente</span>
+                    {canGoNext ? (
+                      <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    ) : (
+                      <Lock className="w-4 h-4" />
+                    )}
+                  </button>
+                )
+              })()}
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Content */}
       <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
         <div className="max-w-full lg:max-w-7xl mx-auto">

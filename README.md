@@ -1,8 +1,8 @@
 # 🐕 HAKADOGS - Plataforma de Educación Canina
 
-**Versión**: 2.0.0 OPTIMIZED  
+**Versión**: 2.1.0 ADVANCED  
 **Fecha Actualización**: Enero 2026  
-**Estado**: ✅ **LIVE EN HAKADOGS.COM - PERFORMANCE 95+**
+**Estado**: ✅ **LIVE EN HAKADOGS.COM - PERFORMANCE 95+ - BLOG PROFESIONAL**
 
 ---
 
@@ -13,20 +13,21 @@ Hakadogs es una plataforma web completa para educación canina profesional que i
 ### 📊 Estadísticas del Proyecto
 
 ```
-📦 Archivos creados:        170+
-📄 Líneas de código:        ~45,000
-🎨 Componentes React:       40+
-📱 Páginas completas:       65+
-🗄️ Tablas SQL:              20+
-⚙️ Funciones utilidad:      80+
-📝 Posts blog:              6 (2 completos)
+📦 Archivos creados:        180+
+📄 Líneas de código:        ~48,000
+🎨 Componentes React:       45+
+📱 Páginas completas:       70+
+🗄️ Tablas SQL:              22+
+⚙️ Funciones utilidad:      85+
+📝 Posts blog:              Sistema completo de gestión
 🌍 Páginas localidades:     54 ciudades (dinámicas)
-📚 Sistema de cursos:       11+ cursos con lecciones
+📚 Sistema de cursos:       11+ cursos con lecciones + módulos
 🎓 Metodología BE HAKA:     Completa y documentada
 🤖 IA Integrada:            OpenAI para descripciones
 ⚡ Performance Score:       95+ Google PageSpeed
 🎯 Accesibilidad:           96/100 WCAG 2.1 AA
 📱 Mobile Optimized:        100% responsive + swipe gestures
+📰 Blog Profesional:        Layout 2 columnas + sidebar sticky
 ```
 
 ---
@@ -90,9 +91,11 @@ Hakadogs es una plataforma web completa para educación canina profesional que i
 hakadogs-app/
 ├── app/
 │   ├── page.tsx              # Landing principal
-│   ├── servicios/            # 4 servicios
+│   ├── servicios/            # 4 servicios (precios actualizados)
 │   ├── apps/                 # Apps (próximamente)
-│   ├── blog/                 # Blog con filtros
+│   ├── blog/                 # Blog profesional con sidebar ⭐
+│   │   ├── page.tsx          # Layout 2 columnas + sidebar sticky
+│   │   └── [slug]/           # Artículo individual
 │   ├── localidades/          # 56 ciudades SEO
 │   ├── metodologia/
 │   ├── sobre-nosotros/
@@ -100,37 +103,45 @@ hakadogs-app/
 │   ├── cursos/               # Sistema de cursos ⭐
 │   │   ├── page.tsx          # Landing cursos
 │   │   ├── auth/             # Login/Registro cursos
-│   │   ├── mi-escuela/       # Dashboard alumno
+│   │   ├── mi-escuela/       # Dashboard alumno (responsive mobile)
 │   │   └── comprar/          # Proceso de compra
 │   ├── administrator/        # Panel admin completo ⭐⭐⭐
 │   │   ├── layout.tsx        # Layout con pestañas y auth
 │   │   ├── page.tsx          # Dashboard principal
 │   │   ├── usuarios/         # Gestión de usuarios
-│   │   ├── cursos/           # Gestión de cursos
+│   │   ├── cursos/           # Gestión de cursos + módulos
+│   │   ├── blog/             # Gestión de blog ⭐
+│   │   │   ├── page.tsx      # Lista de artículos
+│   │   │   ├── nuevo/        # Crear artículo
+│   │   │   └── editar/[postId]/  # Editar artículo
 │   │   └── contactos/        # Gestión de contactos
-│   ├── cliente/              # Área cliente (obsoleto)
 │   ├── legal/                # Términos y privacidad
 │   └── qr/[id]/             # QR público
 ├── components/
-│   ├── Navigation.tsx
+│   ├── Navigation.tsx        # Con auth listener real-time
 │   ├── Footer.tsx
 │   ├── Hero.tsx
 │   ├── admin/               # Componentes admin
 │   │   ├── TinyMCEEditor.tsx
-│   │   └── LessonsManager.tsx
+│   │   ├── LessonsManager.tsx
+│   │   ├── ModulesManager.tsx  # Gestión de módulos
+│   │   └── MediaLibrary.tsx    # Biblioteca de medios del blog ⭐
 │   └── ui/                  # Componentes UI
 ├── lib/
 │   ├── supabase/            # Cliente y funciones
 │   │   ├── client.ts
 │   │   ├── auth.ts          # Autenticación Supabase
 │   │   ├── courses.ts       # API de cursos
+│   │   ├── blog.ts          # API del blog ⭐
 │   │   ├── dashboard.ts     # API del dashboard admin
 │   │   ├── users.ts         # API de usuarios
 │   │   └── contacts.ts      # API de contactos
 │   ├── utils.ts
 │   └── cities.ts            # 56 ciudades
-└── public/
-    └── images/              # Imágenes y logos
+└── supabase/
+    ├── schema_cursos.sql
+    ├── blog_storage_SOLO_RLS.sql  # RLS para blog-images ⭐
+    └── INSTRUCCIONES_BUCKET_BLOG.md  # Guía setup blog storage ⭐
 ```
 
 ---
@@ -171,6 +182,10 @@ hakadogs-app/
 #### **Gestión de Cursos**
 - ✅ **Tabla de cursos con ordenación, paginación y búsqueda**
 - ✅ **Selector de items por página**
+- ✅ **Sistema de módulos**: Organiza lecciones en módulos temáticos
+- ✅ **Orden de pestañas**: Info → Módulos → Lecciones
+- ✅ **Asignación visual**: Dropdowns para asignar lecciones a módulos
+- ✅ **Sección "Lecciones sin asignar"** para organización fácil
 - ✅ Crear cursos con múltiples lecciones
 - ✅ **Editor TinyMCE para descripción corta y contenido**
 - ✅ **Botón "Generar descripción" con IA (OpenAI)**
@@ -185,6 +200,26 @@ hakadogs-app/
 - ✅ Vista previa gratuita por lección
 - ✅ Estadísticas de ventas e ingresos
 
+#### **Gestión de Blog**
+- ✅ **Sistema completo de gestión de artículos**
+- ✅ **Páginas dedicadas** para crear/editar artículos (estilo WordPress/Joomla)
+- ✅ **Editor TinyMCE** para contenido enriquecido
+- ✅ **Media Library integrada**:
+  - Modal con galería de imágenes del blog
+  - Vista grid/lista
+  - Búsqueda de imágenes
+  - Upload múltiple
+  - Selección de imagen destacada
+  - Eliminación de imágenes
+- ✅ **Supabase Storage** para imágenes (`blog-images` bucket)
+- ✅ Gestión de categorías con colores personalizados
+- ✅ Control de publicación (borrador/publicado)
+- ✅ Artículos destacados
+- ✅ SEO: slug, excerpt, meta description
+- ✅ Vista previa antes de publicar
+- ✅ Contador de vistas
+- ✅ Tiempo de lectura estimado
+- ✅ **RLS policies** configuradas para seguridad
 #### **Gestión de Contactos**
 - ✅ **Sistema completo de workflow** de mensajes
 - ✅ **Estados editables directamente desde tabla**: Pendiente, En Progreso, Respondido, Cerrado
@@ -209,12 +244,29 @@ hakadogs-app/
 - ✅ Contenido adaptado del manual técnico para público general
 
 ### 📝 Blog
-- ✅ Lista de artículos
-- ✅ Filtros por categoría
+- ✅ **Diseño profesional de marketing digital**
+- ✅ **Layout 2 columnas**: Contenido principal (66%) + Sidebar (33%)
+- ✅ **Sidebar sticky** con widgets:
+  - 🔍 Búsqueda avanzada
+  - 🏷️ Categorías con contador de posts
+  - 📈 Top 5 artículos populares
+  - 💚 CTA a cursos
+- ✅ **Artículo destacado principal** con imagen grande
+- ✅ Lista de artículos en formato horizontal (imagen + contenido)
+- ✅ Filtros por categoría con colores personalizados
+- ✅ Sistema de búsqueda en tiempo real
 - ✅ Posts destacados
-- ✅ Detalle de artículo
-- ✅ Compartir en redes
-- ✅ 6 artículos de ejemplo
+- ✅ Metadata completa (fecha, tiempo lectura, vistas)
+- ✅ Compartir en redes sociales
+- ✅ Sistema completo de gestión de blog
+- ✅ **Panel administrador integrado**:
+  - Crear/editar artículos en páginas dedicadas (estilo WordPress)
+  - Editor TinyMCE para contenido
+  - **Media Library** para imágenes del blog
+  - Gestión de categorías
+  - Control de publicación
+  - Supabase Storage para imágenes (`blog-images`)
+- ✅ Responsive 100% (mobile, tablet, desktop)
 
 ### 🌍 SEO Local Diferenciado
 - ✅ **54 páginas de localidades (dinámicas, no estáticas)**
@@ -259,14 +311,23 @@ hakadogs-app/
 ### Tablas de Cursos
 1. **courses** - Información de cursos
 2. **course_lessons** - Lecciones de cada curso
-3. **course_resources** - Recursos descargables
-4. **user_lesson_progress** - Progreso por lección
-5. **user_course_progress** - Progreso general
-6. **course_purchases** - Compras de cursos
+3. **course_modules** - Módulos temáticos para organizar lecciones
+4. **course_resources** - Recursos descargables
+5. **user_lesson_progress** - Progreso por lección
+6. **user_course_progress** - Progreso general
+7. **course_purchases** - Compras de cursos
+
+### Tablas del Blog
+8. **blog_posts** - Artículos del blog
+9. **blog_categories** - Categorías del blog
+10. **blog_post_views** - Contador de vistas
 
 ### Tablas del Panel Admin
-7. **user_roles** - Roles de usuarios (admin, instructor, user)
-8. **contacts** - Mensajes del formulario de contacto
+11. **user_roles** - Roles de usuarios (admin, instructor, user)
+12. **contacts** - Mensajes del formulario de contacto
+
+### Storage Buckets
+- **blog-images** - Imágenes del blog (con RLS policies)
 
 ### Funciones RPC del Dashboard
 - `get_dashboard_stats()` - Estadísticas generales completas
