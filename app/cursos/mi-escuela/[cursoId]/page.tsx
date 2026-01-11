@@ -384,7 +384,8 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
 
   const colorGradient = getDifficultyColor(curso.difficulty)
   const completedCount = Object.values(lessonProgress).filter(Boolean).length
-  const progressPercentage = lecciones.length > 0 ? Math.round((completedCount / lecciones.length) * 100) : 0
+  // Usar progreso global del curso en lugar de contar lecciones en memoria
+  const progressPercentage = progreso ? Math.round(progreso.progress_percentage) : 0
 
   // Determinar qué pestañas mostrar
   const availableTabs = []
