@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { ArrowLeft, Plus, Edit2, Trash2, Eye, EyeOff, Folder, Tag, FileText, Loader2, Search, Filter } from 'lucide-react'
-import Link from 'link'
+import Link from 'next/link'
 import { getSession } from '@/lib/supabase/auth'
 import { 
   getAllBlogCategories, 
