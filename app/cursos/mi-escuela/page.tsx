@@ -58,6 +58,10 @@ export default function MiEscuelaPage() {
         // SIEMPRE incluir el curso gratuito si existe
         if (freeCourse) {
           const progress = await getUserCourseProgress(userId, freeCourse.id)
+          console.log('📊 Progreso curso gratuito:', {
+            courseId: freeCourse.id,
+            progress: progress
+          })
           cursosConProgreso.push({
             ...freeCourse,
             progress: progress?.progress_percentage || 0,
@@ -70,6 +74,11 @@ export default function MiEscuelaPage() {
         for (const course of paidCourses) {
           if (purchasedCourseIds.has(course.id)) {
             const progress = await getUserCourseProgress(userId, course.id)
+            console.log('📊 Progreso curso de pago:', {
+              courseId: course.id,
+              courseTitle: course.title,
+              progress: progress
+            })
             cursosConProgreso.push({
               ...course,
               progress: progress?.progress_percentage || 0,
