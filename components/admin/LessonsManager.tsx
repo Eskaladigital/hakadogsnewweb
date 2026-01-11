@@ -178,12 +178,83 @@ export default function LessonsManager({ lessons, modules, onChange }: LessonsMa
         </div>
       )}
 
-      <div className="space-y-4">
-        {lessons.map((lesson, index) => (
-          <div
-            key={lesson.id}
-            className="bg-white border border-gray-200 rounded-lg overflow-hidden"
-          >
+      {/* Agrupar lecciones por módulo */}
+      {lessons.length > 0 && (() => {
+        // Separar lecciones sin asignar
+        const unassigned = lessons.filter(l => !l.module_id)
+        
+        // Agrupar lecciones por módulo
+        const sortedModules = [...modules].sort((a, b) => a.order_index - b.order_index)
+        const lessonsByModule = sortedModules.map(module => ({
+          module,
+          lessons: lessons.filter(l => l.module_id === module.id)
+        }))
+
+        return (
+          <div className="space-y-6">
+            {/* Lecciones sin asignar */}
+            {unassigned.length > 0 && (
+              <div className="border border-amber-200 rounded-lg overflow-hidden">
+                <div className="bg-amber-50 px-4 py-3 border-b border-amber-200">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                      </svg>
+                      <h4 className="font-bold text-amber-900">
+                        Sin asignar a módulo ({unassigned.length})
+                      </h4>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-4 space-y-4 bg-amber-50/30">
+                  {unassigned.map((lesson) => renderLesson(lesson, lessons.indexOf(lesson)))}
+                </div>
+              </div>
+            )}
+
+            {/* Lecciones agrupadas por módulo */}
+            {lessonsByModule.map(({ module, lessons: moduleLessons }, moduleIndex) => (
+              <div key={module.id} className="border border-gray-200 rounded-lg overflow-hidden">
+                <div className="bg-forest/5 px-4 py-3 border-b border-gray-200">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <svg className="w-5 h-5 text-forest" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                      </svg>
+                      <h4 className="font-bold text-gray-900">
+                        Módulo {moduleIndex + 1}: {module.title}
+                      </h4>
+                      <span className="text-sm text-gray-500">
+                        ({moduleLessons.length} {moduleLessons.length === 1 ? 'lección' : 'lecciones'})
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-4 space-y-4">
+                  {moduleLessons.length === 0 ? (
+                    <p className="text-sm text-gray-500 italic text-center py-4">
+                      No hay lecciones asignadas a este módulo
+                    </p>
+                  ) : (
+                    moduleLessons.map((lesson) => renderLesson(lesson, lessons.indexOf(lesson)))
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )
+      })()}
+    </div>
+  )
+
+  // Función auxiliar para renderizar una lección
+  function renderLesson(lesson: Lesson, index: number) {
+    return (
+      <div
+        key={lesson.id}
+        className="bg-white border border-gray-200 rounded-lg overflow-hidden"
+      >
             {/* Lesson Header */}
             <div className="bg-gray-50 p-3 sm:p-4 flex flex-wrap items-center justify-between gap-2 border-b border-gray-200">
               <div className="flex items-center flex-1 min-w-0">
@@ -430,8 +501,6 @@ export default function LessonsManager({ lessons, modules, onChange }: LessonsMa
               </div>
             )}
           </div>
-        ))}
-      </div>
-    </div>
-  )
+    )
+  }
 }
