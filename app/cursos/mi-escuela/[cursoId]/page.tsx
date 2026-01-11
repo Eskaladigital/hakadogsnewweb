@@ -748,22 +748,22 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                 </button>
 
                 {/* Progreso compacto cuando está colapsado (solo móvil) */}
-                {isSidebarCollapsed && (
+                {isSidebarCollapsed && progreso && (
                   <div className="lg:hidden mb-4 p-3 bg-forest/5 rounded-lg">
                     <div className="flex items-center justify-between text-sm mb-2">
                       <span className="font-semibold text-gray-700">Tu Progreso</span>
                       <span className="text-forest font-bold">
-                        {Math.round((Object.keys(lessonProgress).length / lecciones.length) * 100)}%
+                        {Math.round(progreso.progress_percentage)}%
                       </span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
                         className="bg-gradient-to-r from-forest to-sage h-2 rounded-full transition-all duration-500"
-                        style={{ width: `${(Object.keys(lessonProgress).length / lecciones.length) * 100}%` }}
+                        style={{ width: `${progreso.progress_percentage}%` }}
                       />
                     </div>
                     <p className="text-xs text-gray-600 mt-2">
-                      {Object.keys(lessonProgress).length} de {lecciones.length} lecciones completadas
+                      {progreso.completed_lessons} de {progreso.total_lessons} lecciones completadas
                     </p>
                   </div>
                 )}
