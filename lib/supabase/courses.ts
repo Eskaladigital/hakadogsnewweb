@@ -275,6 +275,7 @@ export async function bulkCreateResources(resources: Partial<Resource>[]) {
 // ===== USER PROGRESS =====
 
 export async function getUserCourseProgress(userId: string, courseId: string) {
+  // Intentar obtener de la tabla user_course_progress
   const { data, error } = await supabase
     .from('user_course_progress')
     .select('*')
@@ -284,15 +285,82 @@ export async function getUserCourseProgress(userId: string, courseId: string) {
 
   if (error) {
     if (error.code === 'PGRST116') {
-      console.log('⚠️ No existe progreso del curso:', { userId, courseId })
-      return null // No encontrado
+      // No existe en la tabla - calcular dinámicamente
+      console.log('⚠️ No existe progreso del curso en tabla, calculando dinámicamente:', { userId, courseId })
+      return await calculateCourseProgressDynamically(userId, courseId)
     }
     console.error('❌ Error obteniendo progreso:', error)
     throw error
   }
   
-  console.log('✅ Progreso del curso obtenido:', data)
+  console.log('✅ Progreso del curso obtenido desde tabla:', data)
   return data as UserCourseProgress
+}
+
+// Nueva función para calcular progreso dinámicamente
+async function calculateCourseProgressDynamically(userId: string, courseId: string): Promise<UserCourseProgress | null> {
+  try {
+    // Obtener todas las lecciones del curso
+    const { data: lessons, error: lessonsError } = await supabase
+      .from('course_lessons')
+      .select('id')
+      .eq('course_id', courseId)
+    
+    if (lessonsError) throw lessonsError
+    if (!lessons || lessons.length === 0) {
+      return {
+        id: 'temp',
+        user_id: userId,
+        course_id: courseId,
+        progress_percentage: 0,
+        completed_lessons: 0,
+        total_lessons: 0,
+        completed: false,
+        completed_at: null,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      }
+    }
+
+    const totalLessons = lessons.length
+    const lessonIds = lessons.map(l => l.id)
+
+    // Obtener progreso de todas las lecciones
+    const { data: progressData, error: progressError } = await supabase
+      .from('user_lesson_progress')
+      .select('lesson_id, completed')
+      .eq('user_id', userId)
+      .in('lesson_id', lessonIds)
+      .eq('completed', true)
+    
+    if (progressError) throw progressError
+
+    const completedLessons = progressData?.length || 0
+    const progressPercentage = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0
+
+    console.log('✅ Progreso calculado dinámicamente:', {
+      courseId,
+      totalLessons,
+      completedLessons,
+      progressPercentage
+    })
+
+    return {
+      id: 'calculated',
+      user_id: userId,
+      course_id: courseId,
+      progress_percentage: progressPercentage,
+      completed_lessons: completedLessons,
+      total_lessons: totalLessons,
+      completed: progressPercentage === 100,
+      completed_at: progressPercentage === 100 ? new Date().toISOString() : null,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    }
+  } catch (error) {
+    console.error('Error calculando progreso dinámicamente:', error)
+    return null
+  }
 }
 
 export interface UserLessonProgress {
