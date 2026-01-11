@@ -251,6 +251,128 @@ Una vez ejecutados los scripts SQL, necesitaremos:
 
 ---
 
-**Estado**: ⚡ Optimización inmediata COMPLETADA  
-**Próximo**: Agregar UI de módulos  
-**Versión**: 1.1.0 - Módulos y Performance
+**Estado**: ✅ COMPLETADO - Sistema en Producción  
+**Próximo**: Configurar SQL en Supabase  
+**Versión**: 1.2.0 - Módulos Jerárquicos con Lazy Loading
+
+---
+
+## 🎉 Actualización: Sistema Implementado
+
+### ✅ Optimización Bulk (Producción)
+- Commit: `4baca88`
+- 82 peticiones → 1 sola
+- Carga instantánea
+
+### ✅ UI de Módulos Colapsables (Producción)
+- Commit: `0fde798`
+- Detección automática de módulos
+- Lazy loading de lecciones
+- UI adaptativa (con/sin módulos)
+- Estadísticas de progreso por módulo
+- Experiencia colapsable y optimizada
+
+### Funcionalidades Implementadas
+
+#### 1. **Detección Automática**
+```typescript
+const hasModules = await courseHasModules(courseId)
+// Automáticamente muestra UI de módulos o lecciones simples
+```
+
+#### 2. **Lazy Loading**
+- Solo se cargan lecciones del módulo expandido
+- Primer módulo se expande automáticamente
+- Carga bajo demanda al expandir otros módulos
+
+#### 3. **Estadísticas en Tiempo Real**
+- Progreso por módulo (X/Y lecciones completadas)
+- Porcentaje de completitud
+- Duración total del módulo
+- Check visual al completar módulo 100%
+
+#### 4. **Compatibilidad Total**
+- ✅ Cursos sin módulos: Vista simple (como antes)
+- ✅ Cursos con módulos: Vista jerárquica colapsable
+- ✅ Sin cambios en cursos existentes
+
+---
+
+## 📦 Estructura Final
+
+### Curso Sin Módulos (ej: curso gratuito)
+```
+Contenido del Curso
+├─ Lección 1: Bienvenida ✅
+├─ Lección 2: Conceptos 
+└─ Lección 3: Práctica 🔒
+```
+
+### Curso Con Módulos (ej: curso de 82 lecciones)
+```
+Contenido del Curso
+├─ 📦 Módulo 1: Bienvenida (5 lecciones • 25 min • 100% completado) [▼]
+│   ├─ ✅ Lección 1: ¿Qué vas a conseguir?
+│   ├─ ✅ Lección 2: Mapa del curso
+│   └─ ...
+├─ 📦 Módulo 2: Fundamentos (6 lecciones • 30 min • 33% completado) [▶]
+└─ 📦 Módulo 3: Equipamiento (5 lecciones • 20 min • 0% completado) [▶]
+```
+
+---
+
+## 🚀 Para Activar en tu Curso de 82 Lecciones
+
+### Paso 1: Ejecutar SQL en Supabase
+Ve a Supabase → SQL Editor y ejecuta EN ORDEN:
+
+```sql
+-- 1. Crear estructura de módulos
+supabase/add_modules_structure.sql
+
+-- 2. Migrar el curso específico
+supabase/migrate_curso_correa_a_modulos.sql
+```
+
+### Paso 2: Verificar
+```sql
+-- Ver módulos creados
+SELECT * FROM course_modules 
+WHERE course_id = (SELECT id FROM courses WHERE slug = 'como-ensenar-a-tu-perro-a-caminar-sin-tirar-de-la-correa')
+ORDER BY order_index;
+
+-- Ver distribución de lecciones
+SELECT cm.title, COUNT(cl.id) as lecciones
+FROM course_modules cm
+LEFT JOIN course_lessons cl ON cl.module_id = cm.id
+WHERE cm.course_id = (SELECT id FROM courses WHERE slug = 'como-ensenar-a-tu-perro-a-caminar-sin-tirar-de-la-correa')
+GROUP BY cm.id, cm.title;
+```
+
+### Paso 3: ¡Listo!
+Accede al curso y verás:
+- ✅ 15 módulos colapsables
+- ✅ 82 lecciones organizadas
+- ✅ Progreso por módulo
+- ✅ Carga rápida (lazy loading)
+
+---
+
+## 🎨 Mejoras de UX
+
+### Performance
+- ⚡ Solo 1 petición para progreso completo
+- ⚡ Lazy loading de lecciones por módulo
+- ⚡ Carga inicial ultrarrápida (solo módulos)
+
+### Visual
+- 📊 Barra de progreso por módulo
+- ✅ Check verde al completar módulo
+- 🔽 Animaciones suaves al expandir/contraer
+- 📱 Totalmente responsive
+
+### Accesibilidad
+- ⌨️ Navegación con teclado
+- 🎯 Estados visuales claros
+- 🚫 Bloques lógicos (módulo a módulo)
+
