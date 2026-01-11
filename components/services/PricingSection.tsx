@@ -7,7 +7,7 @@ import { Check } from 'lucide-react'
 const plans = [
   {
     name: 'Educación Básica',
-    price: '350€',
+    price: '250€',
     sessions: '8-10 sesiones',
     features: [
       'Evaluación inicial completa',
@@ -22,7 +22,7 @@ const plans = [
   },
   {
     name: 'Modificación Conducta',
-    price: 'Desde 450€',
+    price: 'Desde 270€',
     sessions: '12-15 sesiones',
     features: [
       'Evaluación exhaustiva',
@@ -38,7 +38,7 @@ const plans = [
   },
   {
     name: 'Cachorros',
-    price: '280€',
+    price: '200€',
     sessions: '6-8 sesiones',
     features: [
       'Evaluación inicial',
