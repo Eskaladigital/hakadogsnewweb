@@ -28,6 +28,7 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
   const [expandedModules, setExpandedModules] = useState<Record<string, boolean>>({})
   const [moduleLoading, setModuleLoading] = useState<Record<string, boolean>>({})
   const [moduleLessons, setModuleLessons] = useState<Record<string, Lesson[]>>({})
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true) // Colapsado por defecto en móvil
   const contentRef = useRef<HTMLDivElement>(null)
 
   // Funciones para navegación con gestos
@@ -728,7 +729,47 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
             {/* Sidebar - Lecciones (con/sin módulos) */}
             <div className="lg:col-span-1 order-1 lg:order-2">
               <div className="bg-white rounded-xl shadow-lg p-3 sm:p-4 lg:p-6 lg:sticky lg:top-24">
-                <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">Contenido del Curso</h3>
+                {/* Header con toggle para móvil */}
+                <button
+                  onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+                  className="w-full flex items-center justify-between mb-4 sm:mb-6 lg:cursor-default"
+                >
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-900">
+                    Contenido del Curso
+                  </h3>
+                  {/* Icono de expand/collapse solo visible en móvil */}
+                  <div className="lg:hidden">
+                    {isSidebarCollapsed ? (
+                      <ChevronDown className="w-6 h-6 text-forest" />
+                    ) : (
+                      <ChevronUp className="w-6 h-6 text-forest" />
+                    )}
+                  </div>
+                </button>
+
+                {/* Progreso compacto cuando está colapsado (solo móvil) */}
+                {isSidebarCollapsed && (
+                  <div className="lg:hidden mb-4 p-3 bg-forest/5 rounded-lg">
+                    <div className="flex items-center justify-between text-sm mb-2">
+                      <span className="font-semibold text-gray-700">Tu Progreso</span>
+                      <span className="text-forest font-bold">
+                        {Math.round((Object.keys(lessonProgress).length / lecciones.length) * 100)}%
+                      </span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div
+                        className="bg-gradient-to-r from-forest to-sage h-2 rounded-full transition-all duration-500"
+                        style={{ width: `${(Object.keys(lessonProgress).length / lecciones.length) * 100}%` }}
+                      />
+                    </div>
+                    <p className="text-xs text-gray-600 mt-2">
+                      {Object.keys(lessonProgress).length} de {lecciones.length} lecciones completadas
+                    </p>
+                  </div>
+                )}
+
+                {/* Contenido colapsable */}
+                <div className={`${isSidebarCollapsed ? 'hidden lg:block' : 'block'}`}>
                 
                 {hasModules ? (
                   /* VISTA CON MÓDULOS */
@@ -968,6 +1009,7 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                     })}
                   </div>
                 )}
+                </div> {/* Cierre del div colapsable */}
               </div>
             </div>
           </div>
