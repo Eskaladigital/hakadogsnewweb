@@ -16,6 +16,13 @@ const LessonsManager = dynamic(() => import('@/components/admin/LessonsManager')
   </div>
 })
 
+const ModulesManager = dynamic(() => import('@/components/admin/ModulesManager'), {
+  ssr: false,
+  loading: () => <div className="w-full h-48 bg-gray-100 rounded-lg animate-pulse flex items-center justify-center">
+    <p className="text-gray-500">Cargando gestor de módulos...</p>
+  </div>
+})
+
 const TinyMCEEditor = dynamic(() => import('@/components/admin/TinyMCEEditor'), {
   ssr: false,
   loading: () => <div className="w-full h-32 bg-gray-100 rounded-lg animate-pulse" />
