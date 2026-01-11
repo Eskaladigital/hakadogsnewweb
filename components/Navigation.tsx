@@ -76,12 +76,12 @@ export default function Navigation() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-8">
+          <div className="hidden lg:flex items-center space-x-5">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-gray-700 hover:text-forest font-medium transition-colors"
+                className="text-gray-700 hover:text-forest font-medium transition-colors text-sm"
               >
                 {link.label}
               </Link>
@@ -89,21 +89,21 @@ export default function Navigation() {
           </div>
 
           {/* Auth Buttons Desktop */}
-          <div className="hidden lg:flex items-center space-x-3">
+          <div className="hidden lg:flex items-center space-x-2">
             {isLoggedIn ? (
               <>
                 <Link
                   href="/cursos/mi-escuela"
-                  className="flex items-center space-x-2 bg-forest/10 text-forest hover:bg-forest/20 font-semibold px-5 py-2 rounded-lg transition-all"
+                  className="flex items-center space-x-1.5 bg-forest/10 text-forest hover:bg-forest/20 font-semibold px-4 py-1.5 rounded-lg transition-all text-sm"
                 >
-                  <User size={18} />
+                  <User size={16} />
                   <span>{userName}</span>
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center space-x-2 bg-red-50 text-red-600 hover:bg-red-100 font-semibold px-5 py-2 rounded-lg transition-all"
+                  className="flex items-center space-x-1.5 bg-red-50 text-red-600 hover:bg-red-100 font-semibold px-4 py-1.5 rounded-lg transition-all text-sm"
                 >
-                  <LogOut size={18} />
+                  <LogOut size={16} />
                   <span>Salir</span>
                 </button>
               </>
@@ -111,13 +111,13 @@ export default function Navigation() {
               <>
                 <Link
                   href="/cursos/auth/login"
-                  className="bg-gray-100 text-gray-700 hover:bg-gray-200 font-semibold px-6 py-2 rounded-lg transition-all"
+                  className="bg-gray-100 text-gray-700 hover:bg-gray-200 font-semibold px-4 py-1.5 rounded-lg transition-all text-sm"
                 >
                   Iniciar Sesión
                 </Link>
                 <Link
                   href="/cursos/auth/registro"
-                  className="bg-gradient-to-r from-forest to-sage text-white font-semibold px-6 py-2 rounded-lg hover:opacity-90 transition-all"
+                  className="bg-gradient-to-r from-forest to-sage text-white font-semibold px-4 py-1.5 rounded-lg hover:opacity-90 transition-all text-sm"
                 >
                   Registrarse
                 </Link>
