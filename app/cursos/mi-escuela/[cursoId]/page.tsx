@@ -3,11 +3,11 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Play, CheckCircle, Lock, Download, FileText, Clock, Loader2, AlertCircle, Video, Headphones, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ArrowLeft, Play, CheckCircle, Lock, Download, FileText, Clock, Loader2, AlertCircle, Video, Headphones, ChevronLeft, ChevronRight, ChevronDown, ChevronUp } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { getSession } from '@/lib/supabase/auth'
-import { getCourseBySlug, getCourseLessons, getUserCourseProgress, markLessonComplete, getLessonResources, getUserLessonsProgressBulk } from '@/lib/supabase/courses'
-import type { Course, Lesson, Resource, UserLessonProgress } from '@/lib/supabase/courses'
+import { getCourseBySlug, getCourseLessons, getUserCourseProgress, markLessonComplete, getLessonResources, getUserLessonsProgressBulk, courseHasModules, getCourseModulesWithStats, getLessonsByModule } from '@/lib/supabase/courses'
+import type { Course, Lesson, Resource, ModuleWithStats } from '@/lib/supabase/courses'
 import { useSwipe } from '@/lib/hooks/useSwipe'
 
 export default function CursoDetailPage({ params }: { params: { cursoId: string } }) {
@@ -23,6 +23,11 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
   const [activeTab, setActiveTab] = useState<'video' | 'audio' | 'content' | 'resources'>('content')
   const [completing, setCompleting] = useState(false)
   const [lessonProgress, setLessonProgress] = useState<Record<string, boolean>>({})
+  const [hasModules, setHasModules] = useState(false)
+  const [modules, setModules] = useState<ModuleWithStats[]>([])
+  const [expandedModules, setExpandedModules] = useState<Record<string, boolean>>({})
+  const [moduleLoading, setModuleLoading] = useState<Record<string, boolean>>({})
+  const [moduleLessons, setModuleLessons] = useState<Record<string, Lesson[]>>({})
   const contentRef = useRef<HTMLDivElement>(null)
 
   // Funciones para navegación con gestos
@@ -59,6 +64,32 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
     timeout: 400,  // Máximo 400ms
   })
 
+  // Función para alternar expansión de módulos (lazy loading de lecciones)
+  const toggleModule = async (moduleId: string) => {
+    const isExpanded = expandedModules[moduleId]
+    
+    setExpandedModules(prev => ({
+      ...prev,
+      [moduleId]: !isExpanded
+    }))
+
+    // Si se está expandiendo y aún no se cargaron las lecciones, cargarlas
+    if (!isExpanded && !moduleLessons[moduleId]) {
+      setModuleLoading(prev => ({ ...prev, [moduleId]: true }))
+      try {
+        const lessons = await getLessonsByModule(moduleId)
+        setModuleLessons(prev => ({
+          ...prev,
+          [moduleId]: lessons
+        }))
+      } catch (error) {
+        console.error('Error cargando lecciones del módulo:', error)
+      } finally {
+        setModuleLoading(prev => ({ ...prev, [moduleId]: false }))
+      }
+    }
+  }
+
   useEffect(() => {
     async function loadData() {
       try {
@@ -80,37 +111,76 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
         }
         setCurso(courseData)
 
-        // Cargar lecciones
-        const lessonsData = await getCourseLessons(courseData.id)
-        setLecciones(lessonsData)
+        // Verificar si el curso tiene módulos
+        const hasModulesFlag = await courseHasModules(courseData.id)
+        setHasModules(hasModulesFlag)
+
+        if (hasModulesFlag) {
+          // Curso con módulos: cargar módulos y estadísticas
+          const modulesData = await getCourseModulesWithStats(courseData.id, uid)
+          setModules(modulesData)
+
+          // Expandir automáticamente el primer módulo
+          if (modulesData.length > 0) {
+            const firstModuleId = modulesData[0].id
+            setExpandedModules({ [firstModuleId]: true })
+            
+            // Cargar lecciones del primer módulo
+            const firstModuleLessons = await getLessonsByModule(firstModuleId)
+            setModuleLessons({ [firstModuleId]: firstModuleLessons })
+            setLecciones(firstModuleLessons)
+
+            // Cargar progreso de lecciones del primer módulo
+            if (firstModuleLessons.length > 0) {
+              const lessonIds = firstModuleLessons.map(l => l.id)
+              const progressMap = await getUserLessonsProgressBulk(uid, lessonIds)
+              setLessonProgress(progressMap)
+
+              // Seleccionar primera lección
+              setLeccionActual(firstModuleLessons[0])
+              if (firstModuleLessons[0].video_url) {
+                setActiveTab('video')
+              } else if (firstModuleLessons[0].audio_url) {
+                setActiveTab('audio')
+              } else {
+                setActiveTab('content')
+              }
+
+              const resourcesData = await getLessonResources(firstModuleLessons[0].id)
+              setRecursos(resourcesData)
+            }
+          }
+        } else {
+          // Curso sin módulos (estructura antigua/simple)
+          const lessonsData = await getCourseLessons(courseData.id)
+          setLecciones(lessonsData)
+
+          // OPTIMIZACIÓN: Cargar progreso de TODAS las lecciones en UNA SOLA petición
+          const lessonIds = lessonsData.map(lesson => lesson.id)
+          const progressMap = await getUserLessonsProgressBulk(uid, lessonIds)
+          setLessonProgress(progressMap)
+
+          // Seleccionar primera lección
+          if (lessonsData.length > 0) {
+            const firstLesson = lessonsData[0]
+            setLeccionActual(firstLesson)
+            
+            if (firstLesson.video_url) {
+              setActiveTab('video')
+            } else if (firstLesson.audio_url) {
+              setActiveTab('audio')
+            } else {
+              setActiveTab('content')
+            }
+
+            const resourcesData = await getLessonResources(firstLesson.id)
+            setRecursos(resourcesData)
+          }
+        }
 
         // Cargar progreso del curso
         const progressData = await getUserCourseProgress(uid, courseData.id)
         setProgreso(progressData)
-
-        // OPTIMIZACIÓN: Cargar progreso de TODAS las lecciones en UNA SOLA petición
-        const lessonIds = lessonsData.map(lesson => lesson.id)
-        const progressMap = await getUserLessonsProgressBulk(uid, lessonIds)
-        setLessonProgress(progressMap)
-
-        // Seleccionar primera lección
-        if (lessonsData.length > 0) {
-          const firstLesson = lessonsData[0]
-          setLeccionActual(firstLesson)
-          
-          // Determinar pestaña inicial según contenido disponible
-          if (firstLesson.video_url) {
-            setActiveTab('video')
-          } else if (firstLesson.audio_url) {
-            setActiveTab('audio')
-          } else {
-            setActiveTab('content')
-          }
-
-          // Cargar recursos de la primera lección
-          const resourcesData = await getLessonResources(firstLesson.id)
-          setRecursos(resourcesData)
-        }
 
       } catch (error) {
         console.error('Error cargando datos:', error)
@@ -603,99 +673,214 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
               </div>
             </div>
 
-            {/* Sidebar - Lecciones */}
+            {/* Sidebar - Lecciones (con/sin módulos) */}
             <div className="lg:col-span-1 order-1 lg:order-2">
               <div className="bg-white rounded-xl shadow-lg p-3 sm:p-4 lg:p-6 lg:sticky lg:top-24">
                 <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">Contenido del Curso</h3>
-                <div className="space-y-2">
-                  {lecciones.map((leccion, index) => {
-                    // Determinar si la lección está bloqueada
-                    const isLocked = index > 0 && !lessonProgress[lecciones[index - 1].id]
-                    const isCompleted = lessonProgress[leccion.id]
-                    const isActive = leccionActual.id === leccion.id
-                    
-                    return (
-                      <div key={leccion.id} className="relative group">
-                        <motion.button
-                          onClick={() => handleSelectLesson(leccion)}
-                          disabled={isLocked}
-                          className={`w-full text-left p-3 sm:p-4 rounded-lg transition-all ${
-                            isActive
-                              ? 'bg-forest/10 border-2 border-forest'
-                              : isLocked
-                              ? 'bg-gray-100 opacity-60 cursor-not-allowed'
-                              : 'bg-gray-50 hover:bg-gray-100'
-                          }`}
-                          whileHover={isLocked ? {} : { scale: 1.02 }}
-                          whileTap={isLocked ? {} : { scale: 0.98 }}
-                        >
-                          <div className="flex items-start">
-                            <div className="mr-2 sm:mr-3 mt-0.5 flex-shrink-0">
-                              {isLocked ? (
-                                <Lock className="w-4 sm:w-5 h-4 sm:h-5 text-gray-400" />
-                              ) : isCompleted ? (
-                                <CheckCircle className="w-4 sm:w-5 h-4 sm:h-5 text-green-600" />
+                
+                {hasModules ? (
+                  /* VISTA CON MÓDULOS */
+                  <div className="space-y-3">
+                    {modules.map((module, moduleIndex) => {
+                      const isExpanded = expandedModules[module.id]
+                      const lessons = moduleLessons[module.id] || []
+                      const isLoading = moduleLoading[module.id]
+                      const completionPercentage = module.total_lessons > 0 
+                        ? Math.round((module.completed_lessons / module.total_lessons) * 100) 
+                        : 0
+
+                      return (
+                        <div key={module.id} className="border border-gray-200 rounded-lg overflow-hidden">
+                          {/* Header del Módulo (siempre visible) */}
+                          <button
+                            onClick={() => toggleModule(module.id)}
+                            className="w-full p-4 bg-gray-50 hover:bg-gray-100 transition flex items-center justify-between group"
+                          >
+                            <div className="flex-1 text-left">
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="text-xs font-bold text-forest uppercase">
+                                  Módulo {module.order_index}
+                                </span>
+                                {completionPercentage === 100 && (
+                                  <CheckCircle className="w-4 h-4 text-green-600" />
+                                )}
+                              </div>
+                              <h4 className="font-bold text-gray-900 text-sm sm:text-base group-hover:text-forest transition">
+                                {module.title}
+                              </h4>
+                              <div className="flex items-center gap-3 mt-2 text-xs text-gray-500">
+                                <span>{module.total_lessons} lecciones</span>
+                                <span>•</span>
+                                <span>{module.duration_minutes} min</span>
+                                <span>•</span>
+                                <span className={completionPercentage === 100 ? 'text-green-600 font-semibold' : ''}>
+                                  {completionPercentage}% completado
+                                </span>
+                              </div>
+                            </div>
+                            <div className="ml-3 flex-shrink-0">
+                              {isExpanded ? (
+                                <ChevronUp className="w-5 h-5 text-forest" />
                               ) : (
-                                <Play className="w-4 sm:w-5 h-4 sm:h-5 text-forest" />
+                                <ChevronDown className="w-5 h-5 text-gray-400 group-hover:text-forest transition" />
                               )}
                             </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center justify-between mb-1">
-                                <span className={`text-xs font-semibold ${
-                                  isLocked ? 'text-gray-400' : 'text-gray-500'
+                          </button>
+
+                          {/* Lecciones del Módulo (colapsables) */}
+                          {isExpanded && (
+                            <div className="border-t border-gray-200 bg-white">
+                              {isLoading ? (
+                                <div className="p-6 text-center">
+                                  <Loader2 className="w-6 h-6 animate-spin mx-auto text-forest" />
+                                  <p className="text-sm text-gray-500 mt-2">Cargando lecciones...</p>
+                                </div>
+                              ) : (
+                                <div className="p-2 space-y-2">
+                                  {lessons.map((leccion, index) => {
+                                    const isLocked = index > 0 && !lessonProgress[lessons[index - 1].id]
+                                    const isCompleted = lessonProgress[leccion.id]
+                                    const isActive = leccionActual?.id === leccion.id
+                                    
+                                    return (
+                                      <div key={leccion.id} className="relative group">
+                                        <motion.button
+                                          onClick={() => handleSelectLesson(leccion)}
+                                          disabled={isLocked}
+                                          className={`w-full text-left p-3 rounded-lg transition-all ${
+                                            isActive
+                                              ? 'bg-forest/10 border-2 border-forest'
+                                              : isLocked
+                                              ? 'bg-gray-100 opacity-60 cursor-not-allowed'
+                                              : 'bg-gray-50 hover:bg-gray-100'
+                                          }`}
+                                          whileHover={isLocked ? {} : { scale: 1.02 }}
+                                          whileTap={isLocked ? {} : { scale: 0.98 }}
+                                        >
+                                          <div className="flex items-start">
+                                            <div className="mr-2 sm:mr-3 mt-0.5 flex-shrink-0">
+                                              {isLocked ? (
+                                                <Lock className="w-4 sm:w-5 h-4 sm:h-5 text-gray-400" />
+                                              ) : isCompleted ? (
+                                                <CheckCircle className="w-4 sm:w-5 h-4 sm:h-5 text-green-600" />
+                                              ) : (
+                                                <Play className="w-4 sm:w-5 h-4 sm:h-5 text-forest" />
+                                              )}
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                              <div className="flex items-center justify-between mb-1">
+                                                <span className={`text-xs font-semibold ${
+                                                  isLocked ? 'text-gray-400' : 'text-gray-500'
+                                                }`}>
+                                                  Lección {index + 1}
+                                                  {isLocked && ' • Bloqueada'}
+                                                </span>
+                                                <span className={`text-xs whitespace-nowrap ml-2 ${
+                                                  isLocked ? 'text-gray-400' : 'text-gray-500'
+                                                }`}>
+                                                  {leccion.duration_minutes} min
+                                                </span>
+                                              </div>
+                                              <p className={`text-sm font-semibold ${
+                                                isActive 
+                                                  ? 'text-forest' 
+                                                  : isLocked 
+                                                  ? 'text-gray-400' 
+                                                  : 'text-gray-900'
+                                              }`}>
+                                                {leccion.title}
+                                              </p>
+                                            </div>
+                                          </div>
+                                        </motion.button>
+                                      </div>
+                                    )
+                                  })}
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      )
+                    })}
+                  </div>
+                ) : (
+                  /* VISTA SIN MÓDULOS (estructura simple) */
+                  <div className="space-y-2">
+                    {lecciones.map((leccion, index) => {
+                      const isLocked = index > 0 && !lessonProgress[lecciones[index - 1].id]
+                      const isCompleted = lessonProgress[leccion.id]
+                      const isActive = leccionActual?.id === leccion.id
+                      
+                      return (
+                        <div key={leccion.id} className="relative group">
+                          <motion.button
+                            onClick={() => handleSelectLesson(leccion)}
+                            disabled={isLocked}
+                            className={`w-full text-left p-3 sm:p-4 rounded-lg transition-all ${
+                              isActive
+                                ? 'bg-forest/10 border-2 border-forest'
+                                : isLocked
+                                ? 'bg-gray-100 opacity-60 cursor-not-allowed'
+                                : 'bg-gray-50 hover:bg-gray-100'
+                            }`}
+                            whileHover={isLocked ? {} : { scale: 1.02 }}
+                            whileTap={isLocked ? {} : { scale: 0.98 }}
+                          >
+                            <div className="flex items-start">
+                              <div className="mr-2 sm:mr-3 mt-0.5 flex-shrink-0">
+                                {isLocked ? (
+                                  <Lock className="w-4 sm:w-5 h-4 sm:h-5 text-gray-400" />
+                                ) : isCompleted ? (
+                                  <CheckCircle className="w-4 sm:w-5 h-4 sm:h-5 text-green-600" />
+                                ) : (
+                                  <Play className="w-4 sm:w-5 h-4 sm:h-5 text-forest" />
+                                )}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center justify-between mb-1">
+                                  <span className={`text-xs font-semibold ${
+                                    isLocked ? 'text-gray-400' : 'text-gray-500'
+                                  }`}>
+                                    Lección {index + 1}
+                                    {isLocked && ' • Bloqueada'}
+                                  </span>
+                                  <span className={`text-xs whitespace-nowrap ml-2 ${
+                                    isLocked ? 'text-gray-400' : 'text-gray-500'
+                                  }`}>
+                                    {leccion.duration_minutes} min
+                                  </span>
+                                </div>
+                                <p className={`text-sm sm:text-base font-semibold truncate ${
+                                  isActive 
+                                    ? 'text-forest' 
+                                    : isLocked 
+                                    ? 'text-gray-400' 
+                                    : 'text-gray-900'
                                 }`}>
-                                  Lección {index + 1}
-                                  {isLocked && ' • Bloqueada'}
-                                </span>
-                                <span className={`text-xs whitespace-nowrap ml-2 ${
-                                  isLocked ? 'text-gray-400' : 'text-gray-500'
-                                }`}>
-                                  {leccion.duration_minutes} min
-                                </span>
+                                  {leccion.title}
+                                </p>
                               </div>
-                              <p className={`text-sm sm:text-base font-semibold truncate ${
-                                isActive 
-                                  ? 'text-forest' 
-                                  : isLocked 
-                                  ? 'text-gray-400' 
-                                  : 'text-gray-900'
-                              }`}>
-                                {leccion.title}
-                              </p>
                             </div>
-                          </div>
-                        </motion.button>
-                        
-                        {/* Tooltip para lecciones bloqueadas - adaptativo */}
-                        {isLocked && (
-                          <div className="hidden lg:block absolute left-full ml-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                            <div className="bg-gray-900 text-white text-sm px-4 py-3 rounded-lg shadow-xl whitespace-nowrap">
-                              <div className="flex items-center">
-                                <Lock className="w-4 h-4 mr-2 flex-shrink-0" />
-                                <span>Completa la lección anterior</span>
+                          </motion.button>
+                          
+                          {/* Tooltip para lecciones bloqueadas */}
+                          {isLocked && (
+                            <div className="hidden lg:block absolute left-full ml-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                              <div className="bg-gray-900 text-white text-sm px-4 py-3 rounded-lg shadow-xl whitespace-nowrap">
+                                <div className="flex items-center">
+                                  <Lock className="w-4 h-4 mr-2 flex-shrink-0" />
+                                  <span>Completa la lección anterior</span>
+                                </div>
+                                <div className="absolute right-full top-1/2 -translate-y-1/2 border-8 border-transparent border-r-gray-900"></div>
                               </div>
-                              {/* Flecha */}
-                              <div className="absolute right-full top-1/2 -translate-y-1/2 border-8 border-transparent border-r-gray-900"></div>
                             </div>
-                          </div>
-                        )}
-                        {/* Tooltip móvil - abajo */}
-                        {isLocked && (
-                          <div className="lg:hidden absolute top-full left-0 right-0 mt-2 opacity-0 group-active:opacity-100 transition-opacity pointer-events-none z-10">
-                            <div className="bg-gray-900 text-white text-xs px-3 py-2 rounded-lg shadow-xl text-center">
-                              <div className="flex items-center justify-center">
-                                <Lock className="w-3 h-3 mr-2" />
-                                <span>Completa la lección anterior</span>
-                              </div>
-                              {/* Flecha arriba */}
-                              <div className="absolute bottom-full left-1/2 -translate-x-1/2 border-4 border-transparent border-b-gray-900"></div>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    )
-                  })}
-                </div>
+                          )}
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
               </div>
             </div>
           </div>

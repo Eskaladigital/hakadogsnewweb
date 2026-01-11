@@ -20,9 +20,27 @@ export interface Course {
   updated_at: string
 }
 
+export interface CourseModule {
+  id: string
+  course_id: string
+  title: string
+  description: string | null
+  order_index: number
+  is_locked: boolean
+  created_at: string
+  updated_at: string
+}
+
+export interface ModuleWithStats extends CourseModule {
+  total_lessons: number
+  completed_lessons: number
+  duration_minutes: number
+}
+
 export interface Lesson {
   id: string
   course_id: string
+  module_id: string | null
   title: string
   slug: string
   content: string | null
@@ -427,4 +445,59 @@ export async function getAdminStats() {
     totalSales,
     totalRevenue
   }
+}
+
+// ===== MÓDULOS =====
+
+/**
+ * Obtiene todos los módulos de un curso con estadísticas de progreso del usuario
+ */
+export async function getCourseModulesWithStats(courseId: string, userId: string): Promise<ModuleWithStats[]> {
+  const { data, error } = await (supabase as any)
+    .rpc('get_course_modules_with_stats', {
+      course_id_param: courseId,
+      user_id_param: userId
+    })
+
+  if (error) {
+    console.warn('Error obteniendo módulos con stats:', error)
+    return []
+  }
+
+  return data as ModuleWithStats[]
+}
+
+/**
+ * Obtiene lecciones de un módulo específico
+ */
+export async function getLessonsByModule(moduleId: string): Promise<Lesson[]> {
+  const { data, error } = await (supabase as any)
+    .rpc('get_lessons_by_module', {
+      module_id_param: moduleId
+    })
+
+  if (error) {
+    console.warn('Error obteniendo lecciones del módulo:', error)
+    return []
+  }
+
+  return data as Lesson[]
+}
+
+/**
+ * Comprueba si un curso tiene módulos configurados
+ */
+export async function courseHasModules(courseId: string): Promise<boolean> {
+  const { data, error } = await supabase
+    .from('course_modules')
+    .select('id')
+    .eq('course_id', courseId)
+    .limit(1)
+
+  if (error) {
+    console.warn('Error verificando módulos:', error)
+    return false
+  }
+
+  return (data?.length || 0) > 0
 }
