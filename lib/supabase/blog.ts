@@ -179,7 +179,7 @@ export async function getFeaturedBlogPosts(limit = 3) {
 }
 
 export async function getBlogPostBySlug(slug: string) {
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('blog_posts')
     .select(`
       *,
@@ -191,7 +191,7 @@ export async function getBlogPostBySlug(slug: string) {
   if (error) throw error
   
   // Incrementar vistas
-  if (data) {
+  if (data && data.id) {
     await incrementPostViews(data.id)
   }
   
