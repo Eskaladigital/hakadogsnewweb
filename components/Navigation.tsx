@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Menu, X, User, LogOut } from 'lucide-react'
 import { getSession, signOut } from '@/lib/supabase/auth'
+import { createClient } from '@/lib/supabase/client'
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
@@ -12,15 +13,43 @@ export default function Navigation() {
   const [userName, setUserName] = useState('')
 
   useEffect(() => {
+    const supabase = createClient()
+    
     // Verificar si hay sesión de Supabase
     const checkSession = async () => {
       const { data } = await getSession()
       if (data.session) {
         setIsLoggedIn(true)
         setUserName(data.session.user.user_metadata.name || data.session.user.email.split('@')[0])
+      } else {
+        setIsLoggedIn(false)
+        setUserName('')
       }
     }
+    
+    // Verificar sesión inicial
     checkSession()
+    
+    // Escuchar cambios en el estado de autenticación
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log('🔄 Auth state changed:', event)
+      
+      if (event === 'SIGNED_IN' && session) {
+        setIsLoggedIn(true)
+        setUserName(session.user.user_metadata.name || session.user.email?.split('@')[0] || 'Usuario')
+      } else if (event === 'SIGNED_OUT') {
+        setIsLoggedIn(false)
+        setUserName('')
+      } else if (event === 'TOKEN_REFRESHED' && session) {
+        setIsLoggedIn(true)
+        setUserName(session.user.user_metadata.name || session.user.email?.split('@')[0] || 'Usuario')
+      }
+    })
+    
+    // Cleanup: remover el listener cuando el componente se desmonte
+    return () => {
+      authListener.subscription.unsubscribe()
+    }
   }, [])
 
   const handleLogout = async () => {

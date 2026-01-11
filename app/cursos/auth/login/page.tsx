@@ -33,13 +33,13 @@ function LoginForm() {
       
       // Si intenta acceder a /administrator pero no es admin, redirigir a mi-escuela
       if (redirectUrl.includes('/administrator') && data.user.user_metadata.role !== 'admin') {
-        router.push('/cursos/mi-escuela')
-        setLoading(false)
+        // Hacer hard refresh para actualizar la navegación
+        window.location.href = '/cursos/mi-escuela'
         return
       }
       
-      // Redirigir a la URL solicitada
-      router.push(redirectUrl)
+      // Hacer hard refresh para actualizar la navegación y mostrar el usuario logueado
+      window.location.href = redirectUrl
     } catch (err) {
       console.error('Error en login:', err)
       setError('Error al iniciar sesión. Verifica tus credenciales.')

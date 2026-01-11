@@ -51,7 +51,8 @@ export default function CursosRegistroPage() {
 
       // Si hay data, el usuario se registró y autenticó automáticamente
       if (data) {
-        router.push('/cursos/mi-escuela')
+        // Hacer hard refresh para actualizar la navegación y mostrar el usuario logueado
+        window.location.href = '/cursos/mi-escuela'
       }
     } catch (err) {
       console.error('Error en registro:', err)

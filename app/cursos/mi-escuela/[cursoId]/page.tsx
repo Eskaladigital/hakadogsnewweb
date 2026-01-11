@@ -550,23 +550,16 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                 {/* Content Area */}
                 <div className="p-4 sm:p-6 lg:p-8 overflow-x-hidden">
                   {activeTab === 'content' && leccionActual.content && (
-                    <div className="w-full max-w-full overflow-x-hidden">
+                    <>
                       <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">
                         {leccionActual.title}
                       </h2>
                       {/* Renderizar HTML de TinyMCE */}
                       <div 
-                        className="lesson-content prose max-w-none w-full overflow-hidden break-words px-2 sm:px-3 md:px-4"
-                        style={{ 
-                          wordWrap: 'break-word', 
-                          overflowWrap: 'break-word',
-                          width: '100%',
-                          maxWidth: '100%',
-                          fontSize: 'clamp(0.875rem, 2vw, 1rem)'
-                        }}
+                        className="lesson-content prose max-w-none"
                         dangerouslySetInnerHTML={{ __html: leccionActual.content }}
                       />
-                    </div>
+                    </>
                   )}
 
                   {activeTab === 'resources' && recursos.length > 0 && (
