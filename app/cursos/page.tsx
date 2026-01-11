@@ -7,6 +7,7 @@ import { motion } from 'framer-motion'
 import { getAllCourses, getCourseModules, courseHasModules } from '@/lib/supabase/courses'
 import type { Course, CourseModule, Lesson } from '@/lib/supabase/courses'
 import Modal from '@/components/ui/Modal'
+import { supabase } from '@/lib/supabase/client'
 
 export default function CursosPage() {
   const [email, setEmail] = useState('')
@@ -85,19 +86,17 @@ export default function CursosPage() {
     window.location.href = '/cursos/auth/registro'
   }
 
-  const handleBuyCourse = (cursoSlug: string) => {
-    // Verificar si hay sesión
-    const session = localStorage.getItem('hakadogs_cursos_session')
-    if (session) {
-      const data = JSON.parse(session)
-      if (data.loggedIn) {
-        // Si está logueado, ir a comprar
-        window.location.href = `/cursos/comprar/${cursoSlug}`
-        return
-      }
+  const handleBuyCourse = async (cursoSlug: string) => {
+    // Verificar sesión de Supabase Auth
+    const { data: { session } } = await supabase.auth.getSession()
+    
+    if (session?.user) {
+      // Usuario autenticado, ir directo a comprar
+      window.location.href = `/cursos/comprar/${cursoSlug}`
+    } else {
+      // No autenticado, ir a registro
+      window.location.href = '/cursos/auth/registro'
     }
-    // Si no está logueado, ir a registro
-    window.location.href = '/cursos/auth/registro'
   }
 
   const toggleFaq = (index: number) => {
