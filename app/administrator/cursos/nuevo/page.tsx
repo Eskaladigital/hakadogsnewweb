@@ -391,7 +391,7 @@ export default function NuevoCursoPage() {
                         </div>
                       </div>
                     ) : (
-                      <LessonsManager lessons={lessons} onChange={setLessons} />
+                      <LessonsManager lessons={lessons} modules={[]} onChange={setLessons} />
                     )}
                   </div>
                 </div>
