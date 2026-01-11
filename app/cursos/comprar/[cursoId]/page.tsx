@@ -3,11 +3,12 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, ShoppingCart, CheckCircle, CreditCard, Lock, Clock, Loader2, AlertCircle } from 'lucide-react'
+import { ArrowLeft, ShoppingCart, CheckCircle, CreditCard, Lock, Clock, Loader2, AlertCircle, BookOpen, GraduationCap, ChevronRight } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { getSession } from '@/lib/supabase/auth'
-import { getCourseBySlug, hasPurchasedCourse, createPurchase } from '@/lib/supabase/courses'
-import type { Course } from '@/lib/supabase/courses'
+import { getCourseBySlug, hasPurchasedCourse, createPurchase, getCourseModules, courseHasModules } from '@/lib/supabase/courses'
+import type { Course, CourseModule, Lesson } from '@/lib/supabase/courses'
+import { supabase } from '@/lib/supabase/client'
 
 export default function ComprarCursoPage({ params }: { params: { cursoId: string } }) {
   const router = useRouter()
@@ -20,6 +21,12 @@ export default function ComprarCursoPage({ params }: { params: { cursoId: string
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'paypal'>('card')
   const [error, setError] = useState<string | null>(null)
   const [processing, setProcessing] = useState(false)
+  const [courseModules, setCourseModules] = useState<CourseModule[]>([])
+  const [moduleLessons, setModuleLessons] = useState<Record<string, Lesson[]>>({})
+  const [lessonsWithoutModule, setLessonsWithoutModule] = useState<Lesson[]>([])
+  const [loadingLessons, setLoadingLessons] = useState(false)
+  const [expandedModules, setExpandedModules] = useState<Set<string>>(new Set())
+  const [hasModules, setHasModules] = useState(false)
 
   useEffect(() => {
     async function loadData() {
@@ -55,6 +62,62 @@ export default function ComprarCursoPage({ params }: { params: { cursoId: string
         const purchased = await hasPurchasedCourse(uid, courseData.id)
         if (purchased) {
           setAlreadyPurchased(true)
+        }
+
+        // Cargar temario (módulos y lecciones)
+        setLoadingLessons(true)
+        try {
+          const hasModulesConfig = await courseHasModules(courseData.id)
+          setHasModules(hasModulesConfig)
+
+          if (hasModulesConfig) {
+            // Cargar módulos
+            const modules = await getCourseModules(courseData.id)
+            setCourseModules(modules)
+
+            // Cargar lecciones de cada módulo
+            const lessonsMap: Record<string, Lesson[]> = {}
+            for (const courseModule of modules) {
+              const { data: lessons } = await supabase
+                .from('lessons')
+                .select('*')
+                .eq('course_id', courseData.id)
+                .eq('module_id', courseModule.id)
+                .order('order_index')
+              
+              if (lessons) {
+                lessonsMap[courseModule.id] = lessons
+              }
+            }
+            setModuleLessons(lessonsMap)
+
+            // Cargar lecciones sin módulo
+            const { data: lessonsNoModule } = await supabase
+              .from('lessons')
+              .select('*')
+              .eq('course_id', courseData.id)
+              .is('module_id', null)
+              .order('order_index')
+
+            if (lessonsNoModule) {
+              setLessonsWithoutModule(lessonsNoModule)
+            }
+          } else {
+            // Sin módulos, cargar todas las lecciones
+            const { data: allLessons } = await supabase
+              .from('lessons')
+              .select('*')
+              .eq('course_id', courseData.id)
+              .order('order_index')
+            
+            if (allLessons) {
+              setLessonsWithoutModule(allLessons)
+            }
+          }
+        } catch (err) {
+          console.error('Error cargando temario:', err)
+        } finally {
+          setLoadingLessons(false)
         }
 
       } catch (error) {
@@ -115,6 +178,18 @@ export default function ComprarCursoPage({ params }: { params: { cursoId: string
       avanzado: 'from-red-500 to-red-600'
     }
     return colors[difficulty] || colors.basico
+  }
+
+  const toggleModule = (moduleId: string) => {
+    setExpandedModules(prev => {
+      const newSet = new Set(prev)
+      if (newSet.has(moduleId)) {
+        newSet.delete(moduleId)
+      } else {
+        newSet.add(moduleId)
+      }
+      return newSet
+    })
   }
 
   if (loading) {
@@ -262,7 +337,7 @@ export default function ComprarCursoPage({ params }: { params: { cursoId: string
                   </div>
                 )}
 
-                <div>
+                <div className="mb-8">
                   <h2 className="text-2xl font-bold text-gray-900 mb-4">Este curso incluye:</h2>
                   <ul className="space-y-3">
                     <li className="flex items-start">
@@ -282,6 +357,170 @@ export default function ComprarCursoPage({ params }: { params: { cursoId: string
                       <span className="text-gray-700">Actualizaciones gratuitas</span>
                     </li>
                   </ul>
+                </div>
+
+                {/* Descripción completa */}
+                <div className="mb-8">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                    <BookOpen className="w-6 h-6 mr-2 text-forest" />
+                    Descripción del Curso
+                  </h2>
+                  <div 
+                    className="prose prose-sm max-w-none text-gray-700 leading-relaxed"
+                    dangerouslySetInnerHTML={{ 
+                      __html: curso.short_description || curso.description || 'No hay descripción disponible.' 
+                    }}
+                  />
+                </div>
+
+                {/* Temario del Curso */}
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                    <GraduationCap className="w-6 h-6 mr-2 text-forest" />
+                    Temario del Curso
+                  </h2>
+
+                  {loadingLessons ? (
+                    <div className="text-center py-8">
+                      <Loader2 className="w-8 h-8 animate-spin text-forest mx-auto mb-3" />
+                      <p className="text-gray-600">Cargando temario...</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {hasModules ? (
+                        <>
+                          {/* Vista con módulos */}
+                          {courseModules.map((courseModule, moduleIdx) => {
+                            const lessons = moduleLessons[courseModule.id] || []
+                            const isExpanded = expandedModules.has(courseModule.id)
+                            const totalDuration = lessons.reduce((sum, l) => sum + (l.duration_minutes || 0), 0)
+
+                            return (
+                              <div key={courseModule.id} className="border border-gray-200 rounded-lg overflow-hidden">
+                                {/* Header del Módulo */}
+                                <button
+                                  onClick={() => toggleModule(courseModule.id)}
+                                  className="w-full bg-gradient-to-r from-forest/5 to-sage/5 hover:from-forest/10 hover:to-sage/10 p-3 sm:p-4 flex items-center justify-between transition-colors"
+                                >
+                                  <div className="flex items-center gap-2 sm:gap-3">
+                                    <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-forest text-white rounded-full flex items-center justify-center font-bold text-xs sm:text-sm">
+                                      {moduleIdx + 1}
+                                    </div>
+                                    <div className="text-left">
+                                      <h4 className="font-bold text-gray-900 text-sm sm:text-base">{courseModule.title}</h4>
+                                      <p className="text-xs text-gray-600 mt-0.5">
+                                        {lessons.length} lección{lessons.length !== 1 ? 'es' : ''}
+                                        {totalDuration > 0 && ` • ${totalDuration} min`}
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <ChevronRight 
+                                    className={`w-4 h-4 sm:w-5 sm:h-5 text-gray-600 transition-transform flex-shrink-0 ${
+                                      isExpanded ? 'rotate-90' : ''
+                                    }`}
+                                  />
+                                </button>
+
+                                {/* Lecciones del módulo */}
+                                {isExpanded && (
+                                  <div className="bg-white divide-y divide-gray-100">
+                                    {lessons.map((lesson, lessonIdx) => (
+                                      <div
+                                        key={lesson.id}
+                                        className="flex items-start p-2.5 sm:p-3 hover:bg-gray-50 transition-colors"
+                                      >
+                                        <div className="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 bg-gray-100 rounded-full flex items-center justify-center mr-2 sm:mr-3 mt-0.5">
+                                          <span className="text-xs font-semibold text-gray-600">{lessonIdx + 1}</span>
+                                        </div>
+                                        <div className="flex-grow min-w-0">
+                                          <h5 className="text-xs sm:text-sm font-medium text-gray-900 break-words">{lesson.title}</h5>
+                                          {lesson.duration_minutes > 0 && (
+                                            <div className="flex items-center text-xs text-gray-500 mt-1">
+                                              <Clock className="w-3 h-3 mr-1 flex-shrink-0" />
+                                              <span>{lesson.duration_minutes} min</span>
+                                              {lesson.is_free_preview && (
+                                                <span className="ml-2 px-2 py-0.5 bg-gold/20 text-gold rounded-full font-medium text-xs">
+                                                  Vista previa gratuita
+                                                </span>
+                                              )}
+                                            </div>
+                                          )}
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            )
+                          })}
+
+                          {/* Lecciones sin módulo */}
+                          {lessonsWithoutModule.length > 0 && (
+                            <div className="border border-gray-200 rounded-lg overflow-hidden">
+                              <div className="bg-gray-50 p-3 sm:p-4">
+                                <h4 className="font-bold text-gray-900 text-sm">Lecciones adicionales</h4>
+                                <p className="text-xs text-gray-600 mt-0.5">
+                                  {lessonsWithoutModule.length} lección{lessonsWithoutModule.length !== 1 ? 'es' : ''}
+                                </p>
+                              </div>
+                              <div className="bg-white divide-y divide-gray-100">
+                                {lessonsWithoutModule.map((lesson, idx) => (
+                                  <div
+                                    key={lesson.id}
+                                    className="flex items-start p-2.5 sm:p-3 hover:bg-gray-50 transition-colors"
+                                  >
+                                    <div className="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 bg-gray-100 rounded-full flex items-center justify-center mr-2 sm:mr-3 mt-0.5">
+                                      <span className="text-xs font-semibold text-gray-600">{idx + 1}</span>
+                                    </div>
+                                    <div className="flex-grow min-w-0">
+                                      <h5 className="text-xs sm:text-sm font-medium text-gray-900 break-words">{lesson.title}</h5>
+                                      {lesson.duration_minutes > 0 && (
+                                        <div className="flex items-center text-xs text-gray-500 mt-1">
+                                          <Clock className="w-3 h-3 mr-1 flex-shrink-0" />
+                                          <span>{lesson.duration_minutes} min</span>
+                                          {lesson.is_free_preview && (
+                                            <span className="ml-2 px-2 py-0.5 bg-gold/20 text-gold rounded-full font-medium text-xs">
+                                              Vista previa gratuita
+                                            </span>
+                                          )}
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        /* Vista sin módulos (lista simple) */
+                        lessonsWithoutModule.map((lesson, idx) => (
+                          <div
+                            key={lesson.id}
+                            className="flex items-start bg-white border border-gray-200 rounded-lg p-3 sm:p-4 hover:border-forest/30 hover:shadow-sm transition-all"
+                          >
+                            <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-forest/10 rounded-full flex items-center justify-center mr-2 sm:mr-3">
+                              <span className="text-xs sm:text-sm font-bold text-forest">{idx + 1}</span>
+                            </div>
+                            <div className="flex-grow min-w-0">
+                              <h4 className="font-semibold text-gray-900 mb-1 text-sm sm:text-base break-words">{lesson.title}</h4>
+                              {lesson.duration_minutes > 0 && (
+                                <div className="flex items-center text-xs text-gray-500 flex-wrap">
+                                  <Clock className="w-3 h-3 mr-1 flex-shrink-0" />
+                                  <span>{lesson.duration_minutes} min</span>
+                                  {lesson.is_free_preview && (
+                                    <span className="ml-2 px-2 py-0.5 bg-gold/20 text-gold rounded-full font-medium text-xs">
+                                      Vista previa gratuita
+                                    </span>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
 
