@@ -42,6 +42,8 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
       // Verificar si está desbloqueada
       if (currentIndex >= 0 && lessonProgress[leccionActual.id]) {
         handleSelectLesson(nextLesson)
+        // Scroll al top de la página
+        window.scrollTo({ top: 0, behavior: 'smooth' })
       }
     }
   }
@@ -53,6 +55,8 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
     if (currentIndex > 0) {
       const previousLesson = lecciones[currentIndex - 1]
       handleSelectLesson(previousLesson)
+      // Scroll al top de la página
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }
 
@@ -221,6 +225,9 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
     
     // Lección desbloqueada
     setLeccionActual(lesson)
+    
+    // Scroll al top de la página
+    window.scrollTo({ top: 0, behavior: 'smooth' })
     
     // Determinar pestaña según contenido disponible
     if (lesson.video_url) {
@@ -686,32 +693,6 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                         )
                       })()}
                     </div>
-                  </div>
-                  
-                  {/* Navegación entre lecciones (móvil) */}
-                  <div className="mt-6 flex items-center justify-between gap-4 lg:hidden">
-                    {/* Lección anterior */}
-                    {lecciones.findIndex(l => l.id === leccionActual.id) > 0 && (
-                      <button
-                        onClick={goToPreviousLesson}
-                        className="flex-1 flex items-center justify-center gap-2 bg-white border-2 border-forest text-forest font-semibold py-3 px-4 rounded-lg hover:bg-forest/5 transition-all"
-                      >
-                        <ChevronLeft className="w-5 h-5" />
-                        <span className="hidden sm:inline">Anterior</span>
-                      </button>
-                    )}
-                    
-                    {/* Lección siguiente */}
-                    {lecciones.findIndex(l => l.id === leccionActual.id) < lecciones.length - 1 && (
-                      <button
-                        onClick={goToNextLesson}
-                        disabled={!lessonProgress[leccionActual.id]}
-                        className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-forest to-sage text-white font-semibold py-3 px-4 rounded-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        <span className="hidden sm:inline">Siguiente</span>
-                        <ChevronRight className="w-5 h-5" />
-                      </button>
-                    )}
                   </div>
                   
                   {/* Hint de swipe (solo móvil) */}
