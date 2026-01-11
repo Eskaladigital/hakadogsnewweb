@@ -634,7 +634,7 @@ export default function CursosPage() {
               <div 
                 className="prose prose-sm max-w-none text-gray-700 leading-relaxed"
                 dangerouslySetInnerHTML={{ 
-                  __html: selectedCourse.description || selectedCourse.short_description || 'No hay descripción disponible.' 
+                  __html: selectedCourse.short_description || selectedCourse.description || 'No hay descripción disponible.' 
                 }}
               />
             </div>
