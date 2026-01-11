@@ -65,8 +65,20 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
   })
 
   // Función para alternar expansión de módulos (lazy loading de lecciones)
-  const toggleModule = async (moduleId: string) => {
+  const toggleModule = async (moduleId: string, moduleIndex: number) => {
     const isExpanded = expandedModules[moduleId]
+    
+    // Verificar si el módulo está desbloqueado
+    if (moduleIndex > 0) {
+      const previousModule = modules[moduleIndex - 1]
+      const isUnlocked = previousModule.total_lessons > 0 && 
+                        previousModule.completed_lessons === previousModule.total_lessons
+      
+      if (!isUnlocked) {
+        // Módulo bloqueado - no expandir
+        return
+      }
+    }
     
     setExpandedModules(prev => ({
       ...prev,
@@ -688,47 +700,82 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                       const completionPercentage = module.total_lessons > 0 
                         ? Math.round((module.completed_lessons / module.total_lessons) * 100) 
                         : 0
+                      
+                      // Determinar si el módulo está bloqueado
+                      const isLocked = moduleIndex > 0 && (
+                        modules[moduleIndex - 1].total_lessons === 0 || 
+                        modules[moduleIndex - 1].completed_lessons < modules[moduleIndex - 1].total_lessons
+                      )
 
                       return (
-                        <div key={module.id} className="border border-gray-200 rounded-lg overflow-hidden">
+                        <div key={module.id} className={`border rounded-lg overflow-hidden ${
+                          isLocked 
+                            ? 'border-gray-300 bg-gray-50/50 opacity-70' 
+                            : 'border-gray-200'
+                        }`}>
                           {/* Header del Módulo (siempre visible) */}
                           <button
-                            onClick={() => toggleModule(module.id)}
-                            className="w-full p-4 bg-gray-50 hover:bg-gray-100 transition flex items-center justify-between group"
+                            onClick={() => toggleModule(module.id, moduleIndex)}
+                            disabled={isLocked}
+                            className={`w-full p-4 transition flex items-center justify-between group ${
+                              isLocked
+                                ? 'bg-gray-100 cursor-not-allowed'
+                                : 'bg-gray-50 hover:bg-gray-100'
+                            }`}
                           >
                             <div className="flex-1 text-left">
                               <div className="flex items-center gap-2 mb-1">
-                                <span className="text-xs font-bold text-forest uppercase">
+                                <span className={`text-xs font-bold uppercase ${
+                                  isLocked ? 'text-gray-400' : 'text-forest'
+                                }`}>
                                   Módulo {module.order_index}
                                 </span>
-                                {completionPercentage === 100 && (
+                                {isLocked && (
+                                  <Lock className="w-4 h-4 text-gray-400" />
+                                )}
+                                {!isLocked && completionPercentage === 100 && (
                                   <CheckCircle className="w-4 h-4 text-green-600" />
                                 )}
                               </div>
-                              <h4 className="font-bold text-gray-900 text-sm sm:text-base group-hover:text-forest transition">
+                              <h4 className={`font-bold text-sm sm:text-base transition ${
+                                isLocked 
+                                  ? 'text-gray-500' 
+                                  : 'text-gray-900 group-hover:text-forest'
+                              }`}>
                                 {module.title}
                               </h4>
                               <div className="flex items-center gap-3 mt-2 text-xs text-gray-500">
                                 <span>{module.total_lessons} lecciones</span>
                                 <span>•</span>
                                 <span>{module.duration_minutes} min</span>
-                                <span>•</span>
-                                <span className={completionPercentage === 100 ? 'text-green-600 font-semibold' : ''}>
-                                  {completionPercentage}% completado
-                                </span>
+                                {!isLocked && (
+                                  <>
+                                    <span>•</span>
+                                    <span className={completionPercentage === 100 ? 'text-green-600 font-semibold' : ''}>
+                                      {completionPercentage}% completado
+                                    </span>
+                                  </>
+                                )}
                               </div>
+                              {isLocked && (
+                                <p className="text-xs text-gray-500 mt-2 italic">
+                                  🔒 Completa el módulo anterior para desbloquear
+                                </p>
+                              )}
                             </div>
                             <div className="ml-3 flex-shrink-0">
-                              {isExpanded ? (
-                                <ChevronUp className="w-5 h-5 text-forest" />
-                              ) : (
-                                <ChevronDown className="w-5 h-5 text-gray-400 group-hover:text-forest transition" />
+                              {!isLocked && (
+                                isExpanded ? (
+                                  <ChevronUp className="w-5 h-5 text-forest" />
+                                ) : (
+                                  <ChevronDown className="w-5 h-5 text-gray-400 group-hover:text-forest transition" />
+                                )
                               )}
                             </div>
                           </button>
 
                           {/* Lecciones del Módulo (colapsables) */}
-                          {isExpanded && (
+                          {!isLocked && isExpanded && (
                             <div className="border-t border-gray-200 bg-white">
                               {isLoading ? (
                                 <div className="p-6 text-center">
