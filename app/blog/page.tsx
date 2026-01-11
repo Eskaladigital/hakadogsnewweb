@@ -3,14 +3,16 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Calendar, Clock, Eye, Search, Tag, Filter, Loader2, ArrowRight, TrendingUp, Star } from 'lucide-react'
-import { getPublishedBlogPosts, getAllBlogCategories, getFeaturedBlogPosts, searchBlogPosts } from '@/lib/supabase/blog'
+import { getPublishedBlogPosts, getAllBlogCategories, getFeaturedBlogPosts, searchBlogPosts, getBlogPostsByCategoryId, getCategoryPostCounts } from '@/lib/supabase/blog'
 import type { BlogPostWithCategory, BlogCategory } from '@/lib/supabase/blog'
 
 export default function BlogPage() {
   const [loading, setLoading] = useState(true)
   const [posts, setPosts] = useState<BlogPostWithCategory[]>([])
+  const [allPosts, setAllPosts] = useState<BlogPostWithCategory[]>([]) // Todos los posts para contar
   const [featuredPosts, setFeaturedPosts] = useState<BlogPostWithCategory[]>([])
   const [categories, setCategories] = useState<BlogCategory[]>([])
+  const [categoryPostCounts, setCategoryPostCounts] = useState<Record<string, number>>({})
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string>('')
   const [searching, setSearching] = useState(false)
@@ -22,15 +24,18 @@ export default function BlogPage() {
   const loadData = async () => {
     try {
       setLoading(true)
-      const [allPosts, featured, cats] = await Promise.all([
+      const [allPosts, featured, cats, counts] = await Promise.all([
         getPublishedBlogPosts(),
         getFeaturedBlogPosts(3),
-        getAllBlogCategories()
+        getAllBlogCategories(),
+        getCategoryPostCounts()
       ])
       
       setPosts(allPosts)
+      setAllPosts(allPosts) // Guardar todos los posts
       setFeaturedPosts(featured)
       setCategories(cats)
+      setCategoryPostCounts(counts)
     } catch (error) {
       console.error('Error cargando blog:', error)
     } finally {
@@ -57,13 +62,24 @@ export default function BlogPage() {
 
   const filterByCategory = async (categoryId: string) => {
     setSelectedCategory(categoryId)
+    setSearchQuery('') // Limpiar búsqueda
+    
     if (!categoryId) {
-      loadData()
+      // Si no hay categoría seleccionada, mostrar todos los posts
+      setPosts(allPosts)
       return
     }
 
-    const filtered = posts.filter(post => post.category_id === categoryId)
-    setPosts(filtered.length > 0 ? filtered : await getPublishedBlogPosts())
+    try {
+      setLoading(true)
+      const filtered = await getBlogPostsByCategoryId(categoryId)
+      setPosts(filtered)
+    } catch (error) {
+      console.error('Error filtrando por categoría:', error)
+      setPosts([])
+    } finally {
+      setLoading(false)
+    }
   }
 
   const formatDate = (dateString: string) => {
@@ -74,13 +90,13 @@ export default function BlogPage() {
     })
   }
 
-  // Calcular posts por categoría
+  // Calcular posts por categoría desde el conteo global
   const getCategoryPostCount = (categoryId: string) => {
-    return posts.filter(post => post.category_id === categoryId).length
+    return categoryPostCounts[categoryId] || 0
   }
 
-  // Obtener posts populares (ordenados por vistas)
-  const popularPosts = [...posts].sort((a, b) => b.views_count - a.views_count).slice(0, 5)
+  // Obtener posts populares (ordenados por vistas) desde todos los posts
+  const popularPosts = [...allPosts].sort((a, b) => b.views_count - a.views_count).slice(0, 5)
 
   if (loading) {
     return (
@@ -322,11 +338,14 @@ export default function BlogPage() {
                   <span className={`text-sm px-2 py-0.5 rounded-full ${
                     !selectedCategory ? 'bg-white/20' : 'bg-gray-200'
                   }`}>
-                    {posts.length}
+                    {allPosts.length}
                   </span>
                 </button>
                 {categories.map(category => {
                   const count = getCategoryPostCount(category.id)
+                  // Ocultar categorías sin posts
+                  if (count === 0) return null
+                  
                   return (
                     <button
                       key={category.id}

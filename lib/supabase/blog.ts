@@ -219,6 +219,46 @@ export async function getBlogPostsByCategory(categorySlug: string, limit?: numbe
   return data as BlogPostWithCategory[]
 }
 
+export async function getBlogPostsByCategoryId(categoryId: string, limit?: number) {
+  let query = (supabase as any)
+    .from('blog_posts')
+    .select(`
+      *,
+      category:blog_categories(*)
+    `)
+    .eq('status', 'published')
+    .eq('category_id', categoryId)
+    .order('published_at', { ascending: false })
+  
+  if (limit) {
+    query = query.limit(limit)
+  }
+  
+  const { data, error } = await query
+  
+  if (error) throw error
+  return data as BlogPostWithCategory[]
+}
+
+export async function getCategoryPostCounts() {
+  const { data, error } = await (supabase as any)
+    .from('blog_posts')
+    .select('category_id')
+    .eq('status', 'published')
+  
+  if (error) throw error
+  
+  // Contar posts por categoría
+  const counts: Record<string, number> = {}
+  data.forEach((post: any) => {
+    if (post.category_id) {
+      counts[post.category_id] = (counts[post.category_id] || 0) + 1
+    }
+  })
+  
+  return counts
+}
+
 export async function createBlogPost(post: Partial<BlogPost>) {
   const { data, error } = await (supabase as any)
     .from('blog_posts')
