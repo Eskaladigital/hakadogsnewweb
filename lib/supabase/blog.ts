@@ -62,7 +62,7 @@ export interface BlogComment {
 // ===== CATEGORÍAS =====
 
 export async function getAllBlogCategories(includeInactive = false) {
-  let query = supabase
+  let query = (supabase as any)
     .from('blog_categories')
     .select('*')
     .order('order_index', { ascending: true })
@@ -78,7 +78,7 @@ export async function getAllBlogCategories(includeInactive = false) {
 }
 
 export async function getBlogCategoryBySlug(slug: string) {
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('blog_categories')
     .select('*')
     .eq('slug', slug)
@@ -113,7 +113,7 @@ export async function updateBlogCategory(id: string, updates: Partial<BlogCatego
 }
 
 export async function deleteBlogCategory(id: string) {
-  const { error } = await supabase
+  const { error } = await (supabase as any)
     .from('blog_categories')
     .delete()
     .eq('id', id)
@@ -124,7 +124,7 @@ export async function deleteBlogCategory(id: string) {
 // ===== POSTS =====
 
 export async function getAllBlogPosts(status?: 'draft' | 'published' | 'archived') {
-  let query = supabase
+  let query = (supabase as any)
     .from('blog_posts')
     .select(`
       *,
@@ -143,7 +143,7 @@ export async function getAllBlogPosts(status?: 'draft' | 'published' | 'archived
 }
 
 export async function getPublishedBlogPosts(limit?: number) {
-  let query = supabase
+  let query = (supabase as any)
     .from('blog_posts')
     .select(`
       *,
@@ -163,7 +163,7 @@ export async function getPublishedBlogPosts(limit?: number) {
 }
 
 export async function getFeaturedBlogPosts(limit = 3) {
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('blog_posts')
     .select(`
       *,
@@ -199,7 +199,7 @@ export async function getBlogPostBySlug(slug: string) {
 }
 
 export async function getBlogPostsByCategory(categorySlug: string, limit?: number) {
-  let query = supabase
+  let query = (supabase as any)
     .from('blog_posts')
     .select(`
       *,
@@ -283,7 +283,7 @@ export async function searchBlogPosts(query: string, categoryId?: string, limit 
 // ===== TAGS =====
 
 export async function getAllBlogTags() {
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('blog_tags')
     .select('*')
     .order('name', { ascending: true })
@@ -293,7 +293,7 @@ export async function getAllBlogTags() {
 }
 
 export async function getPostTags(postId: string) {
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('blog_post_tags')
     .select(`
       tag:blog_tags(*)
@@ -301,7 +301,8 @@ export async function getPostTags(postId: string) {
     .eq('post_id', postId)
   
   if (error) throw error
-  return data.map(item => item.tag) as BlogTag[]
+  if (!data) return []
+  return data.map((item: any) => item.tag) as BlogTag[]
 }
 
 export async function addTagToPost(postId: string, tagId: string) {
@@ -313,7 +314,7 @@ export async function addTagToPost(postId: string, tagId: string) {
 }
 
 export async function removeTagFromPost(postId: string, tagId: string) {
-  const { error } = await supabase
+  const { error } = await (supabase as any)
     .from('blog_post_tags')
     .delete()
     .eq('post_id', postId)

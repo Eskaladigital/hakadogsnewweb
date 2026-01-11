@@ -301,7 +301,7 @@ export async function getUserCourseProgress(userId: string, courseId: string) {
 async function calculateCourseProgressDynamically(userId: string, courseId: string): Promise<UserCourseProgress | null> {
   try {
     // Obtener todas las lecciones del curso
-    const { data: lessons, error: lessonsError } = await supabase
+    const { data: lessons, error: lessonsError } = await (supabase as any)
       .from('course_lessons')
       .select('id')
       .eq('course_id', courseId)
@@ -317,16 +317,17 @@ async function calculateCourseProgressDynamically(userId: string, courseId: stri
         total_lessons: 0,
         completed: false,
         completed_at: null,
+        last_accessed: new Date().toISOString(),
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       }
     }
 
     const totalLessons = lessons.length
-    const lessonIds = lessons.map(l => l.id)
+    const lessonIds = lessons.map((l: any) => l.id)
 
     // Obtener progreso de todas las lecciones
-    const { data: progressData, error: progressError } = await supabase
+    const { data: progressData, error: progressError } = await (supabase as any)
       .from('user_lesson_progress')
       .select('lesson_id, completed')
       .eq('user_id', userId)
@@ -354,6 +355,7 @@ async function calculateCourseProgressDynamically(userId: string, courseId: stri
       total_lessons: totalLessons,
       completed: progressPercentage === 100,
       completed_at: progressPercentage === 100 ? new Date().toISOString() : null,
+      last_accessed: new Date().toISOString(),
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     }
