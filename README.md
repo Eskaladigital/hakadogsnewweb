@@ -1,33 +1,34 @@
 # 🐕 HAKADOGS - Plataforma de Educación Canina
 
-**Versión**: 2.1.0 ADVANCED  
+**Versión**: 2.2.0 MODULES & LESSONS  
 **Fecha Actualización**: Enero 2026  
-**Estado**: ✅ **LIVE EN HAKADOGS.COM - PERFORMANCE 95+ - BLOG PROFESIONAL**
+**Estado**: ✅ **LIVE EN HAKADOGS.COM - PERFORMANCE 95+ - SISTEMA DE MÓDULOS COMPLETO**
 
 ---
 
 ## 🎯 RESUMEN EJECUTIVO
 
-Hakadogs es una plataforma web completa para educación canina profesional que integra un sistema de cursos online, gestión de usuarios y panel administrativo. **Optimizada para máximo rendimiento (95+ Google PageSpeed) y experiencia móvil excepcional.**
+Hakadogs es una plataforma web completa para educación canina profesional que integra un sistema de cursos online con módulos organizados, gestión de usuarios y panel administrativo avanzado. **Optimizada para máximo rendimiento (95+ Google PageSpeed) y experiencia móvil excepcional.**
 
 ### 📊 Estadísticas del Proyecto
 
 ```
-📦 Archivos creados:        180+
-📄 Líneas de código:        ~48,000
-🎨 Componentes React:       45+
-📱 Páginas completas:       70+
-🗄️ Tablas SQL:              22+
-⚙️ Funciones utilidad:      85+
+📦 Archivos creados:        185+
+📄 Líneas de código:        ~52,000
+🎨 Componentes React:       47+
+📱 Páginas completas:       72+
+🗄️ Tablas SQL:              23+
+⚙️ Funciones utilidad:      90+
 📝 Posts blog:              Sistema completo de gestión
 🌍 Páginas localidades:     54 ciudades (dinámicas)
-📚 Sistema de cursos:       11+ cursos con lecciones + módulos
+📚 Sistema de cursos:       11+ cursos con lecciones + módulos ⭐ NUEVO
 🎓 Metodología BE HAKA:     Completa y documentada
 🤖 IA Integrada:            OpenAI para descripciones
 ⚡ Performance Score:       95+ Google PageSpeed
 🎯 Accesibilidad:           96/100 WCAG 2.1 AA
 📱 Mobile Optimized:        100% responsive + swipe gestures
 📰 Blog Profesional:        Layout 2 columnas + sidebar sticky
+🎯 Sistema de Módulos:      Organización jerárquica de lecciones ⭐ NUEVO
 ```
 
 ---
@@ -151,12 +152,15 @@ hakadogs-app/
 ### 📚 Sistema de Cursos
 - ✅ Curso gratuito descargable
 - ✅ 11+ cursos específicos de pago por problema concreto
-- ✅ Cada curso con múltiples lecciones
+- ✅ **Sistema de módulos jerárquico** (organización temática de lecciones) ⭐ NUEVO
+- ✅ Cada curso con múltiples lecciones organizadas en módulos
 - ✅ **Video por lección** (YouTube/Vimeo/Self-hosted)
 - ✅ **Audio por lección** (Soundcloud/Spotify/Self-hosted)
 - ✅ **Contenido HTML enriquecido** (TinyMCE con prose styling)
 - ✅ Recursos descargables por lección
 - ✅ **Sistema de progreso secuencial** (desbloqueo progresivo)
+- ✅ **Navegación entre módulos** con carga dinámica ⭐ NUEVO
+- ✅ **Breadcrumb jerárquico** tipo árbol (Curso > Módulo > Lección) ⭐ NUEVO
 - ✅ Dashboard "Mi Escuela" para alumnos
 - ✅ Carrito de compra
 - ✅ Proceso de pago
@@ -182,10 +186,22 @@ hakadogs-app/
 #### **Gestión de Cursos**
 - ✅ **Tabla de cursos con ordenación, paginación y búsqueda**
 - ✅ **Selector de items por página**
-- ✅ **Sistema de módulos**: Organiza lecciones en módulos temáticos
-- ✅ **Orden de pestañas**: Info → Módulos → Lecciones
-- ✅ **Asignación visual**: Dropdowns para asignar lecciones a módulos
-- ✅ **Sección "Lecciones sin asignar"** para organización fácil
+- ✅ **Sistema de módulos completo**: ⭐ NUEVO
+  - 📂 Organiza lecciones en módulos temáticos
+  - 🔢 Numeración automática (Módulo 1, 2, 3...)
+  - 📊 Contador de lecciones por módulo
+  - ↕️ Reordenamiento de módulos con drag & drop
+  - 🎯 Asignación de lecciones mediante desplegable
+- ✅ **Vista agrupada de lecciones**: ⭐ NUEVO
+  - 📋 Lecciones organizadas visualmente por módulos
+  - ⚠️ Sección "Sin asignar" con advertencias visuales
+  - 🏷️ Badges de estado (sin módulo, vista previa, etc.)
+  - 🔍 Fácil identificación de estructura del curso
+- ✅ **Sistema de advertencias inteligente**: ⭐ NUEVO
+  - ⚠️ Alertas para lecciones sin asignar a módulos
+  - 📊 Contador en sidebar de lecciones pendientes
+  - 🚨 Confirmación antes de guardar con lecciones sin asignar
+- ✅ **Orden de pestañas optimizado**: Info → Módulos → Lecciones
 - ✅ Crear cursos con múltiples lecciones
 - ✅ **Editor TinyMCE para descripción corta y contenido**
 - ✅ **Botón "Generar descripción" con IA (OpenAI)**
