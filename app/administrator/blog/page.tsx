@@ -665,9 +665,9 @@ export default function AdminBlogPage() {
                           </td>
                           <td className="px-4 py-4">
                             <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-gray-100">
-                              {post.featured_image ? (
+                              {post.featured_image_url ? (
                                 <Image
-                                  src={post.featured_image}
+                                  src={post.featured_image_url}
                                   alt={post.title}
                                   fill
                                   className="object-cover"
@@ -795,9 +795,9 @@ export default function AdminBlogPage() {
                   {paginatedPosts.map(post => (
                     <div key={post.id} className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition group">
                       <div className="relative h-48 bg-gray-100">
-                        {post.featured_image ? (
+                        {post.featured_image_url ? (
                           <Image
-                            src={post.featured_image}
+                            src={post.featured_image_url}
                             alt={post.title}
                             fill
                             className="object-cover group-hover:scale-105 transition"

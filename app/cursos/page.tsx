@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { BookOpen, Download, ShoppingCart, CheckCircle, Mail, Clock, Loader2, ChevronDown, MapPin, Phone, Calendar, ArrowRight } from 'lucide-react'
+import { BookOpen, Download, ShoppingCart, CheckCircle, Mail, Clock, Loader2, ChevronDown, MapPin, Phone, Calendar, ArrowRight, Info, GraduationCap, Target, PlayCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { getAllCourses } from '@/lib/supabase/courses'
-import type { Course } from '@/lib/supabase/courses'
+import { getAllCourses, getCourseLessons } from '@/lib/supabase/courses'
+import type { Course, Lesson } from '@/lib/supabase/courses'
+import Modal from '@/components/ui/Modal'
 
 export default function CursosPage() {
   const [email, setEmail] = useState('')
@@ -14,6 +15,9 @@ export default function CursosPage() {
   const [cursosGratuitos, setCursosGratuitos] = useState<Course[]>([])
   const [cursosPago, setCursosPago] = useState<Course[]>([])
   const [openFaq, setOpenFaq] = useState<number | null>(null)
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null)
+  const [courseLessons, setCourseLessons] = useState<Lesson[]>([])
+  const [loadingLessons, setLoadingLessons] = useState(false)
 
   useEffect(() => {
     async function loadCursos() {
@@ -94,6 +98,34 @@ export default function CursosPage() {
 
   const toggleFaq = (index: number) => {
     setOpenFaq(openFaq === index ? null : index)
+  }
+
+  const handleOpenCourseModal = async (curso: Course) => {
+    setSelectedCourse(curso)
+    setLoadingLessons(true)
+    
+    try {
+      const lessons = await getCourseLessons(curso.id)
+      setCourseLessons(lessons)
+    } catch (error) {
+      console.error('Error cargando lecciones:', error)
+      setCourseLessons([])
+    } finally {
+      setLoadingLessons(false)
+    }
+  }
+
+  const handleCloseCourseModal = () => {
+    setSelectedCourse(null)
+    setCourseLessons([])
+  }
+
+  // Función para truncar descripción
+  const truncateDescription = (html: string | null, maxLength: number = 150): string => {
+    if (!html) return ''
+    const text = html.replace(/<[^>]*>/g, '') // Eliminar HTML tags
+    if (text.length <= maxLength) return html
+    return text.substring(0, maxLength) + '...'
   }
 
   const faqs = [
@@ -278,10 +310,20 @@ export default function CursosPage() {
                       </div>
                       <h3 className="text-xl font-bold mb-2 text-gray-900">{curso.title}</h3>
                       <div 
-                        className="responsive-prose text-gray-600 text-sm prose max-w-none"
+                        className="responsive-prose text-gray-600 text-sm prose max-w-none line-clamp-3"
                         style={{ fontSize: 'clamp(0.75rem, 2vw, 0.875rem)' }}
-                        dangerouslySetInnerHTML={{ __html: curso.short_description || curso.description || '' }}
+                        dangerouslySetInnerHTML={{ 
+                          __html: truncateDescription(curso.short_description || curso.description, 150) 
+                        }}
                       />
+                      {/* Botón Ver más detalles */}
+                      <button
+                        onClick={() => handleOpenCourseModal(curso)}
+                        className="mt-3 flex items-center text-forest hover:text-forest-dark font-medium text-sm transition-colors"
+                      >
+                        <Info className="w-4 h-4 mr-1" />
+                        Ver más detalles
+                      </button>
                     </div>
 
                     {/* Contenido */}
@@ -464,6 +506,154 @@ export default function CursosPage() {
           </div>
         </div>
       </section>
+
+      {/* Modal de Detalles del Curso */}
+      {selectedCourse && (
+        <Modal
+          isOpen={!!selectedCourse}
+          onClose={handleCloseCourseModal}
+          title={selectedCourse.title}
+          size="lg"
+        >
+          <div className="space-y-6">
+            {/* Badges de información */}
+            <div className="flex flex-wrap gap-3">
+              <div className={`px-4 py-2 rounded-full text-sm font-semibold ${getDifficultyColor(selectedCourse.difficulty)}`}>
+                {getDifficultyLabel(selectedCourse.difficulty)}
+              </div>
+              <div className="px-4 py-2 rounded-full text-sm font-semibold bg-blue-100 text-blue-700 flex items-center">
+                <Clock className="w-4 h-4 mr-2" />
+                {selectedCourse.duration_minutes} minutos
+              </div>
+              <div className="px-4 py-2 rounded-full text-sm font-semibold bg-purple-100 text-purple-700 flex items-center">
+                <PlayCircle className="w-4 h-4 mr-2" />
+                {selectedCourse.total_lessons} lecciones
+              </div>
+            </div>
+
+            {/* Precio */}
+            <div className="bg-gradient-to-br from-forest/5 to-sage/5 rounded-xl p-6 border-2 border-forest/20">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600 mb-1">Precio del curso</p>
+                  <div className="flex items-baseline">
+                    <span className="text-4xl font-bold text-forest-dark">{selectedCourse.price.toFixed(2)}€</span>
+                    <span className="text-gray-600 ml-2">pago único</span>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">Acceso de por vida</p>
+                </div>
+                <button
+                  onClick={() => {
+                    handleCloseCourseModal()
+                    handleBuyCourse(selectedCourse.slug)
+                  }}
+                  className="bg-gradient-to-r from-forest to-sage text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-all flex items-center shadow-md hover:shadow-lg"
+                >
+                  <ShoppingCart className="w-5 h-5 mr-2" />
+                  Comprar Ahora
+                </button>
+              </div>
+            </div>
+
+            {/* Descripción completa */}
+            <div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center">
+                <BookOpen className="w-5 h-5 mr-2 text-forest" />
+                Descripción del Curso
+              </h3>
+              <div 
+                className="prose prose-sm max-w-none text-gray-700 leading-relaxed"
+                dangerouslySetInnerHTML={{ 
+                  __html: selectedCourse.description || selectedCourse.short_description || 'No hay descripción disponible.' 
+                }}
+              />
+            </div>
+
+            {/* Qué aprenderás */}
+            {selectedCourse.what_you_learn && selectedCourse.what_you_learn.length > 0 && (
+              <div>
+                <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                  <Target className="w-5 h-5 mr-2 text-forest" />
+                  Qué Aprenderás
+                </h3>
+                <div className="grid md:grid-cols-2 gap-3">
+                  {selectedCourse.what_you_learn.map((item, idx) => (
+                    <div key={idx} className="flex items-start bg-gray-50 rounded-lg p-3">
+                      <CheckCircle className="w-5 h-5 text-forest mr-3 flex-shrink-0 mt-0.5" />
+                      <span className="text-sm text-gray-700">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Temario - Listado de Lecciones */}
+            <div>
+              <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                <GraduationCap className="w-5 h-5 mr-2 text-forest" />
+                Temario del Curso
+              </h3>
+              
+              {loadingLessons ? (
+                <div className="text-center py-8">
+                  <Loader2 className="w-8 h-8 animate-spin text-forest mx-auto mb-2" />
+                  <p className="text-gray-600 text-sm">Cargando temario...</p>
+                </div>
+              ) : courseLessons.length === 0 ? (
+                <div className="bg-gray-50 rounded-lg p-6 text-center">
+                  <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                  <p className="text-gray-600">No hay lecciones disponibles aún.</p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {courseLessons.map((lesson, idx) => (
+                    <div
+                      key={lesson.id}
+                      className="flex items-start bg-white border border-gray-200 rounded-lg p-4 hover:border-forest/30 hover:shadow-sm transition-all"
+                    >
+                      <div className="flex-shrink-0 w-8 h-8 bg-forest/10 rounded-full flex items-center justify-center mr-3">
+                        <span className="text-sm font-bold text-forest">{idx + 1}</span>
+                      </div>
+                      <div className="flex-grow">
+                        <h4 className="font-semibold text-gray-900 mb-1">{lesson.title}</h4>
+                        {lesson.duration_minutes > 0 && (
+                          <div className="flex items-center text-xs text-gray-500">
+                            <Clock className="w-3 h-3 mr-1" />
+                            {lesson.duration_minutes} min
+                            {lesson.is_free_preview && (
+                              <span className="ml-2 px-2 py-0.5 bg-gold/20 text-gold rounded-full font-medium">
+                                Vista previa gratuita
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                      <PlayCircle className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* CTA Final */}
+            <div className="bg-gradient-to-br from-forest to-forest-dark rounded-xl p-6 text-white text-center">
+              <h4 className="text-xl font-bold mb-2">¿Listo para empezar?</h4>
+              <p className="text-white/90 mb-4">Obtén acceso instantáneo a todas las lecciones</p>
+              <button
+                onClick={() => {
+                  handleCloseCourseModal()
+                  handleBuyCourse(selectedCourse.slug)
+                }}
+                className="w-full bg-white text-forest font-bold py-3 px-6 rounded-lg hover:bg-white/90 transition-all flex items-center justify-center shadow-lg"
+              >
+                <ShoppingCart className="w-5 h-5 mr-2" />
+                Comprar Curso por {selectedCourse.price.toFixed(2)}€
+              </button>
+              <p className="text-xs text-white/70 mt-3">Acceso de por vida • Todas las actualizaciones incluidas</p>
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   )
 }
