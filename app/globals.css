@@ -239,6 +239,19 @@ body {
     padding-left: 0.25rem !important;
   }
   
+  /* Forzar que los li dentro de ul/ol se muestren como list-item */
+  .lesson-content ul > li,
+  .lesson-content.prose ul > li {
+    list-style: disc !important;
+    display: list-item !important;
+  }
+  
+  .lesson-content ol > li,
+  .lesson-content.prose ol > li {
+    list-style: decimal !important;
+    display: list-item !important;
+  }
+  
   /* Listas anidadas */
   .lesson-content ul ul,
   .lesson-content.prose ul ul {
