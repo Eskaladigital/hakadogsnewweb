@@ -501,3 +501,97 @@ export async function courseHasModules(courseId: string): Promise<boolean> {
 
   return (data?.length || 0) > 0
 }
+
+// ===== ADMIN: CRUD DE MÓDULOS =====
+
+/**
+ * Obtiene todos los módulos de un curso (para admin)
+ */
+export async function getCourseModules(courseId: string): Promise<CourseModule[]> {
+  const { data, error } = await supabase
+    .from('course_modules')
+    .select('*')
+    .eq('course_id', courseId)
+    .order('order_index', { ascending: true })
+
+  if (error) {
+    console.warn('Error obteniendo módulos:', error)
+    return []
+  }
+
+  return data as CourseModule[]
+}
+
+/**
+ * Crear un nuevo módulo
+ */
+export async function createModule(moduleData: {
+  course_id: string
+  title: string
+  description?: string
+  order_index: number
+}): Promise<CourseModule | null> {
+  const { data, error } = await (supabase as any)
+    .from('course_modules')
+    .insert([moduleData])
+    .select()
+    .single()
+
+  if (error) {
+    console.error('Error creando módulo:', error)
+    return null
+  }
+
+  return data as CourseModule
+}
+
+/**
+ * Actualizar un módulo
+ */
+export async function updateModule(moduleId: string, updates: Partial<CourseModule>): Promise<boolean> {
+  const { error } = await (supabase as any)
+    .from('course_modules')
+    .update(updates)
+    .eq('id', moduleId)
+
+  if (error) {
+    console.error('Error actualizando módulo:', error)
+    return false
+  }
+
+  return true
+}
+
+/**
+ * Eliminar un módulo (las lecciones quedan sin módulo)
+ */
+export async function deleteModule(moduleId: string): Promise<boolean> {
+  const { error } = await supabase
+    .from('course_modules')
+    .delete()
+    .eq('id', moduleId)
+
+  if (error) {
+    console.error('Error eliminando módulo:', error)
+    return false
+  }
+
+  return true
+}
+
+/**
+ * Asignar una lección a un módulo
+ */
+export async function assignLessonToModule(lessonId: string, moduleId: string | null): Promise<boolean> {
+  const { error } = await (supabase as any)
+    .from('course_lessons')
+    .update({ module_id: moduleId })
+    .eq('id', lessonId)
+
+  if (error) {
+    console.error('Error asignando lección a módulo:', error)
+    return false
+  }
+
+  return true
+}

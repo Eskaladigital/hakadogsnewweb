@@ -5,8 +5,8 @@ import Link from 'next/link'
 import { useRouter, useParams } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { ArrowLeft, Save, Loader2, Sparkles, Plus, X } from 'lucide-react'
-import { getCourseById, updateCourse, getCourseLessons, getLessonResources, updateLesson, deleteLesson, createLesson, createResource, bulkCreateResources, bulkCreateLessons } from '@/lib/supabase/courses'
-import type { Course, Lesson, Resource } from '@/lib/supabase/courses'
+import { getCourseById, updateCourse, getCourseLessons, getLessonResources, updateLesson, deleteLesson, createLesson, createResource, bulkCreateResources, bulkCreateLessons, getCourseModules, createModule, updateModule, deleteModule, assignLessonToModule } from '@/lib/supabase/courses'
+import type { Course, Lesson, Resource, CourseModule } from '@/lib/supabase/courses'
 import Toast from '@/components/ui/Toast'
 
 const LessonsManager = dynamic(() => import('@/components/admin/LessonsManager'), {
@@ -39,7 +39,7 @@ export default function EditarCursoPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [generatingDescription, setGeneratingDescription] = useState(false)
-  const [activeTab, setActiveTab] = useState<'info' | 'lessons'>('info')
+  const [activeTab, setActiveTab] = useState<'info' | 'lessons' | 'modules'>('info')
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null)
   
   const [formData, setFormData] = useState({
@@ -57,6 +57,7 @@ export default function EditarCursoPage() {
   })
 
   const [lessons, setLessons] = useState<LessonWithResources[]>([])
+  const [modules, setModules] = useState<CourseModule[]>([])
 
   useEffect(() => {
     loadCourseData()
@@ -106,6 +107,10 @@ export default function EditarCursoPage() {
       )
 
       setLessons(lessonsWithResources)
+
+      // Cargar módulos
+      const courseModules = await getCourseModules(cursoId)
+      setModules(courseModules)
     } catch (error) {
       console.error('Error cargando curso:', error)
       setToast({ message: 'Error al cargar el curso', type: 'error' })
@@ -411,10 +416,21 @@ export default function EditarCursoPage() {
                     >
                       2. Lecciones ({lessons.length})
                     </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('modules')}
+                      className={`flex-1 py-4 px-6 font-semibold transition ${
+                        activeTab === 'modules'
+                          ? 'bg-forest/10 text-forest border-b-2 border-forest'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                      }`}
+                    >
+                      3. Módulos ({modules.length})
+                    </button>
                   </div>
 
                   <div className="p-8">
-                    {activeTab === 'info' ? (
+                    {activeTab === 'info' && (
                       <div className="space-y-6">
                         <div>
                           <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -513,7 +529,9 @@ export default function EditarCursoPage() {
                           </button>
                         </div>
                       </div>
-                    ) : (
+                    )}
+
+                    {activeTab === 'lessons' && (
                       <LessonsManager 
                         lessons={lessons.map(l => ({
                           id: l.id,
@@ -573,6 +591,63 @@ export default function EditarCursoPage() {
                             } as LessonWithResources
                           }))
                         }} 
+                      />
+                    )}
+
+                    {activeTab === 'modules' && (
+                      <ModulesManager
+                        courseId={cursoId}
+                        modules={modules}
+                        lessons={lessons}
+                        onModulesChange={setModules}
+                        onLessonsChange={setLessons}
+                        onCreateModule={async (title, description) => {
+                          const newModule = await createModule({
+                            course_id: cursoId,
+                            title,
+                            description,
+                            order_index: modules.length + 1
+                          })
+                          if (newModule) {
+                            setModules([...modules, newModule])
+                            setToast({ message: 'Módulo creado exitosamente', type: 'success' })
+                          } else {
+                            setToast({ message: 'Error al crear módulo', type: 'error' })
+                          }
+                        }}
+                        onUpdateModule={async (moduleId, title, description) => {
+                          const success = await updateModule(moduleId, { title, description })
+                          if (success) {
+                            setModules(modules.map(m => 
+                              m.id === moduleId ? { ...m, title, description } : m
+                            ))
+                            setToast({ message: 'Módulo actualizado exitosamente', type: 'success' })
+                          } else {
+                            setToast({ message: 'Error al actualizar módulo', type: 'error' })
+                          }
+                        }}
+                        onDeleteModule={async (moduleId) => {
+                          const success = await deleteModule(moduleId)
+                          if (success) {
+                            setModules(modules.filter(m => m.id !== moduleId))
+                            // Recargar lecciones para actualizar el module_id = null
+                            await loadCourseData()
+                            setToast({ message: 'Módulo eliminado exitosamente', type: 'success' })
+                          } else {
+                            setToast({ message: 'Error al eliminar módulo', type: 'error' })
+                          }
+                        }}
+                        onAssignLesson={async (lessonId, moduleId) => {
+                          const success = await assignLessonToModule(lessonId, moduleId)
+                          if (success) {
+                            setLessons(lessons.map(l =>
+                              l.id === lessonId ? { ...l, module_id: moduleId } : l
+                            ))
+                            setToast({ message: 'Lección asignada exitosamente', type: 'success' })
+                          } else {
+                            setToast({ message: 'Error al asignar lección', type: 'error' })
+                          }
+                        }}
                       />
                     )}
                   </div>
