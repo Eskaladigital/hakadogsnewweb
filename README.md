@@ -574,6 +574,36 @@ Este proyecto es propiedad privada de Hakadogs y no puede ser reproducido, distr
 
 ---
 
+## 🔧 TROUBLESHOOTING
+
+### ❌ Error 500 al Subir Imágenes al Blog
+
+**Síntoma:** Error `500 (Internal Server Error)` al intentar subir imágenes en el panel de administración del blog.
+
+**Solución Rápida:** ⚡
+
+1. **Ir a Supabase Dashboard** → Tu proyecto
+2. **Verificar Storage** → Debe existir bucket `blog-images` (público)
+3. **Ejecutar SQL:** 
+   ```bash
+   # En SQL Editor, ejecutar:
+   supabase/SOLUCION_AUTOMATICA.sql
+   ```
+4. **Reiniciar sesión** en la aplicación
+5. **Intentar subir imagen** ✅
+
+**Scripts disponibles:**
+- `supabase/VERIFICAR_PERMISOS_ADMIN.sql` - Diagnóstico detallado
+- `supabase/SOLUCION_AUTOMATICA.sql` - ⭐ Solución completa (ejecutar estando autenticado)
+- `supabase/SOLUCION_ERROR_500_STORAGE.md` - Guía detallada paso a paso
+- `supabase/SOLUCION_RAPIDA.md` - Guía express
+
+**Causa:** Falta configuración de políticas RLS o rol de administrador.
+
+**Documentación completa:** Ver `supabase/SOLUCION_ERROR_500_STORAGE.md`
+
+---
+
 ## 📞 SOPORTE
 
 Para cualquier duda o problema:

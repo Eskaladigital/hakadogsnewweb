@@ -274,6 +274,7 @@ export default function EditarCursoPage() {
           content: lesson.content,
           order_index: lessonIndexInOriginalArray,
           duration_minutes: lesson.duration_minutes,
+          module_id: lesson.module_id || null,
           video_url: lesson.videoUrl || null,
           video_provider: lesson.videoUrl ? (lesson.videoProvider as any) : null,
           audio_url: lesson.audioUrl || null,
@@ -323,6 +324,7 @@ export default function EditarCursoPage() {
           content: lesson.content,
           order_index: updatedLessons.length + index,
           duration_minutes: lesson.duration_minutes,
+          module_id: lesson.module_id || null,
           video_url: lesson.videoUrl || null,
           video_provider: lesson.videoUrl ? (lesson.videoProvider as any) : null,
           audio_url: lesson.audioUrl || null,
@@ -550,6 +552,7 @@ export default function EditarCursoPage() {
                           audioUrl: l.audioUrl || '',
                           audioProvider: l.audioProvider || '',
                           isFreePreview: l.isFreePreview || false,
+                          module_id: l.module_id || null,
                           resources: l.resources.map(r => ({
                             id: r.id,
                             title: r.title,
@@ -558,13 +561,15 @@ export default function EditarCursoPage() {
                             fileSize: r.file_size || 0
                           })),
                           isExpanded: l.isExpanded || false
-                        }))} 
+                        }))}
+                        modules={modules}
                         onChange={(updatedLessons) => {
                           setLessons(updatedLessons.map((ul, index) => {
                             const existingLesson = lessons.find(el => el.id === ul.id) || lessons[index]
                             return {
                               id: existingLesson?.id || ul.id,
                               course_id: existingLesson?.course_id || cursoId,
+                              module_id: ul.module_id || null,
                               title: ul.title,
                               slug: existingLesson?.slug || '',
                               content: ul.content,

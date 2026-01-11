@@ -75,26 +75,45 @@ export default function MediaLibrary({ onSelect, onClose, currentImage }: MediaL
 
     try {
       const uploadPromises = Array.from(files).map(async (file) => {
+        // Validar tipo de archivo
+        const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif']
+        if (!validTypes.includes(file.type)) {
+          throw new Error(`Tipo de archivo no válido: ${file.type}. Solo se permiten imágenes JPG, PNG, WEBP y GIF.`)
+        }
+
+        // Validar tamaño (máximo 10MB)
+        const maxSize = 10 * 1024 * 1024 // 10MB
+        if (file.size > maxSize) {
+          throw new Error(`El archivo ${file.name} es demasiado grande. Máximo: 10MB`)
+        }
+
         const fileExt = file.name.split('.').pop()
         const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
 
-        const { error } = await supabase.storage
+        const { error, data } = await supabase.storage
           .from('blog-images')
           .upload(fileName, file, {
             cacheControl: '3600',
-            upsert: false
+            upsert: false,
+            contentType: file.type
           })
 
-        if (error) throw error
+        if (error) {
+          console.error('Supabase upload error:', error)
+          throw new Error(error.message || 'Error al subir la imagen')
+        }
+        
         return fileName
       })
 
       await Promise.all(uploadPromises)
       await loadImages()
+      alert('✅ Imágenes subidas correctamente')
       
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error uploading:', error)
-      alert('Error al subir las imágenes')
+      const errorMessage = error.message || 'Error desconocido al subir las imágenes'
+      alert(`❌ Error al subir las imágenes:\n\n${errorMessage}\n\nVerifica que:\n1. El bucket 'blog-images' existe\n2. Tienes rol de administrador\n3. Las políticas RLS están configuradas`)
     } finally {
       setUploading(false)
     }

@@ -32,31 +32,150 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
   const contentRef = useRef<HTMLDivElement>(null)
 
   // Funciones para navegación con gestos
-  const goToNextLesson = () => {
+  const goToNextLesson = async () => {
     if (!leccionActual) return
     
-    const currentIndex = lecciones.findIndex(l => l.id === leccionActual.id)
-    if (currentIndex < lecciones.length - 1) {
-      const nextLesson = lecciones[currentIndex + 1]
+    if (hasModules) {
+      // NAVEGACIÓN CON MÓDULOS: permitir avanzar al siguiente módulo
+      const currentModuleIndex = modules.findIndex(module => {
+        const lessons = moduleLessons[module.id] || []
+        return lessons.some(l => l.id === leccionActual.id)
+      })
       
-      // Verificar si está desbloqueada
-      if (currentIndex >= 0 && lessonProgress[leccionActual.id]) {
+      if (currentModuleIndex === -1) return
+      
+      const currentModule = modules[currentModuleIndex]
+      const currentModuleLessons = moduleLessons[currentModule.id] || []
+      const currentLessonIndex = currentModuleLessons.findIndex(l => l.id === leccionActual.id)
+      
+      // Verificar si la lección actual está completada
+      if (!lessonProgress[leccionActual.id]) return
+      
+      // ¿Hay una siguiente lección en el módulo actual?
+      if (currentLessonIndex < currentModuleLessons.length - 1) {
+        const nextLesson = currentModuleLessons[currentLessonIndex + 1]
         handleSelectLesson(nextLesson)
-        // Scroll al top de la página
         window.scrollTo({ top: 0, behavior: 'smooth' })
+      } 
+      // ¿Es la última lección del módulo? → Ir al siguiente módulo
+      else if (currentModuleIndex < modules.length - 1) {
+        const nextModule = modules[currentModuleIndex + 1]
+        
+        // Expandir el siguiente módulo si no está expandido
+        if (!expandedModules[nextModule.id]) {
+          setExpandedModules(prev => ({ ...prev, [nextModule.id]: true }))
+        }
+        
+        // Cargar lecciones del siguiente módulo si no están cargadas
+        let nextModuleLessons = moduleLessons[nextModule.id]
+        if (!nextModuleLessons) {
+          setModuleLoading(prev => ({ ...prev, [nextModule.id]: true }))
+          try {
+            nextModuleLessons = await getLessonsByModule(nextModule.id)
+            setModuleLessons(prev => ({
+              ...prev,
+              [nextModule.id]: nextModuleLessons
+            }))
+            
+            // Cargar progreso de las nuevas lecciones
+            if (userId && nextModuleLessons.length > 0) {
+              const lessonIds = nextModuleLessons.map(l => l.id)
+              const progressMap = await getUserLessonsProgressBulk(userId, lessonIds)
+              setLessonProgress(prev => ({ ...prev, ...progressMap }))
+            }
+          } catch (error) {
+            console.error('Error cargando siguiente módulo:', error)
+            return
+          } finally {
+            setModuleLoading(prev => ({ ...prev, [nextModule.id]: false }))
+          }
+        }
+        
+        // Navegar a la primera lección del siguiente módulo
+        if (nextModuleLessons && nextModuleLessons.length > 0) {
+          handleSelectLesson(nextModuleLessons[0])
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+        }
+      }
+    } else {
+      // NAVEGACIÓN SIN MÓDULOS (original)
+      const currentIndex = lecciones.findIndex(l => l.id === leccionActual.id)
+      if (currentIndex < lecciones.length - 1) {
+        const nextLesson = lecciones[currentIndex + 1]
+        
+        // Verificar si está desbloqueada
+        if (currentIndex >= 0 && lessonProgress[leccionActual.id]) {
+          handleSelectLesson(nextLesson)
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+        }
       }
     }
   }
 
-  const goToPreviousLesson = () => {
+  const goToPreviousLesson = async () => {
     if (!leccionActual) return
     
-    const currentIndex = lecciones.findIndex(l => l.id === leccionActual.id)
-    if (currentIndex > 0) {
-      const previousLesson = lecciones[currentIndex - 1]
-      handleSelectLesson(previousLesson)
-      // Scroll al top de la página
-      window.scrollTo({ top: 0, behavior: 'smooth' })
+    if (hasModules) {
+      // NAVEGACIÓN CON MÓDULOS: permitir retroceder al módulo anterior
+      const currentModuleIndex = modules.findIndex(module => {
+        const lessons = moduleLessons[module.id] || []
+        return lessons.some(l => l.id === leccionActual.id)
+      })
+      
+      if (currentModuleIndex === -1) return
+      
+      const currentModule = modules[currentModuleIndex]
+      const currentModuleLessons = moduleLessons[currentModule.id] || []
+      const currentLessonIndex = currentModuleLessons.findIndex(l => l.id === leccionActual.id)
+      
+      // ¿Hay una lección anterior en el módulo actual?
+      if (currentLessonIndex > 0) {
+        const previousLesson = currentModuleLessons[currentLessonIndex - 1]
+        handleSelectLesson(previousLesson)
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
+      // ¿Es la primera lección del módulo? → Ir al módulo anterior
+      else if (currentModuleIndex > 0) {
+        const previousModule = modules[currentModuleIndex - 1]
+        
+        // Expandir el módulo anterior si no está expandido
+        if (!expandedModules[previousModule.id]) {
+          setExpandedModules(prev => ({ ...prev, [previousModule.id]: true }))
+        }
+        
+        // Cargar lecciones del módulo anterior si no están cargadas
+        let previousModuleLessons = moduleLessons[previousModule.id]
+        if (!previousModuleLessons) {
+          setModuleLoading(prev => ({ ...prev, [previousModule.id]: true }))
+          try {
+            previousModuleLessons = await getLessonsByModule(previousModule.id)
+            setModuleLessons(prev => ({
+              ...prev,
+              [previousModule.id]: previousModuleLessons
+            }))
+          } catch (error) {
+            console.error('Error cargando módulo anterior:', error)
+            return
+          } finally {
+            setModuleLoading(prev => ({ ...prev, [previousModule.id]: false }))
+          }
+        }
+        
+        // Navegar a la ÚLTIMA lección del módulo anterior
+        if (previousModuleLessons && previousModuleLessons.length > 0) {
+          const lastLesson = previousModuleLessons[previousModuleLessons.length - 1]
+          handleSelectLesson(lastLesson)
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+        }
+      }
+    } else {
+      // NAVEGACIÓN SIN MÓDULOS (original)
+      const currentIndex = lecciones.findIndex(l => l.id === leccionActual.id)
+      if (currentIndex > 0) {
+        const previousLesson = lecciones[currentIndex - 1]
+        handleSelectLesson(previousLesson)
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
     }
   }
 
@@ -505,46 +624,132 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
           <div className="max-w-full lg:max-w-7xl mx-auto">
             <div className="flex items-center justify-between">
               {/* Flecha Anterior */}
-              {lecciones.findIndex(l => l.id === leccionActual.id) > 0 ? (
-                <button
-                  onClick={goToPreviousLesson}
-                  className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-forest hover:bg-gray-50 rounded-lg transition-all group"
-                >
-                  <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-                  <span className="text-sm font-medium">Anterior</span>
-                </button>
-              ) : (
-                <div></div>
-              )}
+              {(() => {
+                if (hasModules) {
+                  // Navegación con módulos
+                  const currentModuleIndex = modules.findIndex(module => {
+                    const lessons = moduleLessons[module.id] || []
+                    return lessons.some(l => l.id === leccionActual.id)
+                  })
+                  
+                  if (currentModuleIndex === -1) return <div></div>
+                  
+                  const currentModule = modules[currentModuleIndex]
+                  const currentModuleLessons = moduleLessons[currentModule.id] || []
+                  const currentLessonIndex = currentModuleLessons.findIndex(l => l.id === leccionActual.id)
+                  
+                  // Verificar si hay lección anterior en el módulo actual o en el anterior
+                  const hasPreviousInModule = currentLessonIndex > 0
+                  const hasPreviousModule = currentModuleIndex > 0
+                  const canGoPrevious = hasPreviousInModule || hasPreviousModule
+                  
+                  if (!canGoPrevious) {
+                    return <div></div>
+                  }
+                  
+                  return (
+                    <button
+                      onClick={goToPreviousLesson}
+                      className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-forest hover:bg-gray-50 rounded-lg transition-all group"
+                    >
+                      <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+                      <span className="text-sm font-medium">Anterior</span>
+                    </button>
+                  )
+                } else {
+                  // Navegación sin módulos (original)
+                  const hasPrevious = lecciones.findIndex(l => l.id === leccionActual.id) > 0
+                  
+                  if (!hasPrevious) {
+                    return <div></div>
+                  }
+                  
+                  return (
+                    <button
+                      onClick={goToPreviousLesson}
+                      className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-forest hover:bg-gray-50 rounded-lg transition-all group"
+                    >
+                      <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+                      <span className="text-sm font-medium">Anterior</span>
+                    </button>
+                  )
+                }
+              })()}
               
               {/* Flecha Siguiente */}
               {(() => {
-                const currentIndex = lecciones.findIndex(l => l.id === leccionActual.id)
-                const canGoNext = currentIndex < lecciones.length - 1 && lessonProgress[leccionActual.id]
-                const isLastLesson = currentIndex >= lecciones.length - 1
-                
-                if (isLastLesson) {
-                  return <div></div>
+                if (hasModules) {
+                  // Navegación con módulos
+                  const currentModuleIndex = modules.findIndex(module => {
+                    const lessons = moduleLessons[module.id] || []
+                    return lessons.some(l => l.id === leccionActual.id)
+                  })
+                  
+                  if (currentModuleIndex === -1) return <div></div>
+                  
+                  const currentModule = modules[currentModuleIndex]
+                  const currentModuleLessons = moduleLessons[currentModule.id] || []
+                  const currentLessonIndex = currentModuleLessons.findIndex(l => l.id === leccionActual.id)
+                  
+                  // Verificar si hay siguiente lección en el módulo actual
+                  const hasNextInModule = currentLessonIndex < currentModuleLessons.length - 1
+                  // Verificar si hay siguiente módulo
+                  const hasNextModule = currentModuleIndex < modules.length - 1
+                  
+                  const canGoNext = lessonProgress[leccionActual.id] && (hasNextInModule || hasNextModule)
+                  const isLastOverall = !hasNextInModule && !hasNextModule
+                  
+                  if (isLastOverall) {
+                    return <div></div>
+                  }
+                  
+                  return (
+                    <button
+                      onClick={goToNextLesson}
+                      disabled={!canGoNext}
+                      className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all group ${
+                        canGoNext 
+                          ? 'text-forest hover:bg-forest/5' 
+                          : 'text-gray-400 cursor-not-allowed'
+                      }`}
+                    >
+                      <span className="text-sm font-medium">Siguiente</span>
+                      {canGoNext ? (
+                        <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                      ) : (
+                        <Lock className="w-4 h-4" />
+                      )}
+                    </button>
+                  )
+                } else {
+                  // Navegación sin módulos (original)
+                  const currentIndex = lecciones.findIndex(l => l.id === leccionActual.id)
+                  const canGoNext = currentIndex < lecciones.length - 1 && lessonProgress[leccionActual.id]
+                  const isLastLesson = currentIndex >= lecciones.length - 1
+                  
+                  if (isLastLesson) {
+                    return <div></div>
+                  }
+                  
+                  return (
+                    <button
+                      onClick={goToNextLesson}
+                      disabled={!canGoNext}
+                      className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all group ${
+                        canGoNext 
+                          ? 'text-forest hover:bg-forest/5' 
+                          : 'text-gray-400 cursor-not-allowed'
+                      }`}
+                    >
+                      <span className="text-sm font-medium">Siguiente</span>
+                      {canGoNext ? (
+                        <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                      ) : (
+                        <Lock className="w-4 h-4" />
+                      )}
+                    </button>
+                  )
                 }
-                
-                return (
-                  <button
-                    onClick={goToNextLesson}
-                    disabled={!canGoNext}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all group ${
-                      canGoNext 
-                        ? 'text-forest hover:bg-forest/5' 
-                        : 'text-gray-400 cursor-not-allowed'
-                    }`}
-                  >
-                    <span className="text-sm font-medium">Siguiente</span>
-                    {canGoNext ? (
-                      <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                    ) : (
-                      <Lock className="w-4 h-4" />
-                    )}
-                  </button>
-                )
               })()}
             </div>
           </div>
@@ -743,62 +948,162 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                   <div className="mt-6 sm:mt-8 pt-6 border-t border-gray-200">
                     <div className="flex items-center justify-between gap-4">
                       {(() => {
-                        const currentIndex = lecciones.findIndex(l => l.id === leccionActual.id)
-                        const previousLesson = currentIndex > 0 ? lecciones[currentIndex - 1] : null
-                        const nextLesson = currentIndex < lecciones.length - 1 ? lecciones[currentIndex + 1] : null
-                        const canGoNext = lessonProgress[leccionActual.id] && nextLesson
-                        
-                        return (
-                          <>
-                            {/* Botón Anterior */}
-                            {previousLesson ? (
-                              <button
-                                onClick={goToPreviousLesson}
-                                className="flex-1 flex items-center justify-start gap-2 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all group"
-                              >
-                                <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-                                <div className="text-left">
-                                  <p className="text-xs text-gray-500 font-medium">Anterior</p>
-                                  <p className="text-sm font-semibold line-clamp-1">{previousLesson.title}</p>
-                                </div>
-                              </button>
-                            ) : (
-                              <div className="flex-1"></div>
-                            )}
+                        if (hasModules) {
+                          // NAVEGACIÓN CON MÓDULOS
+                          const currentModuleIndex = modules.findIndex(module => {
+                            const lessons = moduleLessons[module.id] || []
+                            return lessons.some(l => l.id === leccionActual.id)
+                          })
+                          
+                          if (currentModuleIndex === -1) return null
+                          
+                          const currentModule = modules[currentModuleIndex]
+                          const currentModuleLessons = moduleLessons[currentModule.id] || []
+                          const currentLessonIndex = currentModuleLessons.findIndex(l => l.id === leccionActual.id)
+                          
+                          // Determinar lección anterior
+                          let previousLesson = null
+                          if (currentLessonIndex > 0) {
+                            // Hay lección anterior en el mismo módulo
+                            previousLesson = currentModuleLessons[currentLessonIndex - 1]
+                          } else if (currentModuleIndex > 0) {
+                            // Es la primera del módulo, buscar en el módulo anterior
+                            const previousModule = modules[currentModuleIndex - 1]
+                            const previousModuleLessons = moduleLessons[previousModule.id] || []
+                            if (previousModuleLessons.length > 0) {
+                              previousLesson = previousModuleLessons[previousModuleLessons.length - 1]
+                            }
+                          }
+                          
+                          // Determinar lección siguiente
+                          let nextLesson = null
+                          let nextLessonTitle = ''
+                          const hasNextInModule = currentLessonIndex < currentModuleLessons.length - 1
+                          const hasNextModule = currentModuleIndex < modules.length - 1
+                          
+                          if (hasNextInModule) {
+                            // Hay siguiente lección en el mismo módulo
+                            nextLesson = currentModuleLessons[currentLessonIndex + 1]
+                            nextLessonTitle = nextLesson.title
+                          } else if (hasNextModule) {
+                            // Es la última del módulo, mostrar que sigue otro módulo
+                            const nextModule = modules[currentModuleIndex + 1]
+                            nextLessonTitle = `Módulo ${nextModule.order_index}: ${nextModule.title}`
+                          }
+                          
+                          const canGoNext = lessonProgress[leccionActual.id] && (hasNextInModule || hasNextModule)
+                          const isLastOverall = !hasNextInModule && !hasNextModule
+                          
+                          return (
+                            <>
+                              {/* Botón Anterior */}
+                              {previousLesson ? (
+                                <button
+                                  onClick={goToPreviousLesson}
+                                  className="flex-1 flex items-center justify-start gap-2 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all group"
+                                >
+                                  <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+                                  <div className="text-left">
+                                    <p className="text-xs text-gray-500 font-medium">Anterior</p>
+                                    <p className="text-sm font-semibold line-clamp-1">{previousLesson.title}</p>
+                                  </div>
+                                </button>
+                              ) : (
+                                <div className="flex-1"></div>
+                              )}
 
-                            {/* Botón Siguiente */}
-                            {nextLesson ? (
-                              <button
-                                onClick={goToNextLesson}
-                                disabled={!canGoNext}
-                                className={`flex-1 flex items-center justify-end gap-2 px-4 py-3 rounded-lg transition-all group ${
-                                  canGoNext 
-                                    ? 'bg-gradient-to-r from-forest to-sage text-white hover:opacity-90' 
-                                    : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                }`}
-                              >
-                                <div className="text-right">
-                                  <p className={`text-xs font-medium ${canGoNext ? 'text-white/80' : 'text-gray-400'}`}>
-                                    {canGoNext ? 'Siguiente' : 'Completa esta lección'}
-                                  </p>
-                                  <p className="text-sm font-semibold line-clamp-1">{nextLesson.title}</p>
+                              {/* Botón Siguiente */}
+                              {!isLastOverall ? (
+                                <button
+                                  onClick={goToNextLesson}
+                                  disabled={!canGoNext}
+                                  className={`flex-1 flex items-center justify-end gap-2 px-4 py-3 rounded-lg transition-all group ${
+                                    canGoNext 
+                                      ? 'bg-gradient-to-r from-forest to-sage text-white hover:opacity-90' 
+                                      : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                  }`}
+                                >
+                                  <div className="text-right">
+                                    <p className={`text-xs font-medium ${canGoNext ? 'text-white/80' : 'text-gray-400'}`}>
+                                      {canGoNext ? 'Siguiente' : 'Completa esta lección'}
+                                    </p>
+                                    <p className="text-sm font-semibold line-clamp-1">{nextLessonTitle}</p>
+                                  </div>
+                                  {canGoNext ? (
+                                    <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                  ) : (
+                                    <Lock className="w-5 h-5" />
+                                  )}
+                                </button>
+                              ) : (
+                                <div className="flex-1 flex items-center justify-end">
+                                  <div className="px-4 py-3 bg-green-50 border border-green-200 text-green-700 rounded-lg text-sm font-semibold">
+                                    <CheckCircle className="w-5 h-5 inline mr-2" />
+                                    ¡Curso Completado!
+                                  </div>
                                 </div>
-                                {canGoNext ? (
-                                  <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                                ) : (
-                                  <Lock className="w-5 h-5" />
-                                )}
-                              </button>
-                            ) : (
-                              <div className="flex-1 flex items-center justify-end">
-                                <div className="px-4 py-3 bg-green-50 border border-green-200 text-green-700 rounded-lg text-sm font-semibold">
-                                  <CheckCircle className="w-5 h-5 inline mr-2" />
-                                  ¡Curso Completado!
+                              )}
+                            </>
+                          )
+                        } else {
+                          // NAVEGACIÓN SIN MÓDULOS (original)
+                          const currentIndex = lecciones.findIndex(l => l.id === leccionActual.id)
+                          const previousLesson = currentIndex > 0 ? lecciones[currentIndex - 1] : null
+                          const nextLesson = currentIndex < lecciones.length - 1 ? lecciones[currentIndex + 1] : null
+                          const canGoNext = lessonProgress[leccionActual.id] && nextLesson
+                          
+                          return (
+                            <>
+                              {/* Botón Anterior */}
+                              {previousLesson ? (
+                                <button
+                                  onClick={goToPreviousLesson}
+                                  className="flex-1 flex items-center justify-start gap-2 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all group"
+                                >
+                                  <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+                                  <div className="text-left">
+                                    <p className="text-xs text-gray-500 font-medium">Anterior</p>
+                                    <p className="text-sm font-semibold line-clamp-1">{previousLesson.title}</p>
+                                  </div>
+                                </button>
+                              ) : (
+                                <div className="flex-1"></div>
+                              )}
+
+                              {/* Botón Siguiente */}
+                              {nextLesson ? (
+                                <button
+                                  onClick={goToNextLesson}
+                                  disabled={!canGoNext}
+                                  className={`flex-1 flex items-center justify-end gap-2 px-4 py-3 rounded-lg transition-all group ${
+                                    canGoNext 
+                                      ? 'bg-gradient-to-r from-forest to-sage text-white hover:opacity-90' 
+                                      : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                  }`}
+                                >
+                                  <div className="text-right">
+                                    <p className={`text-xs font-medium ${canGoNext ? 'text-white/80' : 'text-gray-400'}`}>
+                                      {canGoNext ? 'Siguiente' : 'Completa esta lección'}
+                                    </p>
+                                    <p className="text-sm font-semibold line-clamp-1">{nextLesson.title}</p>
+                                  </div>
+                                  {canGoNext ? (
+                                    <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                  ) : (
+                                    <Lock className="w-5 h-5" />
+                                  )}
+                                </button>
+                              ) : (
+                                <div className="flex-1 flex items-center justify-end">
+                                  <div className="px-4 py-3 bg-green-50 border border-green-200 text-green-700 rounded-lg text-sm font-semibold">
+                                    <CheckCircle className="w-5 h-5 inline mr-2" />
+                                    ¡Curso Completado!
+                                  </div>
                                 </div>
-                              </div>
-                            )}
-                          </>
-                        )
+                              )}
+                            </>
+                          )
+                        }
                       })()}
                     </div>
                   </div>

@@ -21,6 +21,7 @@ interface Lesson {
   isFreePreview: boolean
   resources: Resource[]
   isExpanded: boolean
+  module_id?: string | null
 }
 
 interface Resource {
@@ -31,12 +32,20 @@ interface Resource {
   fileSize: number
 }
 
+interface CourseModule {
+  id: string
+  title: string
+  description: string | null
+  order_index: number
+}
+
 interface LessonsManagerProps {
   lessons: Lesson[]
+  modules: CourseModule[]
   onChange: (lessons: Lesson[]) => void
 }
 
-export default function LessonsManager({ lessons, onChange }: LessonsManagerProps) {
+export default function LessonsManager({ lessons, modules, onChange }: LessonsManagerProps) {
   const addLesson = () => {
     const newLesson: Lesson = {
       id: `lesson-${Date.now()}`,
@@ -224,16 +233,35 @@ export default function LessonsManager({ lessons, onChange }: LessonsManagerProp
                     />
                   </div>
                   <div>
-                    <label className="flex items-center space-x-2 mt-6 sm:mt-8">
-                      <input
-                        type="checkbox"
-                        checked={lesson.isFreePreview}
-                        onChange={(e) => updateLesson(index, 'isFreePreview', e.target.checked)}
-                        className="w-4 h-4 text-forest border-gray-300 rounded"
-                      />
-                      <span className="text-sm text-gray-700">Vista previa gratuita</span>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Módulo
                     </label>
+                    <select
+                      value={lesson.module_id || ''}
+                      onChange={(e) => updateLesson(index, 'module_id', e.target.value || null)}
+                      className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-base"
+                    >
+                      <option value="">Sin módulo</option>
+                      {modules.map((module) => (
+                        <option key={module.id} value={module.id}>
+                          {module.title}
+                        </option>
+                      ))}
+                    </select>
                   </div>
+                </div>
+
+                {/* Vista previa gratuita */}
+                <div>
+                  <label className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={lesson.isFreePreview}
+                      onChange={(e) => updateLesson(index, 'isFreePreview', e.target.checked)}
+                      className="w-4 h-4 text-forest border-gray-300 rounded"
+                    />
+                    <span className="text-sm text-gray-700">Vista previa gratuita</span>
+                  </label>
                 </div>
 
                 {/* Video */}
