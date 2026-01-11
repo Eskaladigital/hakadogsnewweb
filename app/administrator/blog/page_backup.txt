@@ -1,0 +1,200 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import dynamic from 'next/dynamic'
+import { ArrowLeft, Plus, Edit2, Trash2, Eye, EyeOff, Folder, Tag, FileText, Loader2, Search, Filter } from 'lucide-react'
+import Link from 'next/link'
+import { getSession } from '@/lib/supabase/auth'
+import { 
+  getAllBlogCategories, 
+  getAllBlogPosts, 
+  createBlogPost, 
+  updateBlogPost, 
+  deleteBlogPost,
+  createBlogCategory,
+  updateBlogCategory,
+  deleteBlogCategory,
+  generateSlug,
+  calculateReadingTime
+} from '@/lib/supabase/blog'
+import type { BlogCategory, BlogPost, BlogPostWithCategory } from '@/lib/supabase/blog'
+
+// Importar TinyMCE din├ímicamente
+const TinyMCEEditor = dynamic(() => import('@/components/admin/TinyMCEEditor'), {
+  ssr: false,
+  loading: () => <div className="w-full h-64 bg-gray-100 rounded-lg animate-pulse" />
+})
+
+export default function AdminBlogPage() {
+  const router = useRouter()
+  const [loading, setLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState<'posts' | 'categories'>('posts')
+  const [posts, setPosts] = useState<BlogPostWithCategory[]>([])
+  const [categories, setCategories] = useState<BlogCategory[]>([])
+  const [searchQuery, setSearchQuery] = useState('')
+  const [filterStatus, setFilterStatus] = useState<'all' | 'draft' | 'published' | 'archived'>('all')
+  
+  // Estados para modal de post
+  const [showPostModal, setShowPostModal] = useState(false)
+  const [editingPost, setEditingPost] = useState<BlogPost | null>(null)
+  const [postForm, setPostForm] = useState({
+    title: '',
+    slug: '',
+    excerpt: '',
+    content: '',
+    featured_image_url: '',
+    category_id: '',
+    status: 'draft' as 'draft' | 'published' | 'archived',
+    is_featured: false,
+    seo_title: '',
+    seo_description: '',
+    seo_keywords: ''
+  })
+  
+  // Estados para modal de categor├¡a
+  const [showCategoryModal, setShowCategoryModal] = useState(false)
+  const [editingCategory, setEditingCategory] = useState<BlogCategory | null>(null)
+  const [categoryForm, setCategoryForm] = useState({
+    name: '',
+    slug: '',
+    description: '',
+    color: '#10b981',
+    icon: 'Folder'
+  })
+  
+  const [saving, setSaving] = useState(false)
+
+  useEffect(() => {
+    loadData()
+  }, [router])
+
+  const loadData = async () => {
+    try {
+      const { data: sessionData } = await getSession()
+      if (!sessionData?.session) {
+        router.push('/cursos/auth/login')
+        return
+      }
+
+      const [postsData, categoriesData] = await Promise.all([
+        getAllBlogPosts(),
+        getAllBlogCategories(true)
+      ])
+
+      setPosts(postsData)
+      setCategories(categoriesData)
+    } catch (error) {
+      console.error('Error cargando datos:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // ===== GESTI├ôN DE POSTS =====
+
+  const handleCreatePost = () => {
+    setEditingPost(null)
+    setPostForm({
+      title: '',
+      slug: '',
+      excerpt: '',
+      content: '',
+      featured_image_url: '',
+      category_id: categories[0]?.id || '',
+      status: 'draft',
+      is_featured: false,
+      seo_title: '',
+      seo_description: '',
+      seo_keywords: ''
+    })
+    setShowPostModal(true)
+  }
+
+  const handleEditPost = (post: BlogPostWithCategory) => {
+    setEditingPost(post)
+    setPostForm({
+      title: post.title,
+      slug: post.slug,
+      excerpt: post.excerpt || '',
+      content: post.content,
+      featured_image_url: post.featured_image_url || '',
+      category_id: post.category_id || '',
+      status: post.status,
+      is_featured: post.is_featured,
+      seo_title: post.seo_title || '',
+      seo_description: post.seo_description || '',
+      seo_keywords: post.seo_keywords || ''
+    })
+    setShowPostModal(true)
+  }
+
+  const handleSavePost = async () => {
+    try {
+      setSaving(true)
+      
+      const postData = {
+        ...postForm,
+        reading_time_minutes: calculateReadingTime(postForm.content)
+      }
+
+      if (editingPost) {
+        await updateBlogPost(editingPost.id, postData)
+      } else {
+        await createBlogPost(postData)
+      }
+
+      await loadData()
+      setShowPostModal(false)
+    } catch (error) {
+      console.error('Error guardando post:', error)
+      alert('Error al guardar el post')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleDeletePost = async (id: string) => {
+    if (!confirm('┬┐Est├ís seguro de eliminar este post?')) return
+    
+    try {
+      await deleteBlogPost(id)
+      await loadData()
+    } catch (error) {
+      console.error('Error eliminando post:', error)
+      alert('Error al eliminar el post')
+    }
+  }
+
+  // ===== GESTI├ôN DE CATEGOR├ìAS =====
+
+  const handleCreateCategory = () => {
+    setEditingCategory(null)
+    setCategoryForm({
+      name: '',
+      slug: '',
+      description: '',
+      color: '#10b981',
+      icon: 'Folder'
+    })
+    setShowCategoryModal(true)
+  }
+
+  const handleEditCategory = (category: BlogCategory) => {
+    setEditingCategory(category)
+    setCategoryForm({
+      name: category.name,
+      slug: category.slug,
+      description: category.description || '',
+      color: category.color,
+      icon: category.icon || 'Folder'
+    })
+    setShowCategoryModal(true)
+  }
+
+  const handleSaveCategory = async () => {
+    try {
+      setSaving(true)
+
+      if (editingCategory) {
+        await updateBlogCategory(editingCategory.id, categoryForm)
