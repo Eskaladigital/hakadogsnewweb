@@ -47,7 +47,7 @@ export default function PrivacidadPage() {
       </div>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="bg-white rounded-xl p-8 lg:p-12 shadow-lg prose prose-lg max-w-none">
+        <div className="responsive-prose bg-white rounded-xl p-8 lg:p-12 shadow-lg prose max-w-none">
           
           <div className="bg-blue-50 border-l-4 border-blue-600 p-6 mb-8">
             <p className="text-blue-900 font-semibold mb-2">

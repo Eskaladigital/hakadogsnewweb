@@ -281,6 +281,52 @@ body {
     }
   }
 
+  /* APLICAR LAS MISMAS REGLAS A CUALQUIER CONTENIDO RENDERIZADO CON PROSE */
+  .responsive-prose,
+  .responsive-prose *,
+  .responsive-prose.prose,
+  .responsive-prose.prose * {
+    max-width: 100% !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    box-sizing: border-box !important;
+  }
+
+  .responsive-prose img,
+  .responsive-prose video,
+  .responsive-prose iframe {
+    max-width: 100% !important;
+    width: auto !important;
+    height: auto !important;
+  }
+
+  @media (max-width: 640px) {
+    .responsive-prose,
+    .responsive-prose *,
+    .responsive-prose.prose,
+    .responsive-prose.prose * {
+      font-size: clamp(0.75rem, 3vw, 0.875rem) !important;
+      line-height: 1.5 !important;
+    }
+
+    .responsive-prose h1,
+    .responsive-prose.prose h1 {
+      font-size: clamp(1rem, 4vw, 1.125rem) !important;
+    }
+
+    .responsive-prose h2,
+    .responsive-prose.prose h2 {
+      font-size: clamp(0.95rem, 3.5vw, 1.05rem) !important;
+    }
+
+    .responsive-prose p,
+    .responsive-prose li,
+    .responsive-prose.prose p,
+    .responsive-prose.prose li {
+      font-size: clamp(0.75rem, 2.5vw, 0.875rem) !important;
+    }
+  }
+
   /* Tablas responsive */
   .prose table {
     width: 100%;

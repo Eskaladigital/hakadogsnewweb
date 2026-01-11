@@ -175,7 +175,8 @@ export default function CursosPage() {
                     </div>
 
                     <div 
-                      className="text-lg mb-6 text-white/95 prose prose-invert max-w-none prose-p:text-white/95 prose-strong:text-white prose-ul:text-white/95 prose-li:text-white/95"
+                      className="responsive-prose text-lg mb-6 text-white/95 prose prose-invert max-w-none"
+                      style={{ fontSize: 'clamp(0.875rem, 2.5vw, 1.125rem)' }}
                       dangerouslySetInnerHTML={{ __html: curso.short_description || curso.description || '' }}
                     />
 
@@ -277,7 +278,8 @@ export default function CursosPage() {
                       </div>
                       <h3 className="text-xl font-bold mb-2 text-gray-900">{curso.title}</h3>
                       <div 
-                        className="text-gray-600 text-sm prose prose-sm max-w-none prose-p:text-gray-600 prose-strong:text-gray-900 prose-ul:text-gray-600 prose-li:text-gray-600"
+                        className="responsive-prose text-gray-600 text-sm prose max-w-none"
+                        style={{ fontSize: 'clamp(0.75rem, 2vw, 0.875rem)' }}
                         dangerouslySetInnerHTML={{ __html: curso.short_description || curso.description || '' }}
                       />
                     </div>
