@@ -275,18 +275,6 @@ export async function bulkCreateResources(resources: Partial<Resource>[]) {
 // ===== USER PROGRESS =====
 
 export async function getUserCourseProgress(userId: string, courseId: string) {
-  // Primero, sincronizar el progreso del curso (crea o actualiza la entrada)
-  const { error: syncError } = await (supabase as any).rpc('sync_user_course_progress', {
-    p_user_id: userId,
-    p_course_id: courseId
-  })
-  
-  if (syncError) {
-    console.error('❌ Error sincronizando progreso:', syncError)
-    // Continuar de todas formas para intentar obtener datos
-  }
-  
-  // Obtener el progreso sincronizado
   const { data, error } = await supabase
     .from('user_course_progress')
     .select('*')
@@ -296,8 +284,8 @@ export async function getUserCourseProgress(userId: string, courseId: string) {
 
   if (error) {
     if (error.code === 'PGRST116') {
-      console.log('⚠️ No existe progreso del curso después de sincronizar:', { userId, courseId })
-      return null
+      console.log('⚠️ No existe progreso del curso:', { userId, courseId })
+      return null // No encontrado
     }
     console.error('❌ Error obteniendo progreso:', error)
     throw error
