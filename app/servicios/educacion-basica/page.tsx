@@ -62,7 +62,7 @@ export default function EducacionBasicaPage() {
                 <span className="font-semibold">Todas las edades</span>
               </div>
               <div className="flex items-center space-x-2 bg-white rounded-lg px-6 py-3 shadow-sm">
-                <span className="text-2xl font-bold text-forest">350€</span>
+                <span className="text-2xl font-bold text-forest">250€</span>
               </div>
             </div>
           </div>

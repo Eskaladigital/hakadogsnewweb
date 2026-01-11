@@ -58,7 +58,7 @@ export default function ModificacionConductaPage() {
                 <span className="font-semibold">12-15 sesiones</span>
               </div>
               <div className="flex items-center space-x-2 bg-white rounded-lg px-6 py-3 shadow-sm">
-                <span className="text-2xl font-bold text-terracotta">Desde 450€</span>
+                <span className="text-2xl font-bold text-terracotta">Desde 270€</span>
               </div>
             </div>
           </div>

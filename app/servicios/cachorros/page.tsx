@@ -56,7 +56,7 @@ export default function CachorrosPage() {
                 <span className="font-semibold">6-8 sesiones</span>
               </div>
               <div className="flex items-center space-x-2 bg-white rounded-lg px-6 py-3 shadow-sm">
-                <span className="text-2xl font-bold text-gold">280€</span>
+                <span className="text-2xl font-bold text-gold">200€</span>
               </div>
             </div>
           </div>
