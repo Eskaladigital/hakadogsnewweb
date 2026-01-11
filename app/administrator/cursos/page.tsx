@@ -204,9 +204,8 @@ export default function AdministratorPage() {
   if (!isAdmin) return null
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-20">
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-7xl mx-auto">
+    <div className="space-y-6">
+      <div className="max-w-7xl mx-auto">
           {/* Header */}
           <h1 className="text-3xl font-bold text-gray-900 mb-6">Gestión de Cursos</h1>
 
@@ -548,7 +547,6 @@ export default function AdministratorPage() {
             )}
           </div>
         </div>
-      </div>
 
       {/* Toast de notificaciones */}
       {toast && (
