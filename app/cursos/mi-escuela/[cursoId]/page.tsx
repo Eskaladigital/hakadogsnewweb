@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Play, CheckCircle, Lock, Download, FileText, Clock, Loader2, AlertCircle, Video, Headphones, ChevronLeft, ChevronRight, ChevronDown, ChevronUp } from 'lucide-react'
+import { ArrowLeft, Play, CheckCircle, Lock, Download, FileText, Clock, Loader2, AlertCircle, Video, Headphones, ChevronLeft, ChevronRight, ChevronDown, ChevronUp, BookOpen, FolderOpen } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { getSession } from '@/lib/supabase/auth'
 import { getCourseBySlug, getCourseLessons, getUserCourseProgress, markLessonComplete, getLessonResources, getUserLessonsProgressBulk, courseHasModules, getCourseModulesWithStats, getLessonsByModule } from '@/lib/supabase/courses'
@@ -444,27 +444,56 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
         </div>
       </div>
 
-      {/* Breadcrumb - Indicador de ubicación */}
-      <div className="bg-gray-50 border-b border-gray-200">
-        <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
+      {/* Breadcrumb - Indicador de ubicación en forma de árbol */}
+      <div className="bg-gradient-to-r from-gray-50 to-white border-b border-gray-200">
+        <div className="container mx-auto px-4 sm:px-6 py-4">
           <div className="max-w-full lg:max-w-7xl mx-auto">
-            <div className="flex items-center text-sm sm:text-base text-gray-600 overflow-x-auto scrollbar-hide gap-2">
-              <span className="font-bold text-gray-900 whitespace-nowrap flex-shrink-0">{curso.title}</span>
+            <div className="flex flex-col gap-2">
+              {/* Nivel 1: Curso */}
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 text-sm">
+                  <BookOpen className="w-4 h-4 text-forest" />
+                  <span className="font-semibold text-gray-900">{curso.title}</span>
+                </div>
+              </div>
+              
               {hasModules && leccionActual && (() => {
-                // Encontrar el módulo de la lección actual
                 const currentModule = modules.find(module => {
                   const lessons = moduleLessons[module.id] || []
                   return lessons.some(l => l.id === leccionActual.id)
                 })
                 return currentModule ? (
                   <>
-                    <span className="text-gray-400 flex-shrink-0">/</span>
-                    <span className="text-forest font-semibold whitespace-nowrap flex-shrink-0">{currentModule.title}</span>
+                    {/* Flecha vertical */}
+                    <div className="flex items-center gap-2 ml-2">
+                      <div className="w-px h-4 bg-gray-300"></div>
+                    </div>
+                    
+                    {/* Nivel 2: Módulo */}
+                    <div className="flex items-center gap-2 ml-2">
+                      <div className="w-4 h-px bg-gray-300"></div>
+                      <div className="flex items-center gap-2 text-sm bg-forest/5 px-3 py-1 rounded-md">
+                        <FolderOpen className="w-4 h-4 text-forest" />
+                        <span className="font-medium text-forest">{currentModule.title}</span>
+                      </div>
+                    </div>
                   </>
                 ) : null
               })()}
-              <span className="text-gray-400 flex-shrink-0">/</span>
-              <span className="text-gray-700 font-medium truncate min-w-0">{leccionActual?.title || 'Cargando...'}</span>
+              
+              {/* Flecha vertical */}
+              <div className="flex items-center gap-2 ml-2">
+                <div className="w-px h-4 bg-gray-300"></div>
+              </div>
+              
+              {/* Nivel 3: Lección actual */}
+              <div className="flex items-center gap-2 ml-2">
+                <div className="w-4 h-px bg-gray-300"></div>
+                <div className="flex items-center gap-2 text-sm bg-gradient-to-r from-forest to-sage px-3 py-1.5 rounded-md text-white shadow-sm">
+                  <FileText className="w-4 h-4" />
+                  <span className="font-medium">{leccionActual?.title || 'Cargando...'}</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
