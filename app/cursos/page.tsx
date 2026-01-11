@@ -367,7 +367,8 @@ export default function CursosPage() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all flex flex-col border border-gray-100"
+                    className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all flex flex-col border border-gray-100 cursor-pointer"
+                    onClick={() => handleOpenCourseModal(curso)}
                   >
                     {/* Header con dificultad */}
                     <div className="bg-gradient-to-br from-gray-50 to-white p-6 border-b border-gray-100">
@@ -384,14 +385,11 @@ export default function CursosPage() {
                           __html: truncateDescription(curso.short_description || curso.description, 150) 
                         }}
                       />
-                      {/* Botón Ver más detalles */}
-                      <button
-                        onClick={() => handleOpenCourseModal(curso)}
-                        className="mt-3 flex items-center text-forest hover:text-forest-dark font-medium text-sm transition-colors"
-                      >
+                      {/* Badge "Ver detalles" */}
+                      <div className="mt-3 flex items-center text-forest hover:text-forest-dark font-medium text-sm transition-colors">
                         <Info className="w-4 h-4 mr-1" />
                         Ver más detalles
-                      </button>
+                      </div>
                     </div>
 
                     {/* Contenido */}
@@ -427,7 +425,10 @@ export default function CursosPage() {
                         </div>
                       </div>
                       <button
-                        onClick={() => handleBuyCourse(curso.slug)}
+                        onClick={(e) => {
+                          e.stopPropagation() // Evita que se abra el modal
+                          handleBuyCourse(curso.slug)
+                        }}
                         className="w-full bg-gradient-to-r from-forest to-sage text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-all flex items-center justify-center whitespace-nowrap shadow-md hover:shadow-lg"
                       >
                         <ShoppingCart className="w-5 h-5 mr-2" />
