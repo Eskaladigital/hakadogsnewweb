@@ -173,9 +173,9 @@ export default function ComprarCursoPage({ params }: { params: { cursoId: string
 
   const getDifficultyColor = (difficulty: string) => {
     const colors: Record<string, string> = {
-      basico: 'from-green-500 to-green-600',
-      intermedio: 'from-amber-500 to-amber-600',
-      avanzado: 'from-red-500 to-red-600'
+      basico: 'from-sage to-forest',
+      intermedio: 'from-forest to-forest-dark',
+      avanzado: 'from-forest-dark to-forest-dark'
     }
     return colors[difficulty] || colors.basico
   }
