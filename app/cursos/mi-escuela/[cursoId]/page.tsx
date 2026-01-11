@@ -646,6 +646,70 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                       Lección Completada
                     </div>
                   )}
+
+                  {/* Navegación Anterior/Siguiente */}
+                  <div className="mt-6 sm:mt-8 pt-6 border-t border-gray-200">
+                    <div className="flex items-center justify-between gap-4">
+                      {(() => {
+                        const currentIndex = lecciones.findIndex(l => l.id === leccionActual.id)
+                        const previousLesson = currentIndex > 0 ? lecciones[currentIndex - 1] : null
+                        const nextLesson = currentIndex < lecciones.length - 1 ? lecciones[currentIndex + 1] : null
+                        const canGoNext = lessonProgress[leccionActual.id] && nextLesson
+                        
+                        return (
+                          <>
+                            {/* Botón Anterior */}
+                            {previousLesson ? (
+                              <button
+                                onClick={goToPreviousLesson}
+                                className="flex-1 flex items-center justify-start gap-2 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all group"
+                              >
+                                <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+                                <div className="text-left">
+                                  <p className="text-xs text-gray-500 font-medium">Anterior</p>
+                                  <p className="text-sm font-semibold line-clamp-1">{previousLesson.title}</p>
+                                </div>
+                              </button>
+                            ) : (
+                              <div className="flex-1"></div>
+                            )}
+
+                            {/* Botón Siguiente */}
+                            {nextLesson ? (
+                              <button
+                                onClick={goToNextLesson}
+                                disabled={!canGoNext}
+                                className={`flex-1 flex items-center justify-end gap-2 px-4 py-3 rounded-lg transition-all group ${
+                                  canGoNext 
+                                    ? 'bg-gradient-to-r from-forest to-sage text-white hover:opacity-90' 
+                                    : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                }`}
+                              >
+                                <div className="text-right">
+                                  <p className={`text-xs font-medium ${canGoNext ? 'text-white/80' : 'text-gray-400'}`}>
+                                    {canGoNext ? 'Siguiente' : 'Completa esta lección'}
+                                  </p>
+                                  <p className="text-sm font-semibold line-clamp-1">{nextLesson.title}</p>
+                                </div>
+                                {canGoNext ? (
+                                  <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                ) : (
+                                  <Lock className="w-5 h-5" />
+                                )}
+                              </button>
+                            ) : (
+                              <div className="flex-1 flex items-center justify-end">
+                                <div className="px-4 py-3 bg-green-50 border border-green-200 text-green-700 rounded-lg text-sm font-semibold">
+                                  <CheckCircle className="w-5 h-5 inline mr-2" />
+                                  ¡Curso Completado!
+                                </div>
+                              </div>
+                            )}
+                          </>
+                        )
+                      })()}
+                    </div>
+                  </div>
                   
                   {/* Navegación entre lecciones (móvil) */}
                   <div className="mt-6 flex items-center justify-between gap-4 lg:hidden">
