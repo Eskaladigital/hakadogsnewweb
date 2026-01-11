@@ -60,6 +60,34 @@ const nextConfig = {
           },
         ],
       },
+      // Caché corta para páginas dinámicas (Blog, Cursos, etc.)
+      {
+        source: '/blog/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, s-maxage=60, stale-while-revalidate=120',
+          },
+        ],
+      },
+      {
+        source: '/cursos/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, s-maxage=60, stale-while-revalidate=120',
+          },
+        ],
+      },
+      {
+        source: '/administrator/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-cache, no-store, must-revalidate',
+          },
+        ],
+      },
       {
         source: '/:path*',
         headers: [

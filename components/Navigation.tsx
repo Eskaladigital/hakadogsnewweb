@@ -37,6 +37,7 @@ export default function Navigation() {
     { href: '/servicios', label: 'Servicios' },
     { href: '/apps', label: 'Apps' },
     { href: '/cursos', label: 'Cursos' },
+    { href: '/blog', label: 'Blog' },
     { href: '/contacto', label: 'Contacto' },
   ]
 
