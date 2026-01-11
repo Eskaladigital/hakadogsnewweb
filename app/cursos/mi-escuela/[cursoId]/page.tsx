@@ -556,30 +556,31 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                       </h2>
                       {/* Renderizar HTML de TinyMCE */}
                       <div 
-                        className="lesson-content prose prose-sm sm:prose-base md:prose-lg max-w-none w-full
+                        className="lesson-content prose prose-sm sm:prose-sm md:prose-base max-w-none w-full
                           prose-headings:text-gray-900 prose-headings:font-bold
-                          prose-h1:text-xl sm:prose-h1:text-2xl md:prose-h1:text-3xl prose-h1:mb-3 sm:prose-h1:mb-4 md:prose-h1:mb-6 prose-h1:mt-4 sm:prose-h1:mt-6 md:prose-h1:mt-8
-                          prose-h2:text-lg sm:prose-h2:text-xl md:prose-h2:text-2xl prose-h2:mb-2 sm:prose-h2:mb-3 md:prose-h2:mb-4 prose-h2:mt-3 sm:prose-h2:mt-4 md:prose-h2:mt-6
-                          prose-h3:text-base sm:prose-h3:text-lg md:prose-h3:text-xl prose-h3:mb-2 sm:prose-h3:mb-3 prose-h3:mt-2 sm:prose-h3:mt-3 md:prose-h3:mt-4
-                          prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-2 sm:prose-p:mb-3 md:prose-p:mb-4 prose-p:text-sm sm:prose-p:text-base
+                          prose-h1:text-lg sm:prose-h1:text-xl md:prose-h1:text-2xl prose-h1:mb-2 sm:prose-h1:mb-3 md:prose-h1:mb-4 prose-h1:mt-3 sm:prose-h1:mt-4 md:prose-h1:mt-6
+                          prose-h2:text-base sm:prose-h2:text-lg md:prose-h2:text-xl prose-h2:mb-2 sm:prose-h2:mb-2 md:prose-h2:mb-3 prose-h2:mt-2 sm:prose-h2:mt-3 md:prose-h2:mt-4
+                          prose-h3:text-sm sm:prose-h3:text-base md:prose-h3:text-lg prose-h3:mb-1 sm:prose-h3:mb-2 prose-h3:mt-2 sm:prose-h3:mt-2 md:prose-h3:mt-3
+                          prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-2 sm:prose-p:mb-2 md:prose-p:mb-3 prose-p:text-xs sm:prose-p:text-sm md:prose-p:text-base
                           prose-strong:text-gray-900 prose-strong:font-bold
-                          prose-ul:list-disc prose-ul:ml-4 sm:prose-ul:ml-5 md:prose-ul:ml-6 prose-ul:mb-2 sm:prose-ul:mb-3 md:prose-ul:mb-4 prose-ul:space-y-1
-                          prose-ol:list-decimal prose-ol:ml-4 sm:prose-ol:ml-5 md:prose-ol:ml-6 prose-ol:mb-2 sm:prose-ol:mb-3 md:prose-ol:mb-4 prose-ol:space-y-1
-                          prose-li:text-gray-700 prose-li:text-sm sm:prose-li:text-base
+                          prose-ul:list-disc prose-ul:ml-3 sm:prose-ul:ml-4 md:prose-ul:ml-5 prose-ul:mb-2 sm:prose-ul:mb-2 md:prose-ul:mb-3 prose-ul:space-y-1
+                          prose-ol:list-decimal prose-ol:ml-3 sm:prose-ol:ml-4 md:prose-ol:ml-5 prose-ol:mb-2 sm:prose-ol:mb-2 md:prose-ol:mb-3 prose-ol:space-y-1
+                          prose-li:text-gray-700 prose-li:text-xs sm:prose-li:text-sm md:prose-li:text-base
                           prose-a:text-forest prose-a:underline hover:prose-a:text-sage prose-a:break-words
-                          prose-blockquote:border-l-4 prose-blockquote:border-forest prose-blockquote:pl-3 sm:prose-blockquote:pl-4 prose-blockquote:italic
-                          prose-code:bg-gray-100 prose-code:px-1 sm:prose-code:px-2 prose-code:py-0.5 sm:prose-code:py-1 prose-code:rounded prose-code:text-xs sm:prose-code:text-sm prose-code:break-words
-                          prose-pre:bg-gray-900 prose-pre:text-white prose-pre:p-2 sm:prose-pre:p-3 md:prose-pre:p-4 prose-pre:rounded-lg prose-pre:overflow-x-auto prose-pre:text-xs sm:prose-pre:text-sm
+                          prose-blockquote:border-l-4 prose-blockquote:border-forest prose-blockquote:pl-2 sm:prose-blockquote:pl-3 prose-blockquote:italic
+                          prose-code:bg-gray-100 prose-code:px-1 sm:prose-code:px-1 prose-code:py-0.5 sm:prose-code:py-0.5 prose-code:rounded prose-code:text-xs sm:prose-code:text-xs prose-code:break-words
+                          prose-pre:bg-gray-900 prose-pre:text-white prose-pre:p-2 sm:prose-pre:p-2 md:prose-pre:p-3 prose-pre:rounded-lg prose-pre:overflow-x-auto prose-pre:text-xs sm:prose-pre:text-xs
                           prose-img:rounded-lg prose-img:shadow-lg prose-img:max-w-full prose-img:h-auto prose-img:mx-auto prose-img:block
-                          prose-table:w-full prose-table:overflow-x-auto prose-table:block prose-table:text-xs sm:prose-table:text-sm
+                          prose-table:w-full prose-table:overflow-x-auto prose-table:block prose-table:text-xs sm:prose-table:text-xs
                           [&>*]:max-w-full [&_img]:max-w-full [&_img]:h-auto [&_table]:max-w-full [&_table]:block [&_table]:overflow-x-auto
                           [&_iframe]:max-w-full [&_iframe]:w-full [&_video]:max-w-full [&_video]:w-full
-                          overflow-hidden break-words px-2 sm:px-4"
+                          overflow-hidden break-words px-2 sm:px-3 md:px-4"
                         style={{ 
                           wordWrap: 'break-word', 
                           overflowWrap: 'break-word',
                           width: '100%',
-                          maxWidth: '100%'
+                          maxWidth: '100%',
+                          fontSize: 'clamp(0.875rem, 2vw, 1rem)'
                         }}
                         dangerouslySetInnerHTML={{ __html: leccionActual.content }}
                       />
