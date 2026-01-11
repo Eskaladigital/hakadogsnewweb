@@ -607,7 +607,23 @@ export default function EditarCursoPage() {
                         modules={modules}
                         lessons={lessons}
                         onModulesChange={setModules}
-                        onLessonsChange={setLessons}
+                        onLessonsChange={(updatedLessons) => {
+                          // Convertir Lesson[] a LessonWithResources[] manteniendo propiedades extra
+                          const updated = updatedLessons.map(lesson => {
+                            const existing = lessons.find(l => l.id === lesson.id)
+                            return {
+                              ...lesson,
+                              resources: existing?.resources || [],
+                              isExpanded: existing?.isExpanded || false,
+                              videoUrl: lesson.video_url || '',
+                              videoProvider: lesson.video_provider || '',
+                              audioUrl: lesson.audio_url || '',
+                              audioProvider: lesson.audio_provider || '',
+                              isFreePreview: lesson.is_free_preview || false
+                            } as LessonWithResources
+                          })
+                          setLessons(updated)
+                        }}
                         onCreateModule={async (title, description) => {
                           const newModule = await createModule({
                             course_id: cursoId,
