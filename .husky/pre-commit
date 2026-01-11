@@ -1,0 +1,30 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "🔍 Verificando compilación antes del commit..."
+echo "⏳ Ejecutando: npm run build"
+echo ""
+
+# Ejecutar build y capturar el código de salida
+npm run build
+
+# Si el build falla, bloquear el commit
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "❌ ERROR: La compilación falló"
+  echo "⛔ COMMIT BLOQUEADO"
+  echo ""
+  echo "📋 Por favor:"
+  echo "   1. Revisa los errores arriba"
+  echo "   2. Corrige los errores en el código"
+  echo "   3. Ejecuta 'npm run build' manualmente"
+  echo "   4. Cuando compile sin errores, intenta el commit de nuevo"
+  echo ""
+  echo "💡 Recuerda: Esta regla ahorra deploys fallidos en Vercel"
+  exit 1
+fi
+
+echo ""
+echo "✅ Compilación exitosa"
+echo "✅ Commit permitido"
+echo ""

@@ -10,6 +10,26 @@
 
 Hakadogs es una plataforma web completa para educación canina profesional que integra un sistema de cursos online con módulos organizados, gestión de usuarios y panel administrativo avanzado. **Optimizada para máximo rendimiento (95+ Google PageSpeed) y experiencia móvil excepcional.**
 
+### ⚠️ IMPORTANTE: Sistema de Verificación Automática
+
+**Este proyecto incluye verificación automática pre-commit** para prevenir deploys fallidos en Vercel:
+
+- 🛡️ **Pre-commit hook automático** con Husky
+- ✅ **Compilación verificada** antes de cada commit
+- 🚫 **Commits bloqueados** si hay errores de compilación
+- 💰 **Ahorro de deploys** en Vercel
+- 📖 **Documentación completa** en `REGLAS_DESARROLLO.md`
+
+**Workflow obligatorio:**
+```bash
+# 1. Hacer cambios en código
+# 2. git add .
+# 3. git commit -m "mensaje"  # ← Verificación automática aquí
+# 4. git push origin main      # ← Solo si compiló sin errores
+```
+
+Ver `REGLAS_DESARROLLO.md` y `HUSKY_PRECOMMIT.md` para más información.
+
 ### 📊 Estadísticas del Proyecto
 
 ```
@@ -75,6 +95,7 @@ Hakadogs es una plataforma web completa para educación canina profesional que i
 - **date-fns** (fechas)
 - **clsx** + **tailwind-merge** (estilos)
 - **Critters** (CSS crítico inline)
+- **Husky** (Git hooks - verificación pre-commit) ⭐ NUEVO
 
 ### Performance & SEO
 - **Google Analytics** - Lazy loaded
@@ -83,6 +104,12 @@ Hakadogs es una plataforma web completa para educación canina profesional que i
 - **FetchPriority High** - Recursos críticos
 - **Dynamic Imports** - Code splitting avanzado
 - **Canonical URLs** - SEO optimizado
+
+### Calidad de Código
+- **Pre-commit hooks** - Verificación automática de compilación ⭐ NUEVO
+- **TypeScript strict** - Tipado fuerte
+- **ESLint** - Linting automático
+- **Build verification** - Bloqueo de commits con errores
 
 ---
 
@@ -434,6 +461,8 @@ Deploy automático
 
 ### Archivos de Documentación Principal
 - `README.md` - Este archivo (documentación principal)
+- `REGLAS_DESARROLLO.md` - **⚠️ REGLAS OBLIGATORIAS DE DESARROLLO** ⭐ NUEVO
+- `HUSKY_PRECOMMIT.md` - Sistema de verificación pre-commit ⭐ NUEVO
 - `DEPLOY_VERCEL.md` - Guía completa de despliegue en Vercel
 - `CONTENIDO_UNICO_COMPLETO.md` - SEO local 56 ciudades
 - `SEO_LOCAL_Y_LEGAL.md` - Legal + localidades
