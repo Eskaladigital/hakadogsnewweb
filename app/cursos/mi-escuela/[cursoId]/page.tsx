@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { ArrowLeft, Play, CheckCircle, Lock, Download, FileText, Clock, Loader2, AlertCircle, Video, Headphones, ChevronLeft, ChevronRight } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { getSession } from '@/lib/supabase/auth'
-import { getCourseBySlug, getCourseLessons, getUserCourseProgress, markLessonComplete, getLessonResources, getUserLessonProgress } from '@/lib/supabase/courses'
+import { getCourseBySlug, getCourseLessons, getUserCourseProgress, markLessonComplete, getLessonResources, getUserLessonsProgressBulk } from '@/lib/supabase/courses'
 import type { Course, Lesson, Resource, UserLessonProgress } from '@/lib/supabase/courses'
 import { useSwipe } from '@/lib/hooks/useSwipe'
 
@@ -88,12 +88,9 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
         const progressData = await getUserCourseProgress(uid, courseData.id)
         setProgreso(progressData)
 
-        // Cargar progreso de cada lección
-        const progressMap: Record<string, boolean> = {}
-        for (const lesson of lessonsData) {
-          const lessonProg = await getUserLessonProgress(uid, lesson.id)
-          progressMap[lesson.id] = lessonProg?.completed || false
-        }
+        // OPTIMIZACIÓN: Cargar progreso de TODAS las lecciones en UNA SOLA petición
+        const lessonIds = lessonsData.map(lesson => lesson.id)
+        const progressMap = await getUserLessonsProgressBulk(uid, lessonIds)
         setLessonProgress(progressMap)
 
         // Seleccionar primera lección

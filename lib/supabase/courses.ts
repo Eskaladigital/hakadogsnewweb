@@ -298,6 +298,35 @@ export async function getUserLessonProgress(userId: string, lessonId: string): P
   return data as UserLessonProgress
 }
 
+/**
+ * OPTIMIZACIÓN: Obtiene el progreso de TODAS las lecciones de un curso en UNA SOLA petición
+ * En lugar de hacer 82 peticiones individuales, hace 1 sola
+ */
+export async function getUserLessonsProgressBulk(userId: string, lessonIds: string[]): Promise<Record<string, boolean>> {
+  if (lessonIds.length === 0) return {}
+  
+  const { data, error } = await supabase
+    .from('user_lesson_progress')
+    .select('lesson_id, completed')
+    .eq('user_id', userId)
+    .in('lesson_id', lessonIds)
+
+  if (error) {
+    console.warn('Error obteniendo progreso bulk:', error)
+    return {}
+  }
+
+  // Convertir a Record<lessonId, completed>
+  const progressMap: Record<string, boolean> = {}
+  if (data) {
+    data.forEach((item: any) => {
+      progressMap[item.lesson_id] = item.completed
+    })
+  }
+  
+  return progressMap
+}
+
 export async function markLessonComplete(userId: string, lessonId: string) {
   const { data, error } = await supabase
     .from('user_lesson_progress')
