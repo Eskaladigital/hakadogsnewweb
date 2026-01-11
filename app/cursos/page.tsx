@@ -600,8 +600,8 @@ export default function CursosPage() {
             </div>
 
             {/* Precio */}
-            <div className="bg-gradient-to-br from-forest/5 to-sage/5 rounded-xl p-6 border-2 border-forest/20">
-              <div className="flex items-center justify-between">
+            <div className="bg-gradient-to-br from-forest/5 to-sage/5 rounded-xl p-4 sm:p-6 border-2 border-forest/20">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
                   <p className="text-sm text-gray-600 mb-1">Precio del curso</p>
                   <div className="flex items-baseline">
@@ -615,7 +615,7 @@ export default function CursosPage() {
                     handleCloseCourseModal()
                     handleBuyCourse(selectedCourse.slug)
                   }}
-                  className="bg-gradient-to-r from-forest to-sage text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-all flex items-center shadow-md hover:shadow-lg"
+                  className="w-full sm:w-auto bg-gradient-to-r from-forest to-sage text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-all flex items-center justify-center shadow-md hover:shadow-lg whitespace-nowrap"
                 >
                   <ShoppingCart className="w-5 h-5 mr-2" />
                   Comprar Ahora
