@@ -35,23 +35,6 @@ export default function AdminBlogPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [filterStatus, setFilterStatus] = useState<'all' | 'draft' | 'published' | 'archived'>('all')
   
-  // Estados para modal de post
-  const [showPostModal, setShowPostModal] = useState(false)
-  const [editingPost, setEditingPost] = useState<BlogPost | null>(null)
-  const [postForm, setPostForm] = useState({
-    title: '',
-    slug: '',
-    excerpt: '',
-    content: '',
-    featured_image_url: '',
-    category_id: '',
-    status: 'draft' as 'draft' | 'published' | 'archived',
-    is_featured: false,
-    seo_title: '',
-    seo_description: '',
-    seo_keywords: ''
-  })
-  
   // Estados para modal de categoría
   const [showCategoryModal, setShowCategoryModal] = useState(false)
   const [editingCategory, setEditingCategory] = useState<BlogCategory | null>(null)
@@ -93,76 +76,14 @@ export default function AdminBlogPage() {
 
   // ===== GESTIÓN DE POSTS =====
 
-  const handleCreatePost = () => {
-    setEditingPost(null)
-    setPostForm({
-      title: '',
-      slug: '',
-      excerpt: '',
-      content: '',
-      featured_image_url: '',
-      category_id: categories[0]?.id || '',
-      status: 'draft',
-      is_featured: false,
-      seo_title: '',
-      seo_description: '',
-      seo_keywords: ''
-    })
-    setShowPostModal(true)
-  }
-
-  const handleEditPost = (post: BlogPostWithCategory) => {
-    setEditingPost(post)
-    setPostForm({
-      title: post.title,
-      slug: post.slug,
-      excerpt: post.excerpt || '',
-      content: post.content,
-      featured_image_url: post.featured_image_url || '',
-      category_id: post.category_id || '',
-      status: post.status,
-      is_featured: post.is_featured,
-      seo_title: post.seo_title || '',
-      seo_description: post.seo_description || '',
-      seo_keywords: post.seo_keywords || ''
-    })
-    setShowPostModal(true)
-  }
-
-  const handleSavePost = async () => {
-    try {
-      setSaving(true)
-      
-      const postData = {
-        ...postForm,
-        reading_time_minutes: calculateReadingTime(postForm.content)
-      }
-
-      if (editingPost) {
-        await updateBlogPost(editingPost.id, postData)
-      } else {
-        await createBlogPost(postData)
-      }
-
-      await loadData()
-      setShowPostModal(false)
-    } catch (error) {
-      console.error('Error guardando post:', error)
-      alert('Error al guardar el post')
-    } finally {
-      setSaving(false)
-    }
-  }
-
-  const handleDeletePost = async (id: string) => {
-    if (!confirm('¿Estás seguro de eliminar este post?')) return
+  const handleDeletePost = async (postId: string) => {
+    if (!confirm('¿Estás seguro de eliminar este artículo?')) return
     
     try {
-      await deleteBlogPost(id)
+      await deleteBlogPost(postId)
       await loadData()
     } catch (error) {
       console.error('Error eliminando post:', error)
-      alert('Error al eliminar el post')
     }
   }
 
@@ -311,13 +232,13 @@ export default function AdminBlogPage() {
                 <option value="published">Publicados</option>
                 <option value="archived">Archivados</option>
               </select>
-              <button
-                onClick={handleCreatePost}
+              <Link
+                href="/administrator/blog/nuevo"
                 className="bg-gradient-to-r from-forest to-sage text-white px-6 py-2 rounded-lg hover:opacity-90 transition flex items-center"
               >
                 <Plus className="w-5 h-5 mr-2" />
                 Nuevo Artículo
-              </button>
+              </Link>
             </div>
 
             {/* Lista de posts */}
@@ -436,18 +357,8 @@ export default function AdminBlogPage() {
         )}
       </div>
 
-      {/* Modal de Post */}
-      {showPostModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full my-8">
-            <div className="p-6 border-b border-gray-200">
-              <h2 className="text-2xl font-bold text-gray-900">
-                {editingPost ? 'Editar Artículo' : 'Nuevo Artículo'}
-              </h2>
-            </div>
-            
-            <div className="p-6 space-y-6 max-h-[70vh] overflow-y-auto">
-              {/* Título */}
+      {/* Modal de Categoría */}
+      {showCategoryModal && (
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Título *

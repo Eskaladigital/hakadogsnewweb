@@ -1,0 +1,208 @@
+'use client'
+
+import { useState, useEffect, useMemo } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { getSession } from '@/lib/supabase/auth'
+import { getAllCourses, getAdminStats, deleteCourse, updateCourse, type Course } from '@/lib/supabase/courses'
+import { BookOpen, TrendingUp, DollarSign, Users, Plus, Edit, Trash2, Eye, Search, ChevronUp, ChevronDown, CheckCircle, XCircle } from 'lucide-react'
+import Toast from '@/components/ui/Toast'
+import ConfirmModal from '@/components/ui/ConfirmModal'
+
+type SortField = 'title' | 'total_lessons' | 'duration_minutes' | 'price' | 'is_published'
+type SortDirection = 'asc' | 'desc'
+
+export default function AdministratorPage() {
+  const router = useRouter()
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [courses, setCourses] = useState<Course[]>([])
+  const [stats, setStats] = useState({
+    totalCourses: 0,
+    publishedCourses: 0,
+    totalSales: 0,
+    totalRevenue: 0
+  })
+
+  // Toast y modal de confirmación
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null)
+  const [confirmModal, setConfirmModal] = useState<{
+    isOpen: boolean
+    title: string
+    message: string
+    confirmText: string
+    confirmColor: 'red' | 'orange' | 'green' | 'blue'
+    onConfirm: () => void
+  } | null>(null)
+
+  // Filtros y paginación
+  const [searchTerm, setSearchTerm] = useState('')
+  const [sortField, setSortField] = useState<SortField>('price')
+  const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data } = await getSession()
+      const session = data?.session
+      
+      if (!session || session.user?.user_metadata?.role !== 'admin') {
+        router.push('/cursos/auth/login?redirect=/administrator')
+      } else {
+        setIsAdmin(true)
+        loadData()
+      }
+    }
+    
+    checkAuth()
+  }, [router])
+
+  const loadData = async () => {
+    try {
+      const [coursesData, statsData] = await Promise.all([
+        getAllCourses(true),
+        getAdminStats()
+      ])
+      setCourses(coursesData)
+      setStats(statsData)
+    } catch (error) {
+      console.error('Error cargando datos:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleDelete = async (id: string, title: string) => {
+    setConfirmModal({
+      isOpen: true,
+      title: 'Eliminar Curso',
+      message: `¿Estás seguro de eliminar el curso "${title}"? Esta acción no se puede deshacer.`,
+      confirmText: 'Eliminar',
+      confirmColor: 'red',
+      onConfirm: async () => {
+        try {
+          await deleteCourse(id)
+          setCourses(courses.filter(c => c.id !== id))
+          setToast({ message: 'Curso eliminado exitosamente', type: 'success' })
+          loadData()
+        } catch (error) {
+          console.error('Error eliminando curso:', error)
+          setToast({ message: 'Error al eliminar el curso', type: 'error' })
+        }
+      }
+    })
+  }
+
+  const handleTogglePublish = async (id: string, currentStatus: boolean, title: string) => {
+    const action = currentStatus ? 'despublicar' : 'publicar'
+    const actionCapitalized = currentStatus ? 'Despublicar' : 'Publicar'
+    
+    setConfirmModal({
+      isOpen: true,
+      title: `${actionCapitalized} Curso`,
+      message: `¿Estás seguro de ${action} el curso "${title}"?`,
+      confirmText: actionCapitalized,
+      confirmColor: currentStatus ? 'orange' : 'green',
+      onConfirm: async () => {
+        try {
+          await updateCourse(id, { is_published: !currentStatus })
+          // Actualizar el estado local
+          setCourses(courses.map(c => 
+            c.id === id ? { ...c, is_published: !currentStatus } : c
+          ))
+          setToast({ 
+            message: `Curso ${currentStatus ? 'despublicado' : 'publicado'} exitosamente`, 
+            type: 'success' 
+          })
+        } catch (error) {
+          console.error('Error actualizando estado:', error)
+          setToast({ message: 'Error al actualizar el estado del curso', type: 'error' })
+        }
+      }
+    })
+  }
+
+  const getDifficultyBadge = (difficulty: string) => {
+    const badges = {
+      basico: 'bg-green-100 text-green-700',
+      intermedio: 'bg-yellow-100 text-yellow-700',
+      avanzado: 'bg-red-100 text-red-700'
+    }
+    return badges[difficulty as keyof typeof badges] || badges.basico
+  }
+
+  // Filtrado y ordenación
+  const filteredAndSortedCourses = useMemo(() => {
+    let filtered = courses.filter(course =>
+      course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      course.slug.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+
+    filtered.sort((a, b) => {
+      let aValue: any = a[sortField]
+      let bValue: any = b[sortField]
+
+      if (sortField === 'is_published') {
+        aValue = a.is_published ? 1 : 0
+        bValue = b.is_published ? 1 : 0
+      }
+
+      // Para el campo price, tratar cursos gratuitos como 0
+      if (sortField === 'price') {
+        aValue = a.is_free ? 0 : a.price
+        bValue = b.is_free ? 0 : b.price
+      }
+
+      if (typeof aValue === 'string') {
+        return sortDirection === 'asc'
+          ? aValue.localeCompare(bValue)
+          : bValue.localeCompare(aValue)
+      }
+
+      return sortDirection === 'asc' ? aValue - bValue : bValue - aValue
+    })
+
+    return filtered
+  }, [courses, searchTerm, sortField, sortDirection])
+
+  // Paginación
+  const totalPages = Math.ceil(filteredAndSortedCourses.length / itemsPerPage)
+  const paginatedCourses = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage
+    return filteredAndSortedCourses.slice(startIndex, startIndex + itemsPerPage)
+  }, [filteredAndSortedCourses, currentPage, itemsPerPage])
+
+  // Cambiar ordenación
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
+    } else {
+      setSortField(field)
+      setSortDirection('asc')
+    }
+    setCurrentPage(1)
+  }
+
+  // Cambiar items por página
+  const handleItemsPerPageChange = (value: number) => {
+    setItemsPerPage(value)
+    setCurrentPage(1)
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Cargando panel...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!isAdmin) return null
+
+  return (
+    <div className="space-y-6">
+      {/

@@ -1,0 +1,487 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { useRouter, useParams } from 'next/navigation'
+import dynamic from 'next/dynamic'
+import { ArrowLeft, Save, Loader2, X } from 'lucide-react'
+import { supabase } from '@/lib/supabase/client'
+import Toast from '@/components/ui/Toast'
+import ImageUpload from '@/components/ui/ImageUpload'
+
+const TinyMCEEditor = dynamic(() => import('@/components/admin/TinyMCEEditor'), {
+  ssr: false,
+  loading: () => <div className="w-full h-96 bg-gray-100 rounded-lg animate-pulse" />
+})
+
+interface Category {
+  id: string
+  name: string
+  slug: string
+  color: string
+}
+
+interface Post {
+  id: string
+  title: string
+  slug: string
+  excerpt: string | null
+  content: string
+  featured_image_url: string | null
+  category_id: string
+  status: string
+  is_featured: boolean
+  seo_title: string | null
+  seo_description: string | null
+  seo_keywords: string | null
+  reading_time_minutes: number
+}
+
+export default function EditarArticuloPage() {
+  const router = useRouter()
+  const params = useParams()
+  const postId = params.postId as string
+  
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [categories, setCategories] = useState<Category[]>([])
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null)
+  
+  const [formData, setFormData] = useState({
+    title: '',
+    slug: '',
+    excerpt: '',
+    content: '',
+    featuredImageUrl: '',
+    categoryId: '',
+    status: 'draft' as 'draft' | 'published',
+    isFeatured: false,
+    seoTitle: '',
+    seoDescription: '',
+    seoKeywords: ''
+  })
+
+  useEffect(() => {
+    loadData()
+  }, [postId])
+
+  const loadData = async () => {
+    try {
+      setLoading(true)
+      
+      // Cargar categorías
+      const { data: categoriesData, error: categoriesError } = await supabase
+        .from('blog_categories')
+        .select('*')
+        .eq('is_active', true)
+        .order('order_index')
+
+      if (categoriesError) throw categoriesError
+      setCategories(categoriesData || [])
+
+      // Cargar artículo
+      const { data: post, error: postError } = await supabase
+        .from('blog_posts')
+        .select('*')
+        .eq('id', postId)
+        .single<any>()
+
+      if (postError) throw postError
+
+      if (!post) {
+        setToast({ message: 'Artículo no encontrado', type: 'error' })
+        router.push('/administrator/blog')
+        return
+      }
+
+      setFormData({
+        title: post.title,
+        slug: post.slug,
+        excerpt: post.excerpt || '',
+        content: post.content,
+        featuredImageUrl: post.featured_image_url || '',
+        categoryId: post.category_id,
+        status: post.status as 'draft' | 'published',
+        isFeatured: post.is_featured,
+        seoTitle: post.seo_title || '',
+        seoDescription: post.seo_description || '',
+        seoKeywords: post.seo_keywords || ''
+      })
+
+    } catch (error) {
+      console.error('Error loading data:', error)
+      setToast({ message: 'Error al cargar los datos', type: 'error' })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleInputChange = (field: string, value: any) => {
+    setFormData(prev => ({ ...prev, [field]: value }))
+    
+    if (field === 'title') {
+      const slug = value
+        .toLowerCase()
+        .replace(/[áàäâ]/g, 'a')
+        .replace(/[éèëê]/g, 'e')
+        .replace(/[íìïî]/g, 'i')
+        .replace(/[óòöô]/g, 'o')
+        .replace(/[úùüû]/g, 'u')
+        .replace(/ñ/g, 'n')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+      setFormData(prev => ({ 
+        ...prev, 
+        slug,
+        seoTitle: value.substring(0, 60)
+      }))
+    }
+  }
+
+  const handleImageUpload = async (file: File) => {
+    try {
+      const fileExt = file.name.split('.').pop()
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
+      const filePath = `${fileName}`
+
+      const { error: uploadError } = await supabase.storage
+        .from('blog-images')
+        .upload(filePath, file)
+
+      if (uploadError) throw uploadError
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('blog-images')
+        .getPublicUrl(filePath)
+
+      handleInputChange('featuredImageUrl', publicUrl)
+      setToast({ message: 'Imagen subida exitosamente', type: 'success' })
+    } catch (error) {
+      console.error('Error uploading image:', error)
+      setToast({ message: 'Error al subir la imagen', type: 'error' })
+    }
+  }
+
+  const calculateReadingTime = (content: string): number => {
+    const text = content.replace(/<[^>]*>/g, '')
+    const wordCount = text.trim().split(/\s+/).length
+    return Math.max(1, Math.round(wordCount / 200))
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    if (!formData.title || !formData.content || !formData.categoryId) {
+      setToast({ message: 'Por favor completa todos los campos obligatorios', type: 'error' })
+      return
+    }
+
+    setSaving(true)
+
+    try {
+      const readingTime = calculateReadingTime(formData.content)
+
+      // Si el artículo está siendo publicado por primera vez, establecer published_at
+      const shouldSetPublishedAt = formData.status === 'published'
+      
+      const updateData = {
+        title: formData.title,
+        slug: formData.slug,
+        excerpt: formData.excerpt || null,
+        content: formData.content,
+        featured_image_url: formData.featuredImageUrl || null,
+        category_id: formData.categoryId,
+        status: formData.status,
+        is_featured: formData.isFeatured,
+        seo_title: formData.seoTitle || formData.title,
+        seo_description: formData.seoDescription || formData.excerpt,
+        seo_keywords: formData.seoKeywords || null,
+        reading_time_minutes: readingTime,
+        ...(shouldSetPublishedAt && { published_at: new Date().toISOString() })
+      }
+
+      const { error } = await supabase
+        .from('blog_posts')
+        // @ts-ignore - Supabase types issue  
+        .update(updateData)
+        .eq('id', postId)
+
+      if (error) throw error
+
+      setToast({ message: 'Artículo actualizado exitosamente!', type: 'success' })
+      setTimeout(() => router.push('/administrator/blog'), 1500)
+      
+    } catch (error) {
+      console.error('Error al actualizar artículo:', error)
+      setToast({ message: 'Error al actualizar el artículo', type: 'error' })
+      setSaving(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 text-forest animate-spin mx-auto mb-4" />
+          <p className="text-gray-600">Cargando artículo...</p>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <Link
+          href="/administrator/blog"
+          className="inline-flex items-center text-gray-600 hover:text-gray-900 transition mb-4"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Volver al Blog
+        </Link>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Editar Artículo</h1>
+        <p className="text-gray-600">Modifica los campos del artículo del blog</p>
+      </div>
+
+      <form onSubmit={handleSubmit}>
+        <div className="grid lg:grid-cols-4 gap-6">
+          {/* Contenido Principal */}
+          <div className="lg:col-span-3 space-y-6">
+            <div className="bg-white rounded-xl shadow-lg p-8">
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Título del Artículo *
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.title}
+                    onChange={(e) => handleInputChange('title', e.target.value)}
+                    placeholder="Ej: 5 Ejercicios Básicos para Cachorros"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Slug (URL)
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.slug}
+                    onChange={(e) => handleInputChange('slug', e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50"
+                    required
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    URL: /blog/{formData.slug || 'slug-del-articulo'}
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Extracto / Resumen
+                  </label>
+                  <textarea
+                    value={formData.excerpt}
+                    onChange={(e) => handleInputChange('excerpt', e.target.value)}
+                    placeholder="Breve resumen del artículo (aparecerá en listados y redes sociales)"
+                    rows={3}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Contenido del Artículo *
+                  </label>
+                  <TinyMCEEditor
+                    value={formData.content}
+                    onChange={(content) => handleInputChange('content', content)}
+                    height={500}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Imagen Destacada
+                  </label>
+                  {formData.featuredImageUrl ? (
+                    <div className="relative">
+                      <img
+                        src={formData.featuredImageUrl}
+                        alt="Imagen destacada"
+                        className="w-full h-64 object-cover rounded-lg"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleInputChange('featuredImageUrl', '')}
+                        className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full hover:bg-red-700 transition"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    <ImageUpload
+                      onUpload={handleImageUpload}
+                      maxSize={5}
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* SEO Section */}
+            <div className="bg-white rounded-xl shadow-lg p-8">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">SEO y Metadatos</h2>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Título SEO (max 60 caracteres)
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.seoTitle}
+                    onChange={(e) => handleInputChange('seoTitle', e.target.value)}
+                    maxLength={60}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    {formData.seoTitle.length}/60 caracteres
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Descripción SEO (max 160 caracteres)
+                  </label>
+                  <textarea
+                    value={formData.seoDescription}
+                    onChange={(e) => handleInputChange('seoDescription', e.target.value)}
+                    maxLength={160}
+                    rows={3}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    {formData.seoDescription.length}/160 caracteres
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Palabras Clave (separadas por comas)
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.seoKeywords}
+                    onChange={(e) => handleInputChange('seoKeywords', e.target.value)}
+                    placeholder="educación canina, adiestramiento, cachorros"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Sidebar */}
+          <div className="lg:col-span-1">
+            <div className="bg-white rounded-xl shadow-lg p-6 sticky top-24 space-y-6">
+              <div>
+                <h3 className="text-lg font-bold text-gray-900 mb-4">Configuración</h3>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Categoría *
+                    </label>
+                    <select
+                      value={formData.categoryId}
+                      onChange={(e) => handleInputChange('categoryId', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                      required
+                    >
+                      <option value="">Selecciona una categoría</option>
+                      {categories.map((cat) => (
+                        <option key={cat.id} value={cat.id}>
+                          {cat.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Estado
+                    </label>
+                    <select
+                      value={formData.status}
+                      onChange={(e) => handleInputChange('status', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                    >
+                      <option value="draft">Borrador</option>
+                      <option value="published">Publicado</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="flex items-center">
+                      <input
+                        type="checkbox"
+                        checked={formData.isFeatured}
+                        onChange={(e) => handleInputChange('isFeatured', e.target.checked)}
+                        className="w-4 h-4 text-forest border-gray-300 rounded"
+                      />
+                      <span className="ml-2 text-sm text-gray-700">Artículo Destacado</span>
+                    </label>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Aparecerá en la parte superior del blog
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="border-t pt-4">
+                <h4 className="font-semibold text-gray-700 mb-3">Vista Previa</h4>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Tiempo lectura:</span>
+                    <span className="font-semibold">
+                      {calculateReadingTime(formData.content)} min
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Estado:</span>
+                    <span className={`font-semibold ${
+                      formData.status === 'published' ? 'text-green-600' : 'text-gray-600'
+                    }`}>
+                      {formData.status === 'published' ? 'Publicado' : 'Borrador'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={saving}
+                className="w-full bg-gradient-to-r from-forest to-sage text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              >
+                <Save className="w-5 h-5 mr-2" />
+                {saving ? 'Guardando...' : 'Actualizar Artículo'}
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      {/* Toast Notification */}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
+    </div>
+  )
+}
