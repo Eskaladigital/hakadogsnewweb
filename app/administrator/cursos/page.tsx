@@ -208,13 +208,10 @@ export default function AdministratorPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">Gestión de Cursos</h1>
-            <p className="text-gray-600">Administra y gestiona todos los cursos de la plataforma</p>
-          </div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-6">Gestión de Cursos</h1>
 
           {/* Quick Actions */}
-          <div className="mb-8 flex items-center justify-end">
+          <div className="mb-6 flex items-center justify-end">
             <Link
               href="/administrator/cursos/nuevo"
               className="bg-gradient-to-r from-forest to-sage text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-all flex items-center shadow-lg"
@@ -225,7 +222,7 @@ export default function AdministratorPage() {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
               <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-gray-600">Total Cursos</p>
