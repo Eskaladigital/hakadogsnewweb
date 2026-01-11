@@ -1,8 +1,8 @@
 # 🐕 HAKADOGS - Plataforma de Educación Canina
 
-**Versión**: 2.2.0 MODULES & LESSONS  
+**Versión**: 2.3.0 ENHANCED UX  
 **Fecha Actualización**: Enero 2026  
-**Estado**: ✅ **LIVE EN HAKADOGS.COM - PERFORMANCE 95+ - SISTEMA DE MÓDULOS COMPLETO**
+**Estado**: ✅ **LIVE EN HAKADOGS.COM - PERFORMANCE 95+ - UX MEJORADA EN CURSOS**
 
 ---
 
@@ -179,15 +179,25 @@ hakadogs-app/
 ### 📚 Sistema de Cursos
 - ✅ Curso gratuito descargable
 - ✅ 11+ cursos específicos de pago por problema concreto
-- ✅ **Sistema de módulos jerárquico** (organización temática de lecciones) ⭐ NUEVO
+- ✅ **Sistema de módulos jerárquico** (organización temática de lecciones) ⭐
+- ✅ **Modal de detalles completo** con toda la info del curso ⭐ NUEVO
+  - 📋 Descripción completa con HTML enriquecido
+  - 🎯 "Qué aprenderás" con bullets
+  - 📚 Temario con módulos desplegables (acordeón)
+  - 💰 Precio y botón de compra responsive
+  - 📱 Optimizado para móvil (padding y tamaños adaptativos)
+- ✅ **Card de curso completamente clicable** para abrir modal ⭐ NUEVO
+- ✅ **Página de compra con información completa** (paridad con modal) ⭐ NUEVO
+- ✅ **Autenticación Supabase real** para compras ⭐ NUEVO
+- ✅ **Paleta de colores homogénea** (forest/sage) ⭐ NUEVO
 - ✅ Cada curso con múltiples lecciones organizadas en módulos
 - ✅ **Video por lección** (YouTube/Vimeo/Self-hosted)
 - ✅ **Audio por lección** (Soundcloud/Spotify/Self-hosted)
 - ✅ **Contenido HTML enriquecido** (TinyMCE con prose styling)
 - ✅ Recursos descargables por lección
 - ✅ **Sistema de progreso secuencial** (desbloqueo progresivo)
-- ✅ **Navegación entre módulos** con carga dinámica ⭐ NUEVO
-- ✅ **Breadcrumb jerárquico** tipo árbol (Curso > Módulo > Lección) ⭐ NUEVO
+- ✅ **Navegación entre módulos** con carga dinámica
+- ✅ **Breadcrumb jerárquico** tipo árbol (Curso > Módulo > Lección)
 - ✅ Dashboard "Mi Escuela" para alumnos
 - ✅ Carrito de compra
 - ✅ Proceso de pago
@@ -551,6 +561,14 @@ Deploy automático
 - [x] **Menú compacto** (reducción tipografía)
 - [x] **Caché mínima** para desarrollo activo
 - [x] **Responsive mobile** en lecciones de cursos (fix definitivo)
+- [x] **Modal de detalles de curso** con info completa ⭐ NUEVO
+- [x] **Card completamente clicable** para abrir modal ⭐ NUEVO
+- [x] **Temario con módulos desplegables** en modal y página compra ⭐ NUEVO
+- [x] **Página de compra mejorada** con descripción y temario ⭐ NUEVO
+- [x] **Autenticación Supabase** para proceso de compra ⭐ NUEVO
+- [x] **Colores homogéneos** (paleta forest/sage en headers) ⭐ NUEVO
+- [x] **Layout responsive** precio + botón en móvil ⭐ NUEVO
+- [x] **Módulos contraídos** por defecto (mejor UX) ⭐ NUEVO
 
 ---
 
@@ -572,13 +590,18 @@ Este proyecto es propiedad privada de Hakadogs y no puede ser reproducido, distr
 
 ## 🎉 ESTADO DEL PROYECTO
 
-### ✅ COMPLETADO AL 100% + OPTIMIZADO + BLOG PROFESIONAL
+### ✅ COMPLETADO AL 100% + OPTIMIZADO + UX MEJORADA EN CURSOS
 
-**180+ archivos creados**  
-**~48,000 líneas de código**  
-**70+ páginas funcionales**  
+**185+ archivos creados**  
+**~52,000 líneas de código**  
+**72+ páginas funcionales**  
 **54 páginas de localidades (dinámicas)**  
 **11+ cursos con lecciones, módulos y progreso secuencial**  
+**Modal de detalles de curso con temario desplegable** ⭐ NUEVO  
+**Card completamente clicable para mejor discoverability** ⭐ NUEVO  
+**Página de compra con información completa** ⭐ NUEVO  
+**Autenticación Supabase integrada en compras** ⭐ NUEVO  
+**Diseño visual homogéneo con paleta forest/sage** ⭐ NUEVO  
 **Sistema completo de blog con gestión profesional**  
 **Panel administrativo con IA integrada**  
 **Metodología BE HAKA documentada**  
@@ -590,6 +613,7 @@ Este proyecto es propiedad privada de Hakadogs y no puede ser reproducido, distr
 **Blog profesional layout 2 columnas** 📰  
 **Media Library integrada** 🖼️  
 **Auth real-time listener** 🔐  
+**Pre-commit hooks con Husky** 🛡️  
 **Todo listo para producción**
 
 ### 📊 Performance Metrics
@@ -659,12 +683,12 @@ Para cualquier duda o problema:
 ---
 
 **Última actualización**: Enero 2026  
-**Versión**: 2.1.0 ADVANCED  
+**Versión**: 2.3.0 ENHANCED UX  
 **Estado**: ✅ LIVE EN HAKADOGS.COM  
 **Performance**: 95+ Google PageSpeed  
 **Dominio**: https://www.hakadogs.com  
-**Lanzamiento**: Versión 2.1 - Enero 2026
+**Lanzamiento**: Versión 2.3 - Enero 2026
 
 ---
 
-# 🏆 ¡Hakadogs está LIVE, OPTIMIZADO y con BLOG PROFESIONAL listo para cambiar la educación canina en España! 🐕 🚀 ⚡ 📰
+# 🏆 ¡Hakadogs está LIVE, OPTIMIZADO y con UX DE CURSOS MEJORADA lista para cambiar la educación canina en España! 🐕 🚀 ⚡ 🎯
