@@ -1,8 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { getAllUsers, updateUserRole, searchUsers, type User } from '@/lib/supabase/users'
-import { Users as UsersIcon, Search, Edit, Crown, User as UserIcon, BookOpen, TrendingUp, DollarSign, Loader2 } from 'lucide-react'
+import { Users as UsersIcon, Search, Edit, Crown, User as UserIcon, BookOpen, TrendingUp, DollarSign, Loader2, ArrowLeft } from 'lucide-react'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
 import Toast from '@/components/ui/Toast'
 import ConfirmModal from '@/components/ui/ConfirmModal'
@@ -118,10 +119,16 @@ export default function UsuariosPage() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header con Estadísticas */}
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">Gestión de Usuarios</h1>
+    <div className="min-h-screen bg-gray-50 pt-20 pb-12">
+      <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
+        {/* Header */}
+        <div className="mb-6">
+          <Link href="/administrator" className="inline-flex items-center text-forest hover:text-sage mb-3 transition text-sm font-medium">
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Volver al Panel
+          </Link>
+          <h1 className="text-3xl font-bold text-gray-900">Gestión de Usuarios</h1>
+        </div>
         
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
@@ -165,7 +172,6 @@ export default function UsuariosPage() {
             </div>
           </div>
         </div>
-      </div>
 
       {/* Filtros y Búsqueda */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
@@ -331,6 +337,7 @@ export default function UsuariosPage() {
           onClose={() => setToast(null)}
         />
       )}
+    </div>
     </div>
   )
 }

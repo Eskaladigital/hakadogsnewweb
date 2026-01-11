@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { 
   getContactsByStatus, 
   updateContact, 
@@ -10,7 +11,7 @@ import {
 } from '@/lib/supabase/contacts'
 import { getRecentContacts } from '@/lib/supabase/dashboard'
 import { getSession } from '@/lib/supabase/auth'
-import { Mail, Search, Eye, Trash2, Clock, CheckCircle, AlertCircle, MessageSquare, Phone, Calendar, X } from 'lucide-react'
+import { Mail, Search, Eye, Trash2, Clock, CheckCircle, AlertCircle, MessageSquare, Phone, Calendar, X, ArrowLeft } from 'lucide-react'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
 import Toast from '@/components/ui/Toast'
 import ConfirmModal from '@/components/ui/ConfirmModal'
@@ -205,10 +206,16 @@ export default function ContactosPage() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header con Estadísticas */}
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">Gestión de Contactos</h1>
+    <div className="min-h-screen bg-gray-50 pt-20 pb-12">
+      <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
+        {/* Header */}
+        <div className="mb-6">
+          <Link href="/administrator" className="inline-flex items-center text-forest hover:text-sage mb-3 transition text-sm font-medium">
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Volver al Panel
+          </Link>
+          <h1 className="text-3xl font-bold text-gray-900">Gestión de Contactos</h1>
+        </div>
         
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
@@ -262,7 +269,6 @@ export default function ContactosPage() {
             </div>
           </div>
         </div>
-      </div>
 
       {/* Filtros y Búsqueda */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
@@ -571,6 +577,7 @@ export default function ContactosPage() {
           onCancel={() => setConfirmModal(null)}
         />
       )}
+    </div>
     </div>
   )
 }

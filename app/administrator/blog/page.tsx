@@ -352,15 +352,15 @@ export default function AdminBlogPage() {
     <div className="min-h-screen bg-gray-50 pt-20 pb-12">
       <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
         {/* Header */}
-        <div className="mb-8">
-          <Link href="/administrator" className="inline-flex items-center text-forest hover:text-sage mb-4 transition">
+        <div className="mb-6">
+          <Link href="/administrator" className="inline-flex items-center text-forest hover:text-sage mb-3 transition text-sm font-medium">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Volver al Panel
           </Link>
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-bold text-gray-900">Gestión de Blog</h1>
-              <p className="text-gray-600 mt-2">Sistema profesional de administración de contenidos</p>
+              <h1 className="text-3xl font-bold text-gray-900">Gestión de Blog</h1>
+              <p className="text-gray-600 mt-1 text-sm">Sistema profesional de administración de contenidos</p>
             </div>
             {activeTab === 'posts' && (
               <Link

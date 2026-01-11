@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { getSession } from '@/lib/supabase/auth'
 import { getAllCourses, getAdminStats, deleteCourse, updateCourse, type Course } from '@/lib/supabase/courses'
-import { BookOpen, TrendingUp, DollarSign, Users, Plus, Edit, Trash2, Eye, Search, ChevronUp, ChevronDown, CheckCircle, XCircle } from 'lucide-react'
+import { BookOpen, TrendingUp, DollarSign, Users, Plus, Edit, Trash2, Eye, Search, ChevronUp, ChevronDown, CheckCircle, XCircle, ArrowLeft } from 'lucide-react'
 import Toast from '@/components/ui/Toast'
 import ConfirmModal from '@/components/ui/ConfirmModal'
 
@@ -204,21 +204,27 @@ export default function AdministratorPage() {
   if (!isAdmin) return null
 
   return (
-    <div className="space-y-6">
-      <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <h1 className="text-3xl font-bold text-gray-900 mb-6">Gestión de Cursos</h1>
+    <div className="min-h-screen bg-gray-50 pt-20 pb-12">
+      <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
+        {/* Header */}
+        <div className="mb-6">
+          <Link href="/administrator" className="inline-flex items-center text-forest hover:text-sage mb-3 transition text-sm font-medium">
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Volver al Panel
+          </Link>
+          <h1 className="text-3xl font-bold text-gray-900">Gestión de Cursos</h1>
+        </div>
 
-          {/* Quick Actions */}
-          <div className="mb-6 flex items-center justify-end">
-            <Link
-              href="/administrator/cursos/nuevo"
-              className="bg-gradient-to-r from-forest to-sage text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-all flex items-center shadow-lg"
-            >
-              <Plus className="w-5 h-5 mr-2" />
-              Crear Nuevo Curso
-            </Link>
-          </div>
+        {/* Quick Actions */}
+        <div className="mb-6 flex items-center justify-end">
+          <Link
+            href="/administrator/cursos/nuevo"
+            className="bg-gradient-to-r from-forest to-sage text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-all flex items-center shadow-lg"
+          >
+            <Plus className="w-5 h-5 mr-2" />
+            Crear Nuevo Curso
+          </Link>
+        </div>
 
           {/* Stats */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
@@ -546,7 +552,6 @@ export default function AdministratorPage() {
               </>
             )}
           </div>
-        </div>
 
       {/* Toast de notificaciones */}
       {toast && (
@@ -570,6 +575,7 @@ export default function AdministratorPage() {
           onCancel={() => setConfirmModal(null)}
         />
       )}
+    </div>
     </div>
   )
 }
