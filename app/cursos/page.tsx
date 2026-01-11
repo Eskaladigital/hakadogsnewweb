@@ -118,10 +118,8 @@ export default function CursosPage() {
         const modules = await getCourseModules(curso.id)
         setCourseModules(modules)
 
-        // Expandir el primer módulo por defecto
-        if (modules.length > 0) {
-          setExpandedModules(new Set([modules[0].id]))
-        }
+        // NO expandir ningún módulo por defecto (todos contraídos)
+        setExpandedModules(new Set())
 
         // Cargar lecciones de cada módulo
         const { supabase } = await import('@/lib/supabase/client')
@@ -690,14 +688,14 @@ export default function CursosPage() {
                             {/* Header del Módulo */}
                             <button
                               onClick={() => toggleModule(courseModule.id)}
-                              className="w-full bg-gradient-to-r from-forest/5 to-sage/5 hover:from-forest/10 hover:to-sage/10 p-4 flex items-center justify-between transition-colors"
+                              className="w-full bg-gradient-to-r from-forest/5 to-sage/5 hover:from-forest/10 hover:to-sage/10 p-3 sm:p-4 flex items-center justify-between transition-colors"
                             >
-                              <div className="flex items-center gap-3">
-                                <div className="flex-shrink-0 w-8 h-8 bg-forest text-white rounded-full flex items-center justify-center font-bold text-sm">
+                              <div className="flex items-center gap-2 sm:gap-3">
+                                <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-forest text-white rounded-full flex items-center justify-center font-bold text-xs sm:text-sm">
                                   {moduleIdx + 1}
                                 </div>
                                 <div className="text-left">
-                                  <h4 className="font-bold text-gray-900">{courseModule.title}</h4>
+                                  <h4 className="font-bold text-gray-900 text-sm sm:text-base">{courseModule.title}</h4>
                                   <p className="text-xs text-gray-600 mt-0.5">
                                     {lessons.length} lección{lessons.length !== 1 ? 'es' : ''}
                                     {totalDuration > 0 && ` • ${totalDuration} min`}
@@ -705,7 +703,7 @@ export default function CursosPage() {
                                 </div>
                               </div>
                               <ChevronRight 
-                                className={`w-5 h-5 text-gray-600 transition-transform ${
+                                className={`w-4 h-4 sm:w-5 sm:h-5 text-gray-600 transition-transform flex-shrink-0 ${
                                   isExpanded ? 'rotate-90' : ''
                                 }`}
                               />
@@ -722,26 +720,25 @@ export default function CursosPage() {
                                   lessons.map((lesson, lessonIdx) => (
                                     <div
                                       key={lesson.id}
-                                      className="flex items-start p-3 hover:bg-gray-50 transition-colors"
+                                      className="flex items-start p-2.5 sm:p-3 hover:bg-gray-50 transition-colors"
                                     >
-                                      <div className="flex-shrink-0 w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center mr-3 mt-0.5">
+                                      <div className="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 bg-gray-100 rounded-full flex items-center justify-center mr-2 sm:mr-3 mt-0.5">
                                         <span className="text-xs font-semibold text-gray-600">{lessonIdx + 1}</span>
                                       </div>
-                                      <div className="flex-grow">
-                                        <h5 className="text-sm font-medium text-gray-900">{lesson.title}</h5>
+                                      <div className="flex-grow min-w-0">
+                                        <h5 className="text-xs sm:text-sm font-medium text-gray-900 break-words">{lesson.title}</h5>
                                         {lesson.duration_minutes > 0 && (
                                           <div className="flex items-center text-xs text-gray-500 mt-1">
-                                            <Clock className="w-3 h-3 mr-1" />
-                                            {lesson.duration_minutes} min
+                                            <Clock className="w-3 h-3 mr-1 flex-shrink-0" />
+                                            <span>{lesson.duration_minutes} min</span>
                                             {lesson.is_free_preview && (
-                                              <span className="ml-2 px-2 py-0.5 bg-gold/20 text-gold rounded-full font-medium">
+                                              <span className="ml-2 px-2 py-0.5 bg-gold/20 text-gold rounded-full font-medium text-xs">
                                                 Vista previa gratuita
                                               </span>
                                             )}
                                           </div>
                                         )}
                                       </div>
-                                      <PlayCircle className="w-4 h-4 text-gray-400 flex-shrink-0 mt-1" />
                                     </div>
                                   ))
                                 )}
@@ -754,7 +751,7 @@ export default function CursosPage() {
                       {/* Lecciones sin módulo */}
                       {lessonsWithoutModule.length > 0 && (
                         <div className="border border-gray-200 rounded-lg overflow-hidden">
-                          <div className="bg-gray-50 p-4">
+                          <div className="bg-gray-50 p-3 sm:p-4">
                             <h4 className="font-bold text-gray-900 text-sm">Lecciones adicionales</h4>
                             <p className="text-xs text-gray-600 mt-0.5">
                               {lessonsWithoutModule.length} lección{lessonsWithoutModule.length !== 1 ? 'es' : ''}
@@ -764,26 +761,25 @@ export default function CursosPage() {
                             {lessonsWithoutModule.map((lesson, idx) => (
                               <div
                                 key={lesson.id}
-                                className="flex items-start p-3 hover:bg-gray-50 transition-colors"
+                                className="flex items-start p-2.5 sm:p-3 hover:bg-gray-50 transition-colors"
                               >
-                                <div className="flex-shrink-0 w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center mr-3 mt-0.5">
+                                <div className="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 bg-gray-100 rounded-full flex items-center justify-center mr-2 sm:mr-3 mt-0.5">
                                   <span className="text-xs font-semibold text-gray-600">{idx + 1}</span>
                                 </div>
-                                <div className="flex-grow">
-                                  <h5 className="text-sm font-medium text-gray-900">{lesson.title}</h5>
+                                <div className="flex-grow min-w-0">
+                                  <h5 className="text-xs sm:text-sm font-medium text-gray-900 break-words">{lesson.title}</h5>
                                   {lesson.duration_minutes > 0 && (
                                     <div className="flex items-center text-xs text-gray-500 mt-1">
-                                      <Clock className="w-3 h-3 mr-1" />
-                                      {lesson.duration_minutes} min
+                                      <Clock className="w-3 h-3 mr-1 flex-shrink-0" />
+                                      <span>{lesson.duration_minutes} min</span>
                                       {lesson.is_free_preview && (
-                                        <span className="ml-2 px-2 py-0.5 bg-gold/20 text-gold rounded-full font-medium">
+                                        <span className="ml-2 px-2 py-0.5 bg-gold/20 text-gold rounded-full font-medium text-xs">
                                           Vista previa gratuita
                                         </span>
                                       )}
                                     </div>
                                   )}
                                 </div>
-                                <PlayCircle className="w-4 h-4 text-gray-400 flex-shrink-0 mt-1" />
                               </div>
                             ))}
                           </div>
@@ -804,26 +800,25 @@ export default function CursosPage() {
                     lessonsWithoutModule.map((lesson, idx) => (
                       <div
                         key={lesson.id}
-                        className="flex items-start bg-white border border-gray-200 rounded-lg p-4 hover:border-forest/30 hover:shadow-sm transition-all"
+                        className="flex items-start bg-white border border-gray-200 rounded-lg p-3 sm:p-4 hover:border-forest/30 hover:shadow-sm transition-all"
                       >
-                        <div className="flex-shrink-0 w-8 h-8 bg-forest/10 rounded-full flex items-center justify-center mr-3">
-                          <span className="text-sm font-bold text-forest">{idx + 1}</span>
+                        <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-forest/10 rounded-full flex items-center justify-center mr-2 sm:mr-3">
+                          <span className="text-xs sm:text-sm font-bold text-forest">{idx + 1}</span>
                         </div>
-                        <div className="flex-grow">
-                          <h4 className="font-semibold text-gray-900 mb-1">{lesson.title}</h4>
+                        <div className="flex-grow min-w-0">
+                          <h4 className="font-semibold text-gray-900 mb-1 text-sm sm:text-base break-words">{lesson.title}</h4>
                           {lesson.duration_minutes > 0 && (
-                            <div className="flex items-center text-xs text-gray-500">
-                              <Clock className="w-3 h-3 mr-1" />
-                              {lesson.duration_minutes} min
+                            <div className="flex items-center text-xs text-gray-500 flex-wrap">
+                              <Clock className="w-3 h-3 mr-1 flex-shrink-0" />
+                              <span>{lesson.duration_minutes} min</span>
                               {lesson.is_free_preview && (
-                                <span className="ml-2 px-2 py-0.5 bg-gold/20 text-gold rounded-full font-medium">
+                                <span className="ml-2 px-2 py-0.5 bg-gold/20 text-gold rounded-full font-medium text-xs">
                                   Vista previa gratuita
                                 </span>
                               )}
                             </div>
                           )}
                         </div>
-                        <PlayCircle className="w-5 h-5 text-gray-400 flex-shrink-0" />
                       </div>
                     ))
                   )}
