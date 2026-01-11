@@ -334,24 +334,74 @@ export default function BlogPostPage() {
           <aside className="lg:col-span-4">
             <div className="sticky top-32 space-y-6">
               
-              {/* Newsletter */}
-              <div className="bg-gradient-to-br from-forest to-sage text-white rounded-2xl shadow-xl p-6">
-                <div className="flex items-center justify-center w-12 h-12 bg-white/20 rounded-xl mb-4">
-                  <Mail className="w-6 h-6" />
+              {/* Artículos Relacionados */}
+              {relatedPosts.length > 0 && (
+                <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+                  <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                    <BookOpen className="w-5 h-5 mr-2 text-forest" />
+                    Artículos Relacionados
+                  </h3>
+                  <div className="space-y-4">
+                    {relatedPosts.map((relatedPost) => (
+                      <Link
+                        key={relatedPost.id}
+                        href={`/blog/${relatedPost.slug}`}
+                        className="group block hover:bg-gray-50 p-3 rounded-lg transition"
+                      >
+                        {relatedPost.featured_image_url && (
+                          <div className="aspect-video bg-gray-200 rounded-lg overflow-hidden mb-3">
+                            <img
+                              src={relatedPost.featured_image_url}
+                              alt={relatedPost.title}
+                              className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                            />
+                          </div>
+                        )}
+                        {relatedPost.category && (
+                          <span
+                            className="inline-block px-2 py-1 rounded-full text-xs font-bold text-white mb-2"
+                            style={{ backgroundColor: relatedPost.category.color }}
+                          >
+                            {relatedPost.category.name}
+                          </span>
+                        )}
+                        <h4 className="text-sm font-bold text-gray-900 group-hover:text-forest transition line-clamp-2 mb-1">
+                          {relatedPost.title}
+                        </h4>
+                        <div className="flex items-center text-xs text-gray-500">
+                          <Clock className="w-3 h-3 mr-1" />
+                          {relatedPost.reading_time_minutes} min
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
                 </div>
-                <h3 className="text-xl font-bold mb-2">Newsletter</h3>
-                <p className="text-white/90 text-sm mb-4">
-                  Recibe los mejores consejos de educación canina directamente en tu correo
-                </p>
-                <input
-                  type="email"
-                  placeholder="tu@email.com"
-                  className="w-full px-4 py-3 rounded-lg text-gray-900 mb-3 focus:ring-2 focus:ring-white/50 outline-none"
-                />
-                <button className="w-full bg-white text-forest px-4 py-3 rounded-lg font-bold hover:bg-gray-100 transition">
-                  Suscribirme
-                </button>
-              </div>
+              )}
+
+              {/* Categorías del Blog */}
+              {post.category && (
+                <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+                  <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                    <Tag className="w-5 h-5 mr-2 text-forest" />
+                    Más Temas
+                  </h3>
+                  <div className="space-y-2">
+                    <Link
+                      href="/blog"
+                      className="block px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition text-gray-700 font-medium"
+                    >
+                      Ver Todos los Artículos
+                    </Link>
+                    <Link
+                      href="/blog"
+                      className="block px-4 py-3 rounded-lg transition text-white font-medium"
+                      style={{ backgroundColor: post.category.color }}
+                    >
+                      Más de {post.category.name}
+                    </Link>
+                  </div>
+                </div>
+              )}
 
               {/* CTA Cursos */}
               <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
@@ -382,56 +432,6 @@ export default function BlogPostPage() {
           </aside>
         </div>
       </div>
-
-      {/* Posts relacionados */}
-      {relatedPosts.length > 0 && (
-        <section className="bg-gray-50 py-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-4">Artículos Relacionados</h2>
-              <p className="text-gray-600 text-lg">Continúa aprendiendo con estos artículos</p>
-            </div>
-            
-            <div className="grid md:grid-cols-3 gap-8">
-              {relatedPosts.map(relatedPost => (
-                <Link
-                  key={relatedPost.id}
-                  href={`/blog/${relatedPost.slug}`}
-                  className="group bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
-                >
-                  {relatedPost.featured_image_url && (
-                    <div className="aspect-video bg-gray-200 overflow-hidden">
-                      <img
-                        src={relatedPost.featured_image_url}
-                        alt={relatedPost.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
-                      />
-                    </div>
-                  )}
-                  <div className="p-6">
-                    {relatedPost.category && (
-                      <span
-                        className="inline-block px-3 py-1 rounded-full text-xs font-bold text-white mb-3"
-                        style={{ backgroundColor: relatedPost.category.color }}
-                      >
-                        {relatedPost.category.name}
-                      </span>
-                    )}
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-forest transition line-clamp-2">
-                      {relatedPost.title}
-                    </h3>
-                    <p className="text-gray-600 text-sm line-clamp-2 mb-4">{relatedPost.excerpt}</p>
-                    <div className="flex items-center text-sm text-gray-500">
-                      <Clock className="w-4 h-4 mr-2" />
-                      {relatedPost.reading_time_minutes} min
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* CTA Final */}
       <section className="bg-gradient-to-r from-forest via-sage to-forest text-white py-20">
