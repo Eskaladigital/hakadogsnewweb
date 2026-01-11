@@ -273,11 +273,13 @@ export default function LessonsManager({ lessons, modules, onChange }: LessonsMa
                       className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-base"
                     >
                       <option value="">Sin módulo</option>
-                      {modules.map((module) => (
-                        <option key={module.id} value={module.id}>
-                          {module.title}
-                        </option>
-                      ))}
+                      {modules
+                        .sort((a, b) => a.order_index - b.order_index)
+                        .map((module, idx) => (
+                          <option key={module.id} value={module.id}>
+                            Módulo {idx + 1}: {module.title}
+                          </option>
+                        ))}
                     </select>
                   </div>
                 </div>
