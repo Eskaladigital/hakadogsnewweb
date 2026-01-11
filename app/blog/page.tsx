@@ -86,7 +86,7 @@ export default function BlogPage() {
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-forest to-sage text-white pt-32 pb-20">
-        <div className="container mx-auto px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-5xl font-bold mb-6">Blog de HAKADOGS</h1>
             <p className="text-xl text-white/90 mb-8">
@@ -124,7 +124,7 @@ export default function BlogPage() {
 
       {/* Categorías */}
       <section className="bg-white border-b border-gray-200 sticky top-16 z-40">
-        <div className="container mx-auto px-4 sm:px-6 py-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex gap-3 overflow-x-auto pb-2">
             <button
               onClick={() => filterByCategory('')}
@@ -158,7 +158,7 @@ export default function BlogPage() {
 
       {/* Artículos Destacados */}
       {featuredPosts.length > 0 && !searchQuery && (
-        <section className="container mx-auto px-4 sm:px-6 py-12">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-8">Artículos Destacados</h2>
           <div className="grid md:grid-cols-3 gap-6">
             {featuredPosts.map(post => (
@@ -213,7 +213,7 @@ export default function BlogPage() {
       )}
 
       {/* Todos los Artículos */}
-      <section className="container mx-auto px-4 sm:px-6 py-12">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-3xl font-bold text-gray-900">
             {searchQuery ? `Resultados de búsqueda` : selectedCategory ? categories.find(c => c.id === selectedCategory)?.name : 'Todos los Artículos'}

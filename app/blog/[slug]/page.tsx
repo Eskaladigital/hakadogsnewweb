@@ -76,7 +76,7 @@ export default function BlogPostPage() {
   if (!post) {
     return (
       <div className="min-h-screen bg-gray-50 pt-20">
-        <div className="container mx-auto px-4 sm:px-6 py-12 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 text-center">
           <h1 className="text-3xl font-bold text-gray-900 mb-4">Artículo no encontrado</h1>
           <Link href="/blog" className="text-forest hover:underline">
             Volver al blog
@@ -90,7 +90,7 @@ export default function BlogPostPage() {
     <div className="min-h-screen bg-gray-50">
       {/* Hero con imagen destacada */}
       <div className="bg-white border-b border-gray-200 pt-20">
-        <div className="container mx-auto px-4 sm:px-6 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
           <Link href="/blog" className="inline-flex items-center text-forest hover:text-sage mb-6 transition">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Volver al blog
@@ -171,7 +171,7 @@ export default function BlogPostPage() {
       </div>
 
       {/* Contenido del artículo */}
-      <article className="container mx-auto px-4 sm:px-6 py-12">
+      <article className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
         <div className="max-w-4xl mx-auto">
           {/* Extracto */}
           {post.excerpt && (
@@ -191,7 +191,7 @@ export default function BlogPostPage() {
 
       {/* Posts relacionados */}
       {relatedPosts.length > 0 && (
-        <section className="container mx-auto px-4 sm:px-6 py-12 border-t border-gray-200">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12 border-t border-gray-200">
           <h2 className="text-3xl font-bold text-gray-900 mb-8">Artículos Relacionados</h2>
           <div className="grid md:grid-cols-3 gap-6">
             {relatedPosts.map(relatedPost => (
@@ -231,7 +231,7 @@ export default function BlogPostPage() {
 
       {/* CTA */}
       <section className="bg-gradient-to-r from-forest to-sage text-white py-16">
-        <div className="container mx-auto px-4 sm:px-6 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
           <h2 className="text-3xl font-bold mb-4">¿Te ha gustado este artículo?</h2>
           <p className="text-xl text-white/90 mb-8">
             Descubre nuestros cursos y lleva la educación de tu perro al siguiente nivel
