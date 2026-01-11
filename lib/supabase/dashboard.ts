@@ -41,6 +41,13 @@ export interface DashboardStats {
     in_progress: number
     avg_completion: number
   }
+  blog: {
+    total_posts: number
+    published_posts: number
+    draft_posts: number
+    categories: number
+    total_views: number
+  }
 }
 
 export interface RecentUser {
@@ -104,6 +111,32 @@ export interface ConversionMetrics {
 export async function getDashboardStats(): Promise<DashboardStats> {
   const { data, error } = await (supabase as any).rpc('get_dashboard_stats')
   
+  // Obtener estadísticas del blog por separado
+  const [blogPostsResult, blogCategoriesResult] = await Promise.allSettled([
+    supabase.from('blog_posts').select('id, status, views_count', { count: 'exact' }),
+    supabase.from('blog_categories').select('id', { count: 'exact' })
+  ])
+  
+  const blogStats = {
+    total_posts: 0,
+    published_posts: 0,
+    draft_posts: 0,
+    categories: 0,
+    total_views: 0
+  }
+  
+  if (blogPostsResult.status === 'fulfilled' && blogPostsResult.value.data) {
+    const posts = blogPostsResult.value.data
+    blogStats.total_posts = posts.length
+    blogStats.published_posts = posts.filter((p: any) => p.status === 'published').length
+    blogStats.draft_posts = posts.filter((p: any) => p.status === 'draft').length
+    blogStats.total_views = posts.reduce((sum: number, p: any) => sum + (p.views_count || 0), 0)
+  }
+  
+  if (blogCategoriesResult.status === 'fulfilled' && blogCategoriesResult.value.count !== null) {
+    blogStats.categories = blogCategoriesResult.value.count
+  }
+  
   if (error) {
     console.warn('⚠️ Error getting dashboard stats:', error.message || error)
     // Devolver estadísticas por defecto en lugar de lanzar error
@@ -112,11 +145,15 @@ export async function getDashboardStats(): Promise<DashboardStats> {
       courses: { total: 0, published: 0, draft: 0, free: 0, paid: 0 },
       sales: { total: 0, today: 0, this_week: 0, this_month: 0, revenue_total: 0, revenue_today: 0, revenue_month: 0 },
       contacts: { total: 0, pending: 0, in_progress: 0, responded: 0, today: 0, this_week: 0 },
-      progress: { completed_courses: 0, in_progress: 0, avg_completion: 0 }
+      progress: { completed_courses: 0, in_progress: 0, avg_completion: 0 },
+      blog: blogStats
     }
   }
   
-  return data as DashboardStats
+  return {
+    ...data,
+    blog: blogStats
+  } as DashboardStats
 }
 
 /**

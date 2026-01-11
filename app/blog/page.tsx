@@ -1,266 +1,309 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Calendar, User, ArrowRight, Tag } from 'lucide-react'
-
-// En producción, esto vendría de una base de datos o archivos MDX
-const blogPosts = [
-  {
-    slug: '5-ejercicios-basicos-cachorro',
-    title: '5 Ejercicios Básicos para Empezar con tu Cachorro',
-    excerpt: 'Descubre los ejercicios fundamentales que todo cachorro debe aprender en sus primeros meses de vida.',
-    category: 'Educación',
-    author: 'Alfredo García',
-    date: '2024-12-15',
-    readTime: '5 min',
-    image: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800&h=400&fit=crop',
-    featured: true
-  },
-  {
-    slug: 'alimentacion-saludable-perro',
-    title: 'Guía Completa de Alimentación Saludable para Perros',
-    excerpt: 'Todo lo que necesitas saber sobre nutrición canina: desde cachorros hasta perros senior.',
-    category: 'Salud',
-    author: 'Alfredo García',
-    date: '2024-12-10',
-    readTime: '8 min',
-    image: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=800&h=400&fit=crop',
-    featured: true
-  },
-  {
-    slug: 'socializacion-perro-adulto',
-    title: 'Cómo Socializar un Perro Adulto: Guía Paso a Paso',
-    excerpt: 'Nunca es tarde para socializar a tu perro. Aprende técnicas efectivas para perros adultos.',
-    category: 'Comportamiento',
-    author: 'Alfredo García',
-    date: '2024-12-05',
-    readTime: '6 min',
-    image: 'https://images.unsplash.com/photo-1558788353-f76d92427f16?w=800&h=400&fit=crop',
-    featured: false
-  },
-  {
-    slug: 'ansiedad-separacion-soluciones',
-    title: 'Ansiedad por Separación: Causas y Soluciones',
-    excerpt: 'Identifica los síntomas y aprende a tratar la ansiedad por separación en tu perro.',
-    category: 'Comportamiento',
-    author: 'Alfredo García',
-    date: '2024-11-28',
-    readTime: '7 min',
-    image: 'https://images.unsplash.com/photo-1477884213360-7e9d7dcc1e48?w=800&h=400&fit=crop',
-    featured: false
-  },
-  {
-    slug: 'ejercicios-mentales-perros',
-    title: 'Juegos Mentales: Por Qué tu Perro los Necesita',
-    excerpt: 'El ejercicio mental es tan importante como el físico. Descubre los mejores juegos.',
-    category: 'Entrenamiento',
-    author: 'Alfredo García',
-    date: '2024-11-20',
-    readTime: '5 min',
-    image: 'https://images.unsplash.com/photo-1568572933382-74d440642117?w=800&h=400&fit=crop',
-    featured: false
-  },
-  {
-    slug: 'paseo-perfecto-tips',
-    title: 'El Paseo Perfecto: 10 Tips de un Educador Profesional',
-    excerpt: 'Convierte el paseo diario en una experiencia positiva y educativa para tu perro.',
-    category: 'Educación',
-    author: 'Alfredo García',
-    date: '2024-11-15',
-    readTime: '6 min',
-    image: 'https://images.unsplash.com/photo-1548767797-d8c844163c4c?w=800&h=400&fit=crop',
-    featured: false
-  }
-]
-
-const categories = ['Todas', 'Educación', 'Salud', 'Comportamiento', 'Entrenamiento']
+import { Calendar, Clock, Eye, Search, Tag, Filter, Loader2, ArrowRight } from 'lucide-react'
+import { getPublishedBlogPosts, getAllBlogCategories, getFeaturedBlogPosts, searchBlogPosts } from '@/lib/supabase/blog'
+import type { BlogPostWithCategory, BlogCategory } from '@/lib/supabase/blog'
 
 export default function BlogPage() {
-  const [selectedCategory, setSelectedCategory] = useState('Todas')
+  const [loading, setLoading] = useState(true)
+  const [posts, setPosts] = useState<BlogPostWithCategory[]>([])
+  const [featuredPosts, setFeaturedPosts] = useState<BlogPostWithCategory[]>([])
+  const [categories, setCategories] = useState<BlogCategory[]>([])
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState<string>('')
+  const [searching, setSearching] = useState(false)
 
-  // Filtrar posts según categoría seleccionada
-  const filteredPosts = selectedCategory === 'Todas' 
-    ? blogPosts 
-    : blogPosts.filter(post => post.category === selectedCategory)
+  useEffect(() => {
+    loadData()
+  }, [])
 
-  const featuredPosts = filteredPosts.filter(post => post.featured)
-  const regularPosts = filteredPosts.filter(post => !post.featured)
+  const loadData = async () => {
+    try {
+      setLoading(true)
+      const [allPosts, featured, cats] = await Promise.all([
+        getPublishedBlogPosts(),
+        getFeaturedBlogPosts(3),
+        getAllBlogCategories()
+      ])
+      
+      setPosts(allPosts)
+      setFeaturedPosts(featured)
+      setCategories(cats)
+    } catch (error) {
+      console.error('Error cargando blog:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) {
+      loadData()
+      return
+    }
+
+    try {
+      setSearching(true)
+      const results = await searchBlogPosts(searchQuery, selectedCategory || undefined, 20)
+      setPosts(results)
+    } catch (error) {
+      console.error('Error buscando:', error)
+    } finally {
+      setSearching(false)
+    }
+  }
+
+  const filterByCategory = async (categoryId: string) => {
+    setSelectedCategory(categoryId)
+    if (!categoryId) {
+      loadData()
+      return
+    }
+
+    const filtered = posts.filter(post => post.category_id === categoryId)
+    setPosts(filtered.length > 0 ? filtered : await getPublishedBlogPosts())
+  }
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('es-ES', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    })
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 pt-20 flex items-center justify-center">
+        <Loader2 className="w-12 h-12 animate-spin text-forest" />
+      </div>
+    )
+  }
 
   return (
-    <div className="min-h-screen bg-cream">
-      {/* Hero */}
-      <div className="bg-gradient-to-br from-forest-dark via-forest to-sage text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-          <h1 className="text-5xl font-bold mb-6">Blog de Hakadogs</h1>
-          <p className="text-xl text-white/90 max-w-2xl mx-auto">
-            Consejos, guías y recursos sobre educación canina profesional
-          </p>
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <section className="bg-gradient-to-r from-forest to-sage text-white pt-32 pb-20">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="max-w-4xl mx-auto text-center">
+            <h1 className="text-5xl font-bold mb-6">Blog de HAKADOGS</h1>
+            <p className="text-xl text-white/90 mb-8">
+              Consejos, guías y recursos para la educación canina
+            </p>
+            
+            {/* Barra de búsqueda */}
+            <div className="bg-white rounded-xl shadow-lg p-2 flex gap-2 max-w-2xl mx-auto">
+              <input
+                type="text"
+                placeholder="Buscar artículos..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                className="flex-1 px-4 py-3 text-gray-900 focus:outline-none rounded-lg"
+              />
+              <button
+                onClick={handleSearch}
+                disabled={searching}
+                className="bg-gradient-to-r from-forest to-sage text-white px-6 py-3 rounded-lg hover:opacity-90 transition flex items-center disabled:opacity-50"
+              >
+                {searching ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <>
+                    <Search className="w-5 h-5 mr-2" />
+                    Buscar
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        {/* Categories Filter */}
-        <div className="flex flex-wrap gap-3 justify-center mb-12">
-          {categories.map((cat) => (
+      {/* Categorías */}
+      <section className="bg-white border-b border-gray-200 sticky top-16 z-40">
+        <div className="container mx-auto px-4 sm:px-6 py-4">
+          <div className="flex gap-3 overflow-x-auto pb-2">
             <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className={`px-6 py-2 rounded-full font-semibold transition ${
-                cat === selectedCategory
-                  ? 'bg-forest-dark text-white shadow-lg scale-105'
-                  : 'bg-white text-forest-dark hover:bg-forest-dark hover:text-white'
+              onClick={() => filterByCategory('')}
+              className={`px-4 py-2 rounded-lg font-medium whitespace-nowrap transition ${
+                !selectedCategory
+                  ? 'bg-forest text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
-              {cat}
+              Todas
             </button>
-          ))}
+            {categories.map(category => (
+              <button
+                key={category.id}
+                onClick={() => filterByCategory(category.id)}
+                className={`px-4 py-2 rounded-lg font-medium whitespace-nowrap transition ${
+                  selectedCategory === category.id
+                    ? 'text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+                style={{
+                  backgroundColor: selectedCategory === category.id ? category.color : undefined
+                }}
+              >
+                {category.name}
+              </button>
+            ))}
+          </div>
         </div>
+      </section>
 
-        {/* Contador de resultados */}
-        <div className="text-center mb-8">
-          <p className="text-gray-600">
-            Mostrando <span className="font-bold text-forest-dark">{filteredPosts.length}</span> artículo{filteredPosts.length !== 1 ? 's' : ''}
-            {selectedCategory !== 'Todas' && (
-              <span> en <span className="font-bold text-forest-dark">{selectedCategory}</span></span>
-            )}
-          </p>
-        </div>
-
-        {/* Featured Posts */}
-        {featuredPosts.length > 0 && (
-          <div className="mb-16">
-            <h2 className="text-3xl font-bold text-forest-dark mb-8">Destacados</h2>
-            <div className="grid md:grid-cols-2 gap-8">
-              {featuredPosts.map((post) => (
-                <Link
-                  key={post.slug}
-                  href={`/blog/${post.slug}`}
-                  className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition"
-                >
-                  <div className="aspect-[16/9] overflow-hidden">
+      {/* Artículos Destacados */}
+      {featuredPosts.length > 0 && !searchQuery && (
+        <section className="container mx-auto px-4 sm:px-6 py-12">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">Artículos Destacados</h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            {featuredPosts.map(post => (
+              <Link
+                key={post.id}
+                href={`/blog/${post.slug}`}
+                className="group bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition"
+              >
+                {post.featured_image_url && (
+                  <div className="aspect-video bg-gray-200 overflow-hidden">
                     <img
-                      src={post.image}
+                      src={post.featured_image_url}
                       alt={post.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                      className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                     />
                   </div>
-                  <div className="p-8">
-                    <div className="flex items-center space-x-4 text-sm text-gray-600 mb-4">
-                      <span className="px-3 py-1 bg-gold/20 text-gold rounded-full font-semibold">
-                        {post.category}
+                )}
+                <div className="p-6">
+                  {post.category && (
+                    <span
+                      className="inline-block px-3 py-1 rounded-full text-xs font-semibold text-white mb-3"
+                      style={{ backgroundColor: post.category.color }}
+                    >
+                      {post.category.name}
+                    </span>
+                  )}
+                  <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-forest transition">
+                    {post.title}
+                  </h3>
+                  <p className="text-gray-600 mb-4 line-clamp-2">{post.excerpt}</p>
+                  <div className="flex items-center justify-between text-sm text-gray-500">
+                    <div className="flex items-center gap-4">
+                      <span className="flex items-center">
+                        <Calendar className="w-4 h-4 mr-1" />
+                        {formatDate(post.published_at || post.created_at)}
                       </span>
                       <span className="flex items-center">
-                        <Calendar size={14} className="mr-1" />
-                        {new Date(post.date).toLocaleDateString('es-ES', {
-                          day: 'numeric',
-                          month: 'long',
-                          year: 'numeric'
-                        })}
-                      </span>
-                      <span>{post.readTime}</span>
-                    </div>
-                    <h3 className="text-2xl font-bold text-forest-dark mb-3 group-hover:text-forest transition">
-                      {post.title}
-                    </h3>
-                    <p className="text-gray-600 mb-4">{post.excerpt}</p>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2 text-sm text-gray-600">
-                        <User size={14} />
-                        <span>{post.author}</span>
-                      </div>
-                      <span className="text-forest-dark font-semibold group-hover:text-forest flex items-center whitespace-nowrap">
-                        Leer más <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition flex-shrink-0" />
+                        <Clock className="w-4 h-4 mr-1" />
+                        {post.reading_time_minutes} min
                       </span>
                     </div>
+                    <span className="flex items-center text-forest font-semibold">
+                      Leer más
+                      <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition" />
+                    </span>
                   </div>
-                </Link>
-              ))}
-            </div>
+                </div>
+              </Link>
+            ))}
           </div>
-        )}
+        </section>
+      )}
 
-        {/* Regular Posts */}
-        {regularPosts.length > 0 && (
-          <div>
-            <h2 className="text-3xl font-bold text-forest-dark mb-8">
-              {featuredPosts.length > 0 ? 'Últimos Artículos' : 'Artículos'}
-            </h2>
-            <div className="grid md:grid-cols-3 gap-8">
-              {regularPosts.map((post) => (
-                <Link
-                  key={post.slug}
-                  href={`/blog/${post.slug}`}
-                  className="group bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition"
-                >
-                  <div className="aspect-[16/10] overflow-hidden">
+      {/* Todos los Artículos */}
+      <section className="container mx-auto px-4 sm:px-6 py-12">
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-3xl font-bold text-gray-900">
+            {searchQuery ? `Resultados de búsqueda` : selectedCategory ? categories.find(c => c.id === selectedCategory)?.name : 'Todos los Artículos'}
+          </h2>
+          <p className="text-gray-600">{posts.length} artículos</p>
+        </div>
+
+        {posts.length === 0 ? (
+          <div className="bg-white rounded-xl shadow-sm p-12 text-center">
+            <Search className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+            <p className="text-gray-500 text-lg">No se encontraron artículos</p>
+            <button
+              onClick={() => {
+                setSearchQuery('')
+                setSelectedCategory('')
+                loadData()
+              }}
+              className="mt-4 text-forest hover:underline"
+            >
+              Ver todos los artículos
+            </button>
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {posts.map(post => (
+              <Link
+                key={post.id}
+                href={`/blog/${post.slug}`}
+                className="group bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition"
+              >
+                {post.featured_image_url && (
+                  <div className="aspect-video bg-gray-200 overflow-hidden">
                     <img
-                      src={post.image}
+                      src={post.featured_image_url}
                       alt={post.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                      className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                     />
                   </div>
-                  <div className="p-6">
-                    <div className="flex items-center space-x-3 text-sm text-gray-600 mb-3">
-                      <span className="px-3 py-1 bg-forest-dark/10 text-forest-dark rounded-full font-semibold text-xs">
-                        {post.category}
+                )}
+                <div className="p-6">
+                  {post.category && (
+                    <span
+                      className="inline-block px-3 py-1 rounded-full text-xs font-semibold text-white mb-3"
+                      style={{ backgroundColor: post.category.color }}
+                    >
+                      {post.category.name}
+                    </span>
+                  )}
+                  <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-forest transition line-clamp-2">
+                    {post.title}
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-4 line-clamp-3">{post.excerpt}</p>
+                  <div className="flex items-center justify-between text-xs text-gray-500">
+                    <div className="flex items-center gap-3">
+                      <span className="flex items-center">
+                        <Calendar className="w-3 h-3 mr-1" />
+                        {formatDate(post.published_at || post.created_at)}
                       </span>
-                      <span>{post.readTime}</span>
-                    </div>
-                    <h3 className="text-xl font-bold text-forest-dark mb-2 group-hover:text-forest transition line-clamp-2">
-                      {post.title}
-                    </h3>
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">{post.excerpt}</p>
-                    <div className="text-sm text-gray-500">
-                      {new Date(post.date).toLocaleDateString('es-ES', {
-                        day: 'numeric',
-                        month: 'short'
-                      })}
+                      <span className="flex items-center">
+                        <Clock className="w-3 h-3 mr-1" />
+                        {post.reading_time_minutes} min
+                      </span>
+                      <span className="flex items-center">
+                        <Eye className="w-3 h-3 mr-1" />
+                        {post.views_count}
+                      </span>
                     </div>
                   </div>
-                </Link>
-              ))}
-            </div>
+                </div>
+              </Link>
+            ))}
           </div>
         )}
+      </section>
 
-        {/* No results message */}
-        {filteredPosts.length === 0 && (
-          <div className="text-center py-20">
-            <Tag size={64} className="mx-auto mb-6 text-gray-300" />
-            <h3 className="text-2xl font-bold text-gray-600 mb-4">
-              No hay artículos en esta categoría
-            </h3>
-            <p className="text-gray-500 mb-8">
-              Prueba con otra categoría o selecciona &quot;Todas&quot;
-            </p>
-            <button
-              onClick={() => setSelectedCategory('Todas')}
-              className="btn-primary"
-            >
-              Ver Todos los Artículos
-            </button>
-          </div>
-        )}
-
-        {/* CTA */}
-        <div className="mt-16 bg-gradient-to-br from-forest-dark to-forest text-white rounded-2xl p-12 text-center">
-          <h2 className="text-3xl font-bold mb-4">¿Quieres recibir nuestros artículos?</h2>
-          <p className="text-white/90 mb-8 max-w-2xl mx-auto">
-            Suscríbete a nuestra newsletter y recibe los mejores consejos sobre educación canina directamente en tu email
+      {/* CTA Section */}
+      <section className="bg-gradient-to-r from-forest to-sage text-white py-16">
+        <div className="container mx-auto px-4 sm:px-6 text-center">
+          <h2 className="text-3xl font-bold mb-4">¿Quieres aprender más?</h2>
+          <p className="text-xl text-white/90 mb-8">
+            Explora nuestros cursos profesionales de educación canina
           </p>
-          <form className="max-w-md mx-auto flex gap-3">
-            <input
-              type="email"
-              placeholder="Tu email"
-              className="flex-1 px-6 py-4 rounded-lg text-gray-900 focus:ring-2 focus:ring-gold"
-            />
-            <button className="px-8 py-4 bg-gold hover:bg-gold/90 text-forest-dark font-bold rounded-lg transition">
-              Suscribirse
-            </button>
-          </form>
+          <Link
+            href="/cursos"
+            className="inline-block bg-white text-forest px-8 py-4 rounded-lg font-bold hover:bg-gray-100 transition"
+          >
+            Ver Cursos
+          </Link>
         </div>
-      </div>
+      </section>
     </div>
   )
 }

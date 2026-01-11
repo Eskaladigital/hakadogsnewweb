@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { 
   Users, BookOpen, Mail, TrendingUp, DollarSign, 
-  CheckCircle, Clock, AlertCircle, Eye, ArrowRight 
+  CheckCircle, Clock, AlertCircle, Eye, ArrowRight, FileText
 } from 'lucide-react'
 import { getDashboardStats, getRecentUsers, getRecentSales, getRecentContacts, type DashboardStats } from '@/lib/supabase/dashboard'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
@@ -96,6 +96,14 @@ export default function DashboardPage() {
       href: '/administrator/cursos'
     },
     {
+      title: 'Artículos del Blog',
+      value: stats.blog.published_posts,
+      change: `${stats.blog.total_posts} total`,
+      icon: FileText,
+      color: 'bg-indigo-500',
+      href: '/administrator/blog'
+    },
+    {
       title: 'Ventas del Mes',
       value: stats.sales.this_month,
       change: `+${stats.sales.today} hoy`,
@@ -118,14 +126,6 @@ export default function DashboardPage() {
       icon: Mail,
       color: 'bg-red-500',
       href: '/administrator/contactos'
-    },
-    {
-      title: 'Cursos Completados',
-      value: stats.progress.completed_courses,
-      change: `${stats.progress.avg_completion.toFixed(1)}% promedio`,
-      icon: CheckCircle,
-      color: 'bg-teal-500',
-      href: '/administrator/cursos'
     }
   ]
 
