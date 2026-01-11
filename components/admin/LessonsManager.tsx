@@ -46,6 +46,11 @@ interface LessonsManagerProps {
 }
 
 export default function LessonsManager({ lessons, modules, onChange }: LessonsManagerProps) {
+  // Calcular lecciones sin asignar cuando hay módulos
+  const unassignedLessons = modules.length > 0 
+    ? lessons.filter(l => !l.module_id).length 
+    : 0
+
   const addLesson = () => {
     const newLesson: Lesson = {
       id: `lesson-${Date.now()}`,
@@ -138,6 +143,27 @@ export default function LessonsManager({ lessons, modules, onChange }: LessonsMa
         </button>
       </div>
 
+      {/* Advertencia de lecciones sin asignar */}
+      {unassignedLessons > 0 && (
+        <div className="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-lg">
+          <div className="flex items-start">
+            <div className="flex-shrink-0">
+              <svg className="h-5 w-5 text-amber-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <h3 className="text-sm font-semibold text-amber-800">
+                {unassignedLessons} {unassignedLessons === 1 ? 'lección pendiente' : 'lecciones pendientes'} de asignar a un módulo
+              </h3>
+              <p className="mt-1 text-sm text-amber-700">
+                Este curso tiene módulos creados. Por favor, asigna cada lección a un módulo para mantener la organización del curso.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {lessons.length === 0 && (
         <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
           <FileText className="w-12 h-12 text-gray-400 mx-auto mb-3" />
@@ -177,6 +203,11 @@ export default function LessonsManager({ lessons, modules, onChange }: LessonsMa
                 {lesson.isFreePreview && (
                   <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded whitespace-nowrap">
                     Vista previa
+                  </span>
+                )}
+                {modules.length > 0 && !lesson.module_id && (
+                  <span className="text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded whitespace-nowrap font-semibold">
+                    ⚠️ Sin módulo
                   </span>
                 )}
                 <button

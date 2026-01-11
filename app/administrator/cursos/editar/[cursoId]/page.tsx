@@ -229,6 +229,18 @@ export default function EditarCursoPage() {
       return
     }
 
+    // Advertencia si hay lecciones sin asignar cuando existen módulos
+    const unassignedCount = modules.length > 0 ? lessons.filter(l => !l.module_id).length : 0
+    if (unassignedCount > 0) {
+      const confirmSave = window.confirm(
+        `⚠️ ADVERTENCIA:\n\nHay ${unassignedCount} ${unassignedCount === 1 ? 'lección sin asignar' : 'lecciones sin asignar'} a ningún módulo.\n\nEstas lecciones NO se mostrarán en el curso hasta que las asignes a un módulo.\n\n¿Deseas guardar de todas formas?`
+      )
+      if (!confirmSave) {
+        setActiveTab('lessons') // Cambiar a la pestaña de lecciones para que las revise
+        return
+      }
+    }
+
     setSaving(true)
 
     try {
@@ -369,6 +381,9 @@ export default function EditarCursoPage() {
   ]
 
   const totalDuration = lessons.reduce((sum, lesson) => sum + lesson.duration_minutes, 0)
+  const unassignedLessons = modules.length > 0 
+    ? lessons.filter(l => !l.module_id).length 
+    : 0
 
   if (loading) {
     return (
@@ -762,6 +777,12 @@ export default function EditarCursoPage() {
                         <span className="text-gray-600">Duración total:</span>
                         <span className="font-semibold">{totalDuration} min</span>
                       </div>
+                      {unassignedLessons > 0 && (
+                        <div className="flex justify-between items-center pt-2 border-t">
+                          <span className="text-amber-600 font-medium">⚠️ Sin módulo:</span>
+                          <span className="font-semibold text-amber-600">{unassignedLessons}</span>
+                        </div>
+                      )}
                     </div>
                   </div>
 
