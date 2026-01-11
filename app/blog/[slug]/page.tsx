@@ -145,10 +145,7 @@ export default function BlogPostPage() {
           {/* Categoría */}
           {post.category && (
             <div className="mb-6">
-              <span
-                className="inline-flex items-center px-4 py-2 rounded-full text-sm font-bold text-white shadow-md"
-                style={{ backgroundColor: post.category.color }}
-              >
+              <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-bold bg-gradient-to-r from-forest to-sage text-white shadow-md">
                 <Tag className="w-4 h-4 mr-2" />
                 {post.category.name}
               </span>
@@ -178,7 +175,7 @@ export default function BlogPostPage() {
               </div>
             </div>
             <div className="flex items-center gap-2 text-gray-700">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-br from-forest to-sage rounded-full flex items-center justify-center">
                 <Clock className="w-5 h-5 text-white" />
               </div>
               <div className="text-sm">
@@ -186,7 +183,7 @@ export default function BlogPostPage() {
               </div>
             </div>
             <div className="flex items-center gap-2 text-gray-700">
-              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-br from-forest to-sage rounded-full flex items-center justify-center">
                 <Eye className="w-5 h-5 text-white" />
               </div>
               <div className="text-sm">
@@ -358,10 +355,7 @@ export default function BlogPostPage() {
                           </div>
                         )}
                         {relatedPost.category && (
-                          <span
-                            className="inline-block px-2 py-1 rounded-full text-xs font-bold text-white mb-2"
-                            style={{ backgroundColor: relatedPost.category.color }}
-                          >
+                          <span className="inline-block px-2 py-1 rounded-full text-xs font-bold bg-forest/10 text-forest mb-2">
                             {relatedPost.category.name}
                           </span>
                         )}
@@ -394,8 +388,7 @@ export default function BlogPostPage() {
                     </Link>
                     <Link
                       href="/blog"
-                      className="block px-4 py-3 rounded-lg transition text-white font-medium"
-                      style={{ backgroundColor: post.category.color }}
+                      className="block px-4 py-3 bg-gradient-to-r from-forest to-sage rounded-lg transition text-white font-medium hover:shadow-lg"
                     >
                       Más de {post.category.name}
                     </Link>
