@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Calendar, Clock, Eye, ArrowLeft, Share2, Facebook, Twitter, Linkedin, Tag, Loader2, BookOpen, ChevronRight, MessageCircle, Heart, Bookmark, Mail, Copy, Check, Menu } from 'lucide-react'
+import { Calendar, Clock, Eye, Share2, Facebook, Twitter, Linkedin, Tag, Loader2, BookOpen, ChevronRight, Mail, Copy, Check } from 'lucide-react'
 import { getBlogPostBySlug, getPublishedBlogPosts } from '@/lib/supabase/blog'
 import type { BlogPostWithCategory } from '@/lib/supabase/blog'
 
@@ -16,11 +16,8 @@ export default function BlogPostPage() {
   const [post, setPost] = useState<BlogPostWithCategory | null>(null)
   const [relatedPosts, setRelatedPosts] = useState<BlogPostWithCategory[]>([])
   const [readProgress, setReadProgress] = useState(0)
-  const [activeHeading, setActiveHeading] = useState<string>('')
   const [showShareMenu, setShowShareMenu] = useState(false)
   const [copied, setCopied] = useState(false)
-  const [tocOpen, setTocOpen] = useState(false)
-  const contentRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (slug) {
@@ -35,19 +32,6 @@ export default function BlogPostPage() {
       const scrollTop = window.scrollY
       const progress = (scrollTop / (documentHeight - windowHeight)) * 100
       setReadProgress(Math.min(progress, 100))
-
-      // Detectar heading activo
-      if (contentRef.current) {
-        const headings = contentRef.current.querySelectorAll('h2, h3')
-        let active = ''
-        headings.forEach((heading) => {
-          const rect = heading.getBoundingClientRect()
-          if (rect.top <= 150) {
-            active = heading.id
-          }
-        })
-        setActiveHeading(active)
-      }
     }
 
     window.addEventListener('scroll', handleScroll)
@@ -104,21 +88,6 @@ export default function BlogPostPage() {
     window.open(shareUrls[platform], '_blank', 'width=600,height=400')
   }
 
-  // Extraer tabla de contenidos del HTML
-  const extractTableOfContents = () => {
-    if (!post?.content) return []
-    const parser = new DOMParser()
-    const doc = parser.parseFromString(post.content, 'text/html')
-    const headings = doc.querySelectorAll('h2, h3')
-    return Array.from(headings).map((heading, index) => ({
-      id: heading.id || `heading-${index}`,
-      text: heading.textContent || '',
-      level: heading.tagName === 'H2' ? 2 : 3
-    }))
-  }
-
-  const tableOfContents = post ? extractTableOfContents() : []
-
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white pt-20 flex items-center justify-center">
@@ -156,30 +125,17 @@ export default function BlogPostPage() {
       {/* Header compacto con breadcrumb */}
       <div className="bg-white border-b border-gray-100 pt-24 pb-6 sticky top-0 z-40 backdrop-blur-lg bg-white/90">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between">
-            <nav className="flex items-center gap-2 text-sm text-gray-600">
-              <Link href="/" className="hover:text-forest transition">Inicio</Link>
-              <ChevronRight className="w-4 h-4" />
-              <Link href="/blog" className="hover:text-forest transition">Blog</Link>
-              {post.category && (
-                <>
-                  <ChevronRight className="w-4 h-4" />
-                  <span className="text-gray-900 font-medium">{post.category.name}</span>
-                </>
-              )}
-            </nav>
-            
-            {/* Botón móvil para tabla de contenidos */}
-            {tableOfContents.length > 0 && (
-              <button
-                onClick={() => setTocOpen(!tocOpen)}
-                className="lg:hidden flex items-center gap-2 text-sm text-forest font-medium hover:text-sage transition"
-              >
-                <Menu className="w-4 h-4" />
-                Índice
-              </button>
+          <nav className="flex items-center gap-2 text-sm text-gray-600">
+            <Link href="/" className="hover:text-forest transition">Inicio</Link>
+            <ChevronRight className="w-4 h-4" />
+            <Link href="/blog" className="hover:text-forest transition">Blog</Link>
+            {post.category && (
+              <>
+                <ChevronRight className="w-4 h-4" />
+                <span className="text-gray-900 font-medium">{post.category.name}</span>
+              </>
             )}
-          </div>
+          </nav>
         </div>
       </div>
 
@@ -311,44 +267,12 @@ export default function BlogPostPage() {
         </div>
       )}
 
-      {/* Layout con sidebar */}
+      {/* Layout con sidebar derecho solamente */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-20">
         <div className="grid lg:grid-cols-12 gap-12">
           
-          {/* Sidebar izquierdo - Tabla de contenidos (Desktop) */}
-          {tableOfContents.length > 0 && (
-            <aside className="hidden lg:block lg:col-span-3">
-              <div className="sticky top-32">
-                <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <BookOpen className="w-5 h-5 text-forest" />
-                    <h3 className="font-bold text-gray-900">En este artículo</h3>
-                  </div>
-                  <nav className="space-y-2">
-                    {tableOfContents.map((item) => (
-                      <a
-                        key={item.id}
-                        href={`#${item.id}`}
-                        className={`block py-2 px-3 rounded-lg text-sm transition-all ${
-                          activeHeading === item.id
-                            ? 'bg-forest text-white font-semibold'
-                            : 'text-gray-600 hover:bg-gray-50 hover:text-forest'
-                        } ${item.level === 3 ? 'pl-6' : ''}`}
-                      >
-                        {item.text}
-                      </a>
-                    ))}
-                  </nav>
-                </div>
-              </div>
-            </aside>
-          )}
-
-          {/* Contenido principal */}
-          <article 
-            ref={contentRef}
-            className={`${tableOfContents.length > 0 ? 'lg:col-span-6' : 'lg:col-span-8 mx-auto'}`}
-          >
+          {/* Contenido principal - MÁS ANCHO */}
+          <article className="lg:col-span-8">
             <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
               <div className="p-8 md:p-12">
                 {/* Contenido HTML con estilos mejorados */}
@@ -407,7 +331,7 @@ export default function BlogPostPage() {
           </article>
 
           {/* Sidebar derecho - Info adicional */}
-          <aside className={`${tableOfContents.length > 0 ? 'lg:col-span-3' : 'lg:col-span-4'}`}>
+          <aside className="lg:col-span-4">
             <div className="sticky top-32 space-y-6">
               
               {/* Newsletter */}
@@ -532,36 +456,6 @@ export default function BlogPostPage() {
           </div>
         </div>
       </section>
-
-      {/* Tabla de contenidos móvil (overlay) */}
-      {tocOpen && tableOfContents.length > 0 && (
-        <div className="lg:hidden fixed inset-0 bg-black/50 z-50" onClick={() => setTocOpen(false)}>
-          <div className="absolute top-0 right-0 w-80 max-w-[90vw] h-full bg-white shadow-2xl p-6 overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="font-bold text-gray-900">En este artículo</h3>
-              <button onClick={() => setTocOpen(false)} className="text-gray-500 hover:text-gray-700">
-                ✕
-              </button>
-            </div>
-            <nav className="space-y-2">
-              {tableOfContents.map((item) => (
-                <a
-                  key={item.id}
-                  href={`#${item.id}`}
-                  onClick={() => setTocOpen(false)}
-                  className={`block py-2 px-3 rounded-lg text-sm transition-all ${
-                    activeHeading === item.id
-                      ? 'bg-forest text-white font-semibold'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-forest'
-                  } ${item.level === 3 ? 'pl-6' : ''}`}
-                >
-                  {item.text}
-                </a>
-              ))}
-            </nav>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
