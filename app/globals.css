@@ -128,6 +128,68 @@ body {
     height: auto;
     display: block;
   }
+  
+  /* Forzar que todo el contenido HTML renderizado se ajuste al contenedor */
+  .lesson-content,
+  .lesson-content * {
+    max-width: 100% !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+  }
+  
+  .lesson-content img,
+  .lesson-content video,
+  .lesson-content iframe,
+  .lesson-content table,
+  .lesson-content pre {
+    max-width: 100% !important;
+    height: auto !important;
+    overflow-x: auto !important;
+  }
+  
+  .lesson-content table {
+    display: block !important;
+    overflow-x: auto !important;
+    white-space: nowrap;
+  }
+  
+  .lesson-content p,
+  .lesson-content h1,
+  .lesson-content h2,
+  .lesson-content h3,
+  .lesson-content h4,
+  .lesson-content h5,
+  .lesson-content h6,
+  .lesson-content li,
+  .lesson-content div {
+    max-width: 100% !important;
+    word-break: break-word !important;
+  }
+  
+  /* Ajustar tamaños de fuente en móvil */
+  @media (max-width: 640px) {
+    .lesson-content {
+      font-size: 0.9rem !important;
+      line-height: 1.6 !important;
+    }
+    
+    .lesson-content h1 {
+      font-size: 1.5rem !important;
+    }
+    
+    .lesson-content h2 {
+      font-size: 1.3rem !important;
+    }
+    
+    .lesson-content h3 {
+      font-size: 1.1rem !important;
+    }
+    
+    .lesson-content p,
+    .lesson-content li {
+      font-size: 0.9rem !important;
+    }
+  }
 
   /* Tablas responsive */
   .prose table {
