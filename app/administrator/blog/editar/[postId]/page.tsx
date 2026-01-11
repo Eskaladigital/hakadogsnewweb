@@ -123,14 +123,14 @@ export default function EditarArticuloPage() {
     if (field === 'title') {
       const slug = value
         .toLowerCase()
-        .replace(/[áàäâ]/g, 'a')
-        .replace(/[éèëê]/g, 'e')
-        .replace(/[íìïî]/g, 'i')
-        .replace(/[óòöô]/g, 'o')
-        .replace(/[úùüû]/g, 'u')
-        .replace(/ñ/g, 'n')
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '')
+        .trim()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '') // Eliminar acentos
+        .replace(/[^a-z0-9\s-]/g, '') // Mantener solo letras, números, espacios y guiones
+        .replace(/\s+/g, '-') // Espacios a guiones
+        .replace(/-+/g, '-') // Múltiples guiones a uno
+        .replace(/^-+|-+$/g, '') // Eliminar guiones inicio/fin
+        .substring(0, 100) // Limitar longitud
       setFormData(prev => ({ 
         ...prev, 
         slug,

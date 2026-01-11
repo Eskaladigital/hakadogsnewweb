@@ -379,10 +379,14 @@ export async function createBlogTag(tag: Partial<BlogTag>) {
 export function generateSlug(text: string): string {
   return text
     .toLowerCase()
+    .trim()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '') // Eliminar acentos
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)/g, '')
+    .replace(/[^a-z0-9\s-]/g, '') // Eliminar caracteres especiales excepto espacios y guiones
+    .replace(/\s+/g, '-') // Reemplazar espacios con guiones
+    .replace(/-+/g, '-') // Reemplazar múltiples guiones con uno solo
+    .replace(/^-+|-+$/g, '') // Eliminar guiones al inicio y final
+    .substring(0, 100) // Limitar longitud para SEO
 }
 
 export function calculateReadingTime(content: string): number {

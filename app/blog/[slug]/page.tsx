@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Calendar, Clock, Eye, ArrowLeft, Share2, Facebook, Twitter, Linkedin, Tag, Loader2 } from 'lucide-react'
+import { Calendar, Clock, Eye, ArrowLeft, Share2, Facebook, Twitter, Linkedin, Tag, Loader2, BookOpen, ChevronRight, MessageCircle, Heart, Bookmark, Mail, Copy, Check, Menu } from 'lucide-react'
 import { getBlogPostBySlug, getPublishedBlogPosts } from '@/lib/supabase/blog'
 import type { BlogPostWithCategory } from '@/lib/supabase/blog'
 
@@ -15,12 +15,44 @@ export default function BlogPostPage() {
   const [loading, setLoading] = useState(true)
   const [post, setPost] = useState<BlogPostWithCategory | null>(null)
   const [relatedPosts, setRelatedPosts] = useState<BlogPostWithCategory[]>([])
+  const [readProgress, setReadProgress] = useState(0)
+  const [activeHeading, setActiveHeading] = useState<string>('')
+  const [showShareMenu, setShowShareMenu] = useState(false)
+  const [copied, setCopied] = useState(false)
+  const [tocOpen, setTocOpen] = useState(false)
+  const contentRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (slug) {
       loadPost()
     }
   }, [slug])
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const windowHeight = window.innerHeight
+      const documentHeight = document.documentElement.scrollHeight
+      const scrollTop = window.scrollY
+      const progress = (scrollTop / (documentHeight - windowHeight)) * 100
+      setReadProgress(Math.min(progress, 100))
+
+      // Detectar heading activo
+      if (contentRef.current) {
+        const headings = contentRef.current.querySelectorAll('h2, h3')
+        let active = ''
+        headings.forEach((heading) => {
+          const rect = heading.getBoundingClientRect()
+          if (rect.top <= 150) {
+            active = heading.id
+          }
+        })
+        setActiveHeading(active)
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [post])
 
   const loadPost = async () => {
     try {
@@ -52,10 +84,17 @@ export default function BlogPostPage() {
     })
   }
 
-  const sharePost = (platform: 'facebook' | 'twitter' | 'linkedin') => {
+  const sharePost = (platform: 'facebook' | 'twitter' | 'linkedin' | 'copy') => {
     const url = window.location.href
     const title = post?.title || ''
     
+    if (platform === 'copy') {
+      navigator.clipboard.writeText(url)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+      return
+    }
+
     const shareUrls = {
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
       twitter: `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`,
@@ -65,10 +104,28 @@ export default function BlogPostPage() {
     window.open(shareUrls[platform], '_blank', 'width=600,height=400')
   }
 
+  // Extraer tabla de contenidos del HTML
+  const extractTableOfContents = () => {
+    if (!post?.content) return []
+    const parser = new DOMParser()
+    const doc = parser.parseFromString(post.content, 'text/html')
+    const headings = doc.querySelectorAll('h2, h3')
+    return Array.from(headings).map((heading, index) => ({
+      id: heading.id || `heading-${index}`,
+      text: heading.textContent || '',
+      level: heading.tagName === 'H2' ? 2 : 3
+    }))
+  }
+
+  const tableOfContents = post ? extractTableOfContents() : []
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 pt-20 flex items-center justify-center">
-        <Loader2 className="w-12 h-12 animate-spin text-forest" />
+      <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white pt-20 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 animate-spin text-forest mx-auto mb-4" />
+          <p className="text-gray-600">Cargando artículo...</p>
+        </div>
       </div>
     )
   }
@@ -87,163 +144,424 @@ export default function BlogPostPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero con imagen destacada */}
-      <div className="bg-white border-b border-gray-200 pt-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-          <Link href="/blog" className="inline-flex items-center text-forest hover:text-sage mb-6 transition">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Volver al blog
-          </Link>
+    <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white">
+      {/* Barra de progreso de lectura */}
+      <div className="fixed top-0 left-0 w-full h-1 bg-gray-100 z-50">
+        <div 
+          className="h-full bg-gradient-to-r from-forest to-sage transition-all duration-300"
+          style={{ width: `${readProgress}%` }}
+        />
+      </div>
 
+      {/* Header compacto con breadcrumb */}
+      <div className="bg-white border-b border-gray-100 pt-24 pb-6 sticky top-0 z-40 backdrop-blur-lg bg-white/90">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="flex items-center justify-between">
+            <nav className="flex items-center gap-2 text-sm text-gray-600">
+              <Link href="/" className="hover:text-forest transition">Inicio</Link>
+              <ChevronRight className="w-4 h-4" />
+              <Link href="/blog" className="hover:text-forest transition">Blog</Link>
+              {post.category && (
+                <>
+                  <ChevronRight className="w-4 h-4" />
+                  <span className="text-gray-900 font-medium">{post.category.name}</span>
+                </>
+              )}
+            </nav>
+            
+            {/* Botón móvil para tabla de contenidos */}
+            {tableOfContents.length > 0 && (
+              <button
+                onClick={() => setTocOpen(!tocOpen)}
+                className="lg:hidden flex items-center gap-2 text-sm text-forest font-medium hover:text-sage transition"
+              >
+                <Menu className="w-4 h-4" />
+                Índice
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Hero minimalista */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-12 pb-8">
+        <div className="max-w-4xl mx-auto">
           {/* Categoría */}
           {post.category && (
-            <div className="mb-4">
+            <div className="mb-6">
               <span
-                className="inline-block px-4 py-2 rounded-full text-sm font-semibold text-white"
+                className="inline-flex items-center px-4 py-2 rounded-full text-sm font-bold text-white shadow-md"
                 style={{ backgroundColor: post.category.color }}
               >
+                <Tag className="w-4 h-4 mr-2" />
                 {post.category.name}
               </span>
             </div>
           )}
 
           {/* Título */}
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+          <h1 className="text-4xl md:text-6xl font-black text-gray-900 mb-6 leading-tight tracking-tight">
             {post.title}
           </h1>
 
-          {/* Meta información */}
-          <div className="flex flex-wrap items-center gap-6 text-gray-600 mb-8">
-            <div className="flex items-center">
-              <Calendar className="w-5 h-5 mr-2" />
-              <span>{formatDate(post.published_at || post.created_at)}</span>
-            </div>
-            <div className="flex items-center">
-              <Clock className="w-5 h-5 mr-2" />
-              <span>{post.reading_time_minutes} min de lectura</span>
-            </div>
-            <div className="flex items-center">
-              <Eye className="w-5 h-5 mr-2" />
-              <span>{post.views_count} vistas</span>
-            </div>
-          </div>
-
-          {/* Botones de compartir */}
-          <div className="flex items-center gap-3 pb-8">
-            <span className="text-sm font-semibold text-gray-700">Compartir:</span>
-            <button
-              onClick={() => sharePost('facebook')}
-              className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-              title="Compartir en Facebook"
-            >
-              <Facebook className="w-5 h-5" />
-            </button>
-            <button
-              onClick={() => sharePost('twitter')}
-              className="p-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition"
-              title="Compartir en Twitter"
-            >
-              <Twitter className="w-5 h-5" />
-            </button>
-            <button
-              onClick={() => sharePost('linkedin')}
-              className="p-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition"
-              title="Compartir en LinkedIn"
-            >
-              <Linkedin className="w-5 h-5" />
-            </button>
-          </div>
-        </div>
-
-        {/* Imagen destacada */}
-        {post.featured_image_url && (
-          <div className="container mx-auto px-4 sm:px-6">
-            <div className="aspect-video bg-gray-200 rounded-t-xl overflow-hidden">
-              <img
-                src={post.featured_image_url}
-                alt={post.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Contenido del artículo */}
-      <article className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-        <div className="max-w-4xl mx-auto">
-          {/* Extracto */}
+          {/* Extracto grande */}
           {post.excerpt && (
-            <div className="bg-forest/5 border-l-4 border-forest p-6 rounded-r-lg mb-8">
-              <p className="text-lg text-gray-700 italic">{post.excerpt}</p>
-            </div>
+            <p className="text-xl md:text-2xl text-gray-600 leading-relaxed mb-8 font-light">
+              {post.excerpt}
+            </p>
           )}
 
-          {/* Contenido HTML */}
-          <div
-            className="responsive-prose lesson-content prose max-w-none"
-            style={{ fontSize: 'clamp(0.875rem, 2vw, 1rem)' }}
-            dangerouslySetInnerHTML={{ __html: post.content }}
-          />
+          {/* Meta información mejorada */}
+          <div className="flex flex-wrap items-center gap-6 pb-8 border-b border-gray-200">
+            <div className="flex items-center gap-2 text-gray-700">
+              <div className="w-10 h-10 bg-gradient-to-br from-forest to-sage rounded-full flex items-center justify-center">
+                <Calendar className="w-5 h-5 text-white" />
+              </div>
+              <div className="text-sm">
+                <div className="font-semibold">{formatDate(post.published_at || post.created_at)}</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 text-gray-700">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+                <Clock className="w-5 h-5 text-white" />
+              </div>
+              <div className="text-sm">
+                <div className="font-semibold">{post.reading_time_minutes} min lectura</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 text-gray-700">
+              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center">
+                <Eye className="w-5 h-5 text-white" />
+              </div>
+              <div className="text-sm">
+                <div className="font-semibold">{post.views_count.toLocaleString()} vistas</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Botones de acción */}
+          <div className="flex flex-wrap items-center gap-4 pt-8">
+            <div className="relative">
+              <button
+                onClick={() => setShowShareMenu(!showShareMenu)}
+                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-forest to-sage text-white rounded-full font-semibold hover:shadow-lg transition-all hover:scale-105"
+              >
+                <Share2 className="w-5 h-5" />
+                Compartir
+              </button>
+              
+              {showShareMenu && (
+                <div className="absolute top-full left-0 mt-2 bg-white rounded-xl shadow-2xl border border-gray-100 p-2 z-50 min-w-[200px]">
+                  <button
+                    onClick={() => sharePost('facebook')}
+                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-blue-50 rounded-lg transition text-left group"
+                  >
+                    <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                      <Facebook className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="text-gray-700 font-medium group-hover:text-blue-600">Facebook</span>
+                  </button>
+                  <button
+                    onClick={() => sharePost('twitter')}
+                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-sky-50 rounded-lg transition text-left group"
+                  >
+                    <div className="w-8 h-8 bg-sky-500 rounded-lg flex items-center justify-center">
+                      <Twitter className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="text-gray-700 font-medium group-hover:text-sky-500">Twitter</span>
+                  </button>
+                  <button
+                    onClick={() => sharePost('linkedin')}
+                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-blue-50 rounded-lg transition text-left group"
+                  >
+                    <div className="w-8 h-8 bg-blue-700 rounded-lg flex items-center justify-center">
+                      <Linkedin className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="text-gray-700 font-medium group-hover:text-blue-700">LinkedIn</span>
+                  </button>
+                  <button
+                    onClick={() => sharePost('copy')}
+                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg transition text-left group"
+                  >
+                    <div className="w-8 h-8 bg-gray-600 rounded-lg flex items-center justify-center">
+                      {copied ? <Check className="w-4 h-4 text-white" /> : <Copy className="w-4 h-4 text-white" />}
+                    </div>
+                    <span className="text-gray-700 font-medium group-hover:text-gray-900">
+                      {copied ? '¡Copiado!' : 'Copiar enlace'}
+                    </span>
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
-      </article>
+      </div>
+
+      {/* Imagen destacada full-width con efecto parallax */}
+      {post.featured_image_url && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-16">
+          <div className="relative aspect-[21/9] bg-gray-900 rounded-3xl overflow-hidden shadow-2xl">
+            <img
+              src={post.featured_image_url}
+              alt={post.title}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+          </div>
+        </div>
+      )}
+
+      {/* Layout con sidebar */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-20">
+        <div className="grid lg:grid-cols-12 gap-12">
+          
+          {/* Sidebar izquierdo - Tabla de contenidos (Desktop) */}
+          {tableOfContents.length > 0 && (
+            <aside className="hidden lg:block lg:col-span-3">
+              <div className="sticky top-32">
+                <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <BookOpen className="w-5 h-5 text-forest" />
+                    <h3 className="font-bold text-gray-900">En este artículo</h3>
+                  </div>
+                  <nav className="space-y-2">
+                    {tableOfContents.map((item) => (
+                      <a
+                        key={item.id}
+                        href={`#${item.id}`}
+                        className={`block py-2 px-3 rounded-lg text-sm transition-all ${
+                          activeHeading === item.id
+                            ? 'bg-forest text-white font-semibold'
+                            : 'text-gray-600 hover:bg-gray-50 hover:text-forest'
+                        } ${item.level === 3 ? 'pl-6' : ''}`}
+                      >
+                        {item.text}
+                      </a>
+                    ))}
+                  </nav>
+                </div>
+              </div>
+            </aside>
+          )}
+
+          {/* Contenido principal */}
+          <article 
+            ref={contentRef}
+            className={`${tableOfContents.length > 0 ? 'lg:col-span-6' : 'lg:col-span-8 mx-auto'}`}
+          >
+            <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
+              <div className="p-8 md:p-12">
+                {/* Contenido HTML con estilos mejorados */}
+                <div
+                  className="prose prose-lg max-w-none
+                    prose-headings:font-black prose-headings:tracking-tight
+                    prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6 prose-h2:text-gray-900
+                    prose-h3:text-2xl prose-h3:mt-8 prose-h3:mb-4 prose-h3:text-gray-800
+                    prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-6
+                    prose-a:text-forest prose-a:font-semibold prose-a:no-underline hover:prose-a:underline
+                    prose-strong:text-gray-900 prose-strong:font-bold
+                    prose-ul:my-6 prose-ul:space-y-2
+                    prose-ol:my-6 prose-ol:space-y-2
+                    prose-li:text-gray-700 prose-li:leading-relaxed
+                    prose-blockquote:border-l-4 prose-blockquote:border-forest prose-blockquote:bg-forest/5 prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:rounded-r-xl prose-blockquote:not-italic
+                    prose-img:rounded-2xl prose-img:shadow-lg prose-img:my-8
+                    prose-code:text-forest prose-code:bg-gray-50 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:font-mono prose-code:text-sm
+                    prose-pre:bg-gray-900 prose-pre:rounded-2xl prose-pre:shadow-lg"
+                  dangerouslySetInnerHTML={{ __html: post.content }}
+                />
+              </div>
+            </div>
+
+            {/* Compartir al final del artículo */}
+            <div className="mt-12 bg-gradient-to-br from-forest/5 via-sage/5 to-forest/5 rounded-2xl p-8 border border-forest/10">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">¿Te ha resultado útil?</h3>
+                  <p className="text-gray-600">Comparte este artículo con otros amantes de los perros</p>
+                </div>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => sharePost('facebook')}
+                    className="p-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition shadow-md hover:shadow-lg"
+                    title="Compartir en Facebook"
+                  >
+                    <Facebook className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={() => sharePost('twitter')}
+                    className="p-3 bg-sky-500 text-white rounded-xl hover:bg-sky-600 transition shadow-md hover:shadow-lg"
+                    title="Compartir en Twitter"
+                  >
+                    <Twitter className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={() => sharePost('linkedin')}
+                    className="p-3 bg-blue-700 text-white rounded-xl hover:bg-blue-800 transition shadow-md hover:shadow-lg"
+                    title="Compartir en LinkedIn"
+                  >
+                    <Linkedin className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          {/* Sidebar derecho - Info adicional */}
+          <aside className={`${tableOfContents.length > 0 ? 'lg:col-span-3' : 'lg:col-span-4'}`}>
+            <div className="sticky top-32 space-y-6">
+              
+              {/* Newsletter */}
+              <div className="bg-gradient-to-br from-forest to-sage text-white rounded-2xl shadow-xl p-6">
+                <div className="flex items-center justify-center w-12 h-12 bg-white/20 rounded-xl mb-4">
+                  <Mail className="w-6 h-6" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">Newsletter</h3>
+                <p className="text-white/90 text-sm mb-4">
+                  Recibe los mejores consejos de educación canina directamente en tu correo
+                </p>
+                <input
+                  type="email"
+                  placeholder="tu@email.com"
+                  className="w-full px-4 py-3 rounded-lg text-gray-900 mb-3 focus:ring-2 focus:ring-white/50 outline-none"
+                />
+                <button className="w-full bg-white text-forest px-4 py-3 rounded-lg font-bold hover:bg-gray-100 transition">
+                  Suscribirme
+                </button>
+              </div>
+
+              {/* CTA Cursos */}
+              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+                <div className="flex items-center justify-center w-12 h-12 bg-forest/10 rounded-xl mb-4">
+                  <BookOpen className="w-6 h-6 text-forest" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Aprende Más</h3>
+                <p className="text-gray-600 text-sm mb-4">
+                  Descubre nuestros cursos profesionales de educación canina
+                </p>
+                <Link
+                  href="/cursos"
+                  className="block w-full bg-gradient-to-r from-forest to-sage text-white text-center px-4 py-3 rounded-lg font-bold hover:shadow-lg transition"
+                >
+                  Ver Cursos
+                </Link>
+              </div>
+
+              {/* Info rápida */}
+              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+                <h4 className="font-bold text-gray-900 mb-4">Sobre Hakadogs</h4>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  Somos profesionales con más de 15 años de experiencia en educación canina. 
+                  Nuestra misión es ayudarte a crear una relación equilibrada con tu perro.
+                </p>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
 
       {/* Posts relacionados */}
       {relatedPosts.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12 border-t border-gray-200">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">Artículos Relacionados</h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            {relatedPosts.map(relatedPost => (
-              <Link
-                key={relatedPost.id}
-                href={`/blog/${relatedPost.slug}`}
-                className="group bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition"
-              >
-                {relatedPost.featured_image_url && (
-                  <div className="aspect-video bg-gray-200 overflow-hidden">
-                    <img
-                      src={relatedPost.featured_image_url}
-                      alt={relatedPost.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-                    />
-                  </div>
-                )}
-                <div className="p-6">
-                  {relatedPost.category && (
-                    <span
-                      className="inline-block px-3 py-1 rounded-full text-xs font-semibold text-white mb-3"
-                      style={{ backgroundColor: relatedPost.category.color }}
-                    >
-                      {relatedPost.category.name}
-                    </span>
+        <section className="bg-gray-50 py-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-4">Artículos Relacionados</h2>
+              <p className="text-gray-600 text-lg">Continúa aprendiendo con estos artículos</p>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-8">
+              {relatedPosts.map(relatedPost => (
+                <Link
+                  key={relatedPost.id}
+                  href={`/blog/${relatedPost.slug}`}
+                  className="group bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
+                >
+                  {relatedPost.featured_image_url && (
+                    <div className="aspect-video bg-gray-200 overflow-hidden">
+                      <img
+                        src={relatedPost.featured_image_url}
+                        alt={relatedPost.title}
+                        className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+                      />
+                    </div>
                   )}
-                  <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-forest transition line-clamp-2">
-                    {relatedPost.title}
-                  </h3>
-                  <p className="text-gray-600 text-sm line-clamp-2">{relatedPost.excerpt}</p>
-                </div>
-              </Link>
-            ))}
+                  <div className="p-6">
+                    {relatedPost.category && (
+                      <span
+                        className="inline-block px-3 py-1 rounded-full text-xs font-bold text-white mb-3"
+                        style={{ backgroundColor: relatedPost.category.color }}
+                      >
+                        {relatedPost.category.name}
+                      </span>
+                    )}
+                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-forest transition line-clamp-2">
+                      {relatedPost.title}
+                    </h3>
+                    <p className="text-gray-600 text-sm line-clamp-2 mb-4">{relatedPost.excerpt}</p>
+                    <div className="flex items-center text-sm text-gray-500">
+                      <Clock className="w-4 h-4 mr-2" />
+                      {relatedPost.reading_time_minutes} min
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
         </section>
       )}
 
-      {/* CTA */}
-      <section className="bg-gradient-to-r from-forest to-sage text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
-          <h2 className="text-3xl font-bold mb-4">¿Te ha gustado este artículo?</h2>
-          <p className="text-xl text-white/90 mb-8">
-            Descubre nuestros cursos y lleva la educación de tu perro al siguiente nivel
+      {/* CTA Final */}
+      <section className="bg-gradient-to-r from-forest via-sage to-forest text-white py-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+          <h2 className="text-3xl md:text-5xl font-black mb-6">¿Listo para transformar la vida con tu perro?</h2>
+          <p className="text-xl text-white/90 mb-8 leading-relaxed">
+            Únete a miles de personas que ya han mejorado la relación con sus perros gracias a nuestros cursos profesionales
           </p>
-          <Link
-            href="/cursos"
-            className="inline-block bg-white text-forest px-8 py-4 rounded-lg font-bold hover:bg-gray-100 transition"
-          >
-            Ver Cursos
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/cursos"
+              className="inline-block bg-white text-forest px-8 py-4 rounded-full font-bold hover:bg-gray-100 transition shadow-xl hover:shadow-2xl hover:scale-105"
+            >
+              Explorar Cursos
+            </Link>
+            <Link
+              href="/blog"
+              className="inline-block bg-white/10 backdrop-blur text-white border-2 border-white px-8 py-4 rounded-full font-bold hover:bg-white/20 transition"
+            >
+              Más Artículos
+            </Link>
+          </div>
         </div>
       </section>
+
+      {/* Tabla de contenidos móvil (overlay) */}
+      {tocOpen && tableOfContents.length > 0 && (
+        <div className="lg:hidden fixed inset-0 bg-black/50 z-50" onClick={() => setTocOpen(false)}>
+          <div className="absolute top-0 right-0 w-80 max-w-[90vw] h-full bg-white shadow-2xl p-6 overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="font-bold text-gray-900">En este artículo</h3>
+              <button onClick={() => setTocOpen(false)} className="text-gray-500 hover:text-gray-700">
+                ✕
+              </button>
+            </div>
+            <nav className="space-y-2">
+              {tableOfContents.map((item) => (
+                <a
+                  key={item.id}
+                  href={`#${item.id}`}
+                  onClick={() => setTocOpen(false)}
+                  className={`block py-2 px-3 rounded-lg text-sm transition-all ${
+                    activeHeading === item.id
+                      ? 'bg-forest text-white font-semibold'
+                      : 'text-gray-600 hover:bg-gray-50 hover:text-forest'
+                  } ${item.level === 3 ? 'pl-6' : ''}`}
+                >
+                  {item.text}
+                </a>
+              ))}
+            </nav>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
