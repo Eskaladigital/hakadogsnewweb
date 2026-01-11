@@ -4,10 +4,10 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter, useParams } from 'next/navigation'
 import dynamic from 'next/dynamic'
-import { ArrowLeft, Save, Loader2, X } from 'lucide-react'
+import { ArrowLeft, Save, Loader2, X, Image as ImageIcon } from 'lucide-react'
 import { supabase } from '@/lib/supabase/client'
 import Toast from '@/components/ui/Toast'
-import ImageUpload from '@/components/ui/ImageUpload'
+import MediaLibrary from '@/components/admin/MediaLibrary'
 
 const TinyMCEEditor = dynamic(() => import('@/components/admin/TinyMCEEditor'), {
   ssr: false,
@@ -44,6 +44,7 @@ export default function EditarArticuloPage() {
   
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [showMediaLibrary, setShowMediaLibrary] = useState(false)
   const [categories, setCategories] = useState<Category[]>([])
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null)
   
@@ -138,28 +139,9 @@ export default function EditarArticuloPage() {
     }
   }
 
-  const handleImageUpload = async (file: File) => {
-    try {
-      const fileExt = file.name.split('.').pop()
-      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
-      const filePath = `${fileName}`
-
-      const { error: uploadError } = await supabase.storage
-        .from('blog-images')
-        .upload(filePath, file)
-
-      if (uploadError) throw uploadError
-
-      const { data: { publicUrl } } = supabase.storage
-        .from('blog-images')
-        .getPublicUrl(filePath)
-
-      handleInputChange('featuredImageUrl', publicUrl)
-      setToast({ message: 'Imagen subida exitosamente', type: 'success' })
-    } catch (error) {
-      console.error('Error uploading image:', error)
-      setToast({ message: 'Error al subir la imagen', type: 'error' })
-    }
+  const handleSelectImage = (url: string) => {
+    handleInputChange('featuredImageUrl', url)
+    setToast({ message: 'Imagen seleccionada', type: 'success' })
   }
 
   const calculateReadingTime = (content: string): number => {
@@ -321,12 +303,29 @@ export default function EditarArticuloPage() {
                       >
                         <X className="w-4 h-4" />
                       </button>
+                      <button
+                        type="button"
+                        onClick={() => setShowMediaLibrary(true)}
+                        className="absolute bottom-2 right-2 bg-forest text-white px-4 py-2 rounded-lg hover:bg-sage transition flex items-center"
+                      >
+                        <ImageIcon className="w-4 h-4 mr-2" />
+                        Cambiar Imagen
+                      </button>
                     </div>
                   ) : (
-                    <ImageUpload
-                      onUpload={handleImageUpload}
-                      maxSize={5}
-                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowMediaLibrary(true)}
+                      className="w-full h-64 border-2 border-dashed border-gray-300 rounded-lg hover:border-forest transition flex flex-col items-center justify-center gap-3 bg-gray-50 hover:bg-gray-100"
+                    >
+                      <ImageIcon className="w-12 h-12 text-gray-400" />
+                      <div className="text-center">
+                        <p className="text-forest font-semibold mb-1">Seleccionar Imagen</p>
+                        <p className="text-sm text-gray-500">
+                          Haz clic para abrir la biblioteca de medios
+                        </p>
+                      </div>
+                    </button>
                   )}
                 </div>
               </div>
@@ -473,6 +472,15 @@ export default function EditarArticuloPage() {
           </div>
         </div>
       </form>
+
+      {/* Media Library Modal */}
+      {showMediaLibrary && (
+        <MediaLibrary
+          onSelect={handleSelectImage}
+          onClose={() => setShowMediaLibrary(false)}
+          currentImage={formData.featuredImageUrl}
+        />
+      )}
 
       {/* Toast Notification */}
       {toast && (
