@@ -427,6 +427,16 @@ body {
   }
 }
 
+/* Ocultar scrollbar en breadcrumb móvil */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 /* Contenedor principal: asegurar que nada se desborde */
 .container {
   width: 100%;
