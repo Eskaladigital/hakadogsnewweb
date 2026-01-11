@@ -97,6 +97,9 @@ export default function EditarCursoPage() {
 
       // Cargar lecciones con recursos
       const courseLessons = await getCourseLessons(cursoId)
+      console.log('🔍 DEBUG - Lecciones cargadas desde BD:', courseLessons)
+      console.log('🔍 DEBUG - Primera lección module_id:', courseLessons[0]?.module_id)
+      
       const lessonsWithResources = await Promise.all(
         courseLessons.map(async (lesson) => {
           const resources = await getLessonResources(lesson.id)
@@ -113,6 +116,9 @@ export default function EditarCursoPage() {
         })
       )
 
+      console.log('🔍 DEBUG - Lecciones procesadas:', lessonsWithResources)
+      console.log('🔍 DEBUG - Primera lección procesada module_id:', lessonsWithResources[0]?.module_id)
+      
       setLessons(lessonsWithResources)
 
       // Cargar módulos
@@ -557,26 +563,30 @@ export default function EditarCursoPage() {
 
                     {activeTab === 'lessons' && (
                       <LessonsManager 
-                        lessons={lessons.map(l => ({
-                          id: l.id,
-                          title: l.title,
-                          content: l.content || '',
-                          duration: l.duration_minutes,
-                          videoUrl: l.videoUrl || '',
-                          videoProvider: l.videoProvider || '',
-                          audioUrl: l.audioUrl || '',
-                          audioProvider: l.audioProvider || '',
-                          isFreePreview: l.isFreePreview || false,
-                          module_id: l.module_id || null,
-                          resources: l.resources.map(r => ({
-                            id: r.id,
-                            title: r.title,
-                            fileType: r.file_type,
-                            fileUrl: r.file_url,
-                            fileSize: r.file_size || 0
-                          })),
-                          isExpanded: l.isExpanded || false
-                        }))}
+                        lessons={lessons.map(l => {
+                          const mappedLesson = {
+                            id: l.id,
+                            title: l.title,
+                            content: l.content || '',
+                            duration: l.duration_minutes,
+                            videoUrl: l.videoUrl || '',
+                            videoProvider: l.videoProvider || '',
+                            audioUrl: l.audioUrl || '',
+                            audioProvider: l.audioProvider || '',
+                            isFreePreview: l.isFreePreview || false,
+                            module_id: l.module_id || null,
+                            resources: l.resources.map(r => ({
+                              id: r.id,
+                              title: r.title,
+                              fileType: r.file_type,
+                              fileUrl: r.file_url,
+                              fileSize: r.file_size || 0
+                            })),
+                            isExpanded: l.isExpanded || false
+                          }
+                          console.log('🎯 DEBUG - Lección mapeada para LessonsManager:', l.title, 'module_id:', l.module_id, 'mapeado:', mappedLesson.module_id)
+                          return mappedLesson
+                        })}
                         modules={modules}
                         onChange={(updatedLessons) => {
                           setLessons(updatedLessons.map((ul, index) => {
