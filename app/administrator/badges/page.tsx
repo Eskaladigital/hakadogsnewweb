@@ -401,9 +401,16 @@ export default function AdminBadgesPage() {
                     >
                       <td className="px-6 py-4">
                         <div className="flex items-center space-x-3">
-                          <div className="text-3xl">{badge.is_secret ? '❓' : badge.icon}</div>
+                          <div className="text-3xl">{badge.icon}</div>
                           <div>
-                            <p className="font-semibold text-gray-900">{badge.is_secret ? '???' : badge.name}</p>
+                            <div className="flex items-center gap-2">
+                              <p className="font-semibold text-gray-900">{badge.name}</p>
+                              {badge.is_secret && (
+                                <span className="px-2 py-0.5 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full">
+                                  SECRETO
+                                </span>
+                              )}
+                            </div>
                             <p className="text-xs text-gray-500">{categoryIcons[badge.category]} {badge.category}</p>
                           </div>
                         </div>
