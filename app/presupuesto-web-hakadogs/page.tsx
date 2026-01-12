@@ -11,14 +11,14 @@ export default function PresupuestoPage() {
     const interval = setInterval(() => {
       const emojis = ['🐕', '💰', '🚀', '⭐', '🎉', '💎', '🔥', '✨', '🏆', '💪', '🚜', '🏊‍♂️', '🤖'];
       setFloatingEmojis(prev => [
-        ...prev.slice(-15), // Reducido de 25 a 15
+        ...prev.slice(-20), // 20 elementos (entre 15 y 25)
         {
           id: Date.now(),
           x: Math.random() * 100,
           emoji: emojis[Math.floor(Math.random() * emojis.length)]
         }
       ]);
-    }, 1200); // Aumentado de 600ms a 1200ms
+    }, 900); // 900ms (entre 600 y 1200)
 
     return () => clearInterval(interval);
   }, []);
@@ -29,56 +29,57 @@ export default function PresupuestoPage() {
         @keyframes floatUp {
           0% {
             transform: translateY(0) rotate(0deg);
-            opacity: 0.8;
+            opacity: 0.9;
           }
           100% {
-            transform: translateY(-120vh) rotate(180deg);
+            transform: translateY(-120vh) rotate(360deg);
             opacity: 0;
           }
         }
         @keyframes wiggle {
-          0%, 100% { transform: rotate(-2deg) scale(1); }
-          50% { transform: rotate(2deg) scale(1.03); }
+          0%, 100% { transform: rotate(-4deg) scale(1); }
+          50% { transform: rotate(4deg) scale(1.06); }
         }
-        @keyframes bounce-soft {
+        @keyframes bounce-medium {
           0%, 100% { transform: translateY(0) scale(1); }
-          50% { transform: translateY(-10px) scale(1.05); }
+          50% { transform: translateY(-20px) scale(1.08); }
         }
         @keyframes pulse-rainbow {
-          0% { box-shadow: 0 0 20px rgba(255,0,0,0.3), 0 0 40px rgba(255,0,0,0.15); }
-          20% { box-shadow: 0 0 20px rgba(255,255,0,0.3), 0 0 40px rgba(255,255,0,0.15); }
-          40% { box-shadow: 0 0 20px rgba(0,255,0,0.3), 0 0 40px rgba(0,255,0,0.15); }
-          60% { box-shadow: 0 0 20px rgba(0,255,255,0.3), 0 0 40px rgba(0,255,255,0.15); }
-          80% { box-shadow: 0 0 20px rgba(0,0,255,0.3), 0 0 40px rgba(0,0,255,0.15); }
-          100% { box-shadow: 0 0 20px rgba(255,0,255,0.3), 0 0 40px rgba(255,0,255,0.15); }
+          0% { box-shadow: 0 0 25px rgba(255,0,0,0.4), 0 0 50px rgba(255,0,0,0.2); }
+          20% { box-shadow: 0 0 25px rgba(255,255,0,0.4), 0 0 50px rgba(255,255,0,0.2); }
+          40% { box-shadow: 0 0 25px rgba(0,255,0,0.4), 0 0 50px rgba(0,255,0,0.2); }
+          60% { box-shadow: 0 0 25px rgba(0,255,255,0.4), 0 0 50px rgba(0,255,255,0.2); }
+          80% { box-shadow: 0 0 25px rgba(0,0,255,0.4), 0 0 50px rgba(0,0,255,0.2); }
+          100% { box-shadow: 0 0 25px rgba(255,0,255,0.4), 0 0 50px rgba(255,0,255,0.2); }
         }
-        @keyframes spin-slow {
+        @keyframes spin-medium {
           from { transform: rotate(0deg); }
           to { transform: rotate(360deg); }
         }
-        @keyframes gentle-sway {
-          0%, 100% { transform: translateX(0); }
-          50% { transform: translateX(5px); }
+        @keyframes sway {
+          0%, 100% { transform: translateX(0) rotate(0deg); }
+          50% { transform: translateX(8px) rotate(2deg); }
         }
         @keyframes pop-in {
-          0% { transform: scale(0.8); opacity: 0; }
-          100% { transform: scale(1); opacity: 1; }
+          0% { transform: scale(0.85) rotate(-10deg); opacity: 0; }
+          70% { transform: scale(1.05) rotate(5deg); }
+          100% { transform: scale(1) rotate(0deg); opacity: 1; }
         }
-        .animate-bounce-soft { animation: bounce-soft 3s ease-in-out infinite; }
-        .animate-pulse-rainbow { animation: pulse-rainbow 6s ease-in-out infinite; }
-        .animate-spin-slow { animation: spin-slow 10s linear infinite; }
-        .animate-gentle-sway { animation: gentle-sway 2s ease-in-out infinite; }
-        .animate-pop-in { animation: pop-in 0.6s ease-out; }
-        .animate-wiggle { animation: wiggle 2s ease-in-out infinite; }
+        .animate-bounce-medium { animation: bounce-medium 2s ease-in-out infinite; }
+        .animate-pulse-rainbow { animation: pulse-rainbow 4s ease-in-out infinite; }
+        .animate-spin-medium { animation: spin-medium 7s linear infinite; }
+        .animate-sway { animation: sway 1.5s ease-in-out infinite; }
+        .animate-pop-in { animation: pop-in 0.7s cubic-bezier(0.68, -0.35, 0.265, 1.35); }
+        .animate-wiggle { animation: wiggle 1.5s ease-in-out infinite; }
         .hover-grow {
-          transition: all 0.4s ease-out;
+          transition: all 0.35s cubic-bezier(0.68, -0.35, 0.265, 1.35);
         }
         .hover-grow:hover {
-          transform: scale(1.05) translateY(-3px);
-          box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+          transform: scale(1.08) translateY(-4px) rotate(1deg);
+          box-shadow: 0 15px 30px rgba(0,0,0,0.18);
         }
         .text-shadow-glow {
-          text-shadow: 0 0 15px rgba(255, 215, 0, 0.5), 0 0 30px rgba(255, 215, 0, 0.3);
+          text-shadow: 0 0 18px rgba(255, 215, 0, 0.6), 0 0 35px rgba(255, 215, 0, 0.4);
         }
       `}</style>
 
@@ -87,11 +88,11 @@ export default function PresupuestoPage() {
         {floatingEmojis.map(emoji => (
           <div
             key={emoji.id}
-            className="absolute text-4xl pointer-events-none z-0 opacity-60"
+            className="absolute text-5xl pointer-events-none z-0 opacity-75"
             style={{
               left: `${emoji.x}%`,
               bottom: '-50px',
-              animation: `floatUp ${8 + Math.random() * 4}s linear forwards` // Aumentado de 4-7s a 8-12s
+              animation: `floatUp ${5 + Math.random() * 3}s linear forwards` // 5-8s (punto medio entre 4-7 y 8-12)
             }}
           >
             {emoji.emoji}
@@ -102,16 +103,16 @@ export default function PresupuestoPage() {
         <div className="bg-gradient-to-r from-red-600 via-orange-500 to-yellow-500 text-white py-16 md:py-24 relative overflow-hidden">
           {/* Estrellas parpadeantes */}
           <div className="absolute inset-0">
-            {[...Array(25)].map((_, i) => ( // Reducido de 40 a 25
+            {[...Array(30)].map((_, i) => ( // 30 estrellas (punto medio entre 25 y 40)
               <div
                 key={i}
-                className="absolute text-yellow-200 opacity-50"
+                className="absolute text-yellow-200 opacity-70"
                 style={{
                   left: `${Math.random() * 100}%`,
                   top: `${Math.random() * 100}%`,
-                  animation: `pulse ${2 + Math.random() * 3}s ease-in-out infinite`, // Aumentado de 0.5-2s a 2-5s
+                  animation: `pulse ${1.5 + Math.random() * 2}s ease-in-out infinite`, // 1.5-3.5s (medio entre 0.5-2 y 2-5)
                   animationDelay: `${Math.random() * 2}s`,
-                  fontSize: `${10 + Math.random() * 15}px` // Reducido de 10-30px a 10-25px
+                  fontSize: `${12 + Math.random() * 18}px` // 12-30px (medio)
                 }}
               >
                 ✨
@@ -120,11 +121,11 @@ export default function PresupuestoPage() {
           </div>
 
           <div className="max-w-6xl mx-auto px-6 md:px-8 text-center relative z-10">
-            <div className="text-8xl mb-6 animate-bounce-soft">
+            <div className="text-8xl mb-6 animate-bounce-medium">
               🚨💰🚨
             </div>
 
-            <h1 className="text-6xl md:text-8xl font-black mb-6 animate-gentle-sway text-shadow-glow">
+            <h1 className="text-6xl md:text-8xl font-black mb-6 animate-sway text-shadow-glow">
               ¡¡ALFREDO PAGA!!
             </h1>
 
@@ -161,13 +162,13 @@ export default function PresupuestoPage() {
         {/* RESUMEN EJECUTIVO ULTRA LOCO */}
         <section className="max-w-6xl mx-auto px-4 py-16 relative z-10">
           <div className="text-center mb-8">
-            <span className="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white px-10 py-5 rounded-full text-3xl font-black animate-bounce-soft shadow-2xl">
+            <span className="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white px-10 py-5 rounded-full text-3xl font-black animate-bounce-medium shadow-2xl">
               🔥 ¡ESTO ES ORO PURO, ALFREDO! 🔥
             </span>
           </div>
 
           <div className="bg-gradient-to-br from-purple-100 via-pink-100 to-yellow-100 rounded-3xl shadow-2xl p-8 md:p-12 border-4 border-gold animate-pulse-rainbow hover-grow">
-            <div className="text-7xl text-center mb-6 animate-bounce-soft">
+            <div className="text-7xl text-center mb-6 animate-bounce-medium">
               🎊 💎 🎊
             </div>
 
@@ -197,7 +198,7 @@ export default function PresupuestoPage() {
                 >
                   <div className="text-6xl animate-wiggle">{item.icon}</div>
                   <div>
-                    <CheckCircle className="w-6 h-6 text-green-600 inline mr-2 animate-spin-slow" />
+                    <CheckCircle className="w-6 h-6 text-green-600 inline mr-2 animate-spin-medium" />
                     <span className="text-xl" dangerouslySetInnerHTML={{ __html: item.text }} />
                   </div>
                 </div>
@@ -215,7 +216,7 @@ export default function PresupuestoPage() {
         {/* REVOLUCIÓN DE LA IA - MEGA ÉPICO */}
         <section className="max-w-6xl mx-auto px-4 py-16">
           <div className="text-center mb-8">
-            <span className="inline-block bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-8 py-4 rounded-full text-2xl font-black animate-gentle-sway shadow-2xl">
+            <span className="inline-block bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-8 py-4 rounded-full text-2xl font-black animate-sway shadow-2xl">
               🤖 ¡LA IA DICE QUE TE SALE REGALADO! 🤖
             </span>
           </div>
@@ -228,7 +229,7 @@ export default function PresupuestoPage() {
             <div className="grid md:grid-cols-2 gap-8">
               {/* SIN IA */}
               <div className="bg-gradient-to-br from-red-100 to-red-200 rounded-2xl p-8 border-4 border-red-400 transform hover:scale-105 transition-all">
-                <div className="text-6xl mb-4 text-center animate-gentle-sway">❌</div>
+                <div className="text-6xl mb-4 text-center animate-sway">❌</div>
                 <h3 className="text-3xl font-black text-red-700 mb-6 text-center">
                   MÉTODO ANTIGUO (2023)
                 </h3>
@@ -254,7 +255,7 @@ export default function PresupuestoPage() {
 
               {/* CON IA */}
               <div className="bg-gradient-to-br from-green-100 to-emerald-200 rounded-2xl p-8 border-4 border-green-500 transform hover:scale-105 transition-all animate-pulse-rainbow">
-                <div className="text-6xl mb-4 text-center animate-bounce-soft">✅</div>
+                <div className="text-6xl mb-4 text-center animate-bounce-medium">✅</div>
                 <h3 className="text-3xl font-black text-green-700 mb-6 text-center">
                   MÉTODO CON IA (2026)
                 </h3>
@@ -309,14 +310,14 @@ export default function PresupuestoPage() {
             <div className="p-8 text-white">
               <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                 <div className="flex items-center gap-4">
-                  <Award className="w-20 h-20 animate-spin-slow" />
+                  <Award className="w-20 h-20 animate-spin-medium" />
                   <div>
                     <h3 className="text-4xl font-black">1. ACADEMIA ONLINE COMPLETA</h3>
                     <p className="text-2xl text-yellow-300">🎓 Sistema de Venta de Cursos</p>
                   </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-6xl font-black text-yellow-300 animate-bounce-soft">25.000€</div>
+                  <div className="text-6xl font-black text-yellow-300 animate-bounce-medium">25.000€</div>
                   <div className="text-xl">Valor de mercado</div>
                 </div>
               </div>
@@ -360,7 +361,7 @@ export default function PresupuestoPage() {
                   </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-6xl font-black text-yellow-300 animate-gentle-sway">18.000€</div>
+                  <div className="text-6xl font-black text-yellow-300 animate-sway">18.000€</div>
                   <div className="text-xl">Valor de mercado</div>
                 </div>
               </div>
@@ -376,7 +377,7 @@ export default function PresupuestoPage() {
                     key={idx}
                     className="bg-white/20 backdrop-blur-md rounded-xl p-4 flex items-center gap-3 hover:bg-white/30 transition-all hover-grow"
                   >
-                    <CheckCircle className="w-8 h-8 flex-shrink-0 animate-spin-slow" />
+                    <CheckCircle className="w-8 h-8 flex-shrink-0 animate-spin-medium" />
                     <span className="text-xl font-semibold">{feature}</span>
                   </div>
                 ))}
@@ -410,17 +411,17 @@ export default function PresupuestoPage() {
 
         {/* PRECIO FINAL - MEGA EXPLOSIÓN */}
         <section className="bg-gradient-to-br from-yellow-200 via-orange-200 to-red-200 py-20 relative overflow-hidden">
-          {/* Lluvia de dinero - SUAVE */}
-          <div className="absolute inset-0 pointer-events-none opacity-40">
-            {[...Array(15)].map((_, i) => ( // Reducido de 30 a 15
+          {/* Lluvia de dinero - MEDIO */}
+          <div className="absolute inset-0 pointer-events-none opacity-50">
+            {[...Array(20)].map((_, i) => ( // 20 elementos (punto medio)
               <div
                 key={i}
-                className="absolute text-4xl"
+                className="text-4xl"
                 style={{
                   left: `${Math.random() * 100}%`,
                   top: `${Math.random() * 100}%`,
-                  animation: `floatUp ${6 + Math.random() * 4}s linear infinite`, // Aumentado de 2-4s a 6-10s
-                  animationDelay: `${Math.random() * 5}s` // Aumentado de 3s a 5s
+                  animation: `floatUp ${4 + Math.random() * 3}s linear infinite`, // 4-7s (punto medio)
+                  animationDelay: `${Math.random() * 4}s`
                 }}
               >
                 💰
@@ -430,10 +431,10 @@ export default function PresupuestoPage() {
 
           <div className="max-w-5xl mx-auto px-4 relative z-10">
             <div className="text-center mb-10">
-              <div className="inline-block bg-red-600 text-white px-12 py-6 rounded-2xl text-5xl font-black animate-bounce-soft shadow-2xl mb-6">
+              <div className="inline-block bg-red-600 text-white px-12 py-6 rounded-2xl text-5xl font-black animate-bounce-medium shadow-2xl mb-6">
                 🚨 ¡ALFREDO PAGA YA! 🚨
               </div>
-              <div className="inline-block bg-yellow-400 text-black px-8 py-4 rounded-xl text-3xl font-black animate-gentle-sway ml-4">
+              <div className="inline-block bg-yellow-400 text-black px-8 py-4 rounded-xl text-3xl font-black animate-sway ml-4">
                 💸 ¡O DAME LA PISCINA! 🏊‍♂️
               </div>
             </div>
@@ -445,7 +446,7 @@ export default function PresupuestoPage() {
             {/* Precio principal */}
             <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 border-4 border-gold mb-10 hover-grow">
               <div className="text-center">
-                <div className="text-7xl mb-6 animate-bounce-soft">🤖💰🎉</div>
+                <div className="text-7xl mb-6 animate-bounce-medium">🤖💰🎉</div>
 
                 <div className="mb-6">
                   <span className="inline-block bg-gradient-to-r from-red-500 to-orange-500 text-white px-8 py-4 rounded-full text-2xl font-black animate-pulse shadow-xl">
@@ -465,7 +466,7 @@ export default function PresupuestoPage() {
                     12.000€
                   </div>
                   <div className="text-3xl text-gray-600 mb-2">+ IVA (21%)</div>
-                  <div className="text-6xl font-black text-forest-dark mb-6 animate-bounce-soft">
+                  <div className="text-6xl font-black text-forest-dark mb-6 animate-bounce-medium">
                     14.520€ TOTAL
                   </div>
 
@@ -508,7 +509,7 @@ export default function PresupuestoPage() {
 
               {/* Opción B - RECOMENDADA */}
               <div className="bg-gradient-to-br from-yellow-100 to-orange-200 rounded-2xl shadow-2xl p-6 border-4 border-gold relative transform scale-110">
-                <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-6 py-2 rounded-full text-sm font-black animate-bounce-soft">
+                <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-6 py-2 rounded-full text-sm font-black animate-bounce-medium">
                   ⭐ ¡¡ELIGE ESTA ALFREDO!! ⭐
                 </div>
                 <h3 className="text-2xl font-bold mb-2 mt-4">OPCIÓN B</h3>
@@ -551,15 +552,15 @@ export default function PresupuestoPage() {
 
             {/* ROI */}
             <div className="bg-gradient-to-r from-green-600 to-emerald-700 text-white rounded-3xl p-10 relative overflow-hidden">
-              <div className="absolute inset-0 pointer-events-none opacity-20">
-                {[...Array(12)].map((_, i) => ( // Reducido de 20 a 12
+              <div className="absolute inset-0 pointer-events-none opacity-25">
+                {[...Array(16)].map((_, i) => ( // 16 elementos (punto medio entre 12 y 20)
                   <div
                     key={i}
-                    className="absolute text-5xl animate-spin-slow"
+                    className="absolute text-5xl animate-spin-medium"
                     style={{
                       left: `${Math.random() * 100}%`,
                       top: `${Math.random() * 100}%`,
-                      animationDuration: `${6 + Math.random() * 6}s` // Aumentado de 3-6s a 6-12s
+                      animationDuration: `${4 + Math.random() * 5}s` // 4-9s (punto medio)
                     }}
                   >
                     {['🚜', '🏊‍♂️', '💰', '🐕'][i % 4]}
@@ -569,7 +570,7 @@ export default function PresupuestoPage() {
 
               <div className="relative z-10 text-center">
                 <div className="mb-6">
-                  <span className="inline-block bg-yellow-400 text-black px-8 py-4 rounded-full text-3xl font-black animate-bounce-soft">
+                  <span className="inline-block bg-yellow-400 text-black px-8 py-4 rounded-full text-3xl font-black animate-bounce-medium">
                     🎉 ¡LA IA LO CALCULÓ! 🎉
                   </span>
                 </div>
@@ -620,7 +621,7 @@ export default function PresupuestoPage() {
                 </div>
 
                 <div className="mt-8">
-                  <span className="inline-block bg-orange-500 text-white px-10 py-5 rounded-xl text-2xl font-black animate-gentle-sway shadow-2xl">
+                  <span className="inline-block bg-orange-500 text-white px-10 py-5 rounded-xl text-2xl font-black animate-sway shadow-2xl">
                     💸 ¡DAME LA PISCINA ALFREDO! 🏊‍♂️
                   </span>
                 </div>
@@ -643,7 +644,7 @@ export default function PresupuestoPage() {
                   <th className="px-6 py-5">EDUCANINE</th>
                   <th className="px-6 py-5">SENDA CANINA</th>
                   <th className="px-6 py-5 bg-gold text-forest-dark">
-                    <div className="animate-bounce-soft">HAKADOGS ⭐</div>
+                    <div className="animate-bounce-medium">HAKADOGS ⭐</div>
                   </th>
                 </tr>
               </thead>
@@ -676,18 +677,18 @@ export default function PresupuestoPage() {
 
         {/* CONCLUSIÓN FINAL ÉPICA */}
         <section className="bg-gradient-to-br from-purple-200 via-pink-200 to-yellow-200 py-20 relative overflow-hidden">
-          {/* Confetti - SUAVE */}
+          {/* Confetti - MEDIO */}
           <div className="absolute inset-0 pointer-events-none">
-            {[...Array(40)].map((_, i) => ( // Reducido de 100 a 40
+            {[...Array(60)].map((_, i) => ( // 60 elementos (punto medio entre 40 y 100)
               <div
                 key={i}
-                className="absolute w-2 h-2 rounded-full opacity-60"
+                className="absolute w-2 h-2 rounded-full opacity-70"
                 style={{
                   left: `${Math.random() * 100}%`,
                   top: `${Math.random() * 100}%`,
                   backgroundColor: ['#FFD700', '#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A'][Math.floor(Math.random() * 5)],
-                  animation: `floatUp ${6 + Math.random() * 4}s linear infinite`, // Aumentado de 3-5s a 6-10s
-                  animationDelay: `${Math.random() * 5}s` // Aumentado de 3s a 5s
+                  animation: `floatUp ${4 + Math.random() * 3}s linear infinite`, // 4-7s (punto medio)
+                  animationDelay: `${Math.random() * 4}s`
                 }}
               />
             ))}
@@ -705,7 +706,7 @@ export default function PresupuestoPage() {
             </h2>
 
             <div className="bg-white rounded-3xl shadow-2xl p-10 md:p-14 border-4 border-gold hover-grow">
-              <div className="text-8xl mb-6 animate-bounce-soft">
+              <div className="text-8xl mb-6 animate-bounce-medium">
                 🚜🏊‍♂️💰
               </div>
 
@@ -715,7 +716,7 @@ export default function PresupuestoPage() {
               </p>
 
               <div className="mb-8">
-                <span className="inline-block bg-yellow-400 text-black px-8 py-4 rounded-xl text-2xl font-black animate-bounce-soft">
+                <span className="inline-block bg-yellow-400 text-black px-8 py-4 rounded-xl text-2xl font-black animate-bounce-medium">
                   💎 ¡VALE 14.000€ SEGÚN LA IA! 💎
                 </span>
               </div>
@@ -730,7 +731,7 @@ export default function PresupuestoPage() {
                   'Gamificación única 🎮'
                 ].map((item, idx) => (
                   <div key={idx} className="flex items-center gap-3 bg-green-50 rounded-xl p-4 hover-grow">
-                    <CheckCircle className="w-8 h-8 text-green-600 animate-spin-slow" />
+                    <CheckCircle className="w-8 h-8 text-green-600 animate-spin-medium" />
                     <span className="text-xl font-semibold">{item}</span>
                   </div>
                 ))}
@@ -747,7 +748,7 @@ export default function PresupuestoPage() {
                     🚨 ¡ACEPTO LA RANCHERA! 🚜
                   </span>
                   <br />
-                  <span className="inline-block bg-blue-600 text-white px-8 py-4 rounded-xl text-2xl font-black animate-gentle-sway">
+                  <span className="inline-block bg-blue-600 text-white px-8 py-4 rounded-xl text-2xl font-black animate-sway">
                     🏊‍♂️ ¡O LA PISCINA! 🏊‍♂️
                   </span>
                   <br />
@@ -767,7 +768,7 @@ export default function PresupuestoPage() {
               <p className="text-2xl font-bold text-gold mb-4 animate-pulse">
                 PRESUPUESTO VÁLIDO HASTA: 28 de Febrero de 2026
               </p>
-              <div className="text-4xl mb-4 animate-bounce-soft">
+              <div className="text-4xl mb-4 animate-bounce-medium">
                 🤖💰🚀
               </div>
             </div>
