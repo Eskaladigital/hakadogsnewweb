@@ -27,16 +27,54 @@ const nextConfig = {
     optimisticClientCache: true,
   },
   
-  // Optimizar chunks para mejor caché
+  // Optimizar chunks para mejor caché y reducir tareas largas en main thread
   webpack: (config, { isServer }) => {
     if (!isServer) {
-      config.optimization.splitChunks.cacheGroups = {
-        ...config.optimization.splitChunks.cacheGroups,
-        commons: {
-          name: 'commons',
-          chunks: 'all',
-          minChunks: 2,
+      // Code splitting más agresivo para reducir main thread blocking
+      config.optimization.splitChunks = {
+        chunks: 'all',
+        cacheGroups: {
+          default: false,
+          vendors: false,
+          // Chunk de librerías base (React, Next.js core)
+          framework: {
+            name: 'framework',
+            chunks: 'all',
+            test: /[\\/]node_modules[\\/](react|react-dom|scheduler|next)[\\/]/,
+            priority: 40,
+            enforce: true,
+          },
+          // Lucide icons separado para lazy load
+          icons: {
+            name: 'icons',
+            test: /[\\/]node_modules[\\/]lucide-react[\\/]/,
+            priority: 30,
+            reuseExistingChunk: true,
+          },
+          // Librerías grandes separadas
+          lib: {
+            test: /[\\/]node_modules[\\/]/,
+            name(module) {
+              const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1]
+              return `npm.${packageName.replace('@', '')}`
+            },
+            priority: 20,
+            minChunks: 1,
+            reuseExistingChunk: true,
+          },
+          // Commons (código compartido entre páginas)
+          commons: {
+            name: 'commons',
+            minChunks: 2,
+            priority: 10,
+            reuseExistingChunk: true,
+          },
         },
+        // Límites de tamaño para evitar chunks grandes que bloquean
+        maxInitialRequests: 25,
+        maxAsyncRequests: 25,
+        minSize: 20000,
+        maxSize: 244000, // ~244KB max por chunk (evita tareas largas >50ms)
       }
     }
     return config

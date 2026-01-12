@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
+import { Suspense } from 'react'
 import { ArrowRight, CheckCircle2, MapPin, Clock, Globe, Users, Waves, CloudRain, Dog, FileText, AlertCircle, Sunrise } from 'lucide-react'
 import { getCityBySlug } from '@/lib/cities'
 import { getExtendedCityData } from '@/lib/extendedCityData'
@@ -9,15 +10,43 @@ import { getCityContent } from '@/lib/supabase/cityContent'
 import Hero from '@/components/Hero'
 
 // Lazy load de componentes pesados para reducir main thread blocking
-const ServicesSection = dynamic(() => import('@/components/ServicesSection'), { ssr: true })
-const LocalParksSection = dynamic(() => import('@/components/LocalParksSection'), { ssr: true })
-const SessionsShowcase = dynamic(() => import('@/components/SessionsShowcase'), { ssr: true })
-const LocalInfoSection = dynamic(() => import('@/components/LocalInfoSection'), { ssr: true })
-const AppsSection = dynamic(() => import('@/components/AppsSection'), { ssr: true })
-const AboutSection = dynamic(() => import('@/components/AboutSection'), { ssr: true })
-const LocalTestimonialsSection = dynamic(() => import('@/components/LocalTestimonialsSection'), { ssr: true })
-const CTASection = dynamic(() => import('@/components/CTASection'), { ssr: true })
-const OnlineCoursesCtaSection = dynamic(() => import('@/components/OnlineCoursesCtaSection'), { ssr: true })
+// ssr: false para reducir hydration cost, loading con Suspense
+const ServicesSection = dynamic(() => import('@/components/ServicesSection'), { 
+  ssr: false,
+  loading: () => <div className="h-96 bg-gray-50 animate-pulse rounded-3xl" />
+})
+const LocalParksSection = dynamic(() => import('@/components/LocalParksSection'), { 
+  ssr: false,
+  loading: () => <div className="h-96 bg-gray-50 animate-pulse rounded-3xl" />
+})
+const SessionsShowcase = dynamic(() => import('@/components/SessionsShowcase'), { 
+  ssr: false,
+  loading: () => <div className="h-96 bg-gray-50 animate-pulse rounded-3xl" />
+})
+const LocalInfoSection = dynamic(() => import('@/components/LocalInfoSection'), { 
+  ssr: false,
+  loading: () => <div className="h-96 bg-gray-50 animate-pulse rounded-3xl" />
+})
+const AppsSection = dynamic(() => import('@/components/AppsSection'), { 
+  ssr: false,
+  loading: () => <div className="h-96 bg-gray-50 animate-pulse rounded-3xl" />
+})
+const AboutSection = dynamic(() => import('@/components/AboutSection'), { 
+  ssr: false,
+  loading: () => <div className="h-96 bg-gray-50 animate-pulse rounded-3xl" />
+})
+const LocalTestimonialsSection = dynamic(() => import('@/components/LocalTestimonialsSection'), { 
+  ssr: false,
+  loading: () => <div className="h-96 bg-gray-50 animate-pulse rounded-3xl" />
+})
+const CTASection = dynamic(() => import('@/components/CTASection'), { 
+  ssr: false,
+  loading: () => <div className="h-64 bg-gray-50 animate-pulse rounded-3xl" />
+})
+const OnlineCoursesCtaSection = dynamic(() => import('@/components/OnlineCoursesCtaSection'), { 
+  ssr: false,
+  loading: () => <div className="h-96 bg-gray-50 animate-pulse rounded-3xl" />
+})
 
 // NO generamos páginas estáticas - se renderizan dinámicamente
 // Esto reduce el build time de minutos a segundos
@@ -117,38 +146,52 @@ export default async function LocalidadPage({ params }: { params: { ciudad: stri
       {/* Contenido para mercado LOCAL (< 40km de Archena) */}
       {isLocalMarket && (
         <>
-          <ServicesSection />
+          <Suspense fallback={<div className="h-96 bg-gray-50 animate-pulse" />}>
+            <ServicesSection />
+          </Suspense>
 
           {/* CONTENIDO ÚNICO: Parques Caninos */}
           {extendedData && extendedData.parks.length > 0 && (
-            <LocalParksSection
-              cityName={city.name}
-              parks={extendedData.parks}
-              description={`${city.name} cuenta con ${extendedData.parks.length} zonas principales donde tu perro puede ejercitarse y socializar de forma segura.`}
-            />
+            <Suspense fallback={<div className="h-96 bg-gray-50 animate-pulse" />}>
+              <LocalParksSection
+                cityName={city.name}
+                parks={extendedData.parks}
+                description={`${city.name} cuenta con ${extendedData.parks.length} zonas principales donde tu perro puede ejercitarse y socializar de forma segura.`}
+              />
+            </Suspense>
           )}
 
-          <SessionsShowcase />
+          <Suspense fallback={<div className="h-96 bg-gray-50 animate-pulse" />}>
+            <SessionsShowcase />
+          </Suspense>
 
           {/* CONTENIDO ÚNICO: Desafíos Locales */}
           {extendedData && extendedData.challenges.length > 0 && (
-            <LocalInfoSection
-              cityName={city.name}
-              challenges={extendedData.challenges}
-              localTip={extendedData.localTip}
-            />
+            <Suspense fallback={<div className="h-96 bg-gray-50 animate-pulse" />}>
+              <LocalInfoSection
+                cityName={city.name}
+                challenges={extendedData.challenges}
+                localTip={extendedData.localTip}
+              />
+            </Suspense>
           )}
 
-          <AppsSection />
+          <Suspense fallback={<div className="h-96 bg-gray-50 animate-pulse" />}>
+            <AppsSection />
+          </Suspense>
 
           {/* CONTENIDO ÚNICO: Testimonios Locales */}
           {extendedData && extendedData.testimonials.length > 0 ? (
-            <LocalTestimonialsSection
-              cityName={city.name}
-              testimonials={extendedData.testimonials}
-            />
+            <Suspense fallback={<div className="h-96 bg-gray-50 animate-pulse" />}>
+              <LocalTestimonialsSection
+                cityName={city.name}
+                testimonials={extendedData.testimonials}
+              />
+            </Suspense>
           ) : (
-            <AboutSection />
+            <Suspense fallback={<div className="h-96 bg-gray-50 animate-pulse" />}>
+              <AboutSection />
+            </Suspense>
           )}
 
           {/* Sección adicional de Cursos Online (complementaria) */}
@@ -217,7 +260,9 @@ export default async function LocalidadPage({ params }: { params: { ciudad: stri
             </div>
           </section>
 
-          <CTASection />
+          <Suspense fallback={<div className="h-64 bg-gray-50 animate-pulse" />}>
+            <CTASection />
+          </Suspense>
         </>
       )}
 
@@ -366,7 +411,9 @@ export default async function LocalidadPage({ params }: { params: { ciudad: stri
           )}
 
           {/* CTA Cursos Online */}
-          <OnlineCoursesCtaSection cityName={city.name} />
+          <Suspense fallback={<div className="h-96 bg-gray-50 animate-pulse" />}>
+            <OnlineCoursesCtaSection cityName={city.name} />
+          </Suspense>
 
           {/* Testimonial Real de la Ciudad */}
           <section className="py-16 bg-white">
@@ -456,9 +503,15 @@ export default async function LocalidadPage({ params }: { params: { ciudad: stri
             </div>
           </section>
 
-          <SessionsShowcase />
-          <AppsSection />
-          <AboutSection />
+          <Suspense fallback={<div className="h-96 bg-gray-50 animate-pulse" />}>
+            <SessionsShowcase />
+          </Suspense>
+          <Suspense fallback={<div className="h-96 bg-gray-50 animate-pulse" />}>
+            <AppsSection />
+          </Suspense>
+          <Suspense fallback={<div className="h-96 bg-gray-50 animate-pulse" />}>
+            <AboutSection />
+          </Suspense>
           
           {/* CTA Final */}
           <section className="py-20 bg-gradient-to-br from-forest via-forest-dark to-forest">
