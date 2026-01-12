@@ -25,7 +25,16 @@ export const createClient = () => {
     if (!supabaseUrl || !supabaseAnonKey) {
       throw new Error('Variables de entorno de Supabase no configuradas. Verifica NEXT_PUBLIC_SUPABASE_URL y NEXT_PUBLIC_SUPABASE_ANON_KEY en Vercel.')
     }
-    supabaseInstance = createSupabaseClient<Database>(supabaseUrl, supabaseAnonKey)
+    supabaseInstance = createSupabaseClient<Database>(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+        // IMPORTANTE: Esto hace que el cliente use automáticamente el token
+        // de la sesión del usuario en cada petición
+        storage: typeof window !== 'undefined' ? window.localStorage : undefined,
+      },
+    })
   }
   return supabaseInstance
 }
