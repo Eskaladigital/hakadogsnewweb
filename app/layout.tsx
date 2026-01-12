@@ -106,6 +106,7 @@ export default function RootLayout({
           *{margin:0;padding:0;box-sizing:border-box}
           html{scroll-behavior:smooth}
           body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:var(--forest-dark);background:#fff;line-height:1.6}
+          @font-face{font-family:system-ui;font-display:swap}
           @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
           .animate-fade-in-up{animation:fadeIn 0.5s ease-out forwards}
           @keyframes scaleIn{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
@@ -120,9 +121,13 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="theme-color" content="#059669" />
         
-        {/* Preconnect a dominios externos críticos */}
-        <link rel="preconnect" href="https://www.googletagmanager.com" />
-        <link rel="preconnect" href="https://jshqrsnzxzbizgjyfsde.supabase.co" />
+        {/* DNS Prefetch y Preconnect a dominios externos críticos */}
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://jshqrsnzxzbizgjyfsde.supabase.co" />
+        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+        
+        <link rel="preconnect" href="https://jshqrsnzxzbizgjyfsde.supabase.co" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
         
         {/* Schema.org Structured Data - Datos estructurados para SEO */}
         <Script

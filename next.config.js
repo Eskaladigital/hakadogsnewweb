@@ -22,7 +22,7 @@ const nextConfig = {
   // Optimización experimental para reducir CSS bloqueante
   experimental: {
     optimizeCss: true, // Inline critical CSS
-    optimizePackageImports: ['lucide-react', 'framer-motion'],
+    optimizePackageImports: ['lucide-react', 'framer-motion', '@supabase/supabase-js'],
     // Mejorar renderizado inicial
     optimisticClientCache: true,
     // Purge CSS no utilizado agresivamente
@@ -93,6 +93,10 @@ const nextConfig = {
             key: 'Cache-Control',
             value: 'public, max-age=31536000, immutable',
           },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff'
+          },
         ],
       },
       // JS y CSS estáticos de Next.js - caché 1 año
@@ -115,6 +119,20 @@ const nextConfig = {
           },
         ],
       },
+      // Fuentes y archivos de tipografía - caché 1 año
+      {
+        source: '/:all*(woff|woff2|ttf|otf|eot)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*'
+          },
+        ],
+      },
       // Páginas HTML - caché corta con revalidación inteligente
       {
         source: '/:path*',
@@ -126,6 +144,10 @@ const nextConfig = {
           {
             key: 'X-DNS-Prefetch-Control',
             value: 'on'
+          },
+          {
+            key: 'Link',
+            value: '<https://jshqrsnzxzbizgjyfsde.supabase.co>; rel=preconnect; crossorigin, <https://www.googletagmanager.com>; rel=preconnect'
           },
           {
             key: 'Strict-Transport-Security',

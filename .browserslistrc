@@ -1,18 +1,33 @@
-# Navegadores modernos (elimina polyfills innecesarios)
-# Esto reduce JavaScript antiguo y mejora PageSpeed
+# Navegadores modernos ULTRA OPTIMIZADO (elimina polyfills innecesarios)
+# Configuración agresiva para maximizar rendimiento PageSpeed
+# Solo soporta navegadores muy recientes (últimos 2-3 años)
 
-# Chrome, Edge, Firefox, Safari modernos
-last 2 Chrome versions
-last 2 Edge versions
-last 2 Firefox versions
-last 2 Safari versions
+# Chrome/Edge modernos (últimas versiones estables)
+last 1 Chrome version
+last 1 Edge version
 
-# iOS Safari moderno
-iOS >= 14
+# Firefox moderno
+last 1 Firefox version
 
-# Android moderno
-Android >= 10
+# Safari moderno (desktop y móvil)
+last 1 Safari version
 
-# No soportar IE11 ni navegadores muy antiguos
+# iOS Safari muy reciente
+iOS >= 15.5
+
+# Android muy moderno
+Chrome >= 100
+
+# Excluir explícitamente navegadores antiguos
 not IE 11
+not IE_Mob 11
 not dead
+not op_mini all
+not op_mob > 0
+not and_qq > 0
+not android < 100
+not ios_saf < 15
+
+# Cubrir al menos 85% del tráfico global
+> 0.5%
+
