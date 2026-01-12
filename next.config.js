@@ -45,19 +45,9 @@ const nextConfig = {
   // Headers de seguridad y performance
   async headers() {
     return [
-      // Imágenes optimizadas por Next.js - caché 1 año
+      // Imágenes optimizadas por Next.js - caché 1 año (ANTES de /:path*)
       {
-        source: '/_next/image:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-        ],
-      },
-      // Imágenes y assets estáticos - caché 1 año
-      {
-        source: '/:all*(svg|jpg|jpeg|png|webp|avif|gif|ico|woff|woff2)',
+        source: '/_next/image(.*)',
         headers: [
           {
             key: 'Cache-Control',
@@ -68,6 +58,16 @@ const nextConfig = {
       // JS y CSS estáticos de Next.js - caché 1 año
       {
         source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      // Imágenes y assets estáticos - caché 1 año
+      {
+        source: '/:all*(svg|jpg|jpeg|png|webp|avif|gif|ico|woff|woff2)',
         headers: [
           {
             key: 'Cache-Control',
