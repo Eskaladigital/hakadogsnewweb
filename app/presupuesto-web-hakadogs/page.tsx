@@ -22,8 +22,12 @@ export default function PresupuestoPage() {
               <div className="text-sage">Versión</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-gold">740h</div>
-              <div className="text-sage">Desarrollo</div>
+              <div className="text-3xl font-bold text-gold">40h</div>
+              <div className="text-sage">Desarrollo con IA</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-gold">5 días</div>
+              <div className="text-sage">Tiempo entrega</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-gold">95/100</div>
@@ -71,6 +75,82 @@ export default function PresupuestoPage() {
               <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
               <span><strong>COMPETIR</strong> con las academias online más grandes</span>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Nueva sección: Revolución IA */}
+      <section className="max-w-6xl mx-auto px-4 py-12">
+        <div className="bg-gradient-to-br from-blue-50 via-purple-50 to-blue-50 rounded-2xl shadow-xl p-8 md:p-12 border-2 border-blue-200">
+          <h2 className="text-4xl font-bold text-center mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            🤖 REVOLUCIÓN DEL DESARROLLO CON IA
+          </h2>
+          
+          <div className="bg-white/80 rounded-xl p-6 mb-6">
+            <p className="text-lg text-gray-700 leading-relaxed mb-4">
+              Este presupuesto refleja la <strong>REALIDAD del desarrollo en 2026</strong>. 
+              Gracias a herramientas de IA como Claude y Cursor AI, puedo entregar 
+              el mismo producto de calidad en una <strong>fracción del tiempo</strong>.
+            </p>
+            <p className="text-base text-gray-600 italic">
+              ⚠️ Importante: La IA no reduce el VALOR del producto, reduce el TIEMPO de desarrollo.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Método Tradicional */}
+            <div className="bg-gradient-to-br from-red-100 to-red-50 rounded-xl p-6 border-2 border-red-300">
+              <h3 className="text-2xl font-bold text-red-700 mb-4">❌ Método Tradicional (2020-2023)</h3>
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start gap-2">
+                  <span className="text-red-600 font-bold">⏱️</span>
+                  <span><strong>Tiempo:</strong> 4-6 meses de desarrollo</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-red-600 font-bold">⏳</span>
+                  <span><strong>Horas:</strong> 740 horas de trabajo manual</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-red-600 font-bold">👥</span>
+                  <span><strong>Equipo:</strong> 2-3 personas necesarias</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-red-600 font-bold">💰</span>
+                  <span><strong>Coste:</strong> 59,200€ - 95,000€</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Método con IA */}
+            <div className="bg-gradient-to-br from-green-100 to-emerald-50 rounded-xl p-6 border-2 border-green-400">
+              <h3 className="text-2xl font-bold text-green-700 mb-4">✅ Método con IA (2026)</h3>
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start gap-2">
+                  <span className="text-green-600 font-bold">⚡</span>
+                  <span><strong>Tiempo:</strong> 5 días de desarrollo</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-green-600 font-bold">✨</span>
+                  <span><strong>Horas:</strong> 40 horas efectivas con IA</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-green-600 font-bold">👤</span>
+                  <span><strong>Equipo:</strong> 1 desarrollador + IA</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-green-600 font-bold">💎</span>
+                  <span><strong>Coste ajustado:</strong> 12,000€</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="mt-6 bg-gradient-to-r from-gold/20 to-yellow-100 rounded-xl p-6 border-2 border-gold">
+            <h4 className="text-xl font-bold text-gray-800 mb-3 text-center">🎯 DIFERENCIACIÓN CLAVE</h4>
+            <p className="text-center text-gray-700 text-lg">
+              El cliente paga por <strong className="text-gold">RESULTADOS</strong>, no por horas sentado.<br/>
+              <span className="text-base">Eficiencia: <strong className="text-green-700">18.5x más rápido</strong> • Ahorro: <strong className="text-green-700">83%</strong></span>
+            </p>
           </div>
         </div>
       </section>
@@ -454,66 +534,100 @@ export default function PresupuestoPage() {
       {/* Resumen de Valor */}
       <section className="bg-gradient-to-r from-forest-dark via-forest to-forest-dark text-white py-16">
         <div className="max-w-5xl mx-auto px-4">
-          <h2 className="text-4xl font-bold mb-8 text-center">RESUMEN DE VALOR TOTAL</h2>
+          <h2 className="text-4xl font-bold mb-8 text-center">🤖 DESARROLLO CON IA: NUEVA ERA</h2>
+          
+          {/* Comparativa Método Tradicional vs IA */}
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 mb-8">
-            <div className="grid md:grid-cols-2 gap-4 text-lg">
-              <div className="flex justify-between py-2 border-b border-white/20">
-                <span>1. Academia Online + Gamificación</span>
-                <span className="font-bold">25,000€</span>
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* Sin IA */}
+              <div className="border-2 border-red-400 rounded-xl p-6 bg-red-900/20">
+                <h3 className="text-2xl font-bold mb-4 text-red-300">❌ MÉTODO TRADICIONAL (2023)</h3>
+                <div className="space-y-3 text-base">
+                  <div className="flex justify-between py-2 border-b border-white/20">
+                    <span>Tiempo desarrollo:</span>
+                    <span className="font-bold">4.5 meses</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-white/20">
+                    <span>Horas invertidas:</span>
+                    <span className="font-bold">740 horas</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-white/20">
+                    <span>Equipo necesario:</span>
+                    <span className="font-bold">2-3 personas</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-white/20">
+                    <span>Coste por hora:</span>
+                    <span className="font-bold">80€/h</span>
+                  </div>
+                  <div className="flex justify-between py-3 pt-4 border-t-2 border-red-400 text-xl">
+                    <span className="font-bold">Coste total:</span>
+                    <span className="font-bold text-red-300">59,200€</span>
+                  </div>
+                  <div className="text-sm text-red-200 pt-2">
+                    (Valor de mercado completo: 95,000€)
+                  </div>
+                </div>
               </div>
-              <div className="flex justify-between py-2 border-b border-white/20">
-                <span>2. Panel Administración</span>
-                <span className="font-bold">18,000€</span>
-              </div>
-              <div className="flex justify-between py-2 border-b border-white/20">
-                <span>3. Web Marketing</span>
-                <span className="font-bold">8,000€</span>
-              </div>
-              <div className="flex justify-between py-2 border-b border-white/20">
-                <span>4. Blog Profesional</span>
-                <span className="font-bold">6,500€</span>
-              </div>
-              <div className="flex justify-between py-2 border-b border-white/20">
-                <span>5. SEO 54 Ciudades</span>
-                <span className="font-bold">12,000€</span>
-              </div>
-              <div className="flex justify-between py-2 border-b border-white/20">
-                <span>6. Optimización Performance</span>
-                <span className="font-bold">9,500€</span>
-              </div>
-              <div className="flex justify-between py-2 border-b border-white/20">
-                <span>7. Seguridad y GDPR</span>
-                <span className="font-bold">5,500€</span>
-              </div>
-              <div className="flex justify-between py-2 border-b border-white/20">
-                <span>8. Infraestructura Premium</span>
-                <span className="font-bold">4,500€</span>
-              </div>
-              <div className="flex justify-between py-2 border-b border-white/20">
-                <span>9. Analítica</span>
-                <span className="font-bold">2,500€</span>
-              </div>
-              <div className="flex justify-between py-2 border-b border-white/20">
-                <span>10. Documentación</span>
-                <span className="font-bold">3,500€</span>
+
+              {/* Con IA */}
+              <div className="border-2 border-green-400 rounded-xl p-6 bg-green-900/20">
+                <h3 className="text-2xl font-bold mb-4 text-green-300">✅ CON IA (2026)</h3>
+                <div className="space-y-3 text-base">
+                  <div className="flex justify-between py-2 border-b border-white/20">
+                    <span>Tiempo desarrollo:</span>
+                    <span className="font-bold">5 días</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-white/20">
+                    <span>Horas efectivas:</span>
+                    <span className="font-bold">40 horas</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-white/20">
+                    <span>Equipo necesario:</span>
+                    <span className="font-bold">1 persona + IA</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-white/20">
+                    <span>Eficiencia:</span>
+                    <span className="font-bold text-green-300">18.5x más rápido</span>
+                  </div>
+                  <div className="flex justify-between py-3 pt-4 border-t-2 border-green-400 text-xl">
+                    <span className="font-bold">Precio ajustado:</span>
+                    <span className="font-bold text-green-300">12,000€</span>
+                  </div>
+                  <div className="text-sm text-green-200 pt-2">
+                    (Mismo producto, menos tiempo)
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="mt-6 pt-6 border-t-2 border-white/40 flex justify-between items-center">
-              <span className="text-2xl font-bold">VALOR TOTAL DE MERCADO</span>
-              <span className="text-4xl font-bold text-gold">95,000€</span>
+
+            {/* Nota importante */}
+            <div className="mt-6 pt-6 border-t-2 border-white/40 bg-gold/20 rounded-lg p-6">
+              <p className="text-lg text-center mb-3">
+                <strong className="text-gold text-xl">🎯 IMPORTANTE:</strong>
+              </p>
+              <p className="text-base text-center">
+                La IA no reduce el <strong>VALOR</strong> del producto, reduce el <strong>TIEMPO</strong> de desarrollo.<br />
+                El cliente paga por <strong>RESULTADOS</strong>, no por horas sentado.
+              </p>
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6 text-center">
+          {/* Estadísticas finales */}
+          <div className="grid md:grid-cols-3 gap-6 text-center">
             <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-              <div className="text-sm text-sage mb-2">Horas Totales Invertidas</div>
-              <div className="text-4xl font-bold text-gold">740 horas</div>
-              <div className="text-sm text-sage mt-2">4.5 meses a jornada completa</div>
+              <div className="text-sm text-sage mb-2">Ahorro de Tiempo</div>
+              <div className="text-4xl font-bold text-gold">700 horas</div>
+              <div className="text-sm text-sage mt-2">135 días laborables ahorrados</div>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-              <div className="text-sm text-sage mb-2">Coste Real por Horas</div>
-              <div className="text-4xl font-bold text-gold">59,200€</div>
-              <div className="text-sm text-sage mt-2">Tarifa: 80€/hora</div>
+              <div className="text-sm text-sage mb-2">Ahorro para el Cliente</div>
+              <div className="text-4xl font-bold text-gold">83%</div>
+              <div className="text-sm text-sage mt-2">vs método tradicional (59,200€)</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+              <div className="text-sm text-sage mb-2">Calidad del Producto</div>
+              <div className="text-4xl font-bold text-gold">IGUAL</div>
+              <div className="text-sm text-sage mt-2">Performance 95/100, SEO 100/100</div>
             </div>
           </div>
         </div>
@@ -682,16 +796,23 @@ export default function PresupuestoPage() {
 
           <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 border-4 border-gold mb-8">
             <div className="text-center mb-8">
-              <div className="text-sm text-gray-600 mb-2">VALOR TOTAL DE MERCADO</div>
+              <div className="text-sm text-gray-600 mb-2">VALOR TRADICIONAL DE MERCADO</div>
               <div className="text-4xl font-bold text-gray-400 line-through mb-2">95,000€</div>
-              <div className="text-sm text-gray-600 mb-4">Coste real desarrollo (740h × 80€): 59,200€</div>
-              <div className="text-sm text-gray-600 mb-6">Valor añadido (complejidad + innovación): +35,800€</div>
+              <div className="text-sm text-gray-600 mb-2">Coste desarrollo tradicional: 59,200€</div>
+              <div className="text-sm text-green-600 font-semibold mb-6">Con IA: 40 horas en 5 días (18.5x más rápido)</div>
               
               <div className="border-t-2 border-gold pt-6">
                 <div className="text-2xl font-bold text-forest-dark mb-3">PRECIO RECOMENDADO ⭐</div>
-                <div className="text-7xl font-bold text-gold mb-2">70,000€</div>
+                <div className="text-7xl font-bold text-gold mb-2">12,000€</div>
                 <div className="text-2xl text-gray-600">+ IVA (21%)</div>
-                <div className="text-4xl font-bold text-forest-dark mt-4">84,700€ TOTAL</div>
+                <div className="text-4xl font-bold text-forest-dark mt-4">14,520€ TOTAL</div>
+              </div>
+
+              <div className="mt-6 bg-green-50 border-2 border-green-200 rounded-lg p-4">
+                <p className="text-lg text-gray-700">
+                  💰 <strong>Ahorro de 47,200€ (83%)</strong> vs desarrollo tradicional<br/>
+                  ⚡ <strong>Entrega en 5 días</strong> vs 4.5 meses tradicional
+                </p>
               </div>
             </div>
           </div>
@@ -701,15 +822,18 @@ export default function PresupuestoPage() {
             {/* Opción A */}
             <div className="bg-white rounded-xl shadow-lg p-6 border-2 border-gray-300">
               <h3 className="text-xl font-bold text-forest-dark mb-2">OPCIÓN A</h3>
-              <p className="text-sm text-gray-600 mb-4">Precio Freelance Competitivo</p>
-              <div className="text-4xl font-bold text-forest mb-2">65,000€</div>
-              <div className="text-sm text-gray-600 mb-4">+ IVA = 78,650€ TOTAL</div>
+              <p className="text-sm text-gray-600 mb-4">Competitivo</p>
+              <div className="text-4xl font-bold text-forest mb-2">10,000€</div>
+              <div className="text-sm text-gray-600 mb-4">+ IVA = 12,100€ TOTAL</div>
               <ul className="space-y-2 text-sm text-gray-700">
                 <li>✓ Todo lo desarrollado</li>
                 <li>✓ Transferencia completa</li>
                 <li>✓ Documentación 38 archivos</li>
                 <li>✓ 1 mes de soporte</li>
               </ul>
+              <div className="mt-4 text-xs text-gray-500 bg-gray-50 p-3 rounded">
+                2,000€/día • Muy competitivo
+              </div>
             </div>
 
             {/* Opción B - RECOMENDADA */}
@@ -718,9 +842,9 @@ export default function PresupuestoPage() {
                 ⭐ RECOMENDADO
               </div>
               <h3 className="text-xl font-bold text-forest-dark mb-2 mt-2">OPCIÓN B</h3>
-              <p className="text-sm text-gray-600 mb-4">Precio Valor/Calidad</p>
-              <div className="text-5xl font-bold text-gold mb-2">70,000€</div>
-              <div className="text-sm text-gray-600 mb-4">+ IVA = <strong>84,700€ TOTAL</strong></div>
+              <p className="text-sm text-gray-600 mb-4">Valor/Calidad</p>
+              <div className="text-5xl font-bold text-gold mb-2">12,000€</div>
+              <div className="text-sm text-gray-600 mb-4">+ IVA = <strong>14,520€ TOTAL</strong></div>
               <ul className="space-y-2 text-sm text-gray-700">
                 <li>✓ Todo lo desarrollado</li>
                 <li>✓ Transferencia completa</li>
@@ -728,14 +852,17 @@ export default function PresupuestoPage() {
                 <li>✓ <strong>3 meses de soporte</strong></li>
                 <li>✓ <strong>Formación 4 horas</strong></li>
               </ul>
+              <div className="mt-4 text-xs text-gray-700 bg-gold/10 p-3 rounded font-semibold">
+                2,400€/día • Equilibrio perfecto
+              </div>
             </div>
 
             {/* Opción C */}
             <div className="bg-white rounded-xl shadow-lg p-6 border-2 border-gray-300">
               <h3 className="text-xl font-bold text-forest-dark mb-2">OPCIÓN C</h3>
-              <p className="text-sm text-gray-600 mb-4">Precio Premium Agencia</p>
-              <div className="text-4xl font-bold text-forest mb-2">85,000€</div>
-              <div className="text-sm text-gray-600 mb-4">+ IVA = 102,850€ TOTAL</div>
+              <p className="text-sm text-gray-600 mb-4">Premium</p>
+              <div className="text-4xl font-bold text-forest mb-2">15,000€</div>
+              <div className="text-sm text-gray-600 mb-4">+ IVA = 18,150€ TOTAL</div>
               <ul className="space-y-2 text-sm text-gray-700">
                 <li>✓ Todo incluido</li>
                 <li>✓ <strong>6 meses de soporte</strong></li>
@@ -743,6 +870,9 @@ export default function PresupuestoPage() {
                 <li>✓ Auditorías trimestrales</li>
                 <li>✓ Consultoría marketing</li>
               </ul>
+              <div className="mt-4 text-xs text-gray-500 bg-gray-50 p-3 rounded">
+                3,000€/día • Máximo justificable
+              </div>
             </div>
           </div>
 
@@ -754,15 +884,35 @@ export default function PresupuestoPage() {
             <div className="space-y-3 text-lg">
               <div className="flex justify-between py-2 border-b">
                 <span>Desarrollo plataforma completa Hakadogs.com</span>
-                <span className="font-bold">70,000.00€</span>
+                <span className="font-bold">12,000.00€</span>
               </div>
-              <div className="flex justify-between py-2 border-b">
+              <div className="flex justify-between py-2 border-b text-sm text-gray-600">
+                <span className="italic">• Metodología con IA (40 horas en 5 días)</span>
+                <span></span>
+              </div>
+              <div className="flex justify-between py-2 border-b text-sm text-gray-600">
+                <span className="italic">• Academia online + gamificación única</span>
+                <span></span>
+              </div>
+              <div className="flex justify-between py-2 border-b text-sm text-gray-600">
+                <span className="italic">• Panel administrativo + Blog + SEO 54 ciudades</span>
+                <span></span>
+              </div>
+              <div className="flex justify-between py-2 border-b text-sm text-gray-600">
+                <span className="italic">• Performance 95/100 + SEO 100/100</span>
+                <span></span>
+              </div>
+              <div className="flex justify-between py-2 border-b text-sm text-gray-600">
+                <span className="italic">• Documentación completa + 3 meses soporte</span>
+                <span></span>
+              </div>
+              <div className="flex justify-between py-2 border-b mt-4">
                 <span>IVA (21%)</span>
-                <span className="font-bold">14,700.00€</span>
+                <span className="font-bold">2,520.00€</span>
               </div>
               <div className="flex justify-between py-3 border-t-2 border-gold text-2xl font-bold text-gold">
                 <span>TOTAL A FACTURAR</span>
-                <span>84,700.00€</span>
+                <span>14,520.00€</span>
               </div>
             </div>
 
@@ -770,20 +920,16 @@ export default function PresupuestoPage() {
               <h4 className="font-bold text-forest-dark mb-4">FORMA DE PAGO SUGERIDA:</h4>
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span>• 30% al inicio del proyecto:</span>
-                  <span className="font-bold">25,410.00€</span>
+                  <span>• 50% al inicio del proyecto:</span>
+                  <span className="font-bold">7,260.00€</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>• 40% al 50% del desarrollo:</span>
-                  <span className="font-bold">33,880.00€</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>• 30% al finalizar y entregar:</span>
-                  <span className="font-bold">25,410.00€</span>
+                  <span>• 50% al finalizar y entregar:</span>
+                  <span className="font-bold">7,260.00€</span>
                 </div>
                 <div className="flex justify-between pt-3 border-t border-forest/20 font-bold text-lg">
                   <span>TOTAL:</span>
-                  <span className="text-gold">84,700.00€</span>
+                  <span className="text-gold">14,520.00€</span>
                 </div>
               </div>
             </div>
@@ -792,14 +938,14 @@ export default function PresupuestoPage() {
           {/* ROI */}
           <div className="bg-gradient-to-r from-green-600 to-green-700 text-white rounded-2xl p-8 text-center">
             <h3 className="text-3xl font-bold mb-4">💰 RETORNO DE INVERSIÓN</h3>
-            <p className="text-xl mb-6">La inversión de 70,000€ se amortiza con:</p>
+            <p className="text-xl mb-6">La inversión de 12,000€ se amortiza con:</p>
             <div className="grid md:grid-cols-3 gap-4 text-lg">
               <div className="bg-white/20 rounded-lg p-4">
-                <div className="text-3xl font-bold mb-2">35</div>
+                <div className="text-3xl font-bold mb-2">60</div>
                 <div>ventas de curso de 200€</div>
               </div>
               <div className="bg-white/20 rounded-lg p-4">
-                <div className="text-3xl font-bold mb-2">28</div>
+                <div className="text-3xl font-bold mb-2">48</div>
                 <div>ventas de curso de 250€</div>
               </div>
               <div className="bg-white/20 rounded-lg p-4">
@@ -809,6 +955,11 @@ export default function PresupuestoPage() {
             </div>
             <div className="mt-6 text-2xl font-bold text-yellow-300">
               ROI ESTIMADO: 6-12 meses
+            </div>
+            <div className="mt-4 text-sm bg-white/10 rounded-lg p-4">
+              <p className="mb-2">🎯 <strong>Comparativa con competencia:</strong></p>
+              <p>• SaaS como Kajabi/Teachable: 1,788€ - 3,588€/año (5-8 años para igualar)</p>
+              <p>• Desarrollo tradicional: 59,200€ - 95,000€ (ahorro inmediato de 47,200€)</p>
             </div>
           </div>
         </div>
@@ -917,7 +1068,7 @@ export default function PresupuestoPage() {
             <div className="text-3xl font-bold text-forest-dark bg-sage rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0">3</div>
             <div>
               <h3 className="font-bold text-lg text-forest-dark">Facturación Inicial</h3>
-              <p className="text-gray-600">30% inicial (25,410€) para comenzar el traspaso</p>
+              <p className="text-gray-600">50% inicial (7,260€) para comenzar el traspaso</p>
             </div>
           </div>
           <div className="bg-white rounded-lg shadow-lg p-6 flex items-center gap-4 border-l-4 border-forest">

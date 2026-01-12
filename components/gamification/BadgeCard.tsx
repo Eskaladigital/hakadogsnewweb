@@ -115,6 +115,19 @@ export default function BadgeCard({
           <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent rounded-xl pointer-events-none" />
         )}
 
+        {/* Badge de Puntos - SIEMPRE VISIBLE en esquina superior derecha */}
+        {!isSecret && (
+          <div className="absolute -top-2 -right-2 z-20">
+            <motion.div
+              className="bg-gradient-to-br from-yellow-400 to-yellow-500 text-yellow-900 font-bold rounded-full px-2.5 py-1 text-xs shadow-lg border-2 border-white"
+              whileHover={{ scale: 1.1, rotate: 5 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              +{badge.points}
+            </motion.div>
+          </div>
+        )}
+
         {/* Lock Icon (si está bloqueado) */}
         {isLocked && (
           <div className="absolute inset-0 flex items-center justify-center">
@@ -141,11 +154,13 @@ export default function BadgeCard({
             {isSecret ? '???' : badge.name}
           </h4>
 
-          {/* Points */}
+          {/* Points - MÁS GRANDE Y VISIBLE */}
           {!isSecret && (
-            <p className={`text-white/90 font-semibold mt-1 ${size === 'sm' ? 'text-xs' : 'text-sm'}`}>
-              +{badge.points} pts
-            </p>
+            <div className="mt-2 bg-yellow-400/20 backdrop-blur-sm rounded-full px-3 py-1 border border-yellow-300/50">
+              <p className={`font-bold text-yellow-100 ${size === 'sm' ? 'text-sm' : 'text-base'}`}>
+                ⭐ {badge.points}
+              </p>
+            </div>
           )}
         </div>
 
