@@ -112,13 +112,6 @@ export default function RootLayout({
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="preconnect" href="https://jshqrsnzxzbizgjyfsde.supabase.co" />
         
-        {/* Preload CSS crítico para reducir render-blocking */}
-        <link
-          rel="preload"
-          href="/_next/static/css/app/layout.css"
-          as="style"
-        />
-        
         {/* Schema.org Structured Data - Datos estructurados para SEO */}
         <Script
           id="schema-local-business"
