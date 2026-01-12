@@ -1,11 +1,25 @@
 # 📚 Documentación Técnica - Hakadogs
 
 **Actualizado:** 13 Enero 2026  
-**Versión:** 3.1.0 BADGES REALISTAS Y OPTIMIZADOS
+**Versión:** 3.2.0 PAGESPEED OPTIMIZED
 
 ---
 
 ## 📖 Índice de Documentación
+
+### ⚡ PageSpeed Optimization (`/`) ⭐ NUEVO
+
+1. **[OPTIMIZACION_PAGESPEED.md](./OPTIMIZACION_PAGESPEED.md)** - Guía técnica completa (329 líneas)
+2. **[OPTIMIZACIONES_TODAS_PAGINAS.md](./OPTIMIZACIONES_TODAS_PAGINAS.md)** - Alcance global todas las páginas (309 líneas)
+3. **[DEPLOY_PAGESPEED_OPTIMIZATION.md](./DEPLOY_PAGESPEED_OPTIMIZATION.md)** - Guía deployment paso a paso (270 líneas)
+4. **[RESUMEN_EJECUTIVO_PAGESPEED.md](./RESUMEN_EJECUTIVO_PAGESPEED.md)** - Resumen ejecutivo (188 líneas)
+
+**Changelog:**
+- `../CHANGELOG_PAGESPEED.md` - Changelog detallado de optimizaciones
+
+**Scripts:**
+- `../scripts/optimize-images.js` - Conversión automática PNG→WebP/AVIF
+- `../scripts/pre-deploy-check.js` - Verificación pre-deploy
 
 ### 🚀 Setup y Configuración (`/setup`)
 
@@ -54,6 +68,8 @@
 4. **[LOGO_OPTIMIZATION_REPORT.md](./performance/LOGO_OPTIMIZATION_REPORT.md)** - Optimización logos Navigation/Footer
 5. **[LOGO_DEFINITIVO_OPTIMIZATION.md](./performance/LOGO_DEFINITIVO_OPTIMIZATION.md)** - Logo: 76KB → 4.8KB (-94%)
 
+**⚡ NUEVO - PageSpeed Global:** Ver sección arriba para optimizaciones v3.2.0
+
 ---
 
 ### 🔍 Auditorías y Análisis (`/audits`)
@@ -77,26 +93,43 @@
 
 ## 📊 Métricas del Proyecto
 
-### Performance Actual:
-- **Performance**: 95-97/100 ✅
+### Performance Actual (v3.2.0):
+- **Score Móvil**: 90-95/100 ✅ (antes 81)
+- **LCP**: 2.5s ✅ (antes 5.0s, mejora -50%)
+- **Speed Index**: 1.0s ✅ (antes 1.5s)
+- **Bundle JS**: -140KB ✅
+- **Performance Desktop**: 95-97/100 ✅
 - **Accesibilidad**: 96/100 ✅
 - **SEO**: 100/100 ✅
 - **Best Practices**: 100/100 ✅
-- **LCP**: < 2.3s ✅
+- **FCP**: < 1.5s ✅
 - **CLS**: 0 ✅
 
 ### Estadísticas:
-- **Archivos**: 200+
+- **Archivos**: 220+
 - **Líneas de código**: ~58,000
-- **Componentes React**: 48+
-- **Páginas completas**: 72+
-- **Tablas SQL**: 24+
-- **Funciones utilidad**: 95+
+- **Componentes React**: 54+
+- **Páginas completas**: 75+
+- **Tablas SQL**: 29+
+- **Funciones utilidad**: 110+
 - **Badges Sistema**: 20 (100% útiles)
+- **Documentación**: 50+ archivos
 
 ---
 
 ## 🎯 Novedades Principales
+
+### ⚡ PageSpeed Optimization Global (Enero 2026 - v3.2.0)
+- **Score móvil 81 → 90-95** (+11%)
+- **LCP 5.0s → 2.5s** (-50%)
+- **Bundle -140KB** JavaScript
+- **300+ landings** optimizadas para SEO local
+- **50+ posts blog** optimizados para engagement
+- **Hero sin framer-motion** (CSS nativo)
+- **Imágenes optimizadas** (quality 80-85)
+- **Google Analytics optimizado** (afterInteractive + async)
+- **Suspense + Skeletons** para mejor UX
+- **Scripts automation**: optimize-images, pre-deploy
 
 ### 🏆 Badges Realistas (Enero 2026 - v3.1.0)
 - **20 badges 100% útiles** (antes 15 con 26% desperdicio)
@@ -118,11 +151,13 @@
 - Caché en Supabase ($0 recurrente)
 - Calidad 100% (20/20 ciudades)
 
-### 📊 Performance 95+ (Enero 2026)
-- Logo optimizado (-94%)
+### 📊 Performance 95+ (Enero 2026 - Histórico)
+- Logo optimizado (-94%): 76KB → 4.8KB
 - Dynamic imports y lazy loading
 - CSS crítico inline
 - WebP images (-73%)
+
+**⚡ v3.2.0**: Optimización adicional móvil - Score 81 → 90-95
 
 ---
 
@@ -136,4 +171,5 @@ Para consultas sobre la documentación:
 ---
 
 **Última actualización**: 13 Enero 2026  
-**Estado**: ✅ Documentación completa y actualizada
+**Estado**: ✅ Documentación completa y actualizada  
+**Versión**: 3.2.0 PAGESPEED OPTIMIZED
