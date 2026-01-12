@@ -1,7 +1,8 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import { Trophy, TrendingUp, Award, Star, Zap } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Trophy, TrendingUp, Award, Star, Zap, Info, X } from 'lucide-react'
+import { useState } from 'react'
 
 interface UserStats {
   total_points: number
@@ -22,6 +23,7 @@ interface UserStatsCardProps {
 }
 
 export default function UserStatsCard({ stats, userName, compact = false }: UserStatsCardProps) {
+  const [showPointsInfo, setShowPointsInfo] = useState(false)
   // Calcular porcentaje hacia siguiente nivel
   const levelProgress = stats.experience_to_next_level > 0
     ? Math.round(((stats.experience_points % (stats.level * stats.level * 100)) / (stats.level * stats.level * 100)) * 100)
@@ -129,12 +131,22 @@ export default function UserStatsCard({ stats, userName, compact = false }: User
       {/* Stats Grid */}
       <div className="p-6">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {/* Puntos Totales */}
+          {/* Puntos Totales - Con Info */}
           <motion.div
-            className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl p-4 text-center"
+            className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl p-4 text-center relative cursor-pointer"
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 300 }}
+            onClick={() => setShowPointsInfo(true)}
           >
+            <button 
+              className="absolute top-2 right-2 w-5 h-5 bg-amber-200 rounded-full flex items-center justify-center hover:bg-amber-300 transition"
+              onClick={(e) => {
+                e.stopPropagation()
+                setShowPointsInfo(true)
+              }}
+            >
+              <Info className="w-3 h-3 text-amber-800" />
+            </button>
             <Star className="w-6 h-6 text-amber-600 mx-auto mb-2" />
             <p className="text-2xl font-bold text-amber-900">{stats.total_points.toLocaleString()}</p>
             <p className="text-xs text-amber-700 mt-1">Puntos Totales</p>
@@ -200,6 +212,108 @@ export default function UserStatsCard({ stats, userName, compact = false }: User
           }
         </p>
       </div>
+
+      {/* Modal de información de puntos */}
+      <AnimatePresence>
+        {showPointsInfo && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+              onClick={() => setShowPointsInfo(false)}
+            >
+              {/* Modal */}
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 relative"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {/* Botón cerrar */}
+                <button
+                  onClick={() => setShowPointsInfo(false)}
+                  className="absolute top-4 right-4 w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition"
+                >
+                  <X className="w-4 h-4 text-gray-600" />
+                </button>
+
+                {/* Header */}
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center">
+                    <Star className="w-6 h-6 text-amber-600" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900">¿Cómo ganar puntos?</h3>
+                    <p className="text-sm text-gray-500">Sistema de recompensas</p>
+                  </div>
+                </div>
+
+                {/* Contenido */}
+                <div className="space-y-4">
+                  {/* Completar lecciones */}
+                  <div className="flex items-start space-x-3 p-3 bg-blue-50 rounded-lg">
+                    <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                      <span className="text-white font-bold text-sm">📖</span>
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-semibold text-gray-900">Completar Lecciones</p>
+                      <p className="text-sm text-gray-600">+20 puntos por lección</p>
+                      <p className="text-xs text-gray-500 mt-1">¡La forma principal de ganar puntos!</p>
+                    </div>
+                  </div>
+
+                  {/* Completar cursos */}
+                  <div className="flex items-start space-x-3 p-3 bg-green-50 rounded-lg">
+                    <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                      <span className="text-white font-bold text-sm">🎓</span>
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-semibold text-gray-900">Completar Cursos</p>
+                      <p className="text-sm text-gray-600">+50 a +200 puntos</p>
+                      <p className="text-xs text-gray-500 mt-1">Según dificultad del curso</p>
+                    </div>
+                  </div>
+
+                  {/* Ganar badges */}
+                  <div className="flex items-start space-x-3 p-3 bg-purple-50 rounded-lg">
+                    <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
+                      <span className="text-white font-bold text-sm">🏆</span>
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-semibold text-gray-900">Desbloquear Badges</p>
+                      <p className="text-sm text-gray-600">+10 a +1000 puntos</p>
+                      <p className="text-xs text-gray-500 mt-1">Los badges legendarios dan más puntos</p>
+                    </div>
+                  </div>
+
+                  {/* Racha */}
+                  <div className="flex items-start space-x-3 p-3 bg-orange-50 rounded-lg">
+                    <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                      <span className="text-white font-bold text-sm">🔥</span>
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-semibold text-gray-900">Mantener Racha</p>
+                      <p className="text-sm text-gray-600">Bonus diario</p>
+                      <p className="text-xs text-gray-500 mt-1">Estudia todos los días para mantener tu racha</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Footer */}
+                <div className="mt-6 pt-4 border-t border-gray-200">
+                  <p className="text-sm text-center text-gray-600">
+                    💡 <span className="font-semibold">Consejo:</span> Completa lecciones diariamente para maximizar tus puntos
+                  </p>
+                </div>
+              </motion.div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </motion.div>
   )
 }
