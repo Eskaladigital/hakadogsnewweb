@@ -11,14 +11,14 @@ export default function PresupuestoPage() {
     const interval = setInterval(() => {
       const emojis = ['🐕', '💰', '🚀', '⭐', '🎉', '💎', '🔥', '✨', '🏆', '💪', '🚜', '🏊‍♂️', '🤖'];
       setFloatingEmojis(prev => [
-        ...prev.slice(-25),
+        ...prev.slice(-15), // Reducido de 25 a 15
         {
           id: Date.now(),
           x: Math.random() * 100,
           emoji: emojis[Math.floor(Math.random() * emojis.length)]
         }
       ]);
-    }, 600);
+    }, 1200); // Aumentado de 600ms a 1200ms
 
     return () => clearInterval(interval);
   }, []);
@@ -29,73 +29,56 @@ export default function PresupuestoPage() {
         @keyframes floatUp {
           0% {
             transform: translateY(0) rotate(0deg);
-            opacity: 1;
+            opacity: 0.8;
           }
           100% {
-            transform: translateY(-120vh) rotate(720deg);
+            transform: translateY(-120vh) rotate(180deg);
             opacity: 0;
           }
         }
         @keyframes wiggle {
-          0%, 100% { transform: rotate(-8deg) scale(1); }
-          50% { transform: rotate(8deg) scale(1.1); }
+          0%, 100% { transform: rotate(-2deg) scale(1); }
+          50% { transform: rotate(2deg) scale(1.03); }
         }
-        @keyframes bounce-crazy {
-          0%, 100% { transform: translateY(0) scale(1) rotate(0deg); }
-          25% { transform: translateY(-30px) scale(1.15) rotate(10deg); }
-          50% { transform: translateY(0) scale(0.9) rotate(-10deg); }
-          75% { transform: translateY(-15px) scale(1.1) rotate(5deg); }
+        @keyframes bounce-soft {
+          0%, 100% { transform: translateY(0) scale(1); }
+          50% { transform: translateY(-10px) scale(1.05); }
         }
         @keyframes pulse-rainbow {
-          0% { box-shadow: 0 0 30px rgba(255,0,0,0.6), 0 0 60px rgba(255,0,0,0.3); }
-          20% { box-shadow: 0 0 30px rgba(255,255,0,0.6), 0 0 60px rgba(255,255,0,0.3); }
-          40% { box-shadow: 0 0 30px rgba(0,255,0,0.6), 0 0 60px rgba(0,255,0,0.3); }
-          60% { box-shadow: 0 0 30px rgba(0,255,255,0.6), 0 0 60px rgba(0,255,255,0.3); }
-          80% { box-shadow: 0 0 30px rgba(0,0,255,0.6), 0 0 60px rgba(0,0,255,0.3); }
-          100% { box-shadow: 0 0 30px rgba(255,0,255,0.6), 0 0 60px rgba(255,0,255,0.3); }
+          0% { box-shadow: 0 0 20px rgba(255,0,0,0.3), 0 0 40px rgba(255,0,0,0.15); }
+          20% { box-shadow: 0 0 20px rgba(255,255,0,0.3), 0 0 40px rgba(255,255,0,0.15); }
+          40% { box-shadow: 0 0 20px rgba(0,255,0,0.3), 0 0 40px rgba(0,255,0,0.15); }
+          60% { box-shadow: 0 0 20px rgba(0,255,255,0.3), 0 0 40px rgba(0,255,255,0.15); }
+          80% { box-shadow: 0 0 20px rgba(0,0,255,0.3), 0 0 40px rgba(0,0,255,0.15); }
+          100% { box-shadow: 0 0 20px rgba(255,0,255,0.3), 0 0 40px rgba(255,0,255,0.15); }
         }
         @keyframes spin-slow {
           from { transform: rotate(0deg); }
           to { transform: rotate(360deg); }
         }
-        @keyframes shake {
-          0%, 100% { transform: translateX(0) rotate(0deg); }
-          10% { transform: translateX(-15px) rotate(-5deg); }
-          20% { transform: translateX(15px) rotate(5deg); }
-          30% { transform: translateX(-15px) rotate(-5deg); }
-          40% { transform: translateX(15px) rotate(5deg); }
-          50% { transform: translateX(-10px) rotate(-3deg); }
-          60% { transform: translateX(10px) rotate(3deg); }
-          70% { transform: translateX(-5px) rotate(-2deg); }
-          80% { transform: translateX(5px) rotate(2deg); }
-          90% { transform: translateX(-2px) rotate(-1deg); }
+        @keyframes gentle-sway {
+          0%, 100% { transform: translateX(0); }
+          50% { transform: translateX(5px); }
         }
         @keyframes pop-in {
-          0% { transform: scale(0) rotate(-180deg); opacity: 0; }
-          50% { transform: scale(1.3) rotate(20deg); }
-          100% { transform: scale(1) rotate(0deg); opacity: 1; }
+          0% { transform: scale(0.8); opacity: 0; }
+          100% { transform: scale(1); opacity: 1; }
         }
-        @keyframes explode {
-          0% { transform: scale(1); opacity: 1; }
-          50% { transform: scale(1.5); opacity: 0.5; }
-          100% { transform: scale(2); opacity: 0; }
-        }
-        .animate-bounce-crazy { animation: bounce-crazy 1.2s ease-in-out infinite; }
-        .animate-pulse-rainbow { animation: pulse-rainbow 3s ease-in-out infinite; }
-        .animate-spin-slow { animation: spin-slow 5s linear infinite; }
-        .animate-shake { animation: shake 0.6s ease-in-out infinite; }
-        .animate-pop-in { animation: pop-in 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
-        .animate-wiggle { animation: wiggle 0.8s ease-in-out infinite; }
-        .hover-explode:hover { animation: explode 0.5s ease-out; }
+        .animate-bounce-soft { animation: bounce-soft 3s ease-in-out infinite; }
+        .animate-pulse-rainbow { animation: pulse-rainbow 6s ease-in-out infinite; }
+        .animate-spin-slow { animation: spin-slow 10s linear infinite; }
+        .animate-gentle-sway { animation: gentle-sway 2s ease-in-out infinite; }
+        .animate-pop-in { animation: pop-in 0.6s ease-out; }
+        .animate-wiggle { animation: wiggle 2s ease-in-out infinite; }
         .hover-grow {
-          transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+          transition: all 0.4s ease-out;
         }
         .hover-grow:hover {
-          transform: scale(1.15) rotate(3deg) translateY(-5px);
-          box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+          transform: scale(1.05) translateY(-3px);
+          box-shadow: 0 10px 25px rgba(0,0,0,0.15);
         }
         .text-shadow-glow {
-          text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.5);
+          text-shadow: 0 0 15px rgba(255, 215, 0, 0.5), 0 0 30px rgba(255, 215, 0, 0.3);
         }
       `}</style>
 
@@ -104,11 +87,11 @@ export default function PresupuestoPage() {
         {floatingEmojis.map(emoji => (
           <div
             key={emoji.id}
-            className="absolute text-5xl pointer-events-none z-0"
+            className="absolute text-4xl pointer-events-none z-0 opacity-60"
             style={{
               left: `${emoji.x}%`,
               bottom: '-50px',
-              animation: `floatUp ${4 + Math.random() * 3}s linear forwards`
+              animation: `floatUp ${8 + Math.random() * 4}s linear forwards` // Aumentado de 4-7s a 8-12s
             }}
           >
             {emoji.emoji}
@@ -119,16 +102,16 @@ export default function PresupuestoPage() {
         <div className="bg-gradient-to-r from-red-600 via-orange-500 to-yellow-500 text-white py-16 md:py-24 relative overflow-hidden">
           {/* Estrellas parpadeantes */}
           <div className="absolute inset-0">
-            {[...Array(40)].map((_, i) => (
+            {[...Array(25)].map((_, i) => ( // Reducido de 40 a 25
               <div
                 key={i}
-                className="absolute text-yellow-200"
+                className="absolute text-yellow-200 opacity-50"
                 style={{
                   left: `${Math.random() * 100}%`,
                   top: `${Math.random() * 100}%`,
-                  animation: `pulse ${0.5 + Math.random() * 1.5}s ease-in-out infinite`,
+                  animation: `pulse ${2 + Math.random() * 3}s ease-in-out infinite`, // Aumentado de 0.5-2s a 2-5s
                   animationDelay: `${Math.random() * 2}s`,
-                  fontSize: `${10 + Math.random() * 20}px`
+                  fontSize: `${10 + Math.random() * 15}px` // Reducido de 10-30px a 10-25px
                 }}
               >
                 ✨
@@ -137,15 +120,15 @@ export default function PresupuestoPage() {
           </div>
 
           <div className="max-w-6xl mx-auto px-6 md:px-8 text-center relative z-10">
-            <div className="text-8xl mb-6 animate-bounce-crazy">
+            <div className="text-8xl mb-6 animate-bounce-soft">
               🚨💰🚨
             </div>
 
-            <h1 className="text-6xl md:text-8xl font-black mb-6 animate-shake text-shadow-glow">
+            <h1 className="text-6xl md:text-8xl font-black mb-6 animate-gentle-sway text-shadow-glow">
               ¡¡ALFREDO PAGA!!
             </h1>
 
-            <div className="inline-block bg-black text-yellow-300 px-8 py-4 rounded-full text-3xl md:text-4xl font-black animate-pulse-rainbow mb-6 transform hover:scale-110 transition-all cursor-pointer">
+            <div className="inline-block bg-black text-yellow-300 px-8 py-4 rounded-full text-3xl md:text-4xl font-black animate-pulse-rainbow mb-6 transform hover:scale-105 transition-all cursor-pointer">
               💎 ¡DICE LA IA QUE VALE 14.000€! 💎
             </div>
 
@@ -178,13 +161,13 @@ export default function PresupuestoPage() {
         {/* RESUMEN EJECUTIVO ULTRA LOCO */}
         <section className="max-w-6xl mx-auto px-4 py-16 relative z-10">
           <div className="text-center mb-8">
-            <span className="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white px-10 py-5 rounded-full text-3xl font-black animate-bounce-crazy shadow-2xl">
+            <span className="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white px-10 py-5 rounded-full text-3xl font-black animate-bounce-soft shadow-2xl">
               🔥 ¡ESTO ES ORO PURO, ALFREDO! 🔥
             </span>
           </div>
 
           <div className="bg-gradient-to-br from-purple-100 via-pink-100 to-yellow-100 rounded-3xl shadow-2xl p-8 md:p-12 border-4 border-gold animate-pulse-rainbow hover-grow">
-            <div className="text-7xl text-center mb-6 animate-bounce-crazy">
+            <div className="text-7xl text-center mb-6 animate-bounce-soft">
               🎊 💎 🎊
             </div>
 
@@ -232,7 +215,7 @@ export default function PresupuestoPage() {
         {/* REVOLUCIÓN DE LA IA - MEGA ÉPICO */}
         <section className="max-w-6xl mx-auto px-4 py-16">
           <div className="text-center mb-8">
-            <span className="inline-block bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-8 py-4 rounded-full text-2xl font-black animate-shake shadow-2xl">
+            <span className="inline-block bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-8 py-4 rounded-full text-2xl font-black animate-gentle-sway shadow-2xl">
               🤖 ¡LA IA DICE QUE TE SALE REGALADO! 🤖
             </span>
           </div>
@@ -245,7 +228,7 @@ export default function PresupuestoPage() {
             <div className="grid md:grid-cols-2 gap-8">
               {/* SIN IA */}
               <div className="bg-gradient-to-br from-red-100 to-red-200 rounded-2xl p-8 border-4 border-red-400 transform hover:scale-105 transition-all">
-                <div className="text-6xl mb-4 text-center animate-shake">❌</div>
+                <div className="text-6xl mb-4 text-center animate-gentle-sway">❌</div>
                 <h3 className="text-3xl font-black text-red-700 mb-6 text-center">
                   MÉTODO ANTIGUO (2023)
                 </h3>
@@ -271,7 +254,7 @@ export default function PresupuestoPage() {
 
               {/* CON IA */}
               <div className="bg-gradient-to-br from-green-100 to-emerald-200 rounded-2xl p-8 border-4 border-green-500 transform hover:scale-105 transition-all animate-pulse-rainbow">
-                <div className="text-6xl mb-4 text-center animate-bounce-crazy">✅</div>
+                <div className="text-6xl mb-4 text-center animate-bounce-soft">✅</div>
                 <h3 className="text-3xl font-black text-green-700 mb-6 text-center">
                   MÉTODO CON IA (2026)
                 </h3>
@@ -333,7 +316,7 @@ export default function PresupuestoPage() {
                   </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-6xl font-black text-yellow-300 animate-bounce-crazy">25.000€</div>
+                  <div className="text-6xl font-black text-yellow-300 animate-bounce-soft">25.000€</div>
                   <div className="text-xl">Valor de mercado</div>
                 </div>
               </div>
@@ -377,7 +360,7 @@ export default function PresupuestoPage() {
                   </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-6xl font-black text-yellow-300 animate-shake">18.000€</div>
+                  <div className="text-6xl font-black text-yellow-300 animate-gentle-sway">18.000€</div>
                   <div className="text-xl">Valor de mercado</div>
                 </div>
               </div>
@@ -427,17 +410,17 @@ export default function PresupuestoPage() {
 
         {/* PRECIO FINAL - MEGA EXPLOSIÓN */}
         <section className="bg-gradient-to-br from-yellow-200 via-orange-200 to-red-200 py-20 relative overflow-hidden">
-          {/* Lluvia de dinero */}
-          <div className="absolute inset-0 pointer-events-none">
-            {[...Array(30)].map((_, i) => (
+          {/* Lluvia de dinero - SUAVE */}
+          <div className="absolute inset-0 pointer-events-none opacity-40">
+            {[...Array(15)].map((_, i) => ( // Reducido de 30 a 15
               <div
                 key={i}
-                className="absolute text-5xl"
+                className="absolute text-4xl"
                 style={{
                   left: `${Math.random() * 100}%`,
                   top: `${Math.random() * 100}%`,
-                  animation: `floatUp ${2 + Math.random() * 2}s linear infinite`,
-                  animationDelay: `${Math.random() * 3}s`
+                  animation: `floatUp ${6 + Math.random() * 4}s linear infinite`, // Aumentado de 2-4s a 6-10s
+                  animationDelay: `${Math.random() * 5}s` // Aumentado de 3s a 5s
                 }}
               >
                 💰
@@ -447,10 +430,10 @@ export default function PresupuestoPage() {
 
           <div className="max-w-5xl mx-auto px-4 relative z-10">
             <div className="text-center mb-10">
-              <div className="inline-block bg-red-600 text-white px-12 py-6 rounded-2xl text-5xl font-black animate-bounce-crazy shadow-2xl mb-6">
+              <div className="inline-block bg-red-600 text-white px-12 py-6 rounded-2xl text-5xl font-black animate-bounce-soft shadow-2xl mb-6">
                 🚨 ¡ALFREDO PAGA YA! 🚨
               </div>
-              <div className="inline-block bg-yellow-400 text-black px-8 py-4 rounded-xl text-3xl font-black animate-shake ml-4">
+              <div className="inline-block bg-yellow-400 text-black px-8 py-4 rounded-xl text-3xl font-black animate-gentle-sway ml-4">
                 💸 ¡O DAME LA PISCINA! 🏊‍♂️
               </div>
             </div>
@@ -462,7 +445,7 @@ export default function PresupuestoPage() {
             {/* Precio principal */}
             <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 border-4 border-gold mb-10 hover-grow">
               <div className="text-center">
-                <div className="text-7xl mb-6 animate-bounce-crazy">🤖💰🎉</div>
+                <div className="text-7xl mb-6 animate-bounce-soft">🤖💰🎉</div>
 
                 <div className="mb-6">
                   <span className="inline-block bg-gradient-to-r from-red-500 to-orange-500 text-white px-8 py-4 rounded-full text-2xl font-black animate-pulse shadow-xl">
@@ -482,7 +465,7 @@ export default function PresupuestoPage() {
                     12.000€
                   </div>
                   <div className="text-3xl text-gray-600 mb-2">+ IVA (21%)</div>
-                  <div className="text-6xl font-black text-forest-dark mb-6 animate-bounce-crazy">
+                  <div className="text-6xl font-black text-forest-dark mb-6 animate-bounce-soft">
                     14.520€ TOTAL
                   </div>
 
@@ -525,7 +508,7 @@ export default function PresupuestoPage() {
 
               {/* Opción B - RECOMENDADA */}
               <div className="bg-gradient-to-br from-yellow-100 to-orange-200 rounded-2xl shadow-2xl p-6 border-4 border-gold relative transform scale-110">
-                <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-6 py-2 rounded-full text-sm font-black animate-bounce-crazy">
+                <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-6 py-2 rounded-full text-sm font-black animate-bounce-soft">
                   ⭐ ¡¡ELIGE ESTA ALFREDO!! ⭐
                 </div>
                 <h3 className="text-2xl font-bold mb-2 mt-4">OPCIÓN B</h3>
@@ -569,14 +552,14 @@ export default function PresupuestoPage() {
             {/* ROI */}
             <div className="bg-gradient-to-r from-green-600 to-emerald-700 text-white rounded-3xl p-10 relative overflow-hidden">
               <div className="absolute inset-0 pointer-events-none opacity-20">
-                {[...Array(20)].map((_, i) => (
+                {[...Array(12)].map((_, i) => ( // Reducido de 20 a 12
                   <div
                     key={i}
-                    className="absolute text-6xl animate-spin-slow"
+                    className="absolute text-5xl animate-spin-slow"
                     style={{
                       left: `${Math.random() * 100}%`,
                       top: `${Math.random() * 100}%`,
-                      animationDuration: `${3 + Math.random() * 3}s`
+                      animationDuration: `${6 + Math.random() * 6}s` // Aumentado de 3-6s a 6-12s
                     }}
                   >
                     {['🚜', '🏊‍♂️', '💰', '🐕'][i % 4]}
@@ -586,7 +569,7 @@ export default function PresupuestoPage() {
 
               <div className="relative z-10 text-center">
                 <div className="mb-6">
-                  <span className="inline-block bg-yellow-400 text-black px-8 py-4 rounded-full text-3xl font-black animate-bounce-crazy">
+                  <span className="inline-block bg-yellow-400 text-black px-8 py-4 rounded-full text-3xl font-black animate-bounce-soft">
                     🎉 ¡LA IA LO CALCULÓ! 🎉
                   </span>
                 </div>
@@ -637,7 +620,7 @@ export default function PresupuestoPage() {
                 </div>
 
                 <div className="mt-8">
-                  <span className="inline-block bg-orange-500 text-white px-10 py-5 rounded-xl text-2xl font-black animate-shake shadow-2xl">
+                  <span className="inline-block bg-orange-500 text-white px-10 py-5 rounded-xl text-2xl font-black animate-gentle-sway shadow-2xl">
                     💸 ¡DAME LA PISCINA ALFREDO! 🏊‍♂️
                   </span>
                 </div>
@@ -660,7 +643,7 @@ export default function PresupuestoPage() {
                   <th className="px-6 py-5">EDUCANINE</th>
                   <th className="px-6 py-5">SENDA CANINA</th>
                   <th className="px-6 py-5 bg-gold text-forest-dark">
-                    <div className="animate-bounce-crazy">HAKADOGS ⭐</div>
+                    <div className="animate-bounce-soft">HAKADOGS ⭐</div>
                   </th>
                 </tr>
               </thead>
@@ -693,18 +676,18 @@ export default function PresupuestoPage() {
 
         {/* CONCLUSIÓN FINAL ÉPICA */}
         <section className="bg-gradient-to-br from-purple-200 via-pink-200 to-yellow-200 py-20 relative overflow-hidden">
-          {/* Confetti */}
+          {/* Confetti - SUAVE */}
           <div className="absolute inset-0 pointer-events-none">
-            {[...Array(100)].map((_, i) => (
+            {[...Array(40)].map((_, i) => ( // Reducido de 100 a 40
               <div
                 key={i}
-                className="absolute w-3 h-3 rounded-full"
+                className="absolute w-2 h-2 rounded-full opacity-60"
                 style={{
                   left: `${Math.random() * 100}%`,
                   top: `${Math.random() * 100}%`,
-                  backgroundColor: ['#FFD700', '#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#FF1493'][i % 6],
-                  animation: `floatUp ${2 + Math.random() * 2}s linear infinite`,
-                  animationDelay: `${Math.random() * 3}s`
+                  backgroundColor: ['#FFD700', '#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A'][Math.floor(Math.random() * 5)],
+                  animation: `floatUp ${6 + Math.random() * 4}s linear infinite`, // Aumentado de 3-5s a 6-10s
+                  animationDelay: `${Math.random() * 5}s` // Aumentado de 3s a 5s
                 }}
               />
             ))}
@@ -722,7 +705,7 @@ export default function PresupuestoPage() {
             </h2>
 
             <div className="bg-white rounded-3xl shadow-2xl p-10 md:p-14 border-4 border-gold hover-grow">
-              <div className="text-8xl mb-6 animate-bounce-crazy">
+              <div className="text-8xl mb-6 animate-bounce-soft">
                 🚜🏊‍♂️💰
               </div>
 
@@ -732,7 +715,7 @@ export default function PresupuestoPage() {
               </p>
 
               <div className="mb-8">
-                <span className="inline-block bg-yellow-400 text-black px-8 py-4 rounded-xl text-2xl font-black animate-bounce-crazy">
+                <span className="inline-block bg-yellow-400 text-black px-8 py-4 rounded-xl text-2xl font-black animate-bounce-soft">
                   💎 ¡VALE 14.000€ SEGÚN LA IA! 💎
                 </span>
               </div>
@@ -764,7 +747,7 @@ export default function PresupuestoPage() {
                     🚨 ¡ACEPTO LA RANCHERA! 🚜
                   </span>
                   <br />
-                  <span className="inline-block bg-blue-600 text-white px-8 py-4 rounded-xl text-2xl font-black animate-shake">
+                  <span className="inline-block bg-blue-600 text-white px-8 py-4 rounded-xl text-2xl font-black animate-gentle-sway">
                     🏊‍♂️ ¡O LA PISCINA! 🏊‍♂️
                   </span>
                   <br />
@@ -784,7 +767,7 @@ export default function PresupuestoPage() {
               <p className="text-2xl font-bold text-gold mb-4 animate-pulse">
                 PRESUPUESTO VÁLIDO HASTA: 28 de Febrero de 2026
               </p>
-              <div className="text-4xl mb-4 animate-bounce-crazy">
+              <div className="text-4xl mb-4 animate-bounce-soft">
                 🤖💰🚀
               </div>
             </div>
