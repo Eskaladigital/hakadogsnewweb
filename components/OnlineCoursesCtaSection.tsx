@@ -101,7 +101,7 @@ export default function OnlineCoursesCtaSection({ cityName }: OnlineCoursesCtaSe
 
               <ul className="space-y-3 mb-8">
                 {[
-                  'Vídeos HD paso a paso de cada ejercicio',
+                  'Lecciones detalladas paso a paso',
                   'Soporte directo del educador profesional',
                   'Acceso de por vida a todo el contenido',
                   'Certificado de finalización incluido'

@@ -200,12 +200,12 @@ export default async function LocalidadPage({ params }: { params: { ciudad: stri
                       <div className="text-sm text-gray-600 font-medium">Acceso Total</div>
                     </div>
                     <div className="bg-gradient-to-br from-forest/10 to-forest/5 rounded-2xl p-6 text-center border-2 border-forest/20">
-                      <div className="text-4xl font-bold text-forest mb-2">HD</div>
-                      <div className="text-sm text-gray-600 font-medium">Vídeos Calidad</div>
+                      <div className="text-4xl font-bold text-forest mb-2">100%</div>
+                      <div className="text-sm text-gray-600 font-medium">Online Flexible</div>
                     </div>
                     <div className="bg-gradient-to-br from-gold/10 to-gold/5 rounded-2xl p-6 text-center border-2 border-gold/20">
-                      <div className="text-4xl font-bold text-gold mb-2">100%</div>
-                      <div className="text-sm text-gray-600 font-medium">Online Flexible</div>
+                      <div className="text-4xl font-bold text-gold mb-2">🎓</div>
+                      <div className="text-sm text-gray-600 font-medium">Certificados</div>
                     </div>
                   </div>
                 </div>

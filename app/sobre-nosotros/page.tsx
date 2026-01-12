@@ -176,7 +176,7 @@ export default function SobreNosotrosPage() {
               
               <p className="text-gray-700 mb-6 leading-relaxed">
                 Formación profesional desde casa con la misma calidad que las sesiones presenciales. 
-                11+ cursos específicos por problema, con vídeos HD, contenido detallado y acceso de por vida.
+                11+ cursos específicos por problema, con contenido detallado y acceso de por vida.
               </p>
 
               <ul className="space-y-3 mb-6">
@@ -190,7 +190,7 @@ export default function SobreNosotrosPage() {
                   <div className="w-5 h-5 bg-gold rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                     <span className="text-white text-xs">✓</span>
                   </div>
-                  <span className="text-gray-700 text-sm">Vídeos HD paso a paso</span>
+                  <span className="text-gray-700 text-sm">Lecciones paso a paso</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <div className="w-5 h-5 bg-gold rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">

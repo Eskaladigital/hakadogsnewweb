@@ -67,7 +67,7 @@ export default function Home() {
               },
               {
                 icon: Play,
-                title: 'Vídeos HD',
+                title: 'Contenido Completo',
                 description: 'Paso a paso detallado'
               },
               {

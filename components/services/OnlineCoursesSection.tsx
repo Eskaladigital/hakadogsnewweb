@@ -101,8 +101,8 @@ export default function OnlineCoursesSection() {
                   <p className="text-white/90 text-sm">Acceso ilimitado</p>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-                  <p className="text-4xl font-bold text-gold mb-2">HD</p>
-                  <p className="text-white/90 text-sm">Videos en alta calidad</p>
+                  <p className="text-4xl font-bold text-gold mb-2">🎓</p>
+                  <p className="text-white/90 text-sm">Contenido profesional</p>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
                   <p className="text-4xl font-bold text-gold mb-2">100%</p>
