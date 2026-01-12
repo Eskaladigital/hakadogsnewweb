@@ -24,7 +24,7 @@ export default function Home() {
         }
         description="Transforma la relación con tu perro a través de la metodología BE HAKA: servicios presenciales en Murcia y cursos online en toda España. +8 años de experiencia, +500 perros educados."
         primaryCTA={{
-          text: 'Consulta Gratuita',
+          text: 'Contacto',
           href: '/contacto'
         }}
         secondaryCTA={{
