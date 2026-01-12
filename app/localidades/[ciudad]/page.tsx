@@ -1,24 +1,28 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import { ArrowRight, CheckCircle2, MapPin, Clock, Globe, Users, Waves, CloudRain, Dog, FileText, AlertCircle, Sunrise } from 'lucide-react'
 import { getCityBySlug } from '@/lib/cities'
 import { getExtendedCityData } from '@/lib/extendedCityData'
 import { getCityContent } from '@/lib/supabase/cityContent'
 import Hero from '@/components/Hero'
-import ServicesSection from '@/components/ServicesSection'
-import LocalParksSection from '@/components/LocalParksSection'
-import SessionsShowcase from '@/components/SessionsShowcase'
-import LocalInfoSection from '@/components/LocalInfoSection'
-import AppsSection from '@/components/AppsSection'
-import AboutSection from '@/components/AboutSection'
-import LocalTestimonialsSection from '@/components/LocalTestimonialsSection'
-import CTASection from '@/components/CTASection'
-import OnlineCoursesCtaSection from '@/components/OnlineCoursesCtaSection'
+
+// Lazy load de componentes pesados para reducir main thread blocking
+const ServicesSection = dynamic(() => import('@/components/ServicesSection'), { ssr: true })
+const LocalParksSection = dynamic(() => import('@/components/LocalParksSection'), { ssr: true })
+const SessionsShowcase = dynamic(() => import('@/components/SessionsShowcase'), { ssr: true })
+const LocalInfoSection = dynamic(() => import('@/components/LocalInfoSection'), { ssr: true })
+const AppsSection = dynamic(() => import('@/components/AppsSection'), { ssr: true })
+const AboutSection = dynamic(() => import('@/components/AboutSection'), { ssr: true })
+const LocalTestimonialsSection = dynamic(() => import('@/components/LocalTestimonialsSection'), { ssr: true })
+const CTASection = dynamic(() => import('@/components/CTASection'), { ssr: true })
+const OnlineCoursesCtaSection = dynamic(() => import('@/components/OnlineCoursesCtaSection'), { ssr: true })
 
 // NO generamos páginas estáticas - se renderizan dinámicamente
 // Esto reduce el build time de minutos a segundos
-export const dynamic = 'force-dynamic'
+export const dynamicParams = true
+export const revalidate = 0
 
 export async function generateMetadata({ params }: { params: { ciudad: string } }): Promise<Metadata> {
   const city = getCityBySlug(params.ciudad)
