@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Phone, Mail, MapPin, Clock, Send } from 'lucide-react'
+import { Phone, Mail, MapPin, Clock, Send, Loader2, CheckCircle } from 'lucide-react'
 
 export default function ContactoPage() {
   const [formData, setFormData] = useState({
@@ -13,12 +13,37 @@ export default function ContactoPage() {
     service: '',
     message: ''
   })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitSuccess, setSubmitSuccess] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Aquí irá la lógica de envío
-    console.log('Form submitted:', formData)
-    alert('¡Gracias por tu mensaje! Te contactaremos pronto.')
+    setIsSubmitting(true)
+    
+    try {
+      // Simular envío (aquí irá la lógica real)
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      console.log('Form submitted:', formData)
+      setSubmitSuccess(true)
+      
+      // Reset form después de 3 segundos
+      setTimeout(() => {
+        setSubmitSuccess(false)
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          dogName: '',
+          service: '',
+          message: ''
+        })
+      }, 3000)
+    } catch (error) {
+      console.error('Error:', error)
+      alert('Hubo un error al enviar el mensaje. Por favor, inténtalo de nuevo.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -251,14 +276,29 @@ export default function ContactoPage() {
 
                   <button
                     type="submit"
-                    className="w-full btn-primary flex items-center justify-center"
+                    disabled={isSubmitting || submitSuccess}
+                    className="w-full btn-primary flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <Send className="mr-2" size={20} />
-                    Enviar Mensaje
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="mr-2 animate-spin" size={20} />
+                        Enviando...
+                      </>
+                    ) : submitSuccess ? (
+                      <>
+                        <CheckCircle className="mr-2" size={20} />
+                        ¡Mensaje Enviado!
+                      </>
+                    ) : (
+                      <>
+                        <Send className="mr-2" size={20} />
+                        Enviar Mensaje
+                      </>
+                    )}
                   </button>
 
-                  <p className="text-sm text-gray-600 text-center">
-                    Te responderemos en menos de 24 horas
+                  <p className="text-sm text-gray-600 text-center" role="status" aria-live="polite">
+                    {submitSuccess ? '¡Gracias! Te responderemos pronto.' : 'Te responderemos en menos de 24 horas'}
                   </p>
                 </form>
               </div>

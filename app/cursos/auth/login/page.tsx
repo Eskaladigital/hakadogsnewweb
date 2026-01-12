@@ -3,7 +3,7 @@
 import { useState, Suspense } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Mail, Lock, User, ArrowRight, AlertCircle } from 'lucide-react'
+import { Mail, Lock, User, ArrowRight, AlertCircle, Loader2 } from 'lucide-react'
 import { signIn } from '@/lib/supabase/auth'
 
 function LoginForm() {
@@ -107,8 +107,17 @@ function LoginForm() {
                 disabled={loading}
                 className="w-full bg-gradient-to-r from-forest to-sage text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center whitespace-nowrap"
               >
-                {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
-                {!loading && <ArrowRight className="ml-2 flex-shrink-0" size={20} />}
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 animate-spin flex-shrink-0" size={20} />
+                    Iniciando sesión...
+                  </>
+                ) : (
+                  <>
+                    Iniciar Sesión
+                    <ArrowRight className="ml-2 flex-shrink-0" size={20} />
+                  </>
+                )}
               </button>
             </form>
 

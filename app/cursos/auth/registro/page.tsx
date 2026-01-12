@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Mail, Lock, User, ArrowRight, AlertCircle, CheckCircle } from 'lucide-react'
+import { Mail, Lock, User, ArrowRight, AlertCircle, CheckCircle, Loader2 } from 'lucide-react'
 import { signUp } from '@/lib/supabase/auth'
 
 export default function CursosRegistroPage() {
@@ -174,8 +174,17 @@ export default function CursosRegistroPage() {
                 disabled={loading}
                 className="w-full bg-gradient-to-r from-forest to-sage text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center whitespace-nowrap"
               >
-                {loading ? 'Creando cuenta...' : 'Crear Cuenta'}
-                {!loading && <ArrowRight className="ml-2 flex-shrink-0" size={20} />}
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 animate-spin flex-shrink-0" size={20} />
+                    Creando cuenta...
+                  </>
+                ) : (
+                  <>
+                    Crear Cuenta
+                    <ArrowRight className="ml-2 flex-shrink-0" size={20} />
+                  </>
+                )}
               </button>
             </form>
 
