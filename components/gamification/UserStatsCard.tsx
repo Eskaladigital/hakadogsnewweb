@@ -133,23 +133,20 @@ export default function UserStatsCard({ stats, userName, compact = false }: User
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {/* Puntos Totales - Con Info */}
           <motion.div
-            className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl p-4 text-center relative cursor-pointer"
+            className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl p-4 text-center relative cursor-pointer group"
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 300 }}
             onClick={() => setShowPointsInfo(true)}
           >
-            <button 
-              className="absolute top-2 right-2 w-5 h-5 bg-amber-200 rounded-full flex items-center justify-center hover:bg-amber-300 transition"
-              onClick={(e) => {
-                e.stopPropagation()
-                setShowPointsInfo(true)
-              }}
-            >
-              <Info className="w-3 h-3 text-amber-800" />
-            </button>
             <Star className="w-6 h-6 text-amber-600 mx-auto mb-2" />
             <p className="text-2xl font-bold text-amber-900">{stats.total_points.toLocaleString()}</p>
             <p className="text-xs text-amber-700 mt-1">Puntos Totales</p>
+            
+            {/* Botón "Saber más" - Más visible */}
+            <div className="mt-2 flex items-center justify-center space-x-1 text-amber-700 hover:text-amber-900 transition">
+              <Info className="w-3 h-3" />
+              <span className="text-xs font-semibold">Saber más</span>
+            </div>
           </motion.div>
 
           {/* Badges */}
