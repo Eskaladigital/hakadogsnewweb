@@ -294,6 +294,117 @@ export default function PresupuestoPage() {
           </div>
         </section>
 
+        {/* SECCIÓN CONTENIDO GENERADO CON IA - NUEVO VALOR AÑADIDO */}
+        <section className="max-w-6xl mx-auto px-4 py-16">
+          <div className="text-center mb-10">
+            <span className="inline-block bg-gradient-to-r from-cyan-600 to-blue-600 text-white px-8 py-4 rounded-full text-2xl font-black animate-bounce-medium shadow-2xl">
+              🤖 ¡BONUS: CONTENIDO PREMIUM CON N8N + ChatGPT! 🤖
+            </span>
+          </div>
+
+          <div className="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 rounded-3xl p-8 md:p-12 border-4 border-blue-400 shadow-2xl hover-grow">
+            <h2 className="text-4xl md:text-5xl font-black text-center mb-8 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              💎 VALOR ADICIONAL INCLUIDO 💎
+            </h2>
+
+            <div className="grid md:grid-cols-2 gap-8 mb-8">
+              {/* Cursos Completos */}
+              <div className="bg-white rounded-2xl p-6 shadow-lg hover-grow border-2 border-blue-200">
+                <div className="text-6xl mb-4 text-center animate-bounce-medium">📚</div>
+                <h3 className="text-2xl font-black text-blue-700 mb-4 text-center">
+                  CONTENIDO DE CURSOS COMPLETO
+                </h3>
+                <div className="space-y-3">
+                  <div className="flex items-start gap-3">
+                    <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1 animate-spin-medium" />
+                    <div>
+                      <p className="font-bold text-gray-900">Alfredo solo da la metodología</p>
+                      <p className="text-sm text-gray-600">Tú escribes todo el contenido</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1 animate-spin-medium" />
+                    <div>
+                      <p className="font-bold text-gray-900">Generado con N8N + ChatGPT</p>
+                      <p className="text-sm text-gray-600">Automatización inteligente</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1 animate-spin-medium" />
+                    <div>
+                      <p className="font-bold text-gray-900">Todos los cursos listos para publicar</p>
+                      <p className="text-sm text-gray-600">Contenido profesional y estructurado</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-6 bg-blue-100 rounded-xl p-4 text-center">
+                  <div className="text-3xl font-black text-blue-700">+15 horas</div>
+                  <div className="text-sm text-gray-600">de trabajo adicional</div>
+                </div>
+              </div>
+
+              {/* 50 Artículos */}
+              <div className="bg-white rounded-2xl p-6 shadow-lg hover-grow border-2 border-purple-200">
+                <div className="text-6xl mb-4 text-center animate-wiggle">✍️</div>
+                <h3 className="text-2xl font-black text-purple-700 mb-4 text-center">
+                  50 ARTÍCULOS DE BLOG
+                </h3>
+                <div className="space-y-3">
+                  <div className="flex items-start gap-3">
+                    <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1 animate-spin-medium" />
+                    <div>
+                      <p className="font-bold text-gray-900">Máxima calidad SEO</p>
+                      <p className="text-sm text-gray-600">Optimizados para Google</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1 animate-spin-medium" />
+                    <div>
+                      <p className="font-bold text-gray-900">Generados con N8N</p>
+                      <p className="text-sm text-gray-600">Sistema automatizado de contenido</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1 animate-spin-medium" />
+                    <div>
+                      <p className="font-bold text-gray-900">Listos para publicar</p>
+                      <p className="text-sm text-gray-600">Contenido evergreen de valor</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-6 bg-purple-100 rounded-xl p-4 text-center">
+                  <div className="text-3xl font-black text-purple-700">+20 horas</div>
+                  <div className="text-sm text-gray-600">de trabajo adicional</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Resumen del valor */}
+            <div className="bg-gradient-to-r from-gold to-yellow-400 rounded-2xl p-6 text-center border-4 border-yellow-500 shadow-xl">
+              <div className="text-2xl font-black text-gray-900 mb-2">
+                🎁 VALOR ADICIONAL: +35 HORAS DE TRABAJO
+              </div>
+              <div className="text-lg font-bold text-gray-800 mb-4">
+                ¡Todo el contenido generado profesionalmente con IA!
+              </div>
+              <div className="grid md:grid-cols-3 gap-4 text-sm">
+                <div className="bg-white/50 rounded-lg p-3">
+                  <div className="font-black text-gray-900">+10 Cursos</div>
+                  <div className="text-gray-700">Contenido completo</div>
+                </div>
+                <div className="bg-white/50 rounded-lg p-3">
+                  <div className="font-black text-gray-900">+50 Artículos</div>
+                  <div className="text-gray-700">Blog profesional</div>
+                </div>
+                <div className="bg-white/50 rounded-lg p-3">
+                  <div className="font-black text-gray-900">N8N + ChatGPT</div>
+                  <div className="text-gray-700">Tecnología premium</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* LO QUE INCLUYE - MÓDULOS LOCOS */}
         <section className="max-w-6xl mx-auto px-4 py-16">
           <div className="text-center mb-12">
@@ -386,7 +497,7 @@ export default function PresupuestoPage() {
           </div>
 
           {/* Módulo 3-10 en grid compacto */}
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-6 mb-6">
             {[
               { title: '3. Web Marketing', value: '8.000€', icon: '🌐', color: 'from-orange-500 to-red-600' },
               { title: '4. Blog SEO', value: '6.500€', icon: '📝', color: 'from-pink-500 to-purple-600' },
@@ -406,6 +517,94 @@ export default function PresupuestoPage() {
                 <div className="text-4xl font-black text-yellow-300">{module.value}</div>
               </div>
             ))}
+          </div>
+
+          {/* BONUS: Contenido Generado con IA */}
+          <div className="bg-gradient-to-br from-cyan-500 via-blue-600 to-purple-600 rounded-3xl shadow-2xl overflow-hidden hover-grow animate-pulse-rainbow">
+            <div className="p-8 text-white">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-6">
+                <div className="flex items-center gap-4">
+                  <div className="text-7xl animate-bounce-medium">🤖</div>
+                  <div>
+                    <h3 className="text-4xl font-black">11. CONTENIDO GENERADO CON N8N + IA</h3>
+                    <p className="text-2xl text-yellow-300">🎁 ¡Bonus Incluido Gratis!</p>
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div className="text-6xl font-black text-yellow-300 animate-sway">+3.500€</div>
+                  <div className="text-xl">Valor adicional</div>
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="bg-white/20 backdrop-blur-md rounded-xl p-6">
+                  <h4 className="text-2xl font-bold mb-4 flex items-center">
+                    <span className="text-4xl mr-3">📚</span>
+                    Contenido de Cursos
+                  </h4>
+                  <ul className="space-y-2">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 mt-1 flex-shrink-0" />
+                      <span>Alfredo solo proporciona la metodología</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 mt-1 flex-shrink-0" />
+                      <span>Generamos todo el contenido completo</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 mt-1 flex-shrink-0" />
+                      <span>Automatizado con N8N + ChatGPT</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 mt-1 flex-shrink-0" />
+                      <span>Listo para publicar y vender</span>
+                    </li>
+                  </ul>
+                  <div className="mt-4 bg-white/30 rounded-lg p-3 text-center">
+                    <div className="text-2xl font-black">+15 horas</div>
+                    <div className="text-sm">trabajo adicional</div>
+                  </div>
+                </div>
+
+                <div className="bg-white/20 backdrop-blur-md rounded-xl p-6">
+                  <h4 className="text-2xl font-bold mb-4 flex items-center">
+                    <span className="text-4xl mr-3">✍️</span>
+                    50 Artículos SEO
+                  </h4>
+                  <ul className="space-y-2">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 mt-1 flex-shrink-0" />
+                      <span>50 artículos de blog profesionales</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 mt-1 flex-shrink-0" />
+                      <span>Optimizados para SEO y Google</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 mt-1 flex-shrink-0" />
+                      <span>Generados con N8N automático</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 mt-1 flex-shrink-0" />
+                      <span>Contenido evergreen de valor</span>
+                    </li>
+                  </ul>
+                  <div className="mt-4 bg-white/30 rounded-lg p-3 text-center">
+                    <div className="text-2xl font-black">+20 horas</div>
+                    <div className="text-sm">trabajo adicional</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 bg-yellow-400 text-black rounded-2xl p-6 text-center">
+                <div className="text-3xl font-black mb-2">
+                  🎁 ¡VALOR ADICIONAL: +35 HORAS DE TRABAJO!
+                </div>
+                <div className="text-lg font-bold">
+                  Todo el contenido listo para que Alfredo empiece a vender desde el día 1
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -580,14 +779,14 @@ export default function PresupuestoPage() {
 
                 <div className="grid md:grid-cols-3 gap-6 mb-8">
                   <div className="bg-white/20 backdrop-blur-md rounded-xl p-6 hover-grow">
-                    <div className="text-5xl font-bold mb-3">120</div>
-                    <div className="text-xl">ventas de cursos básicos (100€)</div>
-                    <div className="text-sm mt-2">🐕 10 ventas al mes = 1 año</div>
+                    <div className="text-5xl font-bold mb-3">600</div>
+                    <div className="text-xl">ventas de cursos online (20€)</div>
+                    <div className="text-sm mt-2">🐕 50 ventas al mes = 1 año</div>
                   </div>
                   <div className="bg-white/20 backdrop-blur-md rounded-xl p-6 hover-grow">
-                    <div className="text-5xl font-bold mb-3">80</div>
-                    <div className="text-xl">ventas de cursos avanzados (150€)</div>
-                    <div className="text-sm mt-2">🚀 7 ventas al mes = 1 año</div>
+                    <div className="text-5xl font-bold mb-3">45</div>
+                    <div className="text-xl">servicios presenciales (270€)</div>
+                    <div className="text-sm mt-2">🏋️ 4 servicios al mes = 1 año</div>
                   </div>
                   <div className="bg-white/20 backdrop-blur-md rounded-xl p-6 hover-grow">
                     <div className="text-5xl font-bold mb-3">MIX</div>
@@ -600,18 +799,18 @@ export default function PresupuestoPage() {
                   <div className="text-xl font-bold mb-3">📊 Escenario Realista:</div>
                   <div className="grid md:grid-cols-2 gap-4 text-left">
                     <div>
-                      <div className="font-semibold mb-2">• 5 cursos básicos/mes (100€)</div>
-                      <div className="text-sm">= 500€/mes = 6.000€/año</div>
+                      <div className="font-semibold mb-2">• 10 cursos online/mes (10-50€)</div>
+                      <div className="text-sm">= 300€/mes = 3.600€/año</div>
                     </div>
                     <div>
-                      <div className="font-semibold mb-2">• 3 cursos premium/mes (150€)</div>
-                      <div className="text-sm">= 450€/mes = 5.400€/año</div>
+                      <div className="font-semibold mb-2">• 3 servicios presenciales/mes (250€)</div>
+                      <div className="text-sm">= 750€/mes = 9.000€/año</div>
                     </div>
                     <div className="md:col-span-2 text-center mt-4 pt-4 border-t border-white/20">
                       <div className="text-2xl font-black text-yellow-300">
-                        TOTAL: 11.400€/año = ROI en 13 meses
+                        TOTAL: 12.600€/año = ROI en 11-12 meses
                       </div>
-                      <div className="text-sm mt-2">¡Y eso solo con cursos online! 🎯</div>
+                      <div className="text-sm mt-2">¡Combinando cursos online + servicios presenciales! 🎯</div>
                     </div>
                   </div>
                 </div>
@@ -655,7 +854,9 @@ export default function PresupuestoPage() {
                   { name: 'Mobile', others: ['⚠️', '✅'], hakadogs: '✅' },
                   { name: 'Gamificación', others: ['❌', '❌'], hakadogs: '✅ 🎮' },
                   { name: 'IA Integrada', others: ['❌', '❌'], hakadogs: '✅ 🤖' },
-                  { name: 'SEO 54 ciudades', others: ['❌', '❌'], hakadogs: '✅ 🗺️' }
+                  { name: 'SEO 54 ciudades', others: ['❌', '❌'], hakadogs: '✅ 🗺️' },
+                  { name: 'Contenido cursos completo', others: ['❌', '❌'], hakadogs: '✅ 📚' },
+                  { name: '50 Artículos blog', others: ['❌', '❌'], hakadogs: '✅ ✍️' }
                 ].map((row, idx) => (
                   <tr key={idx} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4 font-bold">{row.name}</td>
@@ -728,7 +929,9 @@ export default function PresupuestoPage() {
                   'Posicionarte en 54 ciudades 🗺️',
                   'Automatizar todo ⚙️',
                   'Escalar sin límites 🚀',
-                  'Gamificación única 🎮'
+                  'Gamificación única 🎮',
+                  '+10 Cursos con contenido completo 📚',
+                  '+50 Artículos SEO listos ✍️'
                 ].map((item, idx) => (
                   <div key={idx} className="flex items-center gap-3 bg-green-50 rounded-xl p-4 hover-grow">
                     <CheckCircle className="w-8 h-8 text-green-600 animate-spin-medium" />

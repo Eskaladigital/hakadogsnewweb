@@ -6,6 +6,29 @@ import Image from 'next/image'
 import { Calendar, Clock, Eye, Search, Tag, Filter, Loader2, ArrowRight, TrendingUp, Star } from 'lucide-react'
 import { getPublishedBlogPosts, getAllBlogCategories, getFeaturedBlogPosts, searchBlogPosts, getBlogPostsByCategoryId, getCategoryPostCounts } from '@/lib/supabase/blog'
 import type { BlogPostWithCategory, BlogCategory } from '@/lib/supabase/blog'
+import { Suspense } from 'react'
+
+// Skeleton para loading
+function BlogLoadingSkeleton() {
+  return (
+    <div className="min-h-screen bg-gray-50 pt-28 animate-pulse">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="h-64 bg-gray-200 rounded-2xl mb-8"></div>
+        <div className="grid lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 space-y-6">
+            {[1,2,3].map(i => (
+              <div key={i} className="bg-white rounded-xl p-6 h-48"></div>
+            ))}
+          </div>
+          <div className="space-y-6">
+            <div className="bg-white rounded-xl p-6 h-32"></div>
+            <div className="bg-white rounded-xl p-6 h-64"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export default function BlogPage() {
   const [loading, setLoading] = useState(true)
@@ -100,11 +123,7 @@ export default function BlogPage() {
   const popularPosts = [...allPosts].sort((a, b) => b.views_count - a.views_count).slice(0, 5)
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 pt-20 flex items-center justify-center">
-        <Loader2 className="w-12 h-12 animate-spin text-forest" />
-      </div>
-    )
+    return <BlogLoadingSkeleton />
   }
 
   return (
@@ -138,6 +157,9 @@ export default function BlogPage() {
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                     sizes="(max-width: 768px) 100vw, 50vw"
                     priority
+                    loading="eager"
+                    fetchPriority="high"
+                    quality={85}
                   />
                 </div>
               )}
@@ -239,6 +261,8 @@ export default function BlogPage() {
                               fill
                               className="object-cover group-hover:scale-105 transition-transform duration-300"
                               sizes="(max-width: 640px) 100vw, 256px"
+                              loading="lazy"
+                              quality={80}
                             />
                           </div>
                         )}

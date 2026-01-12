@@ -85,8 +85,10 @@ export default function Navigation() {
                 height={79}
                 className="object-contain object-left"
                 priority
+                loading="eager"
                 fetchPriority="high"
-                quality={95}
+                quality={80}
+                sizes="(max-width: 640px) 0px, 280px"
               />
             </div>
             {/* Logo en móvil */}
@@ -98,8 +100,10 @@ export default function Navigation() {
                 height={59}
                 className="object-contain object-left"
                 priority
+                loading="eager"
                 fetchPriority="high"
-                quality={95}
+                quality={80}
+                sizes="(max-width: 640px) 210px, 0px"
               />
             </div>
           </Link>

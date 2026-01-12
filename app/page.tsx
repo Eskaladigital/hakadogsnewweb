@@ -2,6 +2,8 @@ import Hero from '@/components/Hero'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { GraduationCap, Play, CheckCircle, ArrowRight, BookOpen, Clock, Award } from 'lucide-react'
+import { Suspense } from 'react'
+import { ServicesSkeleton, TestimonialsSkeleton, GallerySkeleton } from '@/components/ui/LoadingSkeleton'
 
 // Lazy load componentes below-the-fold para mejorar FCP/LCP
 const ServicesSection = dynamic(() => import('@/components/ServicesSection'))
@@ -33,7 +35,9 @@ export default function Home() {
         }}
       />
       
-      <ServicesSection />
+      <Suspense fallback={<ServicesSkeleton />}>
+        <ServicesSection />
+      </Suspense>
       
       {/* Sección Cursos Online (NUEVA - DESTACADA) */}
       <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-br from-gold/5 via-cream to-white relative overflow-hidden">
@@ -179,8 +183,15 @@ export default function Home() {
       <AppsSection />
       
       <AboutSection />
-      <GallerySection />
-      <TestimonialsSection />
+      
+      <Suspense fallback={<GallerySkeleton />}>
+        <GallerySection />
+      </Suspense>
+      
+      <Suspense fallback={<TestimonialsSkeleton />}>
+        <TestimonialsSection />
+      </Suspense>
+      
       <CTASection />
     </>
   )

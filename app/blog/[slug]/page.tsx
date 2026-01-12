@@ -263,6 +263,9 @@ export default function BlogPostPage() {
               className="object-cover"
               sizes="(max-width: 1280px) 100vw, 1280px"
               priority
+              loading="eager"
+              fetchPriority="high"
+              quality={85}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
           </div>
@@ -358,6 +361,8 @@ export default function BlogPostPage() {
                               fill
                               className="object-cover group-hover:scale-105 transition duration-300"
                               sizes="(max-width: 1024px) 100vw, 300px"
+                              loading="lazy"
+                              quality={75}
                             />
                           </div>
                         )}

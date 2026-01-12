@@ -109,8 +109,23 @@ export default function RootLayout({
         <meta name="theme-color" content="#059669" />
         
         {/* Preconnect a dominios externos para reducir latencia */}
-        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://www.google-analytics.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+        
+        {/* Preconnect Supabase para autenticación */}
+        <link rel="preconnect" href="https://jshqrsnzxzbizgjyfsde.supabase.co" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://jshqrsnzxzbizgjyfsde.supabase.co" />
+        
+        {/* Preload imagen crítica Hero para mejorar LCP */}
+        <link 
+          rel="preload" 
+          as="image" 
+          href="/images/hakadogs_educacion_canina_home_2.png"
+          type="image/png"
+          fetchPriority="high"
+        />
         
         {/* Preload logo crítico para mejorar LCP con fetchpriority */}
         <link 
@@ -143,12 +158,13 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
         />
         
-        {/* Google Analytics - estrategia lazyOnload para no bloquear renderizado */}
+        {/* Google Analytics - estrategia afterInteractive para mejor rendimiento */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-NXPT2KNYGJ"
-          strategy="lazyOnload"
+          strategy="afterInteractive"
+          async
         />
-        <Script id="google-analytics" strategy="lazyOnload">
+        <Script id="google-analytics" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}

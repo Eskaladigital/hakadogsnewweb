@@ -1,132 +1,200 @@
-// Script para convertir imágenes JPG/PNG a WebP
-// Uso: node scripts/optimize-images.js
+/**
+ * Script de Optimización de Imágenes para PageSpeed
+ * Convierte automáticamente PNG a WebP/AVIF con Sharp
+ * 
+ * Uso: node scripts/optimize-images.js
+ */
 
-const sharp = require('sharp');
-const fs = require('fs');
-const path = require('path');
+const fs = require('fs')
+const path = require('path')
+const sharp = require('sharp')
 
-const IMAGES_DIR = path.join(__dirname, '../public/images');
-const OUTPUT_DIR = IMAGES_DIR; // Guardar en la misma carpeta
+// Configuración
+const CONFIG = {
+  inputDir: path.join(__dirname, '..', 'public', 'images'),
+  quality: {
+    webp: 85,
+    avif: 80,
+    jpeg: 85
+  },
+  sizes: [320, 640, 768, 1024, 1920], // Tamaños responsive
+  formats: ['webp', 'avif'], // Formatos modernos
+  skipPatterns: ['logo_definitivo_hakadogs.webp'], // Ya optimizado
+}
 
-// Configuración de optimización
-const WEBP_QUALITY = 85;
-const RESIZE_MAX_WIDTH = 2000; // Redimensionar si es más grande
+// Colores para consola
+const colors = {
+  reset: '\x1b[0m',
+  green: '\x1b[32m',
+  yellow: '\x1b[33m',
+  blue: '\x1b[34m',
+  red: '\x1b[31m'
+}
 
-async function convertToWebP(inputPath, outputPath) {
+function log(message, color = 'reset') {
+  console.log(`${colors[color]}${message}${colors.reset}`)
+}
+
+// Función para obtener todas las imágenes
+function getAllImages(dir, fileList = []) {
+  const files = fs.readdirSync(dir)
+
+  files.forEach(file => {
+    const filePath = path.join(dir, file)
+    const stat = fs.statSync(filePath)
+
+    if (stat.isDirectory()) {
+      getAllImages(filePath, fileList)
+    } else if (/\.(png|jpg|jpeg)$/i.test(file)) {
+      // Verificar si no está en skipPatterns
+      if (!CONFIG.skipPatterns.some(pattern => file.includes(pattern))) {
+        fileList.push(filePath)
+      }
+    }
+  })
+
+  return fileList
+}
+
+// Función para optimizar una imagen
+async function optimizeImage(imagePath) {
+  const fileName = path.basename(imagePath, path.extname(imagePath))
+  const dirName = path.dirname(imagePath)
+  const ext = path.extname(imagePath).toLowerCase()
+  
+  log(`\n📸 Procesando: ${path.relative(CONFIG.inputDir, imagePath)}`, 'blue')
+  
   try {
-    const image = sharp(inputPath);
-    const metadata = await image.metadata();
+    const image = sharp(imagePath)
+    const metadata = await image.metadata()
+    const originalSize = fs.statSync(imagePath).size
     
-    console.log(`\n📸 Procesando: ${path.basename(inputPath)}`);
-    console.log(`   Tamaño original: ${metadata.width}x${metadata.height} - ${metadata.format.toUpperCase()}`);
+    log(`   Dimensiones originales: ${metadata.width}x${metadata.height}`, 'yellow')
+    log(`   Tamaño original: ${(originalSize / 1024).toFixed(2)} KB`, 'yellow')
     
-    // Construir pipeline de optimización
-    let pipeline = image;
-    
-    // Redimensionar si es muy grande
-    if (metadata.width > RESIZE_MAX_WIDTH) {
-      console.log(`   ⚠️  Redimensionando a ${RESIZE_MAX_WIDTH}px de ancho`);
-      pipeline = pipeline.resize(RESIZE_MAX_WIDTH, null, {
-        withoutEnlargement: true,
-        fit: 'inside'
-      });
+    let totalSaved = 0
+
+    // Generar versiones responsive
+    for (const width of CONFIG.sizes) {
+      if (width >= metadata.width) continue // No agrandar imágenes
+      
+      for (const format of CONFIG.formats) {
+        const outputPath = path.join(
+          dirName,
+          `${fileName}-${width}w.${format}`
+        )
+        
+        await image
+          .clone()
+          .resize(width, null, {
+            withoutEnlargement: true,
+            fit: 'inside'
+          })
+          [format]({ quality: CONFIG.quality[format] })
+          .toFile(outputPath)
+        
+        const newSize = fs.statSync(outputPath).size
+        totalSaved += originalSize - newSize
+        
+        log(`   ✅ ${width}w.${format}: ${(newSize / 1024).toFixed(2)} KB`, 'green')
+      }
     }
     
-    // Convertir a WebP
-    await pipeline
-      .webp({ quality: WEBP_QUALITY })
-      .toFile(outputPath);
+    // Generar versión optimizada full-size
+    for (const format of CONFIG.formats) {
+      const outputPath = path.join(dirName, `${fileName}.${format}`)
+      
+      await image
+        .clone()
+        [format]({ quality: CONFIG.quality[format] })
+        .toFile(outputPath)
+      
+      const newSize = fs.statSync(outputPath).size
+      totalSaved += originalSize - newSize
+      
+      log(`   ✅ Full-size ${format}: ${(newSize / 1024).toFixed(2)} KB`, 'green')
+    }
     
-    // Comparar tamaños
-    const originalSize = fs.statSync(inputPath).size;
-    const webpSize = fs.statSync(outputPath).size;
-    const savings = ((originalSize - webpSize) / originalSize * 100).toFixed(1);
+    log(`   💾 Ahorro total: ${(totalSaved / 1024).toFixed(2)} KB`, 'green')
     
-    console.log(`   ✅ WebP creado: ${(webpSize / 1024).toFixed(1)}KB (ahorro: ${savings}%)`);
+    return {
+      original: imagePath,
+      originalSize,
+      saved: totalSaved
+    }
     
-    return { success: true, originalSize, webpSize, savings };
   } catch (error) {
-    console.error(`   ❌ Error: ${error.message}`);
-    return { success: false, error: error.message };
+    log(`   ❌ Error: ${error.message}`, 'red')
+    return null
   }
 }
 
+// Función principal
 async function main() {
-  console.log('🚀 Iniciando optimización de imágenes...\n');
-  console.log(`📁 Directorio: ${IMAGES_DIR}\n`);
+  log('\n🚀 Iniciando optimización de imágenes para PageSpeed\n', 'blue')
+  log(`📁 Directorio: ${CONFIG.inputDir}`, 'yellow')
+  log(`📐 Tamaños: ${CONFIG.sizes.join(', ')}px`, 'yellow')
+  log(`🖼️  Formatos: ${CONFIG.formats.join(', ')}`, 'yellow')
+  log(`🎯 Calidad: WebP ${CONFIG.quality.webp}%, AVIF ${CONFIG.quality.avif}%\n`, 'yellow')
   
-  // Leer todos los archivos del directorio
-  const files = fs.readdirSync(IMAGES_DIR);
+  const images = getAllImages(CONFIG.inputDir)
   
-  // Filtrar solo JPG y PNG (excluir WebP ya existentes)
-  const imagesToConvert = files.filter(file => {
-    const ext = path.extname(file).toLowerCase();
-    return (ext === '.jpg' || ext === '.jpeg' || ext === '.png') && 
-           !file.endsWith('_optimized.webp'); // Evitar reconvertir
-  });
-  
-  if (imagesToConvert.length === 0) {
-    console.log('ℹ️  No se encontraron imágenes JPG/PNG para convertir.');
-    return;
+  if (images.length === 0) {
+    log('⚠️  No se encontraron imágenes para optimizar', 'yellow')
+    return
   }
   
-  console.log(`📊 Encontradas ${imagesToConvert.length} imágenes para convertir\n`);
+  log(`📋 Encontradas ${images.length} imágenes\n`, 'blue')
   
-  // Estadísticas
-  let totalOriginalSize = 0;
-  let totalWebpSize = 0;
-  let successCount = 0;
-  let errorCount = 0;
+  const results = []
   
-  // Convertir cada imagen
-  for (const file of imagesToConvert) {
-    const inputPath = path.join(IMAGES_DIR, file);
-    const outputPath = path.join(
-      OUTPUT_DIR, 
-      path.basename(file, path.extname(file)) + '.webp'
-    );
-    
-    // No sobrescribir si ya existe WebP (opcional: comentar para forzar)
-    if (fs.existsSync(outputPath)) {
-      console.log(`\n⏭️  Saltando: ${file} (WebP ya existe)`);
-      continue;
-    }
-    
-    const result = await convertToWebP(inputPath, outputPath);
-    
-    if (result.success) {
-      totalOriginalSize += result.originalSize;
-      totalWebpSize += result.webpSize;
-      successCount++;
-    } else {
-      errorCount++;
-    }
+  for (const imagePath of images) {
+    const result = await optimizeImage(imagePath)
+    if (result) results.push(result)
   }
   
-  // Resumen final
-  console.log('\n' + '='.repeat(60));
-  console.log('📊 RESUMEN DE OPTIMIZACIÓN');
-  console.log('='.repeat(60));
-  console.log(`✅ Imágenes convertidas: ${successCount}`);
-  console.log(`❌ Errores: ${errorCount}`);
-  console.log(`💾 Tamaño original total: ${(totalOriginalSize / 1024 / 1024).toFixed(2)}MB`);
-  console.log(`🚀 Tamaño WebP total: ${(totalWebpSize / 1024 / 1024).toFixed(2)}MB`);
+  // Resumen
+  const totalOriginal = results.reduce((sum, r) => sum + r.originalSize, 0)
+  const totalSaved = results.reduce((sum, r) => sum + r.saved, 0)
+  const percentSaved = ((totalSaved / totalOriginal) * 100).toFixed(1)
   
-  if (totalOriginalSize > 0) {
-    const totalSavings = ((totalOriginalSize - totalWebpSize) / totalOriginalSize * 100).toFixed(1);
-    console.log(`📉 Reducción total: ${totalSavings}%`);
+  log('\n' + '='.repeat(60), 'blue')
+  log('📊 RESUMEN DE OPTIMIZACIÓN', 'blue')
+  log('='.repeat(60), 'blue')
+  log(`✅ Imágenes procesadas: ${results.length}`, 'green')
+  log(`📦 Tamaño original total: ${(totalOriginal / 1024 / 1024).toFixed(2)} MB`, 'yellow')
+  log(`💾 Espacio ahorrado: ${(totalSaved / 1024 / 1024).toFixed(2)} MB (${percentSaved}%)`, 'green')
+  log('='.repeat(60) + '\n', 'blue')
+  
+  // Generar reporte
+  const report = {
+    date: new Date().toISOString(),
+    totalImages: results.length,
+    totalOriginalSize: totalOriginal,
+    totalSaved: totalSaved,
+    percentSaved: percentSaved,
+    images: results.map(r => ({
+      path: path.relative(CONFIG.inputDir, r.original),
+      originalSize: r.originalSize,
+      saved: r.saved
+    }))
   }
   
-  console.log('='.repeat(60));
-  console.log('\n✨ Optimización completada!\n');
+  const reportPath = path.join(__dirname, 'image-optimization-report.json')
+  fs.writeFileSync(reportPath, JSON.stringify(report, null, 2))
+  log(`📄 Reporte guardado en: ${reportPath}`, 'blue')
   
-  // Recomendaciones
-  console.log('💡 PRÓXIMOS PASOS:');
-  console.log('   1. Verificar las imágenes WebP en public/images/');
-  console.log('   2. Actualizar referencias en el código si es necesario');
-  console.log('   3. Considerar eliminar JPG/PNG originales si no se usan directamente');
-  console.log('   4. Commit y push de las imágenes optimizadas\n');
+  log('\n💡 PRÓXIMOS PASOS:', 'yellow')
+  log('1. Actualizar referencias de imágenes en componentes', 'yellow')
+  log('2. Usar atributo sizes en Image components', 'yellow')
+  log('3. Considerar eliminar originales PNG/JPG después de verificar', 'yellow')
+  log('4. Agregar blur placeholders con plaiceholder', 'yellow')
+  log('\n🎉 ¡Optimización completada!\n', 'green')
 }
 
 // Ejecutar
-main().catch(console.error);
+main().catch(error => {
+  log(`\n❌ Error fatal: ${error.message}`, 'red')
+  console.error(error)
+  process.exit(1)
+})

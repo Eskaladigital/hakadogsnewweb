@@ -2,7 +2,6 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 
 interface HeroProps {
@@ -59,12 +58,8 @@ export default function Hero({
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 sm:pt-32 sm:pb-24 md:pt-40 md:pb-32">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Content */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: 'easeOut' }}
-          >
+          {/* Content - Eliminado framer-motion para mejorar rendimiento */}
+          <div className="animate-fade-in-up">
             <div className="inline-block px-3 sm:px-4 py-1.5 sm:py-2 bg-forest/10 rounded-full mb-4 sm:mb-6">
               <span className="text-forest font-semibold text-xs sm:text-sm">{badge}</span>
             </div>
@@ -109,15 +104,10 @@ export default function Hero({
                 ))}
               </div>
             )}
-          </motion.div>
+          </div>
 
-          {/* Image */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.1, ease: 'easeOut' }}
-            className="relative"
-          >
+          {/* Image - Optimizada con placeholder y sin framer-motion */}
+          <div className="relative animate-fade-in-scale">
             <div className="relative rounded-3xl overflow-hidden shadow-2xl">
               <div className="aspect-[4/5] relative">
                 <Image
@@ -126,8 +116,10 @@ export default function Hero({
                   fill
                   className="object-cover"
                   priority
+                  loading="eager"
                   fetchPriority="high"
                   sizes="(max-width: 768px) 100vw, 50vw"
+                  quality={85}
                 />
               </div>
             </div>
@@ -146,7 +138,7 @@ export default function Hero({
                 </div>
               </div>
             )}
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

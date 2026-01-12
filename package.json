@@ -16,7 +16,9 @@
     "prepare": "husky",
     "generate-cities": "node scripts/generate-cities.js",
     "generate-cities-test": "node scripts/generate-cities.js 3",
-    "generate-all-remote": "node scripts/generate-all-remote-cities.js"
+    "generate-all-remote": "node scripts/generate-all-remote-cities.js",
+    "optimize-images": "node scripts/optimize-images.js",
+    "pre-deploy": "node scripts/pre-deploy-check.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.2",

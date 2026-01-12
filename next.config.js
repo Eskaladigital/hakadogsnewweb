@@ -7,6 +7,8 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60,
     dangerouslyAllowSVG: false,
+    // Optimización adicional para imágenes
+    unoptimized: false,
   },
   
   // Comprimir todas las respuestas
@@ -22,6 +24,8 @@ const nextConfig = {
   experimental: {
     optimizeCss: true,
     optimizePackageImports: ['lucide-react', 'framer-motion'],
+    // Mejorar renderizado inicial
+    optimisticClientCache: true,
   },
   
   // Optimizar chunks para mejor caché
