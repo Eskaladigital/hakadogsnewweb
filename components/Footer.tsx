@@ -7,33 +7,33 @@ import { Facebook, Instagram, Mail, Phone, MapPin } from 'lucide-react'
 export default function Footer() {
   return (
     <footer className="bg-forest-dark text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 sm:gap-8">
           {/* Logo y descripción */}
           <div className="md:col-span-1">
-            <div className="flex flex-col items-center md:items-start mb-4">
+            <div className="flex flex-col items-center md:items-start mb-3 sm:mb-4">
               <Image
                 src="/images/hakadogs_logo_cara_transparente_vf.webp"
                 alt="Hakadogs"
                 width={64}
                 height={64}
-                className="h-16 w-16 mb-2 object-contain brightness-0 invert"
+                className="h-14 w-14 sm:h-16 sm:w-16 mb-2 object-contain brightness-0 invert"
                 quality={85}
               />
-              <span className="text-lg font-bold text-sage">BE HAKA!</span>
+              <span className="text-base sm:text-lg font-bold text-sage">BE HAKA!</span>
             </div>
             
-            <p className="text-sm text-gray-300 text-center md:text-left">
+            <p className="text-xs sm:text-sm text-gray-300 text-center md:text-left">
               Educación canina profesional con más de 15 años de experiencia.
             </p>
           </div>
 
           {/* Enlaces rápidos */}
           <div>
-            <h3 className="font-bold text-lg mb-4">Navegación</h3>
-            <ul className="space-y-2">
+            <h3 className="font-bold text-base sm:text-lg mb-3 sm:mb-4">Navegación</h3>
+            <ul className="space-y-1.5 sm:space-y-2">
               <li>
-                <Link href="/" className="text-gray-300 hover:text-gold transition">
+                <Link href="/" className="text-sm text-gray-300 hover:text-gold transition">
                   Inicio
                 </Link>
               </li>
@@ -204,18 +204,23 @@ export default function Footer() {
 
           {/* Créditos de desarrollo */}
           <div className="mt-6 pt-6 border-t border-white/10">
-            <p className="text-xs text-gray-500 text-center">
-              Hecho con Amor en Murcia, web desarrollada por{' '}
-              <a 
-                href="https://www.scala.es" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-gold transition underline"
-              >
-                Scala
-              </a>
-              , agencia de marketing digital
-            </p>
+            <div className="text-center text-gray-400 text-xs md:text-sm leading-relaxed">
+              <span className="block sm:inline">
+                Hecho con <span className="text-red-500 inline-block animate-pulse">❤️</span> en Murcia
+              </span>
+              <span className="hidden sm:inline"> · </span>
+              <span className="block sm:inline mt-1 sm:mt-0">
+                Web desarrollada por{' '}
+                <a 
+                  href="https://www.eskaladigital.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-sage hover:text-gold transition-colors font-medium whitespace-nowrap"
+                >
+                  ESKALA Agencia de Marketing Digital
+                </a>
+              </span>
+            </div>
           </div>
         </div>
       </div>

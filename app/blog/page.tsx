@@ -112,8 +112,8 @@ export default function BlogPage() {
       <section className="bg-gradient-to-r from-forest to-sage text-white pt-28 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Blog de Educación Canina</h1>
-            <p className="text-lg text-white/90">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">Blog de Educación Canina</h1>
+            <p className="text-sm sm:text-base md:text-lg text-white/90">
               Consejos profesionales, guías y recursos para educar a tu perro
             </p>
           </div>
@@ -152,10 +152,10 @@ export default function BlogPage() {
                     {featuredPosts[0].category.name}
                   </span>
                 )}
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 group-hover:text-forest transition">
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-3 sm:mb-4 group-hover:text-forest transition">
                   {featuredPosts[0].title}
                 </h2>
-                <p className="text-gray-600 mb-6 line-clamp-3 text-lg">
+                <p className="text-sm sm:text-base md:text-lg text-gray-600 mb-4 sm:mb-6 line-clamp-3">
                   {featuredPosts[0].excerpt}
                 </p>
                 <div className="flex items-center gap-6 text-sm text-gray-500">
@@ -191,11 +191,11 @@ export default function BlogPage() {
             
             {/* Título de sección */}
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-gray-900">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">
                 {searchQuery ? 'Resultados de búsqueda' : selectedCategory ? categories.find(c => c.id === selectedCategory)?.name : 'Últimos Artículos'}
               </h2>
               {!searchQuery && !selectedCategory && (
-                <span className="text-sm text-gray-500">{posts.length} artículos</span>
+                <span className="text-xs sm:text-sm text-gray-500">{posts.length} artículos</span>
               )}
             </div>
 
@@ -245,10 +245,10 @@ export default function BlogPage() {
                               {post.category.name}
                             </span>
                           )}
-                          <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-forest transition line-clamp-2">
+                          <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 mb-2 sm:mb-3 group-hover:text-forest transition line-clamp-2">
                             {post.title}
                           </h3>
-                          <p className="text-gray-600 mb-4 line-clamp-2">{post.excerpt}</p>
+                          <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4 line-clamp-2">{post.excerpt}</p>
                           <div className="flex items-center gap-4 text-sm text-gray-500">
                             <span className="flex items-center">
                               <Calendar className="w-4 h-4 mr-1.5" />
@@ -276,9 +276,9 @@ export default function BlogPage() {
           <div className="space-y-6">
             
             {/* Widget: Búsqueda */}
-            <div className="bg-white rounded-xl shadow-sm p-6 sticky top-24">
-              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
-                <Search className="w-5 h-5 mr-2 text-forest" />
+            <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 sticky top-24">
+              <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4 flex items-center">
+                <Search className="w-4 sm:w-5 h-4 sm:h-5 mr-2 text-forest" />
                 Buscar Artículos
               </h3>
               <div className="space-y-3">
@@ -320,9 +320,9 @@ export default function BlogPage() {
             </div>
 
             {/* Widget: Categorías */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
-                <Tag className="w-5 h-5 mr-2 text-forest" />
+            <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+              <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4 flex items-center">
+                <Tag className="w-4 sm:w-5 h-4 sm:h-5 mr-2 text-forest" />
                 Categorías
               </h3>
               <div className="space-y-2">
@@ -373,9 +373,9 @@ export default function BlogPage() {
 
             {/* Widget: Artículos Populares */}
             {popularPosts.length > 0 && (
-              <div className="bg-white rounded-xl shadow-sm p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
-                  <TrendingUp className="w-5 h-5 mr-2 text-forest" />
+              <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+                <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4 flex items-center">
+                  <TrendingUp className="w-4 sm:w-5 h-4 sm:h-5 mr-2 text-forest" />
                   Más Populares
                 </h3>
                 <div className="space-y-4">
@@ -404,9 +404,9 @@ export default function BlogPage() {
             )}
 
             {/* Widget: CTA */}
-            <div className="bg-gradient-to-br from-forest to-sage text-white rounded-xl shadow-lg p-6">
-              <h3 className="text-xl font-bold mb-3">¿Quieres aprender más?</h3>
-              <p className="text-white/90 mb-6 text-sm">
+            <div className="bg-gradient-to-br from-forest to-sage text-white rounded-xl shadow-lg p-4 sm:p-6">
+              <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3">¿Quieres aprender más?</h3>
+              <p className="text-white/90 mb-4 sm:mb-6 text-xs sm:text-sm">
                 Descubre nuestros cursos profesionales de educación canina
               </p>
               <Link

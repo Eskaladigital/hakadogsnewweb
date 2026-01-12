@@ -30,43 +30,43 @@ export default function ContactoPage() {
   return (
     <div className="min-h-screen">
       {/* Hero */}
-      <section className="relative pt-32 pb-20 bg-gradient-to-br from-cream via-white to-sage/10">
+      <section className="relative pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 bg-gradient-to-br from-cream via-white to-sage/10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-block px-4 py-2 bg-forest/10 rounded-full mb-6">
-            <span className="text-forest font-semibold text-sm">Contacto</span>
+          <div className="inline-block px-3 sm:px-4 py-1.5 sm:py-2 bg-forest/10 rounded-full mb-4 sm:mb-6">
+            <span className="text-forest font-semibold text-xs sm:text-sm">Contacto</span>
           </div>
           
-          <h1 className="text-5xl md:text-6xl font-bold text-forest-dark mb-6">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-forest-dark mb-4 sm:mb-6">
             Hablemos de tu Perro
           </h1>
           
-          <p className="text-xl text-gray-700 leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl text-gray-700 leading-relaxed">
             Primera consulta gratuita sin compromiso. Respuesta en menos de 24 horas.
           </p>
         </div>
       </section>
 
       {/* Contenido Principal */}
-      <section className="py-20 bg-white">
+      <section className="py-12 sm:py-16 md:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12">
+          <div className="grid lg:grid-cols-2 gap-8 sm:gap-12">
             {/* Información de Contacto */}
             <div>
-              <h2 className="text-3xl font-bold text-forest-dark mb-8">
+              <h2 className="text-2xl sm:text-3xl font-bold text-forest-dark mb-6 sm:mb-8">
                 Información de Contacto
               </h2>
               
-              <div className="space-y-6 mb-12">
-                <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-forest/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Phone className="text-forest" size={24} />
+              <div className="space-y-4 sm:space-y-6 mb-8 sm:mb-12">
+                <div className="flex items-start space-x-3 sm:space-x-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-forest/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Phone className="text-forest" size={20} />
                   </div>
                   <div>
-                    <h3 className="font-bold text-forest-dark mb-1">Teléfono</h3>
-                    <a href="tel:+34685648241" className="text-gray-700 hover:text-forest transition">
+                    <h3 className="font-bold text-forest-dark mb-1 text-sm sm:text-base">Teléfono</h3>
+                    <a href="tel:+34685648241" className="text-sm sm:text-base text-gray-700 hover:text-forest transition">
                       685 64 82 41
                     </a>
-                    <p className="text-sm text-gray-500 mt-1">Lun-Sab: 9:00 - 20:00</p>
+                    <p className="text-xs sm:text-sm text-gray-500 mt-1">Lun-Sab: 9:00 - 20:00</p>
                   </div>
                 </div>
 
@@ -113,8 +113,8 @@ export default function ContactoPage() {
               </div>
 
               {/* Redes Sociales */}
-              <div className="bg-cream rounded-2xl p-8">
-                <h3 className="font-bold text-forest-dark mb-4">Síguenos en Redes</h3>
+              <div className="bg-cream rounded-xl sm:rounded-2xl p-6 sm:p-8">
+                <h3 className="font-bold text-forest-dark mb-3 sm:mb-4 text-sm sm:text-base">Síguenos en Redes</h3>
                 <div className="flex space-x-4">
                   <a 
                     href="#" 
@@ -134,8 +134,8 @@ export default function ContactoPage() {
 
             {/* Formulario de Contacto */}
             <div>
-              <div className="bg-cream rounded-2xl p-8">
-                <h2 className="text-2xl font-bold text-forest-dark mb-6">
+              <div className="bg-cream rounded-xl sm:rounded-2xl p-6 sm:p-8">
+                <h2 className="text-xl sm:text-2xl font-bold text-forest-dark mb-4 sm:mb-6">
                   Solicita tu Consulta Gratuita
                 </h2>
                 
@@ -258,13 +258,13 @@ export default function ContactoPage() {
       </section>
 
       {/* FAQs Rápidas */}
-      <section className="py-20 bg-cream">
+      <section className="py-12 sm:py-16 md:py-20 bg-cream">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-forest-dark text-center mb-12">
+          <h2 className="text-2xl sm:text-3xl font-bold text-forest-dark text-center mb-8 sm:mb-12">
             Preguntas Frecuentes
           </h2>
           
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {[
               {
                 q: '¿Cuánto cuesta la primera consulta?',
@@ -283,9 +283,9 @@ export default function ContactoPage() {
                 a: 'Trabajamos con perros de todas las edades, desde cachorros de 2 meses hasta perros senior. Nunca es tarde para educar o modificar conductas.'
               }
             ].map((faq, index) => (
-              <div key={index} className="bg-white rounded-xl p-6">
-                <h3 className="font-bold text-forest-dark mb-2">{faq.q}</h3>
-                <p className="text-gray-700">{faq.a}</p>
+              <div key={index} className="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6">
+                <h3 className="font-bold text-forest-dark mb-2 text-sm sm:text-base">{faq.q}</h3>
+                <p className="text-sm sm:text-base text-gray-700">{faq.a}</p>
               </div>
             ))}
           </div>

@@ -43,22 +43,22 @@ export default function Home() {
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Header */}
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 bg-gold/20 px-4 py-2 rounded-full mb-4">
-              <GraduationCap className="text-gold" size={20} />
-              <span className="text-gold font-semibold text-sm">Formación Online Profesional</span>
+          <div className="text-center mb-8 sm:mb-12">
+            <div className="inline-flex items-center gap-2 bg-gold/20 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full mb-3 sm:mb-4">
+              <GraduationCap className="text-gold" size={18} />
+              <span className="text-gold font-semibold text-xs sm:text-sm">Formación Online Profesional</span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-forest-dark mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-forest-dark mb-3 sm:mb-4">
               Cursos Online de Educación Canina
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
               Aprende desde casa con la misma calidad que nuestras sesiones presenciales. 
               11+ cursos específicos por problema, disponibles 24/7 para toda España.
             </p>
           </div>
 
           {/* Grid de Beneficios */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12">
             {[
               {
                 icon: BookOpen,
@@ -81,41 +81,41 @@ export default function Home() {
                 description: 'Al completar cada curso'
               }
             ].map((item) => (
-              <div key={item.title} className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all text-center border-2 border-gray-100 hover:border-gold/30">
-                <div className="w-14 h-14 bg-gold/10 rounded-xl flex items-center justify-center mx-auto mb-4">
-                  <item.icon className="text-gold" size={28} />
+              <div key={item.title} className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all text-center border-2 border-gray-100 hover:border-gold/30">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gold/10 rounded-xl flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                  <item.icon className="text-gold" size={24} />
                 </div>
-                <h3 className="font-bold text-forest-dark mb-1">{item.title}</h3>
-                <p className="text-sm text-gray-600">{item.description}</p>
+                <h3 className="font-bold text-forest-dark mb-1 text-sm sm:text-base">{item.title}</h3>
+                <p className="text-xs sm:text-sm text-gray-600">{item.description}</p>
               </div>
             ))}
           </div>
 
           {/* CTA Grande */}
-          <div className="bg-gradient-to-br from-gold to-yellow-400 rounded-3xl shadow-2xl overflow-hidden">
-            <div className="grid md:grid-cols-2 gap-8 items-center p-8 md:p-12">
+          <div className="bg-gradient-to-br from-gold to-yellow-400 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden">
+            <div className="grid md:grid-cols-2 gap-6 sm:gap-8 items-center p-6 sm:p-8 md:p-12">
               {/* Izquierda - Contenido */}
               <div className="text-white">
-                <h3 className="text-3xl font-bold mb-4">
+                <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4">
                   Empieza Hoy con Nuestro Curso Gratuito
                 </h3>
-                <p className="text-white/90 mb-6 leading-relaxed">
+                <p className="text-sm sm:text-base text-white/90 mb-4 sm:mb-6 leading-relaxed">
                   Accede gratis a nuestro curso introductorio y descubre cómo la metodología BE HAKA 
                   puede transformar la relación con tu perro. Sin tarjeta de crédito.
                 </p>
 
-                <ul className="space-y-3 mb-6">
+                <ul className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
                   {[
                     'Fundamentos de educación positiva',
                     'Comunicación efectiva con tu perro',
                     'Ejercicios prácticos paso a paso',
                     'Acceso inmediato y para siempre'
                   ].map((item) => (
-                    <li key={item} className="flex items-center gap-3">
-                      <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
-                        <CheckCircle className="text-white" size={16} />
+                    <li key={item} className="flex items-center gap-2 sm:gap-3">
+                      <div className="w-5 h-5 sm:w-6 sm:h-6 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
+                        <CheckCircle className="text-white" size={14} />
                       </div>
-                      <span className="text-white/95">{item}</span>
+                      <span className="text-sm sm:text-base text-white/95">{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -139,22 +139,22 @@ export default function Home() {
               </div>
 
               {/* Derecha - Stats */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center border border-white/20">
-                  <div className="text-4xl font-bold text-white mb-2">+8</div>
-                  <div className="text-sm text-white/90">Años Experiencia</div>
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 text-center border border-white/20">
+                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-1 sm:mb-2">+8</div>
+                  <div className="text-xs sm:text-sm text-white/90">Años Experiencia</div>
                 </div>
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center border border-white/20">
-                  <div className="text-4xl font-bold text-white mb-2">+500</div>
-                  <div className="text-sm text-white/90">Perros Educados</div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 text-center border border-white/20">
+                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-1 sm:mb-2">+500</div>
+                  <div className="text-xs sm:text-sm text-white/90">Perros Educados</div>
                 </div>
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center border border-white/20">
-                  <div className="text-4xl font-bold text-white mb-2">11+</div>
-                  <div className="text-sm text-white/90">Cursos Disponibles</div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 text-center border border-white/20">
+                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-1 sm:mb-2">11+</div>
+                  <div className="text-xs sm:text-sm text-white/90">Cursos Disponibles</div>
                 </div>
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center border border-white/20">
-                  <div className="text-4xl font-bold text-white mb-2">24/7</div>
-                  <div className="text-sm text-white/90">Acceso Total</div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 text-center border border-white/20">
+                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-1 sm:mb-2">24/7</div>
+                  <div className="text-xs sm:text-sm text-white/90">Acceso Total</div>
                 </div>
               </div>
             </div>

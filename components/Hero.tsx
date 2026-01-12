@@ -65,11 +65,11 @@ export default function Hero({
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
           >
-            <div className="inline-block px-4 py-2 bg-forest/10 rounded-full mb-6">
-              <span className="text-forest font-semibold text-sm">{badge}</span>
+            <div className="inline-block px-3 sm:px-4 py-1.5 sm:py-2 bg-forest/10 rounded-full mb-4 sm:mb-6">
+              <span className="text-forest font-semibold text-xs sm:text-sm">{badge}</span>
             </div>
             
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-forest-dark mb-6 leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-forest-dark mb-4 sm:mb-6 leading-tight">
               {typeof title === 'string' ? (
                 <>
                   Educación Canina
@@ -79,10 +79,10 @@ export default function Hero({
             </h1>
             
             {subtitle && (
-              <h2 className="text-3xl font-bold text-forest mb-4">{subtitle}</h2>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-forest mb-3 sm:mb-4">{subtitle}</h2>
             )}
             
-            <p className="text-xl text-gray-700 mb-8 leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl text-gray-700 mb-6 sm:mb-8 leading-relaxed">
               {description}
             </p>
 
@@ -100,11 +100,11 @@ export default function Hero({
 
             {/* Stats */}
             {stats && stats.length > 0 && (
-              <div className="grid grid-cols-3 gap-6 mt-12 pt-12 border-t border-sage/20">
+              <div className="grid grid-cols-3 gap-4 sm:gap-6 mt-8 sm:mt-12 pt-8 sm:pt-12 border-t border-sage/20">
                 {stats.map((stat, index) => (
                   <div key={index}>
-                    <div className="text-3xl font-bold text-forest">{stat.value}</div>
-                    <div className="text-sm text-gray-600 mt-1">{stat.label}</div>
+                    <div className="text-2xl sm:text-3xl font-bold text-forest">{stat.value}</div>
+                    <div className="text-xs sm:text-sm text-gray-600 mt-1">{stat.label}</div>
                   </div>
                 ))}
               </div>
@@ -134,14 +134,14 @@ export default function Hero({
             
             {/* Floating badge */}
             {floatingBadge && (
-              <div className="absolute -bottom-6 -right-6 bg-white rounded-2xl shadow-xl p-6 max-w-xs">
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-gold rounded-full flex items-center justify-center flex-shrink-0">
-                    <span className="text-2xl">{floatingBadge.emoji}</span>
+              <div className="absolute -bottom-4 sm:-bottom-6 -right-4 sm:-right-6 bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 max-w-xs">
+                <div className="flex items-center space-x-2 sm:space-x-3">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gold rounded-full flex items-center justify-center flex-shrink-0">
+                    <span className="text-xl sm:text-2xl">{floatingBadge.emoji}</span>
                   </div>
                   <div>
-                    <div className="font-bold text-forest-dark">{floatingBadge.title}</div>
-                    <div className="text-sm text-gray-600">{floatingBadge.subtitle}</div>
+                    <div className="font-bold text-forest-dark text-sm sm:text-base">{floatingBadge.title}</div>
+                    <div className="text-xs sm:text-sm text-gray-600">{floatingBadge.subtitle}</div>
                   </div>
                 </div>
               </div>

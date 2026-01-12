@@ -105,12 +105,12 @@ export default function Navigation() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-5">
+          <div className="hidden lg:flex items-center space-x-4 xl:space-x-5">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-gray-700 hover:text-forest font-medium transition-colors text-sm"
+                className="text-gray-700 hover:text-forest font-medium transition-colors text-sm whitespace-nowrap"
               >
                 {link.label}
               </Link>

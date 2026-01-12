@@ -232,18 +232,18 @@ export default function CursosPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 pt-20">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-forest to-sage text-white py-16">
+      <section className="bg-gradient-to-r from-forest to-sage text-white py-12 sm:py-16">
         <div className="container mx-auto px-4 text-center">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-6">
-            <BookOpen className="w-10 h-10" />
+          <div className="inline-flex items-center justify-center w-16 sm:w-20 h-16 sm:h-20 bg-white/20 backdrop-blur-sm rounded-full mb-4 sm:mb-6">
+            <BookOpen className="w-8 sm:w-10 h-8 sm:h-10" />
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">
             Cursos de Educación Canina
           </h1>
-          <p className="text-xl md:text-2xl mb-4 max-w-3xl mx-auto opacity-95">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl mb-3 sm:mb-4 max-w-3xl mx-auto opacity-95">
             Múltiples cursos específicos para problemas concretos
           </p>
-          <p className="text-lg max-w-2xl mx-auto opacity-90">
+          <p className="text-sm sm:text-base md:text-lg max-w-2xl mx-auto opacity-90">
             Más de 10 cursos cortos y prácticos. Cada uno resuelve un problema específico: sentarse, venir, no tirar de la correa, solucionar mordidas, socialización y más.
           </p>
         </div>
@@ -264,28 +264,28 @@ export default function CursosPage() {
                 >
                   <div className="bg-white/10 backdrop-blur-sm p-8 md:p-12 text-white">
                     <div className="flex items-center mb-6">
-                      <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mr-4">
-                        <Download className="w-8 h-8" />
+                      <div className="w-12 sm:w-16 h-12 sm:h-16 bg-white/20 rounded-full flex items-center justify-center mr-3 sm:mr-4">
+                        <Download className="w-6 sm:w-8 h-6 sm:h-8" />
                       </div>
                       <div>
-                        <h2 className="text-3xl font-bold">{curso.title}</h2>
-                        <p className="text-white/90">Curso Gratuito</p>
+                        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold">{curso.title}</h2>
+                        <p className="text-sm sm:text-base text-white/90">Curso Gratuito</p>
                       </div>
                     </div>
 
                     <div 
-                      className="responsive-prose text-lg mb-6 text-white/95 prose prose-invert max-w-none"
+                      className="responsive-prose text-sm sm:text-base md:text-lg mb-4 sm:mb-6 text-white/95 prose prose-invert max-w-none"
                       style={{ fontSize: 'clamp(0.875rem, 2.5vw, 1.125rem)' }}
                       dangerouslySetInnerHTML={{ __html: curso.short_description || curso.description || '' }}
                     />
 
                     {curso.what_you_learn && curso.what_you_learn.length > 0 && (
-                      <div className="grid md:grid-cols-2 gap-6 mb-8">
+                      <div className="grid md:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
                         {curso.what_you_learn.map((item, idx) => (
                           <div key={idx} className="flex items-start">
-                            <CheckCircle className="w-6 h-6 mr-3 flex-shrink-0" />
+                            <CheckCircle className="w-5 sm:w-6 h-5 sm:h-6 mr-2 sm:mr-3 flex-shrink-0" />
                             <div>
-                              <p className="text-sm text-white/95">{item}</p>
+                              <p className="text-xs sm:text-sm text-white/95">{item}</p>
                             </div>
                           </div>
                         ))}
@@ -334,16 +334,16 @@ export default function CursosPage() {
       )}
 
       {/* Cursos de Pago Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-12 sm:py-16 bg-gray-50">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
               Cursos Específicos por Problema
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-2">
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto mb-2">
               Más de 10 cursos disponibles. Cada uno resuelve un problema concreto de forma rápida y efectiva.
             </p>
-            <p className="text-lg text-gray-500 max-w-2xl mx-auto">
+            <p className="text-sm sm:text-base md:text-lg text-gray-500 max-w-2xl mx-auto">
               Elige el curso que necesitas según tu problema específico. Puedes comprar uno o varios cursos según tus necesidades.
             </p>
           </div>
@@ -370,43 +370,43 @@ export default function CursosPage() {
                     onClick={() => handleOpenCourseModal(curso)}
                   >
                     {/* Header con dificultad */}
-                    <div className="bg-gradient-to-br from-gray-50 to-white p-6 border-b border-gray-100">
-                      <div className="flex items-center justify-between mb-4">
-                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${difficultyColor}`}>
+                    <div className="bg-gradient-to-br from-gray-50 to-white p-4 sm:p-6 border-b border-gray-100">
+                      <div className="flex items-center justify-between mb-3 sm:mb-4">
+                        <span className={`px-2 sm:px-3 py-1 rounded-full text-xs font-semibold ${difficultyColor}`}>
                           {difficultyLabel}
                         </span>
                       </div>
-                      <h3 className="text-xl font-bold mb-2 text-gray-900">{curso.title}</h3>
+                      <h3 className="text-base sm:text-lg md:text-xl font-bold mb-2 text-gray-900">{curso.title}</h3>
                       <div 
-                        className="responsive-prose text-gray-600 text-sm prose max-w-none line-clamp-3"
+                        className="responsive-prose text-gray-600 text-xs sm:text-sm prose max-w-none line-clamp-3"
                         style={{ fontSize: 'clamp(0.75rem, 2vw, 0.875rem)' }}
                         dangerouslySetInnerHTML={{ 
                           __html: truncateDescription(curso.short_description || curso.description, 150) 
                         }}
                       />
                       {/* Badge "Ver detalles" */}
-                      <div className="mt-3 flex items-center text-forest hover:text-forest-dark font-medium text-sm transition-colors">
-                        <Info className="w-4 h-4 mr-1" />
+                      <div className="mt-2 sm:mt-3 flex items-center text-forest hover:text-forest-dark font-medium text-xs sm:text-sm transition-colors">
+                        <Info className="w-3 sm:w-4 h-3 sm:h-4 mr-1" />
                         Ver más detalles
                       </div>
                     </div>
 
                     {/* Contenido */}
-                    <div className="p-6 flex-grow">
+                    <div className="p-4 sm:p-6 flex-grow">
                       {/* Duración */}
-                      <div className="flex items-center text-gray-600 mb-4">
-                        <Clock className="w-4 h-4 mr-2 text-forest" />
-                        <span className="text-sm font-medium">{curso.duration_minutes} min</span>
+                      <div className="flex items-center text-gray-600 mb-3 sm:mb-4">
+                        <Clock className="w-3 sm:w-4 h-3 sm:h-4 mr-2 text-forest" />
+                        <span className="text-xs sm:text-sm font-medium">{curso.duration_minutes} min</span>
                       </div>
 
                       {/* Qué aprenderás */}
                       {curso.what_you_learn && curso.what_you_learn.length > 0 && (
-                        <div className="mb-6">
-                          <h4 className="font-semibold text-gray-900 mb-3">Qué aprenderás:</h4>
-                          <ul className="space-y-2">
+                        <div className="mb-4 sm:mb-6">
+                          <h4 className="font-semibold text-gray-900 mb-2 sm:mb-3 text-sm sm:text-base">Qué aprenderás:</h4>
+                          <ul className="space-y-1.5 sm:space-y-2">
                             {curso.what_you_learn.map((item, i) => (
-                              <li key={i} className="flex items-start text-sm text-gray-600">
-                                <CheckCircle className="w-4 h-4 text-forest mr-2 flex-shrink-0 mt-0.5" />
+                              <li key={i} className="flex items-start text-xs sm:text-sm text-gray-600">
+                                <CheckCircle className="w-3 sm:w-4 h-3 sm:h-4 text-forest mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" />
                                 <span>{item}</span>
                               </li>
                             ))}
@@ -416,11 +416,11 @@ export default function CursosPage() {
                     </div>
 
                     {/* Footer con precio y botón */}
-                    <div className="p-6 border-t border-gray-100 bg-gray-50">
-                      <div className="flex items-center justify-between mb-4">
+                    <div className="p-4 sm:p-6 border-t border-gray-100 bg-gray-50">
+                      <div className="flex items-center justify-between mb-3 sm:mb-4">
                         <div>
-                          <span className="text-3xl font-bold text-gray-900">{curso.price.toFixed(2)}€</span>
-                          <span className="text-gray-600 text-sm ml-1">/único pago</span>
+                          <span className="text-2xl sm:text-3xl font-bold text-gray-900">{curso.price.toFixed(2)}€</span>
+                          <span className="text-gray-600 text-xs sm:text-sm ml-1">/único pago</span>
                         </div>
                       </div>
                       <button
@@ -446,7 +446,7 @@ export default function CursosPage() {
       <section className="py-8 sm:py-16">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-full sm:max-w-3xl mx-auto">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
+            <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-8 sm:mb-12">
               Preguntas Frecuentes
             </h2>
             <div className="space-y-4">
@@ -457,9 +457,9 @@ export default function CursosPage() {
                 >
                   <button
                     onClick={() => toggleFaq(index)}
-                    className="w-full p-6 flex items-center justify-between text-left hover:bg-gray-50 transition"
+                    className="w-full p-4 sm:p-6 flex items-center justify-between text-left hover:bg-gray-50 transition"
                   >
-                    <h3 className="font-bold text-gray-900 pr-4">{faq.question}</h3>
+                    <h3 className="font-bold text-gray-900 pr-4 text-sm sm:text-base">{faq.question}</h3>
                     <ChevronDown 
                       className={`w-5 h-5 text-gray-600 flex-shrink-0 transition-transform duration-200 ${
                         openFaq === index ? 'rotate-180' : ''
@@ -467,8 +467,8 @@ export default function CursosPage() {
                     />
                   </button>
                   {openFaq === index && (
-                    <div className="px-6 pb-6">
-                      <p className="text-gray-600 leading-relaxed">
+                    <div className="px-4 sm:px-6 pb-4 sm:pb-6">
+                      <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
                         {faq.answer}
                       </p>
                     </div>

@@ -516,28 +516,28 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
   return (
     <div className="min-h-screen bg-gray-50 pt-20">
       {/* Header */}
-      <div className={`bg-gradient-to-r ${colorGradient} text-white py-6 sm:py-8`}>
+      <div className={`bg-gradient-to-r ${colorGradient} text-white py-4 sm:py-6 md:py-8`}>
         <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-full lg:max-w-7xl mx-auto">
             <Link
               href="/cursos/mi-escuela"
-              className="inline-flex items-center text-white/80 hover:text-white transition mb-4 text-sm sm:text-base"
+              className="inline-flex items-center text-white/80 hover:text-white transition mb-3 sm:mb-4 text-xs sm:text-sm md:text-base"
             >
-              <ArrowLeft className="w-4 h-4 mr-2" />
+              <ArrowLeft className="w-3 sm:w-4 h-3 sm:h-4 mr-2" />
               Volver a Mi Escuela
             </Link>
-            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
               <div className="flex-1">
-                <div className="mb-3 sm:mb-4">
-                  <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">{curso.title}</h1>
+                <div className="mb-2 sm:mb-3 md:mb-4">
+                  <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2">{curso.title}</h1>
                   <div 
-                    className="text-white/90 text-sm sm:text-base"
+                    className="text-white/90 text-xs sm:text-sm md:text-base"
                     dangerouslySetInnerHTML={{ __html: curso.short_description || curso.description || '' }}
                   />
                 </div>
-                <div className="flex flex-wrap items-center gap-3 sm:gap-6 text-xs sm:text-sm">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3 md:gap-6 text-xs sm:text-sm">
                   <span className="flex items-center">
-                    <Clock className="w-4 h-4 mr-2" />
+                    <Clock className="w-3 sm:w-4 h-3 sm:h-4 mr-1 sm:mr-2" />
                     {curso.duration_minutes} min
                   </span>
                   <span>{getDifficultyLabel(curso.difficulty)}</span>
@@ -547,8 +547,8 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
             </div>
 
             {/* Progress Bar */}
-            <div className="mt-4 sm:mt-6">
-              <div className="flex items-center justify-between text-xs sm:text-sm mb-2">
+            <div className="mt-3 sm:mt-4 md:mt-6">
+              <div className="flex items-center justify-between text-xs sm:text-sm mb-1 sm:mb-2">
                 <span>Progreso del curso</span>
                 <span className="font-bold">{progressPercentage}%</span>
               </div>
@@ -565,14 +565,14 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
 
       {/* Breadcrumb - Indicador de ubicación en forma de árbol */}
       <div className="bg-gradient-to-r from-gray-50 to-white border-b border-gray-200">
-        <div className="container mx-auto px-4 sm:px-6 py-4">
+        <div className="container mx-auto px-4 sm:px-6 py-2 sm:py-3 md:py-4">
           <div className="max-w-full lg:max-w-7xl mx-auto">
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-1 sm:gap-2">
               {/* Nivel 1: Curso */}
-              <div className="flex items-center gap-2">
-                <div className="flex items-center gap-2 text-sm">
-                  <BookOpen className="w-4 h-4 text-forest" />
-                  <span className="font-semibold text-gray-900">{curso.title}</span>
+              <div className="flex items-center gap-1 sm:gap-2">
+                <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+                  <BookOpen className="w-3 sm:w-4 h-3 sm:h-4 text-forest" />
+                  <span className="font-semibold text-gray-900 truncate">{curso.title}</span>
                 </div>
               </div>
               
@@ -606,11 +606,11 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
               </div>
               
               {/* Nivel 3: Lección actual */}
-              <div className="flex items-center gap-2 ml-2">
-                <div className="w-4 h-px bg-gray-300"></div>
-                <div className="flex items-center gap-2 text-sm bg-gradient-to-r from-forest to-sage px-3 py-1.5 rounded-md text-white shadow-sm">
-                  <FileText className="w-4 h-4" />
-                  <span className="font-medium">{leccionActual?.title || 'Cargando...'}</span>
+              <div className="flex items-center gap-1 sm:gap-2 ml-2">
+                <div className="w-3 sm:w-4 h-px bg-gray-300"></div>
+                <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm bg-gradient-to-r from-forest to-sage px-2 sm:px-3 py-1 sm:py-1.5 rounded-md text-white shadow-sm">
+                  <FileText className="w-3 sm:w-4 h-3 sm:h-4" />
+                  <span className="font-medium truncate max-w-[150px] sm:max-w-none">{leccionActual?.title || 'Cargando...'}</span>
                 </div>
               </div>
             </div>
@@ -872,12 +872,16 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                 <div className="p-4 sm:p-6 lg:p-8 overflow-x-hidden">
                   {activeTab === 'content' && leccionActual.content && (
                     <>
-                      <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">
+                      <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-3 sm:mb-4 md:mb-6">
                         {leccionActual.title}
                       </h2>
-                      {/* Renderizar HTML de TinyMCE */}
+                      {/* Renderizar HTML de TinyMCE - OPTIMIZADO PARA MÓVIL */}
                       <div 
-                        className="lesson-content prose max-w-none"
+                        className="lesson-content prose prose-sm sm:prose-base max-w-none"
+                        style={{
+                          fontSize: 'clamp(0.875rem, 2.5vw, 1rem)',
+                          lineHeight: '1.6'
+                        }}
                         dangerouslySetInnerHTML={{ __html: leccionActual.content }}
                       />
                     </>
@@ -885,19 +889,19 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
 
                   {activeTab === 'resources' && recursos.length > 0 && (
                     <div>
-                      <h2 className="text-2xl font-bold text-gray-900 mb-6">Recursos Descargables</h2>
-                      <div className="space-y-4">
+                      <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">Recursos Descargables</h2>
+                      <div className="space-y-3 sm:space-y-4">
                         {recursos.map((recurso) => (
                           <div 
                             key={recurso.id}
-                            className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition"
+                            className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 sm:p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition gap-3"
                           >
-                            <div className="flex items-center">
-                              <FileText className="w-8 h-8 text-forest mr-4" />
-                              <div>
-                                <h3 className="font-semibold text-gray-900">{recurso.title}</h3>
+                            <div className="flex items-start sm:items-center w-full sm:w-auto">
+                              <FileText className="w-6 sm:w-8 h-6 sm:h-8 text-forest mr-3 sm:mr-4 flex-shrink-0" />
+                              <div className="flex-1">
+                                <h3 className="font-semibold text-gray-900 text-sm sm:text-base">{recurso.title}</h3>
                                 {recurso.description && (
-                                  <p className="text-sm text-gray-600">{recurso.description}</p>
+                                  <p className="text-xs sm:text-sm text-gray-600 mt-1">{recurso.description}</p>
                                 )}
                               </div>
                             </div>
@@ -905,7 +909,7 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                               href={recurso.file_url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="bg-gradient-to-r from-forest to-sage text-white px-4 py-2 rounded-lg hover:opacity-90 transition flex items-center"
+                              className="w-full sm:w-auto bg-gradient-to-r from-forest to-sage text-white px-4 py-2 rounded-lg hover:opacity-90 transition flex items-center justify-center text-sm whitespace-nowrap"
                             >
                               <Download className="w-4 h-4 mr-2" />
                               Descargar

@@ -153,13 +153,13 @@ export default function BlogPostPage() {
           )}
 
           {/* Título */}
-          <h1 className="text-4xl md:text-6xl font-black text-gray-900 mb-6 leading-tight tracking-tight">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black text-gray-900 mb-4 sm:mb-6 leading-tight tracking-tight">
             {post.title}
           </h1>
 
           {/* Extracto grande */}
           {post.excerpt && (
-            <p className="text-xl md:text-2xl text-gray-600 leading-relaxed mb-8 font-light">
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-600 leading-relaxed mb-6 sm:mb-8 font-light">
               {post.excerpt}
             </p>
           )}
@@ -272,33 +272,33 @@ export default function BlogPostPage() {
           <article className="lg:col-span-8">
             <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
               <div className="p-8 md:p-12">
-                {/* Contenido HTML con estilos mejorados */}
+                {/* Contenido HTML con estilos mejorados y responsive */}
                 <div
-                  className="prose prose-lg max-w-none
+                  className="responsive-prose prose prose-sm sm:prose-base md:prose-lg max-w-none
                     prose-headings:font-black prose-headings:tracking-tight
-                    prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6 prose-h2:text-gray-900
-                    prose-h3:text-2xl prose-h3:mt-8 prose-h3:mb-4 prose-h3:text-gray-800
-                    prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-6
+                    prose-h2:text-xl sm:prose-h2:text-2xl md:prose-h2:text-3xl prose-h2:mt-8 sm:prose-h2:mt-12 prose-h2:mb-4 sm:prose-h2:mb-6 prose-h2:text-gray-900
+                    prose-h3:text-lg sm:prose-h3:text-xl md:prose-h3:text-2xl prose-h3:mt-6 sm:prose-h3:mt-8 prose-h3:mb-3 sm:prose-h3:mb-4 prose-h3:text-gray-800
+                    prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4 sm:prose-p:mb-6 prose-p:text-sm sm:prose-p:text-base
                     prose-a:text-forest prose-a:font-semibold prose-a:no-underline hover:prose-a:underline
                     prose-strong:text-gray-900 prose-strong:font-bold
-                    prose-ul:my-6 prose-ul:space-y-2
-                    prose-ol:my-6 prose-ol:space-y-2
-                    prose-li:text-gray-700 prose-li:leading-relaxed
-                    prose-blockquote:border-l-4 prose-blockquote:border-forest prose-blockquote:bg-forest/5 prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:rounded-r-xl prose-blockquote:not-italic
-                    prose-img:rounded-2xl prose-img:shadow-lg prose-img:my-8
-                    prose-code:text-forest prose-code:bg-gray-50 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:font-mono prose-code:text-sm
-                    prose-pre:bg-gray-900 prose-pre:rounded-2xl prose-pre:shadow-lg"
+                    prose-ul:my-4 sm:prose-ul:my-6 prose-ul:space-y-2
+                    prose-ol:my-4 sm:prose-ol:my-6 prose-ol:space-y-2
+                    prose-li:text-gray-700 prose-li:leading-relaxed prose-li:text-sm sm:prose-li:text-base
+                    prose-blockquote:border-l-4 prose-blockquote:border-forest prose-blockquote:bg-forest/5 prose-blockquote:py-3 sm:prose-blockquote:py-4 prose-blockquote:px-4 sm:prose-blockquote:px-6 prose-blockquote:rounded-r-xl prose-blockquote:not-italic prose-blockquote:text-sm sm:prose-blockquote:text-base
+                    prose-img:rounded-xl sm:prose-img:rounded-2xl prose-img:shadow-lg prose-img:my-6 sm:prose-img:my-8
+                    prose-code:text-forest prose-code:bg-gray-50 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:font-mono prose-code:text-xs sm:prose-code:text-sm
+                    prose-pre:bg-gray-900 prose-pre:rounded-xl sm:prose-pre:rounded-2xl prose-pre:shadow-lg prose-pre:text-xs sm:prose-pre:text-sm"
                   dangerouslySetInnerHTML={{ __html: post.content }}
                 />
               </div>
             </div>
 
             {/* Compartir al final del artículo */}
-            <div className="mt-12 bg-gradient-to-br from-forest/5 via-sage/5 to-forest/5 rounded-2xl p-8 border border-forest/10">
-              <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="mt-8 sm:mt-12 bg-gradient-to-br from-forest/5 via-sage/5 to-forest/5 rounded-xl sm:rounded-2xl p-6 sm:p-8 border border-forest/10">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6">
                 <div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">¿Te ha resultado útil?</h3>
-                  <p className="text-gray-600">Comparte este artículo con otros amantes de los perros</p>
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-1 sm:mb-2">¿Te ha resultado útil?</h3>
+                  <p className="text-sm sm:text-base text-gray-600">Comparte este artículo con otros amantes de los perros</p>
                 </div>
                 <div className="flex gap-3">
                   <button
@@ -333,9 +333,9 @@ export default function BlogPostPage() {
               
               {/* Artículos Relacionados */}
               {relatedPosts.length > 0 && (
-                <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-                    <BookOpen className="w-5 h-5 mr-2 text-forest" />
+                <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6">
+                  <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 mb-3 sm:mb-4 flex items-center">
+                    <BookOpen className="w-4 sm:w-5 h-4 sm:h-5 mr-2 text-forest" />
                     Artículos Relacionados
                   </h3>
                   <div className="space-y-4">
@@ -427,10 +427,10 @@ export default function BlogPostPage() {
       </div>
 
       {/* CTA Final */}
-      <section className="bg-gradient-to-r from-forest via-sage to-forest text-white py-20">
+      <section className="bg-gradient-to-r from-forest via-sage to-forest text-white py-12 sm:py-16 md:py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-          <h2 className="text-3xl md:text-5xl font-black mb-6">¿Listo para transformar la vida con tu perro?</h2>
-          <p className="text-xl text-white/90 mb-8 leading-relaxed">
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black mb-4 sm:mb-6">¿Listo para transformar la vida con tu perro?</h2>
+          <p className="text-base sm:text-lg md:text-xl text-white/90 mb-6 sm:mb-8 leading-relaxed">
             Únete a miles de personas que ya han mejorado la relación con sus perros gracias a nuestros cursos profesionales
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
