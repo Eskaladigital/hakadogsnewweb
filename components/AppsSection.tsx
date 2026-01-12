@@ -33,7 +33,7 @@ const apps = [
 
 export default function AppsSection() {
   return (
-    <section className="py-24 bg-gradient-to-br from-forest-dark to-forest text-white relative overflow-hidden">
+    <section className="py-12 sm:py-16 md:py-24 bg-gradient-to-br from-forest-dark to-forest text-white relative overflow-hidden">
       {/* Decorative elements */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
@@ -42,7 +42,7 @@ export default function AppsSection() {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-8 sm:mb-12 md:mb-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -65,7 +65,7 @@ export default function AppsSection() {
         </div>
 
         {/* Apps Grid */}
-        <div className="grid md:grid-cols-3 gap-8 mb-12">
+        <div className="grid md:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mb-8 sm:mb-10 md:mb-12">
           {apps.map((app, index) => (
             <motion.div
               key={app.name}
@@ -73,7 +73,7 @@ export default function AppsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.15 }}
-              className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 hover:bg-white/15 transition-all"
+              className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-5 sm:p-6 md:p-8 hover:bg-white/15 transition-all"
             >
               <div className={`w-16 h-16 bg-gradient-to-br ${app.color} rounded-xl flex items-center justify-center mb-6`}>
                 <app.icon size={32} className="text-white" />

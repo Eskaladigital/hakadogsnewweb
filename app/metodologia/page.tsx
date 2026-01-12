@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Users, Gamepad2, TrendingUp, Brain, Heart, Target, CheckCircle, ArrowRight, Zap, Pause, BarChart3 } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Metodología BE HAKA - Educación Canina | Hakadogs',
+  title: 'Metodología BE HAKA - Educación Canina',
   description: 'Conoce nuestra metodología basada en el binomio perro-guía, juego estructurado y bienestar emocional. Métodos probados con más de 500 perros. Principio de Premack, KPIs medibles.',
   alternates: {
     canonical: 'https://www.hakadogs.com/metodologia',

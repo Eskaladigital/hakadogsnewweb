@@ -36,7 +36,7 @@ export default function Home() {
       <ServicesSection />
       
       {/* Sección Cursos Online (NUEVA - DESTACADA) */}
-      <section className="py-20 bg-gradient-to-br from-gold/5 via-cream to-white relative overflow-hidden">
+      <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-br from-gold/5 via-cream to-white relative overflow-hidden">
         {/* Decoración de fondo */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-gold/5 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-forest/5 rounded-full blur-3xl"></div>
@@ -161,7 +161,7 @@ export default function Home() {
           </div>
 
           {/* Testimonial rápido */}
-          <div className="mt-12 text-center">
+          <div className="mt-8 sm:mt-10 md:mt-12 text-center">
             <p className="text-gray-600 italic mb-2">
               &quot;Los cursos online de Hakadogs tienen la misma calidad que sus sesiones presenciales. 
               Alfredo explica todo con claridad y los resultados son increíbles.&quot;

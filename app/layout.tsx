@@ -6,6 +6,7 @@ import Footer from '@/components/Footer'
 import BackToTop from '@/components/ui/BackToTop'
 import WhatsAppChat from '@/components/ui/WhatsAppChat'
 import CookieConsent from '@/components/ui/CookieConsent'
+import { localBusinessSchema, organizationSchema, websiteSchema, serviceSchema } from '@/lib/schema'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.hakadogs.com'),
@@ -114,6 +115,28 @@ export default function RootLayout({
           href="/images/logo_definitivo_hakadogs.webp"
           type="image/webp"
           fetchPriority="high"
+        />
+        
+        {/* Schema.org Structured Data - Datos estructurados para SEO */}
+        <Script
+          id="schema-local-business"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
+        />
+        <Script
+          id="schema-organization"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+        <Script
+          id="schema-website"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
+        <Script
+          id="schema-service"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
         />
         
         {/* Google Analytics - estrategia lazyOnload para no bloquear renderizado */}

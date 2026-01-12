@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { ArrowLeft, FileText } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Términos y Condiciones de Uso | Hakadogs',
+  title: 'Términos y Condiciones de Uso',
   description: 'Términos y condiciones de uso de los servicios de Hakadogs. Información sobre servicios presenciales, cursos online, cancelaciones y políticas.',
   alternates: {
     canonical: 'https://www.hakadogs.com/legal/terminos',

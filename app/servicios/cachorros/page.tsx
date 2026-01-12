@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { Baby, CheckCircle, Clock, ArrowRight } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Educación de Cachorros - Socialización Temprana | Hakadogs',
+  title: 'Educación de Cachorros - Socialización Temprana',
   description: 'Programa especializado para cachorros de 2 a 6 meses. Socialización temprana y bases sólidas desde el principio. Métodos positivos en Archena y Murcia.',
   alternates: {
     canonical: 'https://www.hakadogs.com/servicios/cachorros',

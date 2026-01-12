@@ -28,6 +28,12 @@ body {
   line-height: 1.6;
 }
 
+/* Optimización CLS: Font display swap para prevenir layout shifts */
+@font-face {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-display: swap;
+}
+
 /* Accesibilidad: Skip to content link */
 .sr-only {
   position: absolute;
@@ -50,6 +56,34 @@ body {
   overflow: visible;
   clip: auto;
   white-space: normal;
+}
+
+/* Accesibilidad: Foco visible mejorado para navegación por teclado (WCAG 2.1) */
+*:focus {
+  outline: 2px solid var(--forest);
+  outline-offset: 2px;
+}
+
+a:focus,
+button:focus,
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid var(--forest);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(45, 95, 58, 0.2);
+}
+
+/* Focus visible solo para teclado, no para mouse */
+*:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--forest);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(45, 95, 58, 0.2);
 }
 
 /* Animaciones suaves */

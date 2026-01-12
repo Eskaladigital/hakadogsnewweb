@@ -27,7 +27,7 @@ export default function SessionsShowcase() {
     <section className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-8 sm:mb-12 md:mb-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -48,7 +48,7 @@ export default function SessionsShowcase() {
         </div>
 
         {/* Sessions Grid */}
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
           {sessions.map((session, index) => (
             <motion.div
               key={session.title}

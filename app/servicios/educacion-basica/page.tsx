@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { GraduationCap, CheckCircle, Clock, Users as UsersIcon, ArrowRight } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Educación Básica para Perros | Hakadogs',
+  title: 'Educación Básica para Perros',
   description: 'Programa completo de educación canina básica. Comandos esenciales, obediencia y control. Métodos positivos en Archena y Murcia.',
   keywords: ['educación canina básica', 'adiestramiento perros murcia', 'comandos básicos perros'],
   alternates: {

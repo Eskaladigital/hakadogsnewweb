@@ -1,24 +1,35 @@
 import { MetadataRoute } from 'next'
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = 'https://hakadogsnewweb.vercel.app' // URL de producción
-
   return {
     rules: [
       {
         userAgent: '*',
         allow: '/',
         disallow: [
-          '/api/',
           '/administrator/',
           '/cursos/mi-escuela/',
-          '/cursos/comprar/',
+          '/api/',
           '/_next/',
-          '/qr/',
         ],
       },
+      {
+        userAgent: 'GPTBot',
+        disallow: '/',
+      },
+      {
+        userAgent: 'ChatGPT-User',
+        disallow: '/',
+      },
+      {
+        userAgent: 'CCBot',
+        disallow: '/',
+      },
+      {
+        userAgent: 'anthropic-ai',
+        disallow: '/',
+      },
     ],
-    sitemap: `${baseUrl}/sitemap.xml`,
+    sitemap: 'https://www.hakadogs.com/sitemap.xml',
   }
 }
-

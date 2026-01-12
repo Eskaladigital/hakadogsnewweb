@@ -8,7 +8,7 @@ export default function Footer() {
   return (
     <footer className="bg-forest-dark text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 sm:gap-8">
           {/* Logo y descripción */}
           <div className="md:col-span-1">
             <div className="flex flex-col items-center md:items-start mb-3 sm:mb-4">
@@ -70,6 +70,43 @@ export default function Footer() {
               <li>
                 <Link href="/contacto" className="text-gray-300 hover:text-gold transition">
                   Contacto
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Localidades principales */}
+          <div>
+            <h3 className="font-bold text-base sm:text-lg mb-3 sm:mb-4">Localidades</h3>
+            <ul className="space-y-1.5 sm:space-y-2 text-sm">
+              <li>
+                <Link href="/localidades/murcia" className="text-gray-300 hover:text-gold transition">
+                  Murcia
+                </Link>
+              </li>
+              <li>
+                <Link href="/localidades/archena" className="text-gray-300 hover:text-gold transition">
+                  Archena
+                </Link>
+              </li>
+              <li>
+                <Link href="/localidades/molina-de-segura" className="text-gray-300 hover:text-gold transition">
+                  Molina de Segura
+                </Link>
+              </li>
+              <li>
+                <Link href="/localidades/cartagena" className="text-gray-300 hover:text-gold transition">
+                  Cartagena
+                </Link>
+              </li>
+              <li>
+                <Link href="/localidades/lorca" className="text-gray-300 hover:text-gold transition">
+                  Lorca
+                </Link>
+              </li>
+              <li>
+                <Link href="/sitemap" className="text-gray-400 hover:text-gold transition text-xs">
+                  Ver todas las localidades →
                 </Link>
               </li>
             </ul>

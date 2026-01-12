@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: { params: { ciudad: string } 
   }
 
   return {
-    title: `Hakadogs - Educación Canina en ${city.name}`,
+    title: `Educación Canina en ${city.name}`,
     description: city.description,
     keywords: city.keywords.join(', '),
     openGraph: {

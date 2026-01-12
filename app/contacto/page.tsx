@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { Phone, Mail, MapPin, Clock, Send } from 'lucide-react'
 
 export default function ContactoPage() {
@@ -91,8 +92,13 @@ export default function ContactoPage() {
                     <h3 className="font-bold text-forest-dark mb-1">Ubicación</h3>
                     <p className="text-gray-700">Archena, Región de Murcia</p>
                     <p className="text-sm text-gray-500 mt-1">
-                      Nos desplazamos a: Archena, Molina de Segura, Murcia, Alguazas, 
-                      Ceutí, Lorquí y alrededores
+                      Nos desplazamos a:{' '}
+                      <Link href="/localidades/archena" className="text-forest hover:underline">Archena</Link>,{' '}
+                      <Link href="/localidades/molina-de-segura" className="text-forest hover:underline">Molina de Segura</Link>,{' '}
+                      <Link href="/localidades/murcia" className="text-forest hover:underline">Murcia</Link>,{' '}
+                      <Link href="/localidades/alguazas" className="text-forest hover:underline">Alguazas</Link>,{' '}
+                      <Link href="/localidades/ceuti" className="text-forest hover:underline">Ceutí</Link>,{' '}
+                      <Link href="/localidades/lorqui" className="text-forest hover:underline">Lorquí</Link> y alrededores
                     </p>
                   </div>
                 </div>
@@ -142,13 +148,14 @@ export default function ContactoPage() {
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                      Tu Nombre *
+                      Tu Nombre <span className="text-forest" aria-label="requerido">*</span>
                     </label>
                     <input
                       type="text"
                       id="name"
                       name="name"
                       required
+                      aria-required="true"
                       value={formData.name}
                       onChange={handleChange}
                       className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-forest focus:border-transparent transition"
@@ -158,13 +165,14 @@ export default function ContactoPage() {
 
                   <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                      Email *
+                      Email <span className="text-forest" aria-label="requerido">*</span>
                     </label>
                     <input
                       type="email"
                       id="email"
                       name="email"
                       required
+                      aria-required="true"
                       value={formData.email}
                       onChange={handleChange}
                       className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-forest focus:border-transparent transition"
@@ -174,13 +182,14 @@ export default function ContactoPage() {
 
                   <div>
                     <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                      Teléfono *
+                      Teléfono <span className="text-forest" aria-label="requerido">*</span>
                     </label>
                     <input
                       type="tel"
                       id="phone"
                       name="phone"
                       required
+                      aria-required="true"
                       value={formData.phone}
                       onChange={handleChange}
                       className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-forest focus:border-transparent transition"
@@ -225,12 +234,13 @@ export default function ContactoPage() {
 
                   <div>
                     <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                      Cuéntanos sobre tu Perro *
+                      Cuéntanos sobre tu Perro <span className="text-forest" aria-label="requerido">*</span>
                     </label>
                     <textarea
                       id="message"
                       name="message"
                       required
+                      aria-required="true"
                       value={formData.message}
                       onChange={handleChange}
                       rows={5}

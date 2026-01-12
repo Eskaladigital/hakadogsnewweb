@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Heart, Target, Users, ArrowRight, CheckCircle, Sparkles } from 'lucide-react'
 
 export const metadata = {
-  title: 'Apps de Educación Canina - HakaHealth, HakaTrainer, HakaCommunity | Hakadogs',
+  title: 'Apps de Educación Canina - HakaHealth, HakaTrainer, HakaCommunity',
   description: 'Herramientas digitales para seguimiento de salud, adiestramiento y comunidad canina. Próximamente: HakaHealth, HakaTrainer y HakaCommunity.',
   openGraph: {
     title: 'Apps de Educación Canina | Hakadogs',

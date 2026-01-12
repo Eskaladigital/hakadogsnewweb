@@ -32,10 +32,10 @@ const galleryImages = [
 
 export default function GallerySection() {
   return (
-    <section className="py-24 bg-gradient-to-br from-cream to-white">
+    <section className="py-12 sm:py-16 md:py-24 bg-gradient-to-br from-cream to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-8 sm:mb-12 md:mb-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}

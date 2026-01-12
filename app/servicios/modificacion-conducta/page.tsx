@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { Heart, CheckCircle, Clock, AlertCircle, ArrowRight } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Modificación de Conducta Canina | Hakadogs',
+  title: 'Modificación de Conducta Canina',
   description: 'Soluciones profesionales para problemas de agresividad, ansiedad, miedos y conductas no deseadas. Especialistas en modificación de conducta en Murcia.',
   keywords: ['modificación conducta perros', 'perro agresivo murcia', 'ansiedad separación perros'],
   alternates: {

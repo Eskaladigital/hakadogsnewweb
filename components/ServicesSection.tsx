@@ -37,10 +37,10 @@ const services = [
 
 export default function ServicesSection() {
   return (
-    <section className="py-24 bg-white">
+    <section className="py-12 sm:py-16 md:py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-8 sm:mb-12 md:mb-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -57,7 +57,7 @@ export default function ServicesSection() {
         </div>
 
         {/* Services Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
           {services.map((service, index) => (
             <motion.div
               key={service.title}
@@ -67,7 +67,7 @@ export default function ServicesSection() {
               transition={{ duration: 0.6, delay: index * 0.1 }}
             >
               <Link href={service.link}>
-                <div className="group bg-cream rounded-2xl p-8 h-full hover:shadow-xl transition-all duration-300 cursor-pointer border-2 border-transparent hover:border-forest/20">
+                <div className="group bg-cream rounded-xl sm:rounded-2xl p-5 sm:p-6 md:p-8 h-full hover:shadow-xl transition-all duration-300 cursor-pointer border-2 border-transparent hover:border-forest/20">
                   <div className={`w-16 h-16 bg-${service.color}/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
                     <service.icon className={`text-${service.color}`} size={32} />
                   </div>

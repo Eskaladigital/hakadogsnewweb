@@ -6,7 +6,7 @@ import { ArrowRight, Phone } from 'lucide-react'
 
 export default function CTASection() {
   return (
-    <section className="py-24 bg-gradient-to-br from-forest to-forest-dark text-white relative overflow-hidden">
+    <section className="py-12 sm:py-16 md:py-24 bg-gradient-to-br from-forest to-forest-dark text-white relative overflow-hidden">
       {/* Decorative elements */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
