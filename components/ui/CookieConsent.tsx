@@ -41,8 +41,8 @@ export default function CookieConsent() {
     // Verificar si el usuario ya ha dado su consentimiento
     const consent = localStorage.getItem('hakadogs_cookie_consent')
     if (!consent) {
-      // Mostrar el banner después de un pequeño delay para mejor UX
-      setTimeout(() => setShowBanner(true), 1000)
+      // Mostrar el banner SIN delay para no bloquear LCP
+      setShowBanner(true)
     } else {
       // Cargar preferencias guardadas
       const savedPreferences = JSON.parse(consent)
