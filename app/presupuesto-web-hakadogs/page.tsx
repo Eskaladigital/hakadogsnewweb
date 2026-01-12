@@ -2,8 +2,19 @@ import { Metadata } from 'next';
 import { CheckCircle, TrendingUp, Shield, Zap, Target, Award, BarChart3, Globe, Lock, FileText } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Presupuesto Profesional - Hakadogs Platform',
+  title: 'Alfredo!! Que dice la IA que esto vale 14.000 euros!! A pagar!! Te acepto la ranchera!!',
+  description: 'Alfredo!! Que dice la IA que esto vale 14.000 euros!! A pagar!! Te acepto la ranchera!!',
   robots: 'noindex, nofollow', // Importante: no indexar en Google
+  openGraph: {
+    title: 'Alfredo!! Que dice la IA que esto vale 14.000 euros!! A pagar!! Te acepto la ranchera!!',
+    description: 'Alfredo!! Que dice la IA que esto vale 14.000 euros!! A pagar!! Te acepto la ranchera!!',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Alfredo!! Que dice la IA que esto vale 14.000 euros!! A pagar!! Te acepto la ranchera!!',
+    description: 'Alfredo!! Que dice la IA que esto vale 14.000 euros!! A pagar!! Te acepto la ranchera!!',
+  },
 };
 
 export default function PresupuestoPage() {

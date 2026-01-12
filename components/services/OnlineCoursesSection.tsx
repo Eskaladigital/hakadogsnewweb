@@ -37,7 +37,7 @@ export default function OnlineCoursesSection() {
               
               <p className="text-gray-600 mb-6 leading-relaxed">
                 Nuestros cursos online ofrecen el mismo contenido de calidad que nuestras sesiones 
-                presenciales. Aprende a tu ritmo, desde casa, con video lecciones, contenido descargable 
+                presenciales. Aprende a tu ritmo, desde casa, con lecciones completas, contenido descargable 
                 y seguimiento personalizado.
               </p>
 

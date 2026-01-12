@@ -18,7 +18,7 @@ const apps = [
     name: 'HakaTrainer',
     tagline: 'Entrenamiento y Juegos',
     description: 'Biblioteca completa de ejercicios, juegos interactivos y seguimiento de tu progreso.',
-    features: ['50+ ejercicios con video', 'Juegos mentales', 'Sistema de logros'],
+    features: ['50+ ejercicios detallados', 'Juegos mentales', 'Sistema de logros'],
     color: 'from-blue-500 to-cyan-500'
   },
   {
