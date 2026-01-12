@@ -8,7 +8,7 @@ import CTASection from '@/components/CTASection'
 
 export const metadata: Metadata = {
   title: 'Servicios de Educación Canina - Presencial en Murcia',
-  description: 'Educación básica, modificación de conducta, cachorros y clases grupales. Servicios presenciales en Archena y Murcia. Métodos positivos y personalizados. +8 años de experiencia.',
+  description: 'Servicios de educación canina en Archena y Murcia ✓ Educación básica ✓ Modificación conducta ✓ Cachorros ✓ Clases grupales. Métodos positivos. Zona Murcia presencial.',
   alternates: {
     canonical: 'https://www.hakadogs.com/servicios',
   },

@@ -5,7 +5,7 @@ import { Users, CheckCircle, Calendar, ArrowRight } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Clases Grupales para Perros - Socialización',
-  description: 'Clases de socialización y obediencia en grupo. Aprende mientras tu perro socializa con otros perros. Métodos positivos en Archena y Murcia.',
+  description: 'Clases grupales perros Archena-Murcia ✓ Socialización controlada ✓ Obediencia en grupo ✓ Diversión asegurada. Tu perro aprende jugando con otros. ¡Prueba gratis!',
   alternates: {
     canonical: 'https://www.hakadogs.com/servicios/clases-grupales',
   },

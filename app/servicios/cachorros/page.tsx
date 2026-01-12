@@ -5,7 +5,7 @@ import { Baby, CheckCircle, Clock, ArrowRight } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Educación de Cachorros - Socialización Temprana',
-  description: 'Programa especializado para cachorros de 2 a 6 meses. Socialización temprana y bases sólidas desde el principio. Métodos positivos en Archena y Murcia.',
+  description: 'Educación de cachorros 2-6 meses en Archena-Murcia ✓ Socialización temprana ✓ Prevenir problemas futuros ✓ Bases sólidas. Programa especializado cachorro feliz.',
   alternates: {
     canonical: 'https://www.hakadogs.com/servicios/cachorros',
   },

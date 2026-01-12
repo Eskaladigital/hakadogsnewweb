@@ -4,6 +4,8 @@ import { cities } from '@/lib/cities'
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://www.hakadogs.com' // URL de producción
 
+  // NOTA: /presupuesto-web-hakadogs NO se incluye intencionalmente (página privada)
+  
   // Páginas estáticas principales
   const staticPages = [
     {

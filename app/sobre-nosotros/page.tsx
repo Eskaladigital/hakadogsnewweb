@@ -5,7 +5,7 @@ import { Award, Heart, TrendingUp, Users, Target, BookOpen, ArrowRight, Gamepad2
 
 export const metadata: Metadata = {
   title: 'Sobre Nosotros - Alfredo García',
-  description: 'Conoce a Alfredo y la metodología BE HAKA: binomio perro-guía, juego estructurado y resultados medibles. +8 años de experiencia, +500 perros educados. Servicios presenciales y cursos online.',
+  description: 'Alfredo García, educador canino profesional en Archena-Murcia. +8 años transformando perros con metodología BE HAKA. Binomio perro-guía. ¡Conoce mi historia!',
   alternates: {
     canonical: 'https://www.hakadogs.com/sobre-nosotros',
   },

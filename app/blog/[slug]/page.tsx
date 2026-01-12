@@ -424,7 +424,7 @@ export default function BlogPostPage() {
               <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
                 <h4 className="font-bold text-gray-900 mb-4">Sobre Hakadogs</h4>
                 <p className="text-sm text-gray-600 leading-relaxed">
-                  Somos profesionales con más de 15 años de experiencia en educación canina. 
+                  Somos profesionales con más de 8 años de experiencia en educación canina. 
                   Nuestra misión es ayudarte a crear una relación equilibrada con tu perro.
                 </p>
               </div>

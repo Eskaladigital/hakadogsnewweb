@@ -4,6 +4,53 @@ Todos los cambios importantes del proyecto Hakadogs documentados en orden cronol
 
 ---
 
+## [3.0.2] - 2026-01-12 📊 PANEL ADMIN: Analytics de Badges
+
+### 🎯 Nueva Funcionalidad Administrativa
+
+#### Página de Estadísticas de Badges
+- 🆕 **Nueva ruta**: `/administrator/badges` - Panel completo de analytics
+- 📊 **8 Métricas generales**:
+  - Total de badges disponibles
+  - Usuarios activos en el sistema
+  - Total de desbloqueos globales
+  - Media de badges por usuario
+  - Tasa de completado (100% badges)
+  - Badge más popular del sistema
+  - Badge más raro (menor %)
+- 📋 **Tabla detallada por badge**:
+  - Desbloqueos totales y porcentaje de usuarios
+  - Actividad últimos 7 días con comparativa
+  - Tendencia semanal (↑↓→) automática
+  - Rareza, categoría, tier y puntos
+  - Fecha del último desbloqueo
+  - Barra de progreso visual
+- 🎛️ **Filtros interactivos**:
+  - Ordenar por: popularidad, rareza, actividad reciente
+  - Filtrar por categorías: progreso, cursos, conocimiento, racha, especiales
+- 🎨 **Diseño profesional**:
+  - Responsive con animaciones Framer Motion
+  - Colores por rareza (common, rare, epic, legendary)
+  - Loading states elegantes
+  - Hover effects en tabla
+
+#### Mejoras UX en Badges
+- ✅ **Tooltips mejorados**: Sección "Cómo conseguirlo" más clara
+- ✅ **Banner informativo**: Guía rápida en página `/cursos/badges`
+- ✅ **Información detallada**: Rareza, puntos, fecha en tooltips
+
+#### Navegación Admin
+- ✅ **Nuevo tab**: "Badges 🏆" añadido al menú del administrador
+- ✅ **Layout actualizado**: Integración perfecta con sistema existente
+
+#### Archivos Creados/Modificados
+- `app/administrator/badges/page.tsx` (nuevo, 479 líneas)
+- `app/administrator/layout.tsx` (actualizado con nuevo tab)
+- `components/gamification/BadgeCard.tsx` (tooltip mejorado)
+- `app/cursos/badges/page.tsx` (añadido banner informativo)
+
+---
+
 ## [3.0.1] - 2026-01-12 🐛 FIX: Contador de Badges
 
 ### 🔧 Corrección Crítica

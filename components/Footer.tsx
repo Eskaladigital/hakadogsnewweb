@@ -24,7 +24,7 @@ export default function Footer() {
             </div>
             
             <p className="text-xs sm:text-sm text-gray-300 text-center md:text-left">
-              Educación canina profesional con más de 15 años de experiencia.
+              Educación canina profesional con más de 8 años de experiencia.
             </p>
           </div>
 

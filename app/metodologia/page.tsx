@@ -4,7 +4,7 @@ import { Users, Gamepad2, TrendingUp, Brain, Heart, Target, CheckCircle, ArrowRi
 
 export const metadata: Metadata = {
   title: 'Metodología BE HAKA - Educación Canina',
-  description: 'Conoce nuestra metodología basada en el binomio perro-guía, juego estructurado y bienestar emocional. Métodos probados con más de 500 perros. Principio de Premack, KPIs medibles.',
+  description: 'Metodología BE HAKA: binomio perro-guía + juego estructurado + KPIs medibles. Sistema probado con 500+ perros. Principio de Premack. Educación respetuosa y efectiva.',
   alternates: {
     canonical: 'https://www.hakadogs.com/metodologia',
   },

@@ -5,7 +5,7 @@ import { GraduationCap, CheckCircle, Clock, Users as UsersIcon, ArrowRight } fro
 
 export const metadata: Metadata = {
   title: 'Educación Básica para Perros',
-  description: 'Programa completo de educación canina básica. Comandos esenciales, obediencia y control. Métodos positivos en Archena y Murcia.',
+  description: 'Educación canina básica en Murcia ✓ Comandos esenciales ✓ Obediencia ✓ Paseo sin tirones. Métodos positivos 100%. Archena, Murcia y alrededores. ¡Primera sesión gratis!',
   keywords: ['educación canina básica', 'adiestramiento perros murcia', 'comandos básicos perros'],
   alternates: {
     canonical: 'https://www.hakadogs.com/servicios/educacion-basica',
