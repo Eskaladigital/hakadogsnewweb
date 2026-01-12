@@ -141,13 +141,12 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
         />
         
-        {/* Google Analytics - estrategia afterInteractive para mejor rendimiento */}
+        {/* Google Analytics - Lazy extremo para no bloquear */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-NXPT2KNYGJ"
-          strategy="afterInteractive"
-          async
+          strategy="lazyOnload"
         />
-        <Script id="google-analytics" strategy="afterInteractive">
+        <Script id="google-analytics" strategy="lazyOnload">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
