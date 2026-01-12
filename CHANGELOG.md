@@ -4,7 +4,109 @@ Todos los cambios importantes del proyecto Hakadogs documentados en orden cronol
 
 ---
 
-## [2.6.0] - 2026-01-12 🎮 GAMIFICACIÓN + DOCUMENTACIÓN
+## [3.0.0] - 2026-01-12 🎮 GAMIFICACIÓN 100% AUTOMÁTICA
+
+### 🤖 SISTEMA DE GAMIFICACIÓN CON AUTO-UPDATE
+
+#### ✨ Características Implementadas
+
+- ✅ **Sistema de Badges**: 15 medallas con rareza y tiers
+  - 🎯 3 badges de progreso (bienvenida, primera lección, primer curso)
+  - 📚 3 badges de cursos (3, 5, todos los cursos)
+  - 📖 2 badges de lecciones (10, 50 lecciones)
+  - 🔥 3 badges de racha (7, 30, 100 días)
+  - ✨ 4 badges especiales (madrugador, nocturno, perfeccionista, secreto)
+
+- ✅ **Sistema de Puntos y Niveles**:
+  - +20 puntos por lección completada
+  - +50-200 puntos por curso completado
+  - +10-1000 puntos por badge según rareza
+  - Niveles basados en fórmula: `Math.sqrt(XP/100) + 1`
+
+- ✅ **Racha de Días Consecutivos**:
+  - Contador automático de días estudiando
+  - Badges especiales por hitos (7, 30, 100 días)
+  - Mensajes motivacionales
+  - Advertencias de racha en riesgo
+
+- ✅ **Leaderboard Global**:
+  - Ranking de todos los usuarios
+  - Filtros: All Time, This Month, This Week
+  - Podio visual para top 3
+  - Posición del usuario destacada
+
+- ✅ **Tooltips Informativos**:
+  - Modal explicativo en card de puntos
+  - Información sobre cómo ganar puntos
+  - Diseño responsive móvil/desktop
+
+#### 🗄️ Backend (Supabase)
+
+- ✅ **5 Tablas Nuevas**:
+  - `badges` - Catálogo de 15 badges
+  - `user_badges` - Badges ganados por usuario
+  - `user_stats` - Estadísticas completas del usuario
+  - `badge_progress` - Progreso hacia badges
+  - `user_achievements` - Histórico de logros
+
+- ✅ **3 Funciones RPC**:
+  - `award_badge(user_id, badge_code)` - Otorgar badge manualmente
+  - `calculate_user_level(user_id)` - Recalcular nivel
+  - `get_leaderboard(limit, period)` - Obtener ranking
+
+- ✅ **4 Triggers Automáticos**:
+  - `trigger_update_stats_on_lesson` - Actualiza puntos, XP, lecciones
+  - `trigger_update_streak` - Actualiza racha de días
+  - `trigger_check_badges` - Otorga badges automáticamente
+  - `trigger_create_user_stats` - Crea registro al registrarse
+
+- ✅ **Row Level Security (RLS)**: Configurado en todas las tablas
+
+#### 🎨 Frontend (React/Next.js)
+
+- ✅ **6 Componentes Nuevos**:
+  - `BadgeCard.tsx` (198 líneas) - Card individual de badge
+  - `BadgeGrid.tsx` (176 líneas) - Galería de badges
+  - `UserStatsCard.tsx` (319 líneas) - Card principal con stats
+  - `StreakCounter.tsx` (202 líneas) - Contador de racha
+  - `Leaderboard.tsx` (259 líneas) - Tabla de clasificación
+  - `BadgeUnlockNotification.tsx` (214 líneas) - Notificación de logro
+
+- ✅ **2 Páginas Nuevas**:
+  - `/cursos/badges` - Galería completa con filtros
+  - `/cursos/leaderboard` - Ranking global
+
+- ✅ **1 Página Modificada**:
+  - `/cursos/mi-escuela` - Integración de gamificación
+
+#### 📦 Dependencias
+
+- ✅ `react-confetti@^6.1.0` - Animaciones de celebración
+
+#### 📚 Documentación
+
+- ✅ `docs/features/SISTEMA_GAMIFICACION_COMPLETO.md` - Documentación técnica completa
+- ✅ `docs/features/IMPLEMENTACION_GAMIFICACION_COMPLETA.md` - Resumen de implementación
+- ✅ `docs/setup/INSTALACION_RAPIDA_GAMIFICACION.md` - Guía de instalación
+- ✅ `INSTALACION_COMPLETADA_GAMIFICACION.md` - Resumen ejecutivo
+- ✅ `supabase/gamification_system.sql` - Script SQL (620 líneas)
+
+#### 🔧 Archivos Técnicos
+
+- ✅ `lib/supabase/gamification.ts` (391 líneas) - Funciones de utilidad
+- ✅ `types/database.types.ts` - Tipos actualizados con tablas de gamificación
+
+#### 📈 Estadísticas
+
+- 📦 **+20 archivos nuevos**
+- 📄 **+3,000 líneas de código**
+- 🗄️ **+5 tablas SQL**
+- ⚙️ **+15 funciones de utilidad**
+- 🎨 **+6 componentes React**
+
+---
+
+## [2.6.0] - 2026-01-12 🗂️ REORGANIZACIÓN DOCUMENTACIÓN
 
 ### 🗂️ REORGANIZACIÓN MASIVA DE DOCUMENTACIÓN
 
