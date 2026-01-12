@@ -10,8 +10,8 @@ export default function PresupuestoPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-cream via-white to-cream">
       {/* Header Premium */}
-      <div className="bg-gradient-to-r from-forest-dark via-forest to-forest-dark text-white py-16">
-        <div className="max-w-6xl mx-auto px-4 text-center">
+      <div className="bg-gradient-to-r from-forest-dark via-forest to-forest-dark text-white py-20 md:py-24">
+        <div className="max-w-6xl mx-auto px-6 md:px-8 text-center">
           <h1 className="text-5xl md:text-6xl font-bold mb-4">
             PRESUPUESTO PROFESIONAL
           </h1>
