@@ -92,9 +92,11 @@ export default function BadgeCard({
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        whileHover={{ scale: isLocked ? 1 : 1.05 }}
+        whileHover={{ scale: isSecret ? 1 : 1.08, y: -4 }}
+        whileTap={{ scale: isSecret ? 1 : 0.95 }}
         className="relative cursor-pointer"
         onClick={handleCardClick}
+        style={{ cursor: isSecret ? 'default' : 'pointer' }}
       >
         {/* Card Container */}
         <div
@@ -103,8 +105,8 @@ export default function BadgeCard({
             flex flex-col items-center justify-center
             transition-all duration-300 group
             ${isLocked 
-              ? 'bg-gray-100 border-2 border-gray-300 opacity-60' 
-              : `bg-gradient-to-br ${rarityColors[badge.rarity]} border-2 ${rarityBorderColors[badge.rarity]}`
+              ? 'bg-gray-100 border-2 border-gray-300 opacity-60 hover:opacity-75' 
+              : `bg-gradient-to-br ${rarityColors[badge.rarity]} border-2 ${rarityBorderColors[badge.rarity]} hover:shadow-2xl`
             }
           `}
         >
@@ -146,6 +148,27 @@ export default function BadgeCard({
             </p>
           )}
         </div>
+
+        {/* Botón "Saber más" - Siempre visible */}
+        {!isSecret && (
+          <motion.div
+            className="absolute bottom-2 left-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+            whileHover={{ scale: 1.05 }}
+          >
+            <div className={`bg-white/90 backdrop-blur-sm text-gray-900 font-semibold rounded-lg shadow-lg text-center py-1.5 px-2 ${
+              size === 'sm' ? 'text-xs' : 'text-xs'
+            }`}>
+              👁️ Ver detalles
+            </div>
+          </motion.div>
+        )}
+
+        {/* Indicador visual permanente de clickeable */}
+        {!isSecret && (
+          <div className="absolute bottom-1 right-1 w-6 h-6 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md">
+            <span className="text-xs">👁️</span>
+          </div>
+        )}
 
         {/* Sparkles for legendary */}
         {!isLocked && badge.rarity === 'legendary' && (
