@@ -1,6 +1,6 @@
 # 🐕 HAKADOGS - Plataforma de Educación Canina
 
-**Versión**: 3.0.0 GAMIFICATION AUTO-UPDATE  
+**Versión**: 3.0.1 GAMIFICATION BADGE-COUNTER FIX  
 **Fecha Actualización**: 12 Enero 2026  
 **Estado**: ✅ **LIVE EN HAKADOGS.COM - PERFORMANCE 95+ - GAMIFICACIÓN AUTOMÁTICA - CONTENIDO ÚNICO IA**
 
@@ -30,10 +30,11 @@ Hakadogs es una plataforma web completa para educación canina profesional que i
 - ✅ **Responsive**: Perfecto en móvil y desktop
 
 **📂 Documentación:**
-- `docs/features/IMPLEMENTACION_GAMIFICACION_COMPLETA.md` - Documentación técnica completa
+- `docs/features/SISTEMA_GAMIFICACION_COMPLETO.md` - Documentación técnica completa
 - `docs/setup/INSTALACION_RAPIDA_GAMIFICACION.md` - Guía rápida de instalación
 - `INSTALACION_COMPLETADA_GAMIFICACION.md` - Resumen ejecutivo
-- `supabase/gamification_system.sql` - Script SQL completo (620 líneas)
+- `supabase/gamification_system.sql` - Script SQL completo (625 líneas)
+- `supabase/fix_badge_counter.sql` - Fix contador badges (97 líneas)
 
 ### 📊 SISTEMA DE CONTENIDO ÚNICO CON IA
 

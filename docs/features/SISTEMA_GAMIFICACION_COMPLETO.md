@@ -1,8 +1,8 @@
 # 🎮 SISTEMA DE GAMIFICACIÓN - DOCUMENTACIÓN COMPLETA
 
-**Versión**: 3.0.0  
+**Versión**: 3.0.1  
 **Fecha**: 12 Enero 2026  
-**Estado**: ✅ **100% FUNCIONAL CON AUTO-UPDATE**
+**Estado**: ✅ **100% FUNCIONAL CON AUTO-UPDATE + FIX BADGE COUNTER**
 
 ---
 
@@ -20,6 +20,26 @@ Sistema completo de gamificación para la plataforma educativa Hakadogs que **in
 - 🎉 **Notificaciones**: Confetti y animaciones al desbloquear
 - 💬 **Tooltips**: Modales informativos sobre cómo ganar puntos
 - 🤖 **100% Automático**: Sin necesidad de SQL manual
+- ✅ **Badge Counter Fix**: Actualización automática del contador de badges
+
+---
+
+## 🐛 ÚLTIMO FIX (v3.0.1)
+
+### Problema Corregido: Contador de Badges
+
+**Síntoma**: El contador mostraba "0 Badges" aunque el usuario tenía badges desbloqueados.
+
+**Causa**: La función `award_badge()` no actualizaba el campo `total_badges` en la tabla `user_stats`.
+
+**Solución**:
+1. Modificada función `award_badge()` para recalcular `total_badges` automáticamente
+2. Creado script `supabase/fix_badge_counter.sql` para recalcular usuarios existentes
+3. Añadida query de verificación para confirmar corrección
+
+**Archivo**: `supabase/fix_badge_counter.sql` (97 líneas)
+
+**Ejecución**: Una sola vez en Supabase SQL Editor, luego funciona automáticamente.
 
 ---
 
@@ -292,12 +312,23 @@ CREATE POLICY "view_own_stats" ON user_stats FOR SELECT
 ### 1. Ejecutar SQL en Supabase
 
 ```bash
-# Archivo: supabase/gamification_system.sql
-# 620 líneas de SQL
+# Archivo inicial: supabase/gamification_system.sql
+# 625 líneas de SQL
 # Tiempo: ~5 segundos
 ```
 
-### 2. Verificar Tablas Creadas
+### 2. Aplicar Fix de Badge Counter (IMPORTANTE)
+
+```bash
+# Archivo: supabase/fix_badge_counter.sql
+# 97 líneas de SQL
+# Tiempo: ~1 segundo
+# Ejecutar UNA VEZ después del setup inicial
+```
+
+Este fix corrige el contador de badges para que se actualice automáticamente.
+
+### 3. Verificar Tablas Creadas
 
 - ✅ badges (15 registros)
 - ✅ user_badges (vacía)
@@ -305,13 +336,13 @@ CREATE POLICY "view_own_stats" ON user_stats FOR SELECT
 - ✅ badge_progress (vacía)
 - ✅ user_achievements (vacía)
 
-### 3. Actualizar Tipos TypeScript
+### 4. Actualizar Tipos TypeScript
 
 ```bash
 # Ya actualizado en: types/database.types.ts
 ```
 
-### 4. ¡Listo!
+### 5. ¡Listo!
 
 El sistema funciona automáticamente. No requiere configuración adicional.
 
@@ -377,14 +408,16 @@ El sistema funciona automáticamente. No requiere configuración adicional.
 - `components/gamification/` - Componentes React
 - `app/cursos/badges/` - Página de badges
 - `app/cursos/leaderboard/` - Página de ranking
+- `supabase/gamification_system.sql` - Script SQL completo (625 líneas)
+- `supabase/fix_badge_counter.sql` - Fix contador badges (97 líneas)
 
 ---
 
 **Sistema creado por:** Cursor AI + Claude Sonnet 4.5  
 **Para:** Hakadogs - Educación Canina Profesional 🐕  
 **Fecha:** Enero 2026  
-**Versión:** 3.0.0  
-**Estado:** ✅ **100% FUNCIONAL Y AUTOMÁTICO**
+**Versión:** 3.0.1  
+**Estado:** ✅ **100% FUNCIONAL Y AUTOMÁTICO + BADGE COUNTER FIX**
 
 ---
 

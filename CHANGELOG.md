@@ -4,6 +4,29 @@ Todos los cambios importantes del proyecto Hakadogs documentados en orden cronol
 
 ---
 
+## [3.0.1] - 2026-01-12 🐛 FIX: Contador de Badges
+
+### 🔧 Corrección Crítica
+
+#### Bug Corregido
+- 🐛 **Contador de badges no actualizaba**: El campo `total_badges` en `user_stats` no se actualizaba al ganar badges
+
+#### Solución Implementada
+- ✅ **Función `award_badge()` actualizada**: Ahora recalcula `total_badges` automáticamente
+- ✅ **Script de recalculo**: `supabase/fix_badge_counter.sql` para usuarios existentes
+- ✅ **Verificación SQL**: Query de validación incluido en el script
+
+#### Archivos Modificados
+- `supabase/gamification_system.sql` (líneas 290-299)
+- `supabase/fix_badge_counter.sql` (nuevo, 97 líneas)
+
+#### UX Mejorada
+- ✅ **Botón "Saber más" visible**: Reemplazó el pequeño ícono de info
+- ✅ **Texto explícito**: Ahora dice claramente "Saber más" con icono
+- ✅ **Mejor affordance**: Los usuarios entienden que la card es clickeable
+
+---
+
 ## [3.0.0] - 2026-01-12 🎮 GAMIFICACIÓN 100% AUTOMÁTICA
 
 ### 🤖 SISTEMA DE GAMIFICACIÓN CON AUTO-UPDATE
