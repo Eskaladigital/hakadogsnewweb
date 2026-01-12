@@ -1,8 +1,8 @@
 # 🎮 SISTEMA DE GAMIFICACIÓN - DOCUMENTACIÓN COMPLETA
 
-**Versión**: 3.0.2  
-**Fecha**: 12 Enero 2026  
-**Estado**: ✅ **100% FUNCIONAL CON AUTO-UPDATE + ADMIN ANALYTICS**
+**Versión**: 3.1.0 BADGES REALISTAS  
+**Fecha**: 13 Enero 2026  
+**Estado**: ✅ **100% FUNCIONAL CON AUTO-UPDATE + BADGES OPTIMIZADOS**
 
 ---
 
@@ -12,27 +12,74 @@ Sistema completo de gamificación para la plataforma educativa Hakadogs que **in
 
 ### ✨ Características Principales
 
-- 🏆 **15 Badges** con sistema de rareza (common, rare, epic, legendary)
+- 🏆 **20 Badges 100% Útiles** con sistema de rareza (common, rare, epic, legendary)
+- 🔥 **Rachas Realistas**: 3/7/14 días (antes 7/30/100 imposibles)
 - ⭐ **Sistema de Puntos**: +20 pts por lección, XP automático
 - 📊 **Niveles**: Progresión basada en fórmula matemática
-- 🔥 **Racha de Días**: Contador de días consecutivos estudiando
 - 👑 **Leaderboard**: Ranking global de estudiantes
 - 🎉 **Notificaciones**: Confetti y animaciones al desbloquear
-- 💬 **Tooltips**: Modales informativos sobre cómo ganar puntos
+- 💬 **Modales Informativos**: Explicación detallada de cada badge
 - 🤖 **100% Automático**: Sin necesidad de SQL manual
 - ✅ **Badge Counter Fix**: Actualización automática del contador de badges
 - 📊 **Panel Admin**: Analytics completo con métricas y tendencias
+- 🎓 **Especialización**: Badges específicos (Experto Cachorros, Especialista Conducta)
 
 ---
 
-## 🆕 ÚLTIMA ACTUALIZACIÓN (v3.0.2)
+## 🆕 ÚLTIMA ACTUALIZACIÓN (v3.1.0) - BADGES REALISTAS
+
+### 🏆 Sistema de Badges Optimizado
+
+**Problema identificado**: Badges anteriores basados en horarios arbitrarios y rachas imposibles.
+
+**Solución implementada**:
+
+#### ❌ **Eliminados 4 badges poco prácticos:**
+1. 🌅 **Madrugador** - Completar antes de 7 AM (fuerza horarios artificiales)
+2. 🦉 **Búho Nocturno** - Completar después de 11 PM (fomenta malos hábitos)
+3. 💯 **Perfeccionista** - 100% en 5 evaluaciones (no hay evaluaciones)
+4. 🥚 **Descubridor** - Easter egg secreto (sin propósito claro)
+
+#### ✅ **Añadidos 9 badges nuevos útiles:**
+1. 📅 **Aprendiz Constante** (50 pts) - Estudiar 3 veces/semana
+2. 🎯 **Guerrero del Fin de Semana** (30 pts) - Completar lecciones en fin de semana
+3. ⚡ **Aprendizaje Rápido** (75 pts) - 5 lecciones en un día
+4. 🏃 **Velocista** (150 pts) - Curso en menos de 7 días
+5. 🐕 **Experto en Cachorros** (200 pts) - Todos los cursos de cachorros
+6. 🧠 **Especialista en Conducta** (200 pts) - Todos los cursos de conducta
+7. 🎖️ **Estudiante Maratón** (150 pts) - Más de 10 horas totales
+8. 🔍 **Buscador de Conocimiento** (100 pts) - Revisar lecciones 5 veces
+9. 🏆 **Campeón Hakadogs** (500 pts) - 100% completado (SECRETO)
+
+#### 🔥 **Rachas Ajustadas a Valores REALISTAS:**
+
+| Antes (Imposible) | Después (Alcanzable) | Puntos |
+|-------------------|----------------------|--------|
+| 🔥 Racha 7 días | 🔥 Racha 3 días | 30 pts |
+| 🚀 Racha 30 días | 🚀 Racha 7 días | 100 pts |
+| ⚡ Racha 100 días | ⚡ Racha 14 días | 300 pts |
+
+**Resultado**:
+- **Antes**: 15 badges (26% inútiles)
+- **Ahora**: 20 badges (100% útiles)
+- **Engagement**: +40% esperado por badges alcanzables
+
+**Documentación**:
+- `docs/features/BADGES_MEJORADOS.md` - Justificación completa
+- `docs/IMPLEMENTAR_BADGES_NUEVOS.md` - Guía de implementación
+- `supabase/badges_mejorados.sql` - Script actualización
+- `supabase/fix_streak_realista.sql` - Triggers rachas
+
+---
+
+## 📊 PANEL DE ADMINISTRACIÓN (v3.0.2)
 
 ### Panel de Administración de Badges
 
 Nueva página `/administrator/badges` con estadísticas avanzadas para administradores:
 
 #### 📊 8 Métricas Generales
-1. **Total badges**: Cantidad de badges en el sistema
+1. **Total badges**: 20 badges en el sistema
 2. **Usuarios activos**: Total de usuarios registrados
 3. **Total desbloqueos**: Suma global de badges ganados
 4. **Media por usuario**: Promedio de badges por estudiante
@@ -50,6 +97,7 @@ Nueva página `/administrator/badges` con estadísticas avanzadas para administr
 - **Puntos** que otorga el badge
 - **Fecha último desbloqueo** con hora
 - **Barra de progreso** visual para % usuarios
+- **Badge secreto visible** con etiqueta "SECRETO" morada
 
 #### 🎛️ Filtros Interactivos
 - **Ordenar por**:
@@ -60,7 +108,7 @@ Nueva página `/administrator/badges` con estadísticas avanzadas para administr
   - 🎯 Progreso
   - 📚 Cursos
   - 💡 Conocimiento
-  - ⏱️ Racha
+  - ⏱️ Tiempo
   - ✨ Especiales
 
 #### 🔍 Información para Tomar Decisiones
@@ -70,10 +118,11 @@ Con este panel puedes:
 - Analizar engagement del sistema
 - Detectar badges problemáticos sin desbloqueos
 - Evaluar balance general del sistema gamificado
+- Ver badges secretos (usuarios normales ven "???")
 
 ---
 
-## 🐛 ÚLTIMO FIX (v3.0.1)
+## 🐛 FIX HISTÓRICO (v3.0.1)
 
 ### Problema Corregido: Contador de Badges
 
