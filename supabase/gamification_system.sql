@@ -172,7 +172,7 @@ BEGIN
   VALUES (v_user_id)
   ON CONFLICT (user_id) DO NOTHING;
 
-  -- Actualizar lecciones completadas
+  -- Actualizar lecciones completadas Y PUNTOS
   IF TG_TABLE_NAME = 'user_lesson_progress' AND NEW.completed = true THEN
     UPDATE user_stats
     SET 
@@ -181,8 +181,22 @@ BEGIN
         FROM user_lesson_progress 
         WHERE user_id = v_user_id AND completed = true
       ),
+      -- Calcular puntos automáticamente (20 por lección)
+      total_points = (
+        SELECT COALESCE(COUNT(*) * 20, 0)
+        FROM user_lesson_progress 
+        WHERE user_id = v_user_id AND completed = true
+      ),
+      experience_points = (
+        SELECT COALESCE(COUNT(*) * 20, 0)
+        FROM user_lesson_progress 
+        WHERE user_id = v_user_id AND completed = true
+      ),
       updated_at = NOW()
     WHERE user_id = v_user_id;
+    
+    -- Recalcular nivel automáticamente
+    PERFORM calculate_user_level(v_user_id);
   END IF;
 
   -- Actualizar cursos completados y en progreso
