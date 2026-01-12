@@ -1,0 +1,338 @@
+[
+  {
+    "slug": "cartagena",
+    "name": "Cartagena",
+    "province": "Murcia",
+    "region": "Región de Murcia",
+    "population": 218000,
+    "distanceFromArchena": 70
+  },
+  {
+    "slug": "lorca",
+    "name": "Lorca",
+    "province": "Murcia",
+    "region": "Región de Murcia",
+    "population": 95000,
+    "distanceFromArchena": 60
+  },
+  {
+    "slug": "yecla",
+    "name": "Yecla",
+    "province": "Murcia",
+    "region": "Región de Murcia",
+    "population": 35000,
+    "distanceFromArchena": 75
+  },
+  {
+    "slug": "jumilla",
+    "name": "Jumilla",
+    "province": "Murcia",
+    "region": "Región de Murcia",
+    "population": 26000,
+    "distanceFromArchena": 65
+  },
+  {
+    "slug": "totana",
+    "name": "Totana",
+    "province": "Murcia",
+    "region": "Región de Murcia",
+    "population": 32000,
+    "distanceFromArchena": 52
+  },
+  {
+    "slug": "aguilas",
+    "name": "Águilas",
+    "province": "Murcia",
+    "region": "Región de Murcia",
+    "population": 35000,
+    "distanceFromArchena": 100
+  },
+  {
+    "slug": "mazarron",
+    "name": "Mazarrón",
+    "province": "Murcia",
+    "region": "Región de Murcia",
+    "population": 33000,
+    "distanceFromArchena": 80
+  },
+  {
+    "slug": "san-javier",
+    "name": "San Javier",
+    "province": "Murcia",
+    "region": "Región de Murcia",
+    "population": 33000,
+    "distanceFromArchena": 75
+  },
+  {
+    "slug": "san-pedro-del-pinatar",
+    "name": "San Pedro del Pinatar",
+    "province": "Murcia",
+    "region": "Región de Murcia",
+    "population": 26000,
+    "distanceFromArchena": 80
+  },
+  {
+    "slug": "alhama-de-murcia",
+    "name": "Alhama de Murcia",
+    "province": "Murcia",
+    "region": "Región de Murcia",
+    "population": 22000,
+    "distanceFromArchena": 48
+  },
+  {
+    "slug": "caravaca-de-la-cruz",
+    "name": "Caravaca de la Cruz",
+    "province": "Murcia",
+    "region": "Región de Murcia",
+    "population": 26000,
+    "distanceFromArchena": 72
+  },
+  {
+    "slug": "ceheguin",
+    "name": "Cehegín",
+    "province": "Murcia",
+    "region": "Región de Murcia",
+    "population": 16000,
+    "distanceFromArchena": 60
+  },
+  {
+    "slug": "bullas",
+    "name": "Bullas",
+    "province": "Murcia",
+    "region": "Región de Murcia",
+    "population": 12000,
+    "distanceFromArchena": 45
+  },
+  {
+    "slug": "alicante",
+    "name": "Alicante",
+    "province": "Alicante",
+    "region": "Comunidad Valenciana",
+    "population": 337000,
+    "distanceFromArchena": 100
+  },
+  {
+    "slug": "valencia",
+    "name": "Valencia",
+    "province": "Valencia",
+    "region": "Comunidad Valenciana",
+    "population": 800000,
+    "distanceFromArchena": 100
+  },
+  {
+    "slug": "elche",
+    "name": "Elche",
+    "province": "Alicante",
+    "region": "Comunidad Valenciana",
+    "population": 234000,
+    "distanceFromArchena": 100
+  },
+  {
+    "slug": "torrevieja",
+    "name": "Torrevieja",
+    "province": "Alicante",
+    "region": "Comunidad Valenciana",
+    "population": 83000,
+    "distanceFromArchena": 100
+  },
+  {
+    "slug": "orihuela",
+    "name": "Orihuela",
+    "province": "Alicante",
+    "region": "Comunidad Valenciana",
+    "population": 86000,
+    "distanceFromArchena": 100
+  },
+  {
+    "slug": "benidorm",
+    "name": "Benidorm",
+    "province": "Alicante",
+    "region": "Comunidad Valenciana",
+    "population": 70000,
+    "distanceFromArchena": 100
+  },
+  {
+    "slug": "alcoy",
+    "name": "Alcoy",
+    "province": "Alicante",
+    "region": "Comunidad Valenciana",
+    "population": 60000,
+    "distanceFromArchena": 100
+  },
+  {
+    "slug": "albacete",
+    "name": "Albacete",
+    "province": "Albacete",
+    "region": "Castilla-La Mancha",
+    "population": 174000,
+    "distanceFromArchena": 100
+  },
+  {
+    "slug": "hellin",
+    "name": "Hellín",
+    "province": "Albacete",
+    "region": "Castilla-La Mancha",
+    "population": 31000,
+    "distanceFromArchena": 100
+  },
+  {
+    "slug": "villarrobledo",
+    "name": "Villarrobledo",
+    "province": "Albacete",
+    "region": "Castilla-La Mancha",
+    "population": 26000,
+    "distanceFromArchena": 100
+  },
+  {
+    "slug": "almeria",
+    "name": "Almería",
+    "province": "Almería",
+    "region": "Andalucía",
+    "population": 201000,
+    "distanceFromArchena": 100
+  },
+  {
+    "slug": "roquetas-de-mar",
+    "name": "Roquetas de Mar",
+    "province": "Almería",
+    "region": "Andalucía",
+    "population": 95000,
+    "distanceFromArchena": 100
+  },
+  {
+    "slug": "el-ejido",
+    "name": "El Ejido",
+    "province": "Almería",
+    "region": "Andalucía",
+    "population": 85000,
+    "distanceFromArchena": 100
+  },
+  {
+    "slug": "granada",
+    "name": "Granada",
+    "province": "Granada",
+    "region": "Andalucía",
+    "population": 232000,
+    "distanceFromArchena": 100
+  },
+  {
+    "slug": "jaen",
+    "name": "Jaén",
+    "province": "Jaén",
+    "region": "Andalucía",
+    "population": 114000,
+    "distanceFromArchena": 100
+  },
+  {
+    "slug": "madrid",
+    "name": "Madrid",
+    "province": "Madrid",
+    "region": "Comunidad de Madrid",
+    "population": 3300000,
+    "distanceFromArchena": 100
+  },
+  {
+    "slug": "barcelona",
+    "name": "Barcelona",
+    "province": "Barcelona",
+    "region": "Cataluña",
+    "population": 1620000,
+    "distanceFromArchena": 100
+  },
+  {
+    "slug": "sevilla",
+    "name": "Sevilla",
+    "province": "Sevilla",
+    "region": "Andalucía",
+    "population": 688000,
+    "distanceFromArchena": 100
+  },
+  {
+    "slug": "malaga",
+    "name": "Málaga",
+    "province": "Málaga",
+    "region": "Andalucía",
+    "population": 578000,
+    "distanceFromArchena": 100
+  },
+  {
+    "slug": "cordoba",
+    "name": "Córdoba",
+    "province": "Córdoba",
+    "region": "Andalucía",
+    "population": 326000,
+    "distanceFromArchena": 100
+  },
+  {
+    "slug": "zaragoza",
+    "name": "Zaragoza",
+    "province": "Zaragoza",
+    "region": "Aragón",
+    "population": 675000,
+    "distanceFromArchena": 100
+  },
+  {
+    "slug": "palma-de-mallorca",
+    "name": "Palma de Mallorca",
+    "province": "Baleares",
+    "region": "Islas Baleares",
+    "population": 416000,
+    "distanceFromArchena": 100
+  },
+  {
+    "slug": "las-palmas-de-gran-canaria",
+    "name": "Las Palmas de Gran Canaria",
+    "province": "Las Palmas",
+    "region": "Islas Canarias",
+    "population": 379000,
+    "distanceFromArchena": 100
+  },
+  {
+    "slug": "bilbao",
+    "name": "Bilbao",
+    "province": "Vizcaya",
+    "region": "País Vasco",
+    "population": 347000,
+    "distanceFromArchena": 100
+  },
+  {
+    "slug": "vitoria-gasteiz",
+    "name": "Vitoria-Gasteiz",
+    "province": "Álava",
+    "region": "País Vasco",
+    "population": 253000,
+    "distanceFromArchena": 100
+  },
+  {
+    "slug": "valladolid",
+    "name": "Valladolid",
+    "province": "Valladolid",
+    "region": "Castilla y León",
+    "population": 298000,
+    "distanceFromArchena": 100
+  },
+  {
+    "slug": "vigo",
+    "name": "Vigo",
+    "province": "Pontevedra",
+    "region": "Galicia",
+    "population": 296000,
+    "distanceFromArchena": 100
+  },
+  {
+    "slug": "a-coruna",
+    "name": "A Coruña",
+    "province": "A Coruña",
+    "region": "Galicia",
+    "population": 246000,
+    "distanceFromArchena": 100
+  },
+  {
+    "slug": "gijon",
+    "name": "Gijón",
+    "province": "Asturias",
+    "region": "Principado de Asturias",
+    "population": 273000,
+    "distanceFromArchena": 100
+  }
+]

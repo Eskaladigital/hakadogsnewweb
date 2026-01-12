@@ -4,6 +4,101 @@ Todos los cambios importantes del proyecto Hakadogs documentados en orden cronol
 
 ---
 
+## [2.6.0] - 2026-01-12 🎮 GAMIFICACIÓN + DOCUMENTACIÓN
+
+### 🗂️ REORGANIZACIÓN MASIVA DE DOCUMENTACIÓN
+
+#### Añadido
+- ✅ Carpeta `/docs` con 6 subcarpetas organizadas
+- ✅ **[/docs/setup]** - 7 guías de configuración y despliegue
+- ✅ **[/docs/seo]** - 4 documentos de estrategia SEO
+- ✅ **[/docs/features]** - 5 guías de funcionalidades
+- ✅ **[/docs/performance]** - 5 reportes de optimización
+- ✅ **[/docs/audits]** - 8 auditorías y análisis
+- ✅ **[/docs/improvements]** - Mejoras UX/UI
+- ✅ `/docs/README.md` - Índice completo de documentación
+
+#### Eliminado - Raíz
+- ❌ **24 archivos .md obsoletos** eliminados de raíz:
+  - ARCHIVOS_CREADOS.md, PROYECTO_DEFINITIVO_FINAL.md, RESUMEN_LANZAMIENTO.md
+  - RESUMEN_3_APPS.md, RESUMEN_AUDITORIA.md, AUDITORIA_COMPLETADA.md
+  - DOCUMENTATION_INDEX.md, PREPARACION_GAMIFICACION_COMPLETA.md
+  - SISTEMA_GAMIFICACION.md, CONTENIDO_UNICO_COMPLETADO.md
+  - Y 14 más (performance, optimizaciones, guías obsoletas)
+
+#### Eliminado - /supabase
+- ❌ **25 archivos SQL obsoletos** eliminados:
+  - Migraciones puntuales: add_audio_to_lessons.sql, migrate_curso_correa_a_modulos.sql
+  - Duplicados: schema_cursos.sql, storage_setup.sql, security_policies.sql
+  - Blog storage (4 versiones → 1): blog_storage_setup.sql, blog_storage_completo.sql, etc.
+  - Troubleshooting: DIAGNOSTICO_STORAGE.sql, SOLUCION_AUTOMATICA.sql, etc.
+  - Utilidades: create_admin_user.sql, update_user_role.sql, etc.
+  - Datos: seed.sql, insert_initial_courses.sql
+- ❌ **3 archivos .md de troubleshooting** eliminados
+
+#### Movido
+- 📂 **32 archivos .md** reorganizados en `/docs`:
+  - Setup: DEPLOY_VERCEL, DOMINIO_PRODUCCION, CONFIGURAR_SUPABASE_VERCEL, etc.
+  - SEO: CONTENIDO_UNICO_COMPLETO, SEO_LOCAL_Y_LEGAL, etc.
+  - Features: SISTEMA_MODULOS, BLOG_PROFESIONAL, GAMIFICACION, etc.
+  - Performance: LCP, IMAGE, LOGO optimizations
+  - Audits: ACCESSIBILITY, ADMIN_PANEL, AUDITORIA_WEB, etc.
+
+#### Modificado
+- ✅ **README.md** completamente actualizado:
+  - Nueva sección de gamificación
+  - Referencias a `/docs` en lugar de archivos individuales
+  - Estructura más limpia y organizada
+  - Versión 2.6.0 actualizada
+- ✅ **INSTALACION.md** simplificado y actualizado:
+  - Información actualizada con dominio propio
+  - Referencias a documentación en `/docs`
+  - Guía más concisa y práctica
+
+### 🎮 SISTEMA DE GAMIFICACIÓN COMPLETO
+
+#### Implementado
+- ✅ **Badges (Medallas)**: 15 medallas diferentes por logros
+- ✅ **Leaderboard**: Ranking de estudiantes por puntos
+- ✅ **Streak Counter**: Racha de días consecutivos estudiando
+- ✅ **Puntos XP**: Sistema de experiencia y niveles
+- ✅ **Notificaciones**: Alertas al desbloquear logros
+- ✅ **Dashboard estadísticas**: Métricas completas de aprendizaje
+
+#### Archivos Nuevos
+- `app/cursos/badges/page.tsx` - Página de medallas
+- `app/cursos/leaderboard/page.tsx` - Clasificación de usuarios
+- `components/gamification/BadgeCard.tsx` - Card de medalla
+- `components/gamification/BadgeGrid.tsx` - Grid de medallas
+- `components/gamification/Leaderboard.tsx` - Tabla de ranking
+- `components/gamification/StreakCounter.tsx` - Contador de racha
+- `components/gamification/UserStatsCard.tsx` - Estadísticas usuario
+- `components/gamification/BadgeUnlockNotification.tsx` - Notificación logro
+- `lib/supabase/gamification.ts` - API de gamificación
+- `supabase/gamification_system.sql` - Schema completo (606 líneas)
+
+#### Documentación
+- `IMPLEMENTACION_GAMIFICACION_COMPLETA.md` → movido a `/docs/features`
+- `INSTALACION_RAPIDA_GAMIFICACION.md` → movido a `/docs/setup`
+
+### 📊 Resultado Final
+
+**Antes:**
+- 56 archivos .md en raíz (desorganizados)
+- Documentación dispersa y duplicada
+- README con 770+ líneas
+- Difícil encontrar documentación específica
+
+**Después:**
+- 3 archivos .md en raíz (README, CHANGELOG, INSTALACION)
+- 32 archivos organizados en `/docs` por categoría
+- 24 archivos obsoletos eliminados
+- README más limpio con referencias a `/docs`
+- Índice completo en `/docs/README.md`
+- Fácil navegación y mantenimiento
+
+---
+
 ## [1.0.5] - 2026-01-09 🎓 METODOLOGÍA BE HAKA
 
 ### 📚 PÁGINA DE METODOLOGÍA RENOVADA

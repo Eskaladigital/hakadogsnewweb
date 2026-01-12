@@ -1,231 +1,160 @@
-# 📦 INFORMACIÓN DEL PROYECTO - HAKADOGS
+# 🚀 Guía Rápida de Instalación - Hakadogs
 
-**⚠️ IMPORTANTE:** Esta aplicación está desplegada en producción en **Vercel** con **autenticación real de Supabase**.
-
----
-
-## 🌐 ACCESO A LA APLICACIÓN
-
-### URL de Producción
-**https://hakadogsnewweb.vercel.app**
-
-La aplicación está desplegada en Vercel y se actualiza automáticamente con cada push a GitHub.
-
-### 🔐 Sistema de Autenticación
-- **Registro de usuarios:** Los usuarios se registran directamente en la aplicación
-- **Base de datos:** Supabase Auth (PostgreSQL)
-- **Roles:** user (por defecto) / admin (asignado manualmente en Supabase)
+**Versión:** 2.6.0 GAMIFICATION SYSTEM  
+**Actualizado:** 12 Enero 2026
 
 ---
 
-## 🛡️ NO HAY USUARIOS DE PRUEBA
+## 🌐 APLICACIÓN EN PRODUCCIÓN
 
-Esta es una **aplicación en producción real** con autenticación de Supabase.
+### URL Oficial:
+**https://www.hakadogs.com**
 
-- ✅ Los usuarios se registran en `/cursos/auth/registro`
-- ✅ Las credenciales se almacenan en Supabase
-- ✅ El rol de admin se asigna manualmente en Supabase Dashboard
-
-### Asignar Rol de Admin
-1. Ve a Supabase Dashboard → Authentication → Users
-2. Selecciona el usuario
-3. Click en "..." → Edit User
-4. En "User Metadata" agrega: `{"role": "admin"}`
-5. Guarda los cambios
+La aplicación está desplegada en **Vercel** con dominio propio y se actualiza automáticamente con cada push a GitHub.
 
 ---
 
-## 🔧 CONFIGURACIÓN TÉCNICA (Solo para Desarrolladores)
+## 💻 DESARROLLO LOCAL
 
-### Repositorio GitHub
+### 1. Clonar Repositorio
 ```bash
-git clone https://github.com/Eskaladigital/HACKADOGS.git
-```
-
-### Stack Tecnológico
-- **Frontend:** Next.js 14, React 18, TypeScript 5.3
-- **Estilos:** Tailwind CSS 3.4
-- **Base de Datos:** Supabase
-- **Editor:** TinyMCE
-- **Deploy:** Vercel
-- **CI/CD:** Automático desde GitHub
-
-### Variables de Entorno (Configuradas en Vercel)
-```bash
-# Supabase (REQUERIDO - Obtener de Supabase Dashboard)
-NEXT_PUBLIC_SUPABASE_URL=https://tu-proyecto.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...tu_anon_key
-SUPABASE_SERVICE_ROLE_KEY=eyJ...tu_service_role_key
-
-# TinyMCE (REQUERIDO para panel admin - Obtener de tiny.cloud)
-NEXT_PUBLIC_TINYMCE_API_KEY=tu_api_key_aqui
-
-# URL de la app
-NEXT_PUBLIC_SITE_URL=https://hakadogsnewweb.vercel.app
-```
-
-**📍 Dónde obtener las credenciales:**
-- **Supabase:** https://supabase.com/dashboard → Tu Proyecto → Settings → API
-- **TinyMCE:** https://www.tiny.cloud/auth/signup/ (gratis hasta 1000 cargas/mes)
-
----
-
-## 📝 REALIZAR CAMBIOS
-
-### Workflow de Desarrollo
-
-1. **Clonar repositorio**
-```bash
-git clone https://github.com/Eskaladigital/HACKADOGS.git
+git clone https://github.com/Eskaladigital/hakadogsnewweb.git
 cd hakadogs-app
 ```
 
-2. **Instalar dependencias**
+### 2. Instalar Dependencias
 ```bash
 npm install
 ```
 
-3. **Configurar variables locales** (opcional para desarrollo local)
+### 3. Configurar Variables de Entorno
+Crea un archivo `.env.local` en la raíz con:
+
 ```bash
-cp .env.example .env.local
-# Editar .env.local con tus credenciales
+# Supabase (Base de datos)
+NEXT_PUBLIC_SUPABASE_URL=https://tu-proyecto.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_anon_key
+SUPABASE_SERVICE_ROLE_KEY=tu_service_role_key
+
+# OpenAI (Generación de contenido con IA)
+OPENAI_API_KEY=sk-proj-...
+
+# TinyMCE (Editor de contenido)
+NEXT_PUBLIC_TINYMCE_API_KEY=tu_tinymce_key
+
+# Google Analytics
+NEXT_PUBLIC_GA_ID=G-NXPT2KNYGJ
+
+# URL de la aplicación
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
-4. **Probar localmente** (opcional)
+**📍 Obtener credenciales:**
+- **Supabase:** https://supabase.com/dashboard → Settings → API
+- **OpenAI:** https://platform.openai.com/api-keys
+- **TinyMCE:** https://www.tiny.cloud/auth/signup/ (gratis hasta 1000 cargas/mes)
+
+### 4. Configurar Base de Datos
+Ejecuta los scripts SQL en Supabase Dashboard → SQL Editor:
+
+```bash
+# Scripts en orden:
+1. supabase/schema_cursos.sql
+2. supabase/user_roles_table.sql  
+3. supabase/contacts_table.sql
+4. supabase/dashboard_functions.sql
+5. supabase/gamification_system.sql
+```
+
+Ver [`docs/setup/INSTALACION_RAPIDA_GAMIFICACION.md`](./docs/setup/INSTALACION_RAPIDA_GAMIFICACION.md) para más detalles.
+
+### 5. Ejecutar en Desarrollo
 ```bash
 npm run dev
-# Abre http://localhost:3000
 ```
 
-5. **Hacer cambios en el código**
-```bash
-# Edita los archivos que necesites
-```
-
-6. **Subir cambios a GitHub**
-```bash
-git add .
-git commit -m "Descripción de los cambios"
-git push origin main
-```
-
-7. **Deploy automático**
-```
-Vercel detecta el push
-  ↓
-Build automático (~2 minutos)
-  ↓
-Deploy automático
-  ↓
-✅ Cambios LIVE en producción
-```
+Abre **http://localhost:3000** en tu navegador.
 
 ---
 
-## 🚀 DEPLOY Y CI/CD
+## 🚀 DESPLIEGUE EN PRODUCCIÓN
 
-### Estado Actual
-- ✅ Repositorio en GitHub: https://github.com/Eskaladigital/HACKADOGS.git
-- ✅ Deploy automático en Vercel configurado
-- ✅ CI/CD activo
-- ✅ SSL/HTTPS automático
-- ✅ Preview deployments para PRs
+### Deploy Automático con Vercel
 
-### Monitoreo
-1. Ve a Vercel Dashboard
-2. Selecciona el proyecto HACKADOGS
-3. Revisa logs, analytics y estado del build
+1. **Fork o clona** el repositorio en tu cuenta de GitHub
+2. Importa el proyecto en **Vercel**: https://vercel.com/new
+3. Configura las **variables de entorno** en Vercel
+4. Click **Deploy**
+
+Cada push a `main` dispara un deploy automático.
+
+Ver [`docs/setup/DEPLOY_VERCEL.md`](./docs/setup/DEPLOY_VERCEL.md) para la guía completa.
 
 ---
 
-## 📚 DOCUMENTACIÓN
+## 🔐 AUTENTICACIÓN Y ROLES
 
-### Archivos Principales
-- `README.md` - Documentación general
-- `DEPLOY_VERCEL.md` - Guía completa de deploy en Vercel
-- `INSTALACION.md` - Este archivo (info de producción)
-- `CONTENIDO_UNICO_COMPLETO.md` - SEO local
-- `supabase/schema_cursos.sql` - Schema de base de datos
-- `supabase/storage_setup.sql` - Configuración de Storage
+### Crear Usuario Admin
+
+1. Registra un usuario en `/cursos/auth/registro`
+2. Ve a **Supabase Dashboard** → Authentication → Users
+3. Ejecuta en SQL Editor:
+
+```sql
+-- Reemplaza con el email del usuario
+INSERT INTO public.user_roles (user_id, role)
+SELECT id, 'admin' FROM auth.users 
+WHERE email = 'tu-email@ejemplo.com'
+ON CONFLICT (user_id) DO UPDATE SET role = 'admin';
+```
+
+4. Accede al panel admin en `/administrator`
+
+---
+
+## 📚 DOCUMENTACIÓN ADICIONAL
+
+### Guías de Setup:
+- [`docs/setup/DEPLOY_VERCEL.md`](./docs/setup/DEPLOY_VERCEL.md) - Deploy en producción
+- [`docs/setup/CONFIGURAR_SUPABASE_VERCEL.md`](./docs/setup/CONFIGURAR_SUPABASE_VERCEL.md) - Variables de entorno
+- [`docs/setup/INSTRUCCIONES_SEGURIDAD.md`](./docs/setup/INSTRUCCIONES_SEGURIDAD.md) - Seguridad RLS
+- [`docs/setup/INSTALACION_RAPIDA_GAMIFICACION.md`](./docs/setup/INSTALACION_RAPIDA_GAMIFICACION.md) - Sistema gamificación
+
+### Documentación Completa:
+Ver **[`/docs/README.md`](./docs/README.md)** para índice completo de documentación técnica.
 
 ---
 
 ## 🐛 SOLUCIÓN DE PROBLEMAS
 
-### La app no carga
-1. Verifica que Vercel esté desplegado
-2. Revisa los logs en Vercel Dashboard
-3. Verifica el último build fue exitoso
+### Error de Autenticación
+- Verifica que las credenciales de Supabase sean correctas
+- Confirma que el usuario existe en Supabase Dashboard
+- Verifica que las variables de entorno estén configuradas
 
-### Cambios no se reflejan
-1. Verifica que el push a GitHub fue exitoso
-2. Ve a Vercel y revisa el estado del deployment
-3. Espera ~2 minutos para que complete el deploy
-4. Limpia caché del navegador (Ctrl+Shift+Delete)
-
-### Error al hacer push
+### Error de Build
 ```bash
-# Si hay conflictos:
-git pull origin main
-git push origin main
+# Limpiar caché y reinstalar
+rm -rf .next node_modules
+npm install
+npm run build
 ```
 
-### Error de build en Vercel
-1. Ve a Vercel Dashboard → Deployments
-2. Click en el deployment fallido
-3. Revisa los logs de error
-4. Verifica que todas las variables de entorno estén configuradas
+### Error en Producción
+1. Revisa **Vercel Dashboard** → Deployments → Logs
+2. Verifica que todas las variables de entorno estén configuradas
+3. Comprueba que el último deployment fue exitoso
 
 ---
 
-## 🔒 SEGURIDAD
+## 📞 SOPORTE
 
-### Archivos Protegidos
-- `.env.local` - NO está en GitHub (ignorado)
-- Credenciales de Supabase - Solo en Vercel
-- API Keys - Solo en Variables de Entorno de Vercel
-
-### Buenas Prácticas
-- ✅ Nunca subir credenciales a GitHub
-- ✅ Usar variables de entorno en Vercel
-- ✅ Mantener `.gitignore` actualizado
-- ✅ Rotar API keys periódicamente
+- **Email:** contacto@hakadogs.com
+- **GitHub:** https://github.com/Eskaladigital/hakadogsnewweb
+- **Documentación:** [`/docs`](./docs/README.md)
 
 ---
 
-## 📞 SOPORTE TÉCNICO
-
-### Para Problemas de Deploy
-- **Vercel Dashboard:** https://vercel.com/dashboard
-- **Logs:** Ver en Vercel → tu proyecto → Deployments → Logs
-- **Documentación:** https://vercel.com/docs
-
-### Para Cambios en el Código
-- **GitHub:** https://github.com/Eskaladigital/HACKADOGS
-- **Issues:** Crear issue en GitHub si necesario
-
-### Para Base de Datos
-- **Supabase Dashboard:** https://supabase.com/dashboard
-- **Documentación:** https://supabase.com/docs
-
----
-
-## ✅ CHECKLIST DE VERIFICACIÓN
-
-### Después de Cambios
-- [ ] Código commiteado a GitHub
-- [ ] Push exitoso a rama main
-- [ ] Build completado en Vercel
-- [ ] Deploy exitoso
-- [ ] Cambios visibles en producción
-- [ ] Funcionalidad probada en navegador
-- [ ] Sin errores en consola
-
----
-
-**Última actualización:** Enero 2026  
-**Versión:** 1.0.0 PRODUCTION  
-**Plataforma:** Vercel  
-**Repositorio:** https://github.com/Eskaladigital/HACKADOGS.git  
-**Estado:** ✅ Desplegado y funcionando  
-**Lanzamiento:** Versión 1.0 - Enero 2026
+**Última actualización:** 12 Enero 2026  
+**Versión:** 2.6.0 GAMIFICATION SYSTEM  
+**Estado:** ✅ Desplegado en hakadogs.com
