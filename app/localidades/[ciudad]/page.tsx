@@ -28,10 +28,20 @@ export async function generateMetadata({ params }: { params: { ciudad: string } 
     }
   }
 
+  // Para localidades remotas con contenido similar, usar canonical hacia Murcia
+  // Esto evita penalización por contenido duplicado según la auditoría
+  const useCanonical = city.isRemoteMarket === true && city.distanceFromArchena && city.distanceFromArchena > 50
+  const canonicalUrl = useCanonical 
+    ? 'https://www.hakadogs.com/localidades/murcia'
+    : `https://www.hakadogs.com/localidades/${city.slug}`
+
   return {
     title: `Educación Canina en ${city.name}`,
     description: city.description,
     keywords: city.keywords.join(', '),
+    alternates: {
+      canonical: canonicalUrl,
+    },
     openGraph: {
       title: `Educación Canina Profesional en ${city.name} | Hakadogs`,
       description: city.description,
