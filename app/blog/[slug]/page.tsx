@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Calendar, Clock, Eye, Share2, Facebook, Twitter, Linkedin, Tag, Loader2, BookOpen, ChevronRight, Mail, Copy, Check } from 'lucide-react'
 import { getBlogPostBySlug, getPublishedBlogPosts } from '@/lib/supabase/blog'
 import type { BlogPostWithCategory } from '@/lib/supabase/blog'
@@ -23,6 +24,7 @@ export default function BlogPostPage() {
     if (slug) {
       loadPost()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug])
 
   useEffect(() => {
@@ -254,10 +256,13 @@ export default function BlogPostPage() {
       {post.featured_image_url && (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-16">
           <div className="relative aspect-[21/9] bg-gray-900 rounded-3xl overflow-hidden shadow-2xl">
-            <img
+            <Image
               src={post.featured_image_url}
               alt={post.title}
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
+              sizes="(max-width: 1280px) 100vw, 1280px"
+              priority
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
           </div>
@@ -346,11 +351,13 @@ export default function BlogPostPage() {
                         className="group block hover:bg-gray-50 p-3 rounded-lg transition"
                       >
                         {relatedPost.featured_image_url && (
-                          <div className="aspect-video bg-gray-200 rounded-lg overflow-hidden mb-3">
-                            <img
+                          <div className="aspect-video bg-gray-200 rounded-lg overflow-hidden mb-3 relative">
+                            <Image
                               src={relatedPost.featured_image_url}
                               alt={relatedPost.title}
-                              className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                              fill
+                              className="object-cover group-hover:scale-105 transition duration-300"
+                              sizes="(max-width: 1024px) 100vw, 300px"
                             />
                           </div>
                         )}

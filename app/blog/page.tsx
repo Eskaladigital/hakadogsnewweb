@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Calendar, Clock, Eye, Search, Tag, Filter, Loader2, ArrowRight, TrendingUp, Star } from 'lucide-react'
 import { getPublishedBlogPosts, getAllBlogCategories, getFeaturedBlogPosts, searchBlogPosts, getBlogPostsByCategoryId, getCategoryPostCounts } from '@/lib/supabase/blog'
 import type { BlogPostWithCategory, BlogCategory } from '@/lib/supabase/blog'
@@ -129,11 +130,14 @@ export default function BlogPage() {
           >
             <div className="grid md:grid-cols-2 gap-0">
               {featuredPosts[0].featured_image_url && (
-                <div className="aspect-video md:aspect-auto bg-gray-200 overflow-hidden">
-                  <img
+                <div className="aspect-video md:aspect-auto bg-gray-200 overflow-hidden relative">
+                  <Image
                     src={featuredPosts[0].featured_image_url}
                     alt={featuredPosts[0].title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    priority
                   />
                 </div>
               )}
@@ -228,11 +232,13 @@ export default function BlogPage() {
                     >
                       <div className="flex flex-col sm:flex-row gap-6 p-6">
                         {post.featured_image_url && (
-                          <div className="sm:w-64 h-48 sm:h-auto bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
-                            <img
+                          <div className="sm:w-64 h-48 sm:h-auto bg-gray-200 rounded-lg overflow-hidden flex-shrink-0 relative">
+                            <Image
                               src={post.featured_image_url}
                               alt={post.title}
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              fill
+                              className="object-cover group-hover:scale-105 transition-transform duration-300"
+                              sizes="(max-width: 640px) 100vw, 256px"
                             />
                           </div>
                         )}

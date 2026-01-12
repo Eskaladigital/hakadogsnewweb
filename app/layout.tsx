@@ -1,5 +1,5 @@
 import './globals.css'
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import Script from 'next/script'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
@@ -7,6 +7,13 @@ import BackToTop from '@/components/ui/BackToTop'
 import WhatsAppChat from '@/components/ui/WhatsAppChat'
 import CookieConsent from '@/components/ui/CookieConsent'
 import { localBusinessSchema, organizationSchema, websiteSchema, serviceSchema } from '@/lib/schema'
+
+export const viewport: Viewport = {
+  themeColor: '#059669',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+}
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.hakadogs.com'),
@@ -59,9 +66,6 @@ export const metadata: Metadata = {
   
   // PWA Manifest
   manifest: '/manifest.json',
-  
-  // Theme Color (barra de navegación en móvil)
-  themeColor: '#059669',
   
   // Apple Web App
   appleWebApp: {
