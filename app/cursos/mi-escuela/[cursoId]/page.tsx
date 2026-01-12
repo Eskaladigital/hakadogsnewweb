@@ -877,11 +877,20 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                       </h2>
                       {/* Renderizar HTML de TinyMCE - OPTIMIZADO PARA MÓVIL */}
                       <div 
-                        className="lesson-content prose prose-sm sm:prose-base max-w-none"
-                        style={{
-                          fontSize: 'clamp(0.875rem, 2.5vw, 1rem)',
-                          lineHeight: '1.6'
-                        }}
+                        className="responsive-prose prose prose-sm sm:prose-base md:prose-lg max-w-none
+                          prose-headings:font-black prose-headings:tracking-tight
+                          prose-h2:text-xl sm:prose-h2:text-2xl md:prose-h2:text-3xl prose-h2:mt-8 sm:prose-h2:mt-12 prose-h2:mb-4 sm:prose-h2:mb-6 prose-h2:text-gray-900
+                          prose-h3:text-lg sm:prose-h3:text-xl md:prose-h3:text-2xl prose-h3:mt-6 sm:prose-h3:mt-8 prose-h3:mb-3 sm:prose-h3:mb-4 prose-h3:text-gray-800
+                          prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4 sm:prose-p:mb-6 prose-p:text-sm sm:prose-p:text-base
+                          prose-a:text-forest prose-a:font-semibold prose-a:no-underline hover:prose-a:underline
+                          prose-strong:text-gray-900 prose-strong:font-bold
+                          prose-ul:my-4 sm:prose-ul:my-6 prose-ul:space-y-2
+                          prose-ol:my-4 sm:prose-ol:my-6 prose-ol:space-y-2
+                          prose-li:text-gray-700 prose-li:leading-relaxed prose-li:text-sm sm:prose-li:text-base
+                          prose-blockquote:border-l-4 prose-blockquote:border-forest prose-blockquote:bg-forest/5 prose-blockquote:py-3 sm:prose-blockquote:py-4 prose-blockquote:px-4 sm:prose-blockquote:px-6 prose-blockquote:rounded-r-xl prose-blockquote:not-italic prose-blockquote:text-sm sm:prose-blockquote:text-base
+                          prose-img:rounded-xl sm:prose-img:rounded-2xl prose-img:shadow-lg prose-img:my-6 sm:prose-img:my-8
+                          prose-code:text-forest prose-code:bg-gray-50 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:font-mono prose-code:text-xs sm:prose-code:text-sm
+                          prose-pre:bg-gray-900 prose-pre:rounded-xl sm:prose-pre:rounded-2xl prose-pre:shadow-lg prose-pre:text-xs sm:prose-pre:text-sm"
                         dangerouslySetInnerHTML={{ __html: leccionActual.content }}
                       />
                     </>
