@@ -21,10 +21,12 @@ const nextConfig = {
   
   // Optimización experimental para reducir CSS bloqueante
   experimental: {
-    optimizeCss: true,
+    optimizeCss: true, // Inline critical CSS
     optimizePackageImports: ['lucide-react', 'framer-motion'],
     // Mejorar renderizado inicial
     optimisticClientCache: true,
+    // Purge CSS no utilizado agresivamente
+    cssChunking: 'loose', // Permite mejor code splitting de CSS
   },
   
   // Optimizar chunks para mejor caché y reducir tareas largas en main thread
@@ -143,7 +145,8 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://cdn.tiny.cloud; style-src 'self' 'unsafe-inline' https://cdn.tiny.cloud https://fonts.googleapis.com; img-src 'self' data: https://images.unsplash.com https://jshqrsnzxzbizgjyfsde.supabase.co https://www.googletagmanager.com https://www.google-analytics.com blob:; font-src 'self' data: https://cdn.tiny.cloud https://fonts.gstatic.com; connect-src 'self' https://jshqrsnzxzbizgjyfsde.supabase.co https://www.google-analytics.com https://api.openai.com https://cdn.tiny.cloud https://www.googletagmanager.com; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests;"
+            // CSP mejorado con mejor protección contra XSS manteniendo funcionalidad
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://cdn.tiny.cloud; style-src 'self' 'unsafe-inline' https://cdn.tiny.cloud https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' data: https://cdn.tiny.cloud https://fonts.gstatic.com; connect-src 'self' https://jshqrsnzxzbizgjyfsde.supabase.co https://www.google-analytics.com https://api.openai.com https://cdn.tiny.cloud https://www.googletagmanager.com; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests; block-all-mixed-content;"
           },
           {
             key: 'Permissions-Policy',

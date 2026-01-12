@@ -100,6 +100,18 @@ export default function RootLayout({
   return (
     <html lang="es">
       <head>
+        {/* Critical CSS inline - Solo para above the fold */}
+        <style dangerouslySetInnerHTML={{__html: `
+          :root{--forest-dark:#1a3d23;--forest:#2d5f3a;--sage:#6b8e5f;--gold:#c9a961;--cream:#f9f6f1}
+          *{margin:0;padding:0;box-sizing:border-box}
+          html{scroll-behavior:smooth}
+          body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:var(--forest-dark);background:#fff;line-height:1.6}
+          @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+          .animate-fade-in-up{animation:fadeIn 0.5s ease-out forwards}
+          @keyframes scaleIn{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
+          .animate-fade-in-scale{animation:scaleIn 0.5s ease-out forwards;will-change:transform,opacity}
+        `}} />
+        
         {/* PWA Meta Tags */}
         <meta name="application-name" content="Hakadogs" />
         <meta name="apple-mobile-web-app-capable" content="yes" />

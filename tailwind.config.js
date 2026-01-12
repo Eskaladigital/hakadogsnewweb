@@ -5,6 +5,12 @@ module.exports = {
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  // Purge agresivo para reducir CSS no utilizado
+  safelist: [
+    // Solo mantener clases dinámicas críticas
+    'animate-fade-in-up',
+    'animate-fade-in-scale',
+  ],
   theme: {
     extend: {
       colors: {
