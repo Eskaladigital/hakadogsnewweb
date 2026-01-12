@@ -12,10 +12,11 @@ export const metadata: Metadata = {
     siteName: 'Hakadogs',
     images: [
       {
-        url: '/logo.png',
+        url: 'https://www.hakadogs.com/images/logo_facebook_1200_630.jpg',
         width: 1200,
         height: 630,
-        alt: 'Hakadogs - ¡Alfredo Paga! 💰🚜'
+        alt: 'Hakadogs - ¡Alfredo Paga! 💰🚜',
+        type: 'image/jpeg'
       }
     ],
     locale: 'es_ES'
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: '🚨 ¡¡ALFREDO PAGA!! - Vale 14.000€ según la IA 💰',
     description: '🎉 ¡Dame tu ranchera o tu piscina! 🏊‍♂️ Presupuesto ÉPICO con animaciones locas. ¡Acepto la ranchera! 🚜💰',
-    images: ['/logo.png']
+    images: ['https://www.hakadogs.com/images/logo_facebook_1200_630.jpg']
   },
   other: {
     'og:price:amount': '14520',
