@@ -14,6 +14,16 @@
 3. 💯 **Perfeccionista** - 100% en 5 evaluaciones
 4. 🥚 **Descubridor** - Easter egg secreto
 
+### ✏️ **Badges de Racha Ajustados (MÁS REALISTAS):**
+- **Antes:** 7 / 30 / 100 días consecutivos (IMPOSIBLE)
+- **Después:** 3 / 7 / 14 días consecutivos (ALCANZABLE)
+
+| Antes | Después | Puntos |
+|-------|---------|--------|
+| 🔥 Racha 7 días | 🔥 Racha 3 días | 30 pts |
+| 🚀 Racha 30 días | 🚀 Racha 7 días | 100 pts |
+| ⚡ Imparable (100 días) | ⚡ Racha 14 días | 300 pts |
+
 ### ✅ **Badges Nuevos (9):**
 1. 📅 **Aprendiz Constante** (50 pts) - Estudiar 3 veces/semana
 2. 🎯 **Guerrero del Fin de Semana** (30 pts) - Completar lecciones en fin de semana
@@ -43,20 +53,31 @@ Se ha actualizado:
 
 ### ⏸️ **Paso 2: Base de Datos (PENDIENTE - TÚ DEBES HACERLO)**
 
+#### **IMPORTANTE: Ejecutar en ESTE ORDEN**
+
+**Primero ejecuta:** `supabase/badges_mejorados.sql`
+- Elimina badges antiguos (Madrugador, Búho Nocturno, etc.)
+- Añade 9 badges nuevos
+- Actualiza descripciones
+- Ajusta rachas a valores realistas (3/7/14 días)
+
+**Después ejecuta:** `supabase/fix_streak_realista.sql`
+- Actualiza los TRIGGERS para usar rachas realistas (3/7/14)
+- Mantiene compatibilidad con badges existentes
+
 #### **Opción A: Ejecutar en Supabase Dashboard (RECOMENDADO)**
 
 1. Ve a: https://supabase.com/dashboard/project/[tu-proyecto]/sql
-2. Abre el archivo: `supabase/badges_mejorados.sql`
-3. Copia todo el contenido
-4. Pega en el SQL Editor de Supabase
-5. Haz clic en "Run" (▶️)
-6. Verifica que salga: "Success. No rows returned"
+2. **PRIMERO:** Abre `supabase/badges_mejorados.sql`, copia todo, pega y ejecuta (▶️)
+3. **DESPUÉS:** Abre `supabase/fix_streak_realista.sql`, copia todo, pega y ejecuta (▶️)
+4. Verifica que ambos salgan: "Success"
 
 #### **Opción B: Usar Supabase CLI (Terminal)**
 
 ```bash
 # Desde la raíz del proyecto
 npx supabase db push --file supabase/badges_mejorados.sql
+npx supabase db push --file supabase/fix_streak_realista.sql
 ```
 
 ---
