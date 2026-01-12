@@ -287,11 +287,16 @@ BEGIN
   INSERT INTO user_badges (user_id, badge_id, earned_at, is_unlocked)
   VALUES (p_user_id, v_badge_id, NOW(), true);
 
-  -- Sumar puntos
+  -- Sumar puntos Y actualizar contador de badges
   UPDATE user_stats
   SET 
     total_points = total_points + v_points,
     experience_points = experience_points + v_points,
+    total_badges = (
+      SELECT COUNT(*) 
+      FROM user_badges 
+      WHERE user_id = p_user_id AND is_unlocked = true
+    ),
     updated_at = NOW()
   WHERE user_id = p_user_id;
 
