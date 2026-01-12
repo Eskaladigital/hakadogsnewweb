@@ -82,7 +82,7 @@ export default function BadgeCard({
         className={`
           relative w-full h-full rounded-xl p-4
           flex flex-col items-center justify-center
-          transition-all duration-300
+          transition-all duration-300 group
           ${isLocked 
             ? 'bg-gray-100 border-2 border-gray-300 opacity-60' 
             : `bg-gradient-to-br ${rarityColors[badge.rarity]} border-2 ${rarityBorderColors[badge.rarity]}`
@@ -178,16 +178,46 @@ export default function BadgeCard({
 
       {/* Tooltip on Hover */}
       {!isSecret && (
-        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 hover:opacity-100 transition-opacity pointer-events-none z-20">
-          <div className="bg-gray-900 text-white text-xs rounded-lg py-2 px-3 max-w-xs whitespace-normal">
-            <p className="font-bold mb-1">{badge.name}</p>
-            <p className="text-gray-300">{badge.description}</p>
-            {isLocked && (
-              <p className="text-gold mt-2 font-semibold">🔒 Bloqueado</p>
-            )}
+        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 hover:opacity-100 transition-opacity pointer-events-none z-20 group-hover:opacity-100">
+          <div className="bg-gray-900 text-white text-xs rounded-lg py-3 px-4 max-w-xs whitespace-normal shadow-xl border border-gray-700">
+            {/* Nombre y rareza */}
+            <div className="flex items-center justify-between mb-2">
+              <p className="font-bold text-sm">{badge.name}</p>
+              <span className={`text-xs px-2 py-0.5 rounded ${
+                badge.rarity === 'legendary' ? 'bg-purple-500' :
+                badge.rarity === 'epic' ? 'bg-orange-500' :
+                badge.rarity === 'rare' ? 'bg-blue-500' : 'bg-gray-500'
+              }`}>
+                {badge.rarity === 'legendary' ? 'Legendario' :
+                 badge.rarity === 'epic' ? 'Épico' :
+                 badge.rarity === 'rare' ? 'Raro' : 'Común'}
+              </span>
+            </div>
+            
+            {/* Descripción (cómo conseguirlo) */}
+            <div className="mb-2 pb-2 border-b border-gray-700">
+              <p className="text-xs text-gray-300 font-semibold mb-1">📋 Cómo conseguirlo:</p>
+              <p className="text-gray-300 leading-relaxed">{badge.description}</p>
+            </div>
+            
+            {/* Puntos */}
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-yellow-400 font-semibold">⭐ +{badge.points} puntos</span>
+              {isLocked ? (
+                <span className="text-red-400 font-semibold">🔒 Bloqueado</span>
+              ) : (
+                <span className="text-green-400 font-semibold">✅ Desbloqueado</span>
+              )}
+            </div>
+            
+            {/* Fecha de desbloqueo */}
             {!isLocked && badge.earned_at && (
-              <p className="text-green-400 mt-2 text-xs">
-                ✅ Desbloqueado: {new Date(badge.earned_at).toLocaleDateString('es-ES')}
+              <p className="text-green-400 mt-2 pt-2 border-t border-gray-700 text-xs">
+                Conseguido: {new Date(badge.earned_at).toLocaleDateString('es-ES', { 
+                  day: 'numeric', 
+                  month: 'long', 
+                  year: 'numeric' 
+                })}
               </p>
             )}
           </div>

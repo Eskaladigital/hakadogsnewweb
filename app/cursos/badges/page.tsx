@@ -241,6 +241,41 @@ export default function BadgesPage() {
       <section className="py-12">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-7xl mx-auto">
+            {/* Información de ayuda */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-8"
+            >
+              <div className="flex items-start space-x-3">
+                <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                  <span className="text-white text-xl">💡</span>
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-bold text-blue-900 text-lg mb-2">
+                    ¿Cómo conseguir badges?
+                  </h3>
+                  <p className="text-blue-800 mb-3">
+                    Pasa el cursor sobre cualquier badge para ver los requisitos exactos. Aquí tienes una guía rápida:
+                  </p>
+                  <div className="grid md:grid-cols-3 gap-4">
+                    <div className="bg-white rounded-lg p-3 border border-blue-200">
+                      <p className="font-semibold text-gray-900 mb-1">🎯 Progreso</p>
+                      <p className="text-sm text-gray-600">Completa lecciones y cursos</p>
+                    </div>
+                    <div className="bg-white rounded-lg p-3 border border-blue-200">
+                      <p className="font-semibold text-gray-900 mb-1">🔥 Racha</p>
+                      <p className="text-sm text-gray-600">Estudia días consecutivos</p>
+                    </div>
+                    <div className="bg-white rounded-lg p-3 border border-blue-200">
+                      <p className="font-semibold text-gray-900 mb-1">✨ Especiales</p>
+                      <p className="text-sm text-gray-600">Cumple retos únicos</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
             {filteredBadges.length === 0 ? (
               <div className="text-center py-12">
                 <Trophy className="w-16 h-16 text-gray-400 mx-auto mb-4" />
