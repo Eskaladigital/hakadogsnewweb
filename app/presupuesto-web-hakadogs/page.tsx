@@ -1,1180 +1,814 @@
-import { Metadata } from 'next';
-import { CheckCircle, TrendingUp, Shield, Zap, Target, Award, BarChart3, Globe, Lock, FileText } from 'lucide-react';
+'use client';
 
-export const metadata: Metadata = {
-  title: 'Alfredo!! Que dice la IA que esto vale 14.000 euros!! A pagar!! Te acepto la ranchera!!',
-  description: 'Alfredo!! Que dice la IA que esto vale 14.000 euros!! A pagar!! Te acepto la ranchera!!',
-  robots: 'noindex, nofollow', // Importante: no indexar en Google
-  openGraph: {
-    title: 'Alfredo!! Que dice la IA que esto vale 14.000 euros!! A pagar!! Te acepto la ranchera!!',
-    description: 'Alfredo!! Que dice la IA que esto vale 14.000 euros!! A pagar!! Te acepto la ranchera!!',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Alfredo!! Que dice la IA que esto vale 14.000 euros!! A pagar!! Te acepto la ranchera!!',
-    description: 'Alfredo!! Que dice la IA que esto vale 14.000 euros!! A pagar!! Te acepto la ranchera!!',
-  },
-};
+import { useState, useEffect } from 'react';
+import { CheckCircle, Rocket, PartyPopper, DollarSign, Star, Zap, Award, TrendingUp, Target, Shield, Sparkles } from 'lucide-react';
 
 export default function PresupuestoPage() {
+  const [floatingEmojis, setFloatingEmojis] = useState<Array<{id: number, x: number, emoji: string}>>([]);
+  const [exploding, setExploding] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const emojis = ['🐕', '💰', '🚀', '⭐', '🎉', '💎', '🔥', '✨', '🏆', '💪', '🚜', '🏊‍♂️', '🤖'];
+      setFloatingEmojis(prev => [
+        ...prev.slice(-25),
+        {
+          id: Date.now(),
+          x: Math.random() * 100,
+          emoji: emojis[Math.floor(Math.random() * emojis.length)]
+        }
+      ]);
+    }, 600);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-cream via-white to-cream">
-      {/* Header Premium */}
-      <div className="bg-gradient-to-r from-forest-dark via-forest to-forest-dark text-white py-20 md:py-24">
-        <div className="max-w-6xl mx-auto px-6 md:px-8 text-center">
-          <h1 className="text-5xl md:text-6xl font-bold mb-4">
-            PRESUPUESTO PROFESIONAL
-          </h1>
-          <p className="text-2xl mb-2 text-sage">Plataforma Digital Hakadogs.com</p>
-          <div className="flex flex-wrap justify-center gap-6 mt-8 text-sm">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-gold">3.0.1</div>
-              <div className="text-sage">Versión</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-gold">40h</div>
-              <div className="text-sage">Desarrollo con IA</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-gold">5 días</div>
-              <div className="text-sage">Tiempo entrega</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-gold">95/100</div>
-              <div className="text-sage">Performance</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-gold">100/100</div>
-              <div className="text-sage">SEO</div>
-            </div>
+    <>
+      <style jsx global>{`
+        @keyframes floatUp {
+          0% {
+            transform: translateY(0) rotate(0deg);
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(-120vh) rotate(720deg);
+            opacity: 0;
+          }
+        }
+        @keyframes wiggle {
+          0%, 100% { transform: rotate(-8deg) scale(1); }
+          50% { transform: rotate(8deg) scale(1.1); }
+        }
+        @keyframes bounce-crazy {
+          0%, 100% { transform: translateY(0) scale(1) rotate(0deg); }
+          25% { transform: translateY(-30px) scale(1.15) rotate(10deg); }
+          50% { transform: translateY(0) scale(0.9) rotate(-10deg); }
+          75% { transform: translateY(-15px) scale(1.1) rotate(5deg); }
+        }
+        @keyframes pulse-rainbow {
+          0% { box-shadow: 0 0 30px rgba(255,0,0,0.6), 0 0 60px rgba(255,0,0,0.3); }
+          20% { box-shadow: 0 0 30px rgba(255,255,0,0.6), 0 0 60px rgba(255,255,0,0.3); }
+          40% { box-shadow: 0 0 30px rgba(0,255,0,0.6), 0 0 60px rgba(0,255,0,0.3); }
+          60% { box-shadow: 0 0 30px rgba(0,255,255,0.6), 0 0 60px rgba(0,255,255,0.3); }
+          80% { box-shadow: 0 0 30px rgba(0,0,255,0.6), 0 0 60px rgba(0,0,255,0.3); }
+          100% { box-shadow: 0 0 30px rgba(255,0,255,0.6), 0 0 60px rgba(255,0,255,0.3); }
+        }
+        @keyframes spin-slow {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        @keyframes shake {
+          0%, 100% { transform: translateX(0) rotate(0deg); }
+          10% { transform: translateX(-15px) rotate(-5deg); }
+          20% { transform: translateX(15px) rotate(5deg); }
+          30% { transform: translateX(-15px) rotate(-5deg); }
+          40% { transform: translateX(15px) rotate(5deg); }
+          50% { transform: translateX(-10px) rotate(-3deg); }
+          60% { transform: translateX(10px) rotate(3deg); }
+          70% { transform: translateX(-5px) rotate(-2deg); }
+          80% { transform: translateX(5px) rotate(2deg); }
+          90% { transform: translateX(-2px) rotate(-1deg); }
+        }
+        @keyframes pop-in {
+          0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+          50% { transform: scale(1.3) rotate(20deg); }
+          100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+        @keyframes explode {
+          0% { transform: scale(1); opacity: 1; }
+          50% { transform: scale(1.5); opacity: 0.5; }
+          100% { transform: scale(2); opacity: 0; }
+        }
+        .animate-bounce-crazy { animation: bounce-crazy 1.2s ease-in-out infinite; }
+        .animate-pulse-rainbow { animation: pulse-rainbow 3s ease-in-out infinite; }
+        .animate-spin-slow { animation: spin-slow 5s linear infinite; }
+        .animate-shake { animation: shake 0.6s ease-in-out infinite; }
+        .animate-pop-in { animation: pop-in 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+        .animate-wiggle { animation: wiggle 0.8s ease-in-out infinite; }
+        .hover-explode:hover { animation: explode 0.5s ease-out; }
+        .hover-grow {
+          transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        .hover-grow:hover {
+          transform: scale(1.15) rotate(3deg) translateY(-5px);
+          box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        .text-shadow-glow {
+          text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.5);
+        }
+      `}</style>
+
+      <div className="min-h-screen bg-gradient-to-b from-cream via-white to-cream overflow-hidden relative">
+        {/* Emojis flotantes de fondo */}
+        {floatingEmojis.map(emoji => (
+          <div
+            key={emoji.id}
+            className="absolute text-5xl pointer-events-none z-0"
+            style={{
+              left: `${emoji.x}%`,
+              bottom: '-50px',
+              animation: `floatUp ${4 + Math.random() * 3}s linear forwards`
+            }}
+          >
+            {emoji.emoji}
           </div>
-        </div>
-      </div>
+        ))}
 
-      {/* Resumen Ejecutivo */}
-      <section className="max-w-6xl mx-auto px-4 py-12">
-        <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 border-2 border-forest/10">
-          <h2 className="text-4xl font-bold text-forest-dark mb-6 text-center">
-            ✅ RESUMEN EJECUTIVO
-          </h2>
-          <p className="text-lg text-gray-700 leading-relaxed mb-6">
-            Hakadogs es una <strong>plataforma digital completa y profesional</strong> que permite:
-          </p>
-          <div className="grid md:grid-cols-2 gap-4 text-lg">
-            <div className="flex items-start gap-3">
-              <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
-              <span><strong>VENDER</strong> cursos online de educación canina 24/7</span>
-            </div>
-            <div className="flex items-start gap-3">
-              <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
-              <span><strong>GESTIONAR</strong> alumnos, contenidos y ventas desde panel admin</span>
-            </div>
-            <div className="flex items-start gap-3">
-              <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
-              <span><strong>POSICIONARSE</strong> en Google en 54 ciudades españolas</span>
-            </div>
-            <div className="flex items-start gap-3">
-              <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
-              <span><strong>GENERAR</strong> ingresos pasivos automáticos</span>
-            </div>
-            <div className="flex items-start gap-3">
-              <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
-              <span><strong>OFRECER</strong> experiencia premium a los clientes</span>
-            </div>
-            <div className="flex items-start gap-3">
-              <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
-              <span><strong>COMPETIR</strong> con las academias online más grandes</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Nueva sección: Revolución IA */}
-      <section className="max-w-6xl mx-auto px-4 py-12">
-        <div className="bg-gradient-to-br from-blue-50 via-purple-50 to-blue-50 rounded-2xl shadow-xl p-8 md:p-12 border-2 border-blue-200">
-          <h2 className="text-4xl font-bold text-center mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            🤖 REVOLUCIÓN DEL DESARROLLO CON IA
-          </h2>
-          
-          <div className="bg-white/80 rounded-xl p-6 mb-6">
-            <p className="text-lg text-gray-700 leading-relaxed mb-4">
-              Este presupuesto refleja la <strong>REALIDAD del desarrollo en 2026</strong>. 
-              Gracias a herramientas de IA como Claude y Cursor AI, puedo entregar 
-              el mismo producto de calidad en una <strong>fracción del tiempo</strong>.
-            </p>
-            <p className="text-base text-gray-600 italic">
-              ⚠️ Importante: La IA no reduce el VALOR del producto, reduce el TIEMPO de desarrollo.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Método Tradicional */}
-            <div className="bg-gradient-to-br from-red-100 to-red-50 rounded-xl p-6 border-2 border-red-300">
-              <h3 className="text-2xl font-bold text-red-700 mb-4">❌ Método Tradicional (2020-2023)</h3>
-              <ul className="space-y-3 text-gray-700">
-                <li className="flex items-start gap-2">
-                  <span className="text-red-600 font-bold">⏱️</span>
-                  <span><strong>Tiempo:</strong> 4-6 meses de desarrollo</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-red-600 font-bold">⏳</span>
-                  <span><strong>Horas:</strong> 740 horas de trabajo manual</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-red-600 font-bold">👥</span>
-                  <span><strong>Equipo:</strong> 2-3 personas necesarias</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-red-600 font-bold">💰</span>
-                  <span><strong>Coste:</strong> 59,200€ - 95,000€</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Método con IA */}
-            <div className="bg-gradient-to-br from-green-100 to-emerald-50 rounded-xl p-6 border-2 border-green-400">
-              <h3 className="text-2xl font-bold text-green-700 mb-4">✅ Método con IA (2026)</h3>
-              <ul className="space-y-3 text-gray-700">
-                <li className="flex items-start gap-2">
-                  <span className="text-green-600 font-bold">⚡</span>
-                  <span><strong>Tiempo:</strong> 5 días de desarrollo</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-600 font-bold">✨</span>
-                  <span><strong>Horas:</strong> 40 horas efectivas con IA</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-600 font-bold">👤</span>
-                  <span><strong>Equipo:</strong> 1 desarrollador + IA</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-600 font-bold">💎</span>
-                  <span><strong>Coste ajustado:</strong> 12,000€</span>
-                </li>
-              </ul>
-            </div>
+        {/* HEADER ÉPICO */}
+        <div className="bg-gradient-to-r from-red-600 via-orange-500 to-yellow-500 text-white py-16 md:py-24 relative overflow-hidden">
+          {/* Estrellas parpadeantes */}
+          <div className="absolute inset-0">
+            {[...Array(40)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute text-yellow-200"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animation: `pulse ${0.5 + Math.random() * 1.5}s ease-in-out infinite`,
+                  animationDelay: `${Math.random() * 2}s`,
+                  fontSize: `${10 + Math.random() * 20}px`
+                }}
+              >
+                ✨
+              </div>
+            ))}
           </div>
 
-          <div className="mt-6 bg-gradient-to-r from-gold/20 to-yellow-100 rounded-xl p-6 border-2 border-gold">
-            <h4 className="text-xl font-bold text-gray-800 mb-3 text-center">🎯 DIFERENCIACIÓN CLAVE</h4>
-            <p className="text-center text-gray-700 text-lg">
-              El cliente paga por <strong className="text-gold">RESULTADOS</strong>, no por horas sentado.<br/>
-              <span className="text-base">Eficiencia: <strong className="text-green-700">18.5x más rápido</strong> • Ahorro: <strong className="text-green-700">83%</strong></span>
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Componentes con iconos */}
-      <section className="max-w-6xl mx-auto px-4 py-12">
-        <h2 className="text-4xl font-bold text-forest-dark mb-12 text-center">
-          ¿QUÉ INCLUYE ESTA PLATAFORMA?
-        </h2>
-
-        {/* Módulo 1: Academia Online */}
-        <div className="mb-8 bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-forest/10">
-          <div className="bg-gradient-to-r from-forest-dark to-forest text-white p-6">
-            <div className="flex items-center gap-4">
-              <Award className="w-12 h-12" />
-              <div>
-                <h3 className="text-2xl font-bold">1. ACADEMIA ONLINE COMPLETA</h3>
-                <p className="text-sage text-lg">Sistema de Venta de Cursos</p>
-              </div>
-              <div className="ml-auto text-right">
-                <div className="text-3xl font-bold text-gold">25,000€</div>
-                <div className="text-sm text-sage">Valor de mercado</div>
-              </div>
+          <div className="max-w-6xl mx-auto px-6 md:px-8 text-center relative z-10">
+            <div className="text-8xl mb-6 animate-bounce-crazy">
+              🚨💰🚨
             </div>
-          </div>
-          <div className="p-6 md:p-8">
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <h4 className="font-bold text-lg text-forest mb-3 flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-600" />
-                  📚 Gestión Ilimitada de Cursos
-                </h4>
-                <ul className="space-y-2 text-gray-700 ml-7">
-                  <li>• Crear y publicar cursos ilimitados</li>
-                  <li>• Organizar lecciones en módulos temáticos</li>
-                  <li>• Videos + Audios + Texto enriquecido</li>
-                  <li>• Recursos descargables para alumnos</li>
-                  <li>• Sistema de precios flexible</li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-bold text-lg text-forest mb-3 flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-600" />
-                  🎓 Área Personal del Alumno
-                </h4>
-                <ul className="space-y-2 text-gray-700 ml-7">
-                  <li>• Dashboard personalizado</li>
-                  <li>• Ver todos sus cursos comprados</li>
-                  <li>• Seguimiento de progreso automático</li>
-                  <li>• Desbloqueo secuencial de lecciones</li>
-                  <li>• Acceso 24/7 desde cualquier dispositivo</li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-bold text-lg text-forest mb-3 flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-600" />
-                  💰 Sistema de Compra Integrado
-                </h4>
-                <ul className="space-y-2 text-gray-700 ml-7">
-                  <li>• Carrito de compra profesional</li>
-                  <li>• Proceso de pago claro y rápido</li>
-                  <li>• Registro automático de usuarios</li>
-                  <li>• Control total desde el panel</li>
-                  <li>• Listo para pasarela de pago real</li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-bold text-lg text-forest mb-3 flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-600" />
-                  🎮 Gamificación Automática
-                </h4>
-                <ul className="space-y-2 text-gray-700 ml-7">
-                  <li>• <strong>15 medallas desbloqueables</strong></li>
-                  <li>• Ranking de estudiantes en tiempo real</li>
-                  <li>• Contador de racha de días</li>
-                  <li>• Sistema de puntos y niveles</li>
-                  <li>• <strong>¡+40% retención de alumnos!</strong></li>
-                </ul>
-              </div>
+
+            <h1 className="text-6xl md:text-8xl font-black mb-6 animate-shake text-shadow-glow">
+              ¡¡ALFREDO PAGA!!
+            </h1>
+
+            <div className="inline-block bg-black text-yellow-300 px-8 py-4 rounded-full text-3xl md:text-4xl font-black animate-pulse-rainbow mb-6 transform hover:scale-110 transition-all cursor-pointer">
+              💎 ¡DICE LA IA QUE VALE 14.000€! 💎
+            </div>
+
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 animate-pop-in text-shadow-glow">
+              🚜 ¡DAME TU RANCHERA... O TU PISCINA! 🏊‍♂️
+            </h2>
+
+            <div className="flex flex-wrap justify-center gap-6 mt-12">
+              {[
+                { icon: '🏷️', value: '3.0.1', label: 'Versión' },
+                { icon: '🤖', value: '40h', label: 'Con IA' },
+                { icon: '⚡', value: '5 días', label: 'Entrega' },
+                { icon: '🚀', value: '95/100', label: 'Performance' },
+                { icon: '🎯', value: '100/100', label: 'SEO' }
+              ].map((item, idx) => (
+                <div
+                  key={idx}
+                  className="bg-white/20 backdrop-blur-md rounded-2xl p-6 hover-grow cursor-pointer animate-pop-in"
+                  style={{ animationDelay: `${idx * 0.15}s` }}
+                >
+                  <div className="text-5xl mb-3 animate-wiggle">{item.icon}</div>
+                  <div className="text-4xl font-black text-yellow-300">{item.value}</div>
+                  <div className="text-white font-semibold">{item.label}</div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* Módulo 2: Panel Admin */}
-        <div className="mb-8 bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-forest/10">
-          <div className="bg-gradient-to-r from-forest to-sage text-white p-6">
-            <div className="flex items-center gap-4">
-              <BarChart3 className="w-12 h-12" />
-              <div>
-                <h3 className="text-2xl font-bold">2. PANEL DE ADMINISTRACIÓN PROFESIONAL</h3>
-                <p className="text-cream text-lg">Tu Centro de Control Total</p>
-              </div>
-              <div className="ml-auto text-right">
-                <div className="text-3xl font-bold text-gold">18,000€</div>
-                <div className="text-sm text-cream">Valor de mercado</div>
-              </div>
-            </div>
+        {/* RESUMEN EJECUTIVO ULTRA LOCO */}
+        <section className="max-w-6xl mx-auto px-4 py-16 relative z-10">
+          <div className="text-center mb-8">
+            <span className="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white px-10 py-5 rounded-full text-3xl font-black animate-bounce-crazy shadow-2xl">
+              🔥 ¡ESTO ES ORO PURO, ALFREDO! 🔥
+            </span>
           </div>
-          <div className="p-6 md:p-8">
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <h4 className="font-bold text-lg text-forest mb-3 flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-600" />
-                  📊 Dashboard con Estadísticas
-                </h4>
-                <ul className="space-y-2 text-gray-700 ml-7">
-                  <li>• Ver ventas e ingresos al instante</li>
-                  <li>• Gráficas de rendimiento</li>
-                  <li>• Actividad reciente</li>
-                  <li>• KPIs de tu negocio en un vistazo</li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-bold text-lg text-forest mb-3 flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-600" />
-                  👥 Gestión de Usuarios
-                </h4>
-                <ul className="space-y-2 text-gray-700 ml-7">
-                  <li>• Ver todos tus alumnos</li>
-                  <li>• Buscar y filtrar rápidamente</li>
-                  <li>• Cambiar roles y permisos</li>
-                  <li>• Controlar accesos</li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-bold text-lg text-forest mb-3 flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-600" />
-                  📚 Gestión Avanzada de Cursos
-                </h4>
-                <ul className="space-y-2 text-gray-700 ml-7">
-                  <li>• Crear cursos desde cero</li>
-                  <li>• Editor profesional (como Word)</li>
-                  <li>• <strong>Generador IA de descripciones</strong></li>
-                  <li>• Publicar/despublicar con un clic</li>
-                  <li>• Reordenar lecciones fácilmente</li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-bold text-lg text-forest mb-3 flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-600" />
-                  📰 Gestión del Blog
-                </h4>
-                <ul className="space-y-2 text-gray-700 ml-7">
-                  <li>• Crear artículos ilimitados</li>
-                  <li>• Galería de imágenes integrada</li>
-                  <li>• Categorías personalizables</li>
-                  <li>• SEO optimizado automáticamente</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        {/* Módulo 3: Web Marketing */}
-        <div className="mb-8 bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-forest/10">
-          <div className="bg-gradient-to-r from-sage to-forest text-white p-6">
-            <div className="flex items-center gap-4">
-              <Target className="w-12 h-12" />
-              <div>
-                <h3 className="text-2xl font-bold">3. WEB DE MARKETING PROFESIONAL</h3>
-                <p className="text-cream text-lg">Tu Escaparate Digital 24/7</p>
-              </div>
-              <div className="ml-auto text-right">
-                <div className="text-3xl font-bold text-gold">8,000€</div>
-                <div className="text-sm text-cream">Valor de mercado</div>
-              </div>
+          <div className="bg-gradient-to-br from-purple-100 via-pink-100 to-yellow-100 rounded-3xl shadow-2xl p-8 md:p-12 border-4 border-gold animate-pulse-rainbow hover-grow">
+            <div className="text-7xl text-center mb-6 animate-bounce-crazy">
+              🎊 💎 🎊
             </div>
-          </div>
-          <div className="p-6 md:p-8">
-            <div className="grid md:grid-cols-3 gap-4">
-              <div>
-                <h4 className="font-bold text-forest mb-2">🏠 Página Principal</h4>
-                <p className="text-gray-700 text-sm">Diseño moderno optimizado para conversión</p>
-              </div>
-              <div>
-                <h4 className="font-bold text-forest mb-2">📄 Páginas de Servicios</h4>
-                <p className="text-gray-700 text-sm">4 servicios detallados con precios</p>
-              </div>
-              <div>
-                <h4 className="font-bold text-forest mb-2">🎯 Metodología BE HAKA</h4>
-                <p className="text-gray-700 text-sm">Diferenciación y autoridad</p>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        {/* Módulo 4: Blog */}
-        <div className="mb-8 bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-forest/10">
-          <div className="bg-gradient-to-r from-forest-dark to-sage text-white p-6">
-            <div className="flex items-center gap-4">
-              <FileText className="w-12 h-12" />
-              <div>
-                <h3 className="text-2xl font-bold">4. BLOG PROFESIONAL</h3>
-                <p className="text-cream text-lg">Motor de Contenidos y SEO</p>
-              </div>
-              <div className="ml-auto text-right">
-                <div className="text-3xl font-bold text-gold">6,500€</div>
-                <div className="text-sm text-cream">Valor de mercado</div>
-              </div>
-            </div>
-          </div>
-          <div className="p-6 md:p-8">
-            <div className="space-y-4">
-              <div>
-                <h4 className="font-bold text-forest mb-2 flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-600" />
-                  📰 Diseño Profesional Tipo Revista
-                </h4>
-                <p className="text-gray-700 ml-7">Layout de 2 columnas, sidebar con contenido relacionado, búsqueda en tiempo real, categorías con colores</p>
-              </div>
-              <div>
-                <h4 className="font-bold text-forest mb-2 flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-600" />
-                  🎯 Generación de Tráfico Orgánico
-                </h4>
-                <p className="text-gray-700 ml-7">Cada artículo atrae visitantes de Google. Incluye calendario editorial de 48 artículos planificado.</p>
-              </div>
-            </div>
-          </div>
-        </div>
+            <h2 className="text-5xl md:text-6xl font-black text-forest-dark mb-8 text-center">
+              ¿QUÉ INCLUYE ESTE CHOLLO?
+            </h2>
 
-        {/* Módulo 5: SEO Local */}
-        <div className="mb-8 bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-forest/10">
-          <div className="bg-gradient-to-r from-green-600 to-green-700 text-white p-6">
-            <div className="flex items-center gap-4">
-              <Globe className="w-12 h-12" />
-              <div>
-                <h3 className="text-2xl font-bold">5. POSICIONAMIENTO SEO EN 54 CIUDADES</h3>
-                <p className="text-green-100 text-lg">Estrategia Única con IA</p>
-              </div>
-              <div className="ml-auto text-right">
-                <div className="text-3xl font-bold text-yellow-300">12,000€</div>
-                <div className="text-sm text-green-100">Valor de mercado</div>
-              </div>
+            <div className="grid md:grid-cols-2 gap-6 text-lg">
+              {[
+                { icon: '💰', text: '<strong>VENDER</strong> cursos 24/7 sin parar' },
+                { icon: '📊', text: '<strong>GESTIONAR</strong> todo desde el sofá' },
+                { icon: '🗺️', text: '<strong>APARECER</strong> en 54 ciudades en Google' },
+                { icon: '🤑', text: '<strong>GENERAR</strong> pasta mientras duermes' },
+                { icon: '⭐', text: '<strong>PRESUMIR</strong> de web profesional' },
+                { icon: '🏆', text: '<strong>COMPETIR</strong> con los grandes' }
+              ].map((item, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center gap-4 bg-white rounded-2xl p-6 hover-grow cursor-pointer shadow-lg animate-pop-in"
+                  style={{ animationDelay: `${idx * 0.1}s` }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'scale(1.1) rotate(2deg)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'scale(1) rotate(0deg)';
+                  }}
+                >
+                  <div className="text-6xl animate-wiggle">{item.icon}</div>
+                  <div>
+                    <CheckCircle className="w-6 h-6 text-green-600 inline mr-2 animate-spin-slow" />
+                    <span className="text-xl" dangerouslySetInnerHTML={{ __html: item.text }} />
+                  </div>
+                </div>
+              ))}
             </div>
-          </div>
-          <div className="p-6 md:p-8">
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <h4 className="font-bold text-lg text-forest mb-3">🗺️ 54 Páginas de Localidades</h4>
-                <p className="text-gray-700">
-                  Una página por cada ciudad importante: Cartagena, Murcia, Alicante, Valencia, Madrid, Barcelona...
-                  Contenido único para cada ciudad. Apareces en Google Maps y búsquedas locales.
-                </p>
-              </div>
-              <div>
-                <h4 className="font-bold text-lg text-forest mb-3">🤖 Contenido con IA</h4>
-                <p className="text-gray-700">
-                  Información real de cada ciudad (pipicanes, playas, normativas). 20 ciudades procesadas con calidad perfecta.
-                  Sistema de caché para no repetir costos.
-                </p>
-              </div>
-              <div>
-                <h4 className="font-bold text-lg text-forest mb-3">📍 Estrategia Dual Inteligente</h4>
-                <p className="text-gray-700">
-                  Ciudades cercanas (&lt;40km): priorizan servicios presenciales.<br />
-                  Ciudades lejanas (&gt;40km): priorizan cursos online.
-                </p>
-              </div>
-              <div>
-                <h4 className="font-bold text-lg text-forest mb-3">🎯 Resultados SEO Garantizados</h4>
-                <p className="text-gray-700">
-                  <strong>Puntuación SEO: 100/100</strong> en Google.<br />
-                  Sitemap automático, Schema.org implementado, Robots.txt optimizado.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        {/* Módulo 6: Performance */}
-        <div className="mb-8 bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-forest/10">
-          <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white p-6">
-            <div className="flex items-center gap-4">
-              <Zap className="w-12 h-12" />
-              <div>
-                <h3 className="text-2xl font-bold">6. OPTIMIZACIÓN DE PERFORMANCE</h3>
-                <p className="text-orange-100 text-lg">Resultados Medibles Excepcionales</p>
-              </div>
-              <div className="ml-auto text-right">
-                <div className="text-3xl font-bold text-yellow-300">9,500€</div>
-                <div className="text-sm text-orange-100">Valor de mercado</div>
+            <div className="mt-10 text-center">
+              <div className="inline-block bg-red-600 text-white px-8 py-4 rounded-lg text-2xl font-black animate-pulse shadow-xl">
+                ⚠️ ¡LA IA DICE QUE ESTO VALE 95.000€! ⚠️
               </div>
             </div>
           </div>
-          <div className="p-6 md:p-8">
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <h4 className="font-bold text-lg text-forest mb-3">⚡ Velocidad Excepcional</h4>
-                <ul className="space-y-2 text-gray-700">
-                  <li>• <strong>Google PageSpeed: 95-97/100</strong> (¡EXCELENTE!)</li>
-                  <li>• Carga en menos de 2.3 segundos</li>
-                  <li>• Optimización imágenes <strong>-73%</strong></li>
-                  <li>• Logo optimizado <strong>-94%</strong></li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-bold text-lg text-forest mb-3">📱 Experiencia Móvil Perfecta</h4>
-                <ul className="space-y-2 text-gray-700">
-                  <li>• 100% responsive</li>
-                  <li>• Gestos táctiles (swipe) en cursos</li>
-                  <li>• Navegación fluida</li>
-                  <li>• Botones y textos adaptados</li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-bold text-lg text-forest mb-3">♿ Accesibilidad Premium</h4>
-                <ul className="space-y-2 text-gray-700">
-                  <li>• <strong>Puntuación: 96/100</strong></li>
-                  <li>• Cumple normativas WCAG 2.1 AA</li>
-                  <li>• Accesible para discapacitados</li>
-                  <li>• Navegación por teclado</li>
-                </ul>
-              </div>
-              <div className="bg-green-50 p-4 rounded-lg border-2 border-green-200">
-                <h4 className="font-bold text-lg text-green-700 mb-3">🎯 Impacto en Negocio</h4>
-                <ul className="space-y-2 text-gray-700 text-sm">
-                  <li>✓ 1 segundo más rápido = <strong>+7% conversiones</strong></li>
-                  <li>✓ Mejor posicionamiento en Google</li>
-                  <li>✓ Menos rebote de visitantes</li>
-                  <li>✓ <strong>Más ventas y leads</strong></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
+        </section>
 
-        {/* Módulo 7: Seguridad */}
-        <div className="mb-8 bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-forest/10">
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-6">
-            <div className="flex items-center gap-4">
-              <Shield className="w-12 h-12" />
-              <div>
-                <h3 className="text-2xl font-bold">7. SEGURIDAD Y PROTECCIÓN DE DATOS</h3>
-                <p className="text-blue-100 text-lg">Tranquilidad Total</p>
-              </div>
-              <div className="ml-auto text-right">
-                <div className="text-3xl font-bold text-yellow-300">5,500€</div>
-                <div className="text-sm text-blue-100">Valor de mercado</div>
-              </div>
-            </div>
+        {/* REVOLUCIÓN DE LA IA - MEGA ÉPICO */}
+        <section className="max-w-6xl mx-auto px-4 py-16">
+          <div className="text-center mb-8">
+            <span className="inline-block bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-8 py-4 rounded-full text-2xl font-black animate-shake shadow-2xl">
+              🤖 ¡LA IA DICE QUE TE SALE REGALADO! 🤖
+            </span>
           </div>
-          <div className="p-6 md:p-8">
-            <div className="grid md:grid-cols-3 gap-4">
-              <div>
-                <h4 className="font-bold text-forest mb-2">🔐 Autenticación Segura</h4>
-                <p className="text-gray-700 text-sm">Registro, login, encriptación, control de accesos</p>
-              </div>
-              <div>
-                <h4 className="font-bold text-forest mb-2">🛡️ Seguridad OWASP</h4>
-                <p className="text-gray-700 text-sm">Protección contra hackeos, SSL/HTTPS activo</p>
-              </div>
-              <div>
-                <h4 className="font-bold text-forest mb-2">📋 Cumplimiento GDPR</h4>
-                <p className="text-gray-700 text-sm">Banner cookies, política privacidad, legal completo</p>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        {/* Módulos 8-10 Resumidos */}
-        <div className="grid md:grid-cols-3 gap-6">
-          <div className="bg-white rounded-xl shadow-lg p-6 border-2 border-forest/10">
-            <h3 className="text-xl font-bold text-forest mb-2">8. Infraestructura Premium</h3>
-            <div className="text-3xl font-bold text-gold mb-3">4,500€</div>
-            <p className="text-gray-700 text-sm">Dominio propio, hosting Vercel, base de datos Supabase, deploy automático</p>
-          </div>
-          <div className="bg-white rounded-xl shadow-lg p-6 border-2 border-forest/10">
-            <h3 className="text-xl font-bold text-forest mb-2">9. Analítica y Seguimiento</h3>
-            <div className="text-3xl font-bold text-gold mb-3">2,500€</div>
-            <p className="text-gray-700 text-sm">Google Analytics integrado, dashboard administrativo con KPIs</p>
-          </div>
-          <div className="bg-white rounded-xl shadow-lg p-6 border-2 border-forest/10">
-            <h3 className="text-xl font-bold text-forest mb-2">10. Documentación Técnica</h3>
-            <div className="text-3xl font-bold text-gold mb-3">3,500€</div>
-            <p className="text-gray-700 text-sm">38 documentos técnicos, formación incluida, manuales completos</p>
-          </div>
-        </div>
-      </section>
+          <div className="bg-gradient-to-br from-blue-50 via-cyan-50 to-purple-50 rounded-3xl p-8 md:p-12 border-4 border-blue-400 hover-grow">
+            <h2 className="text-5xl font-black text-center mb-10 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              🤖 REVOLUCIÓN CON IA - 2026
+            </h2>
 
-      {/* Resumen de Valor */}
-      <section className="bg-gradient-to-r from-forest-dark via-forest to-forest-dark text-white py-16">
-        <div className="max-w-5xl mx-auto px-4">
-          <h2 className="text-4xl font-bold mb-8 text-center">🤖 DESARROLLO CON IA: NUEVA ERA</h2>
-          
-          {/* Comparativa Método Tradicional vs IA */}
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 mb-8">
             <div className="grid md:grid-cols-2 gap-8">
-              {/* Sin IA */}
-              <div className="border-2 border-red-400 rounded-xl p-6 bg-red-900/20">
-                <h3 className="text-2xl font-bold mb-4 text-red-300">❌ MÉTODO TRADICIONAL (2023)</h3>
-                <div className="space-y-3 text-base">
-                  <div className="flex justify-between py-2 border-b border-white/20">
-                    <span>Tiempo desarrollo:</span>
-                    <span className="font-bold">4.5 meses</span>
+              {/* SIN IA */}
+              <div className="bg-gradient-to-br from-red-100 to-red-200 rounded-2xl p-8 border-4 border-red-400 transform hover:scale-105 transition-all">
+                <div className="text-6xl mb-4 text-center animate-shake">❌</div>
+                <h3 className="text-3xl font-black text-red-700 mb-6 text-center">
+                  MÉTODO ANTIGUO (2023)
+                </h3>
+                <div className="space-y-4 text-lg">
+                  <div className="flex justify-between items-center bg-white/50 p-3 rounded-lg">
+                    <span>⏱️ Tiempo:</span>
+                    <span className="font-bold">4-6 meses 😴</span>
                   </div>
-                  <div className="flex justify-between py-2 border-b border-white/20">
-                    <span>Horas invertidas:</span>
-                    <span className="font-bold">740 horas</span>
+                  <div className="flex justify-between items-center bg-white/50 p-3 rounded-lg">
+                    <span>⏳ Horas:</span>
+                    <span className="font-bold">740 horas 🥵</span>
                   </div>
-                  <div className="flex justify-between py-2 border-b border-white/20">
-                    <span>Equipo necesario:</span>
+                  <div className="flex justify-between items-center bg-white/50 p-3 rounded-lg">
+                    <span>👥 Equipo:</span>
                     <span className="font-bold">2-3 personas</span>
                   </div>
-                  <div className="flex justify-between py-2 border-b border-white/20">
-                    <span>Coste por hora:</span>
-                    <span className="font-bold">80€/h</span>
-                  </div>
-                  <div className="flex justify-between py-3 pt-4 border-t-2 border-red-400 text-xl">
-                    <span className="font-bold">Coste total:</span>
-                    <span className="font-bold text-red-300">59,200€</span>
-                  </div>
-                  <div className="text-sm text-red-200 pt-2">
-                    (Valor de mercado completo: 95,000€)
+                  <div className="flex justify-between items-center bg-white/50 p-3 rounded-lg">
+                    <span>💸 Coste:</span>
+                    <span className="font-bold text-red-700">95.000€ 😱</span>
                   </div>
                 </div>
               </div>
 
-              {/* Con IA */}
-              <div className="border-2 border-green-400 rounded-xl p-6 bg-green-900/20">
-                <h3 className="text-2xl font-bold mb-4 text-green-300">✅ CON IA (2026)</h3>
-                <div className="space-y-3 text-base">
-                  <div className="flex justify-between py-2 border-b border-white/20">
-                    <span>Tiempo desarrollo:</span>
-                    <span className="font-bold">5 días</span>
+              {/* CON IA */}
+              <div className="bg-gradient-to-br from-green-100 to-emerald-200 rounded-2xl p-8 border-4 border-green-500 transform hover:scale-105 transition-all animate-pulse-rainbow">
+                <div className="text-6xl mb-4 text-center animate-bounce-crazy">✅</div>
+                <h3 className="text-3xl font-black text-green-700 mb-6 text-center">
+                  MÉTODO CON IA (2026)
+                </h3>
+                <div className="space-y-4 text-lg">
+                  <div className="flex justify-between items-center bg-white/50 p-3 rounded-lg">
+                    <span>⚡ Tiempo:</span>
+                    <span className="font-bold text-green-700">5 días 🚀</span>
                   </div>
-                  <div className="flex justify-between py-2 border-b border-white/20">
-                    <span>Horas efectivas:</span>
-                    <span className="font-bold">40 horas</span>
+                  <div className="flex justify-between items-center bg-white/50 p-3 rounded-lg">
+                    <span>✨ Horas:</span>
+                    <span className="font-bold text-green-700">40 horas 😎</span>
                   </div>
-                  <div className="flex justify-between py-2 border-b border-white/20">
-                    <span>Equipo necesario:</span>
-                    <span className="font-bold">1 persona + IA</span>
+                  <div className="flex justify-between items-center bg-white/50 p-3 rounded-lg">
+                    <span>👤 Equipo:</span>
+                    <span className="font-bold text-green-700">1 + IA 🤖</span>
                   </div>
-                  <div className="flex justify-between py-2 border-b border-white/20">
-                    <span>Eficiencia:</span>
-                    <span className="font-bold text-green-300">18.5x más rápido</span>
-                  </div>
-                  <div className="flex justify-between py-3 pt-4 border-t-2 border-green-400 text-xl">
-                    <span className="font-bold">Precio ajustado:</span>
-                    <span className="font-bold text-green-300">12,000€</span>
-                  </div>
-                  <div className="text-sm text-green-200 pt-2">
-                    (Mismo producto, menos tiempo)
+                  <div className="flex justify-between items-center bg-white/50 p-3 rounded-lg">
+                    <span>💎 Coste:</span>
+                    <span className="font-bold text-green-700 text-2xl">14.000€ 🎉</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Nota importante */}
-            <div className="mt-6 pt-6 border-t-2 border-white/40 bg-gold/20 rounded-lg p-6">
-              <p className="text-lg text-center mb-3">
-                <strong className="text-gold text-xl">🎯 IMPORTANTE:</strong>
-              </p>
-              <p className="text-base text-center">
-                La IA no reduce el <strong>VALOR</strong> del producto, reduce el <strong>TIEMPO</strong> de desarrollo.<br />
-                El cliente paga por <strong>RESULTADOS</strong>, no por horas sentado.
-              </p>
-            </div>
-          </div>
-
-          {/* Estadísticas finales */}
-          <div className="grid md:grid-cols-3 gap-6 text-center">
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-              <div className="text-sm text-sage mb-2">Ahorro de Tiempo</div>
-              <div className="text-4xl font-bold text-gold">700 horas</div>
-              <div className="text-sm text-sage mt-2">135 días laborables ahorrados</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-              <div className="text-sm text-sage mb-2">Ahorro para el Cliente</div>
-              <div className="text-4xl font-bold text-gold">83%</div>
-              <div className="text-sm text-sage mt-2">vs método tradicional (59,200€)</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-              <div className="text-sm text-sage mb-2">Calidad del Producto</div>
-              <div className="text-4xl font-bold text-gold">IGUAL</div>
-              <div className="text-sm text-sage mt-2">Performance 95/100, SEO 100/100</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Resultados Medibles */}
-      <section className="max-w-6xl mx-auto px-4 py-16">
-        <h2 className="text-4xl font-bold text-forest-dark mb-12 text-center">
-          RESULTADOS MEDIBLES ALCANZADOS
-        </h2>
-        <div className="grid md:grid-cols-4 gap-6">
-          <div className="bg-white rounded-xl shadow-lg p-6 text-center border-2 border-green-200">
-            <div className="text-5xl font-bold text-green-600 mb-2">95/100</div>
-            <div className="text-sm text-gray-600 mb-1">Google PageSpeed</div>
-            <div className="text-xs text-gray-500">(Promedio sector: 60-70)</div>
-          </div>
-          <div className="bg-white rounded-xl shadow-lg p-6 text-center border-2 border-blue-200">
-            <div className="text-5xl font-bold text-blue-600 mb-2">100/100</div>
-            <div className="text-sm text-gray-600 mb-1">Puntuación SEO</div>
-            <div className="text-xs text-gray-500">54 ciudades posicionadas</div>
-          </div>
-          <div className="bg-white rounded-xl shadow-lg p-6 text-center border-2 border-purple-200">
-            <div className="text-5xl font-bold text-purple-600 mb-2">96/100</div>
-            <div className="text-sm text-gray-600 mb-1">Accesibilidad</div>
-            <div className="text-xs text-gray-500">WCAG 2.1 AA compliant</div>
-          </div>
-          <div className="bg-white rounded-xl shadow-lg p-6 text-center border-2 border-orange-200">
-            <div className="text-5xl font-bold text-orange-600 mb-2">100%</div>
-            <div className="text-sm text-gray-600 mb-1">Mobile Responsive</div>
-            <div className="text-xs text-gray-500">Todos los dispositivos</div>
-          </div>
-        </div>
-      </section>
-
-      {/* ¿Qué significa para tu negocio? */}
-      <section className="bg-gradient-to-b from-sage/10 to-cream py-16">
-        <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-4xl font-bold text-forest-dark mb-12 text-center">
-            ¿QUÉ SIGNIFICA ESTO PARA TU NEGOCIO?
-          </h2>
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-500">
-              <h3 className="text-2xl font-bold text-green-700 mb-4 flex items-center gap-2">
-                <TrendingUp className="w-6 h-6" />
-                💰 MONETIZACIÓN
-              </h3>
-              <ul className="space-y-2 text-gray-700">
-                <li>✓ Vender cursos online 24/7 sin límite</li>
-                <li>✓ Ingresos pasivos automáticos</li>
-                <li>✓ Escalable sin aumentar costes</li>
-                <li>✓ No dependes de tu tiempo físico</li>
-              </ul>
-            </div>
-            <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500">
-              <h3 className="text-2xl font-bold text-blue-700 mb-4 flex items-center gap-2">
-                <Target className="w-6 h-6" />
-                📈 CRECIMIENTO
-              </h3>
-              <ul className="space-y-2 text-gray-700">
-                <li>✓ Aparecer en Google en 54 ciudades</li>
-                <li>✓ Blog generando tráfico orgánico</li>
-                <li>✓ Sistema de leads con formularios</li>
-                <li>✓ Base de datos de clientes potenciales</li>
-              </ul>
-            </div>
-            <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-purple-500">
-              <h3 className="text-2xl font-bold text-purple-700 mb-4 flex items-center gap-2">
-                <Award className="w-6 h-6" />
-                🎯 AUTORIDAD
-              </h3>
-              <ul className="space-y-2 text-gray-700">
-                <li>✓ Web profesional que transmite confianza</li>
-                <li>✓ Metodología BE HAKA como diferenciación</li>
-                <li>✓ Blog posicionándote como experto</li>
-                <li>✓ Competir con las grandes academias</li>
-              </ul>
-            </div>
-            <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-orange-500">
-              <h3 className="text-2xl font-bold text-orange-700 mb-4 flex items-center gap-2">
-                <Zap className="w-6 h-6" />
-                ⚙️ AUTOMATIZACIÓN
-              </h3>
-              <ul className="space-y-2 text-gray-700">
-                <li>✓ Sistema funcionando 24/7 sin intervención</li>
-                <li>✓ Alumnos se registran y acceden solos</li>
-                <li>✓ Progreso calculado automáticamente</li>
-                <li>✓ Estadísticas en tiempo real</li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="mt-12 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-2xl p-8 text-center">
-            <h3 className="text-3xl font-bold mb-4">🌍 ALCANCE NACIONAL</h3>
-            <p className="text-xl mb-2">No limitado a Archena/Murcia • Vender en toda España</p>
-            <p className="text-lg text-green-100">Estrategia dual (presencial + online) • Adaptado a cada mercado</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Comparativa Competencia */}
-      <section className="max-w-6xl mx-auto px-4 py-16">
-        <h2 className="text-4xl font-bold text-forest-dark mb-12 text-center">
-          COMPARATIVA CON COMPETENCIA
-        </h2>
-        <div className="overflow-x-auto">
-          <table className="w-full bg-white rounded-xl shadow-lg overflow-hidden">
-            <thead className="bg-gradient-to-r from-forest-dark to-forest text-white">
-              <tr>
-                <th className="px-6 py-4 text-left">CARACTERÍSTICA</th>
-                <th className="px-6 py-4 text-center">EDUCANINE</th>
-                <th className="px-6 py-4 text-center">SENDA CANINA</th>
-                <th className="px-6 py-4 text-center bg-gold text-forest-dark">HAKADOGS ⭐</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              <tr>
-                <td className="px-6 py-4 font-medium">Performance</td>
-                <td className="px-6 py-4 text-center">65</td>
-                <td className="px-6 py-4 text-center">72</td>
-                <td className="px-6 py-4 text-center bg-green-50 font-bold text-green-700">95 ✅</td>
-              </tr>
-              <tr>
-                <td className="px-6 py-4 font-medium">SEO Score</td>
-                <td className="px-6 py-4 text-center">78</td>
-                <td className="px-6 py-4 text-center">85</td>
-                <td className="px-6 py-4 text-center bg-green-50 font-bold text-green-700">100 ✅</td>
-              </tr>
-              <tr>
-                <td className="px-6 py-4 font-medium">Mobile Responsive</td>
-                <td className="px-6 py-4 text-center">⚠️</td>
-                <td className="px-6 py-4 text-center">✅</td>
-                <td className="px-6 py-4 text-center bg-green-50 font-bold text-green-700">✅</td>
-              </tr>
-              <tr>
-                <td className="px-6 py-4 font-medium">Sistema Gamificación</td>
-                <td className="px-6 py-4 text-center">❌</td>
-                <td className="px-6 py-4 text-center">❌</td>
-                <td className="px-6 py-4 text-center bg-green-50 font-bold text-green-700">✅ 🎮</td>
-              </tr>
-              <tr>
-                <td className="px-6 py-4 font-medium">IA Integrada</td>
-                <td className="px-6 py-4 text-center">❌</td>
-                <td className="px-6 py-4 text-center">❌</td>
-                <td className="px-6 py-4 text-center bg-green-50 font-bold text-green-700">✅ 🤖</td>
-              </tr>
-              <tr>
-                <td className="px-6 py-4 font-medium">SEO Local 54 ciudades</td>
-                <td className="px-6 py-4 text-center">❌</td>
-                <td className="px-6 py-4 text-center">❌</td>
-                <td className="px-6 py-4 text-center bg-green-50 font-bold text-green-700">✅ 🗺️</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p className="text-center mt-6 text-lg text-gray-700">
-          🏆 <strong>HAKADOGS tiene ventajas técnicas únicas frente a competidores</strong>
-        </p>
-      </section>
-
-      {/* Precio Final - CTA Principal */}
-      <section className="bg-gradient-to-br from-gold/20 via-cream to-gold/20 py-20">
-        <div className="max-w-5xl mx-auto px-4">
-          <h2 className="text-5xl font-bold text-forest-dark mb-8 text-center">
-            INVERSIÓN Y FACTURACIÓN
-          </h2>
-
-          <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 border-4 border-gold mb-8">
-            <div className="text-center mb-8">
-              <div className="text-sm text-gray-600 mb-2">VALOR TRADICIONAL DE MERCADO</div>
-              <div className="text-4xl font-bold text-gray-400 line-through mb-2">95,000€</div>
-              <div className="text-sm text-gray-600 mb-2">Coste desarrollo tradicional: 59,200€</div>
-              <div className="text-sm text-green-600 font-semibold mb-6">Con IA: 40 horas en 5 días (18.5x más rápido)</div>
-              
-              <div className="border-t-2 border-gold pt-6">
-                <div className="text-2xl font-bold text-forest-dark mb-3">PRECIO RECOMENDADO ⭐</div>
-                <div className="text-7xl font-bold text-gold mb-2">12,000€</div>
-                <div className="text-2xl text-gray-600">+ IVA (21%)</div>
-                <div className="text-4xl font-bold text-forest-dark mt-4">14,520€ TOTAL</div>
+            <div className="mt-10 bg-gradient-to-r from-yellow-300 to-orange-300 rounded-2xl p-8 text-center border-4 border-yellow-500">
+              <div className="text-4xl font-black mb-4">
+                🎯 ¡18.5x MÁS RÁPIDO! 🎯
               </div>
-
-              <div className="mt-6 bg-green-50 border-2 border-green-200 rounded-lg p-4">
-                <p className="text-lg text-gray-700">
-                  💰 <strong>Ahorro de 47,200€ (83%)</strong> vs desarrollo tradicional<br/>
-                  ⚡ <strong>Entrega en 5 días</strong> vs 4.5 meses tradicional
-                </p>
+              <div className="text-2xl font-bold">
+                ¡AHORRO DE 81.000€ (83%)! 💰
+              </div>
+              <div className="mt-4 text-xl">
+                <strong className="text-red-600">¡MISMO PRODUCTO, MENOS TIEMPO!</strong>
               </div>
             </div>
           </div>
+        </section>
 
-          {/* Opciones de Precio */}
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
-            {/* Opción A */}
-            <div className="bg-white rounded-xl shadow-lg p-6 border-2 border-gray-300">
-              <h3 className="text-xl font-bold text-forest-dark mb-2">OPCIÓN A</h3>
-              <p className="text-sm text-gray-600 mb-4">Competitivo</p>
-              <div className="text-4xl font-bold text-forest mb-2">10,000€</div>
-              <div className="text-sm text-gray-600 mb-4">+ IVA = 12,100€ TOTAL</div>
-              <ul className="space-y-2 text-sm text-gray-700">
-                <li>✓ Todo lo desarrollado</li>
-                <li>✓ Transferencia completa</li>
-                <li>✓ Documentación 38 archivos</li>
-                <li>✓ 1 mes de soporte</li>
-              </ul>
-              <div className="mt-4 text-xs text-gray-500 bg-gray-50 p-3 rounded">
-                2,000€/día • Muy competitivo
-              </div>
+        {/* LO QUE INCLUYE - MÓDULOS LOCOS */}
+        <section className="max-w-6xl mx-auto px-4 py-16">
+          <div className="text-center mb-12">
+            <div className="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white px-10 py-5 rounded-full text-4xl font-black animate-pulse-rainbow shadow-2xl mb-6">
+              💎 ¡DAME TU RANCHERA, ALFREDO! 🚜
             </div>
-
-            {/* Opción B - RECOMENDADA */}
-            <div className="bg-gradient-to-b from-gold/20 to-gold/30 rounded-xl shadow-2xl p-6 border-4 border-gold relative">
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gold text-white px-6 py-2 rounded-full text-sm font-bold">
-                ⭐ RECOMENDADO
-              </div>
-              <h3 className="text-xl font-bold text-forest-dark mb-2 mt-2">OPCIÓN B</h3>
-              <p className="text-sm text-gray-600 mb-4">Valor/Calidad</p>
-              <div className="text-5xl font-bold text-gold mb-2">12,000€</div>
-              <div className="text-sm text-gray-600 mb-4">+ IVA = <strong>14,520€ TOTAL</strong></div>
-              <ul className="space-y-2 text-sm text-gray-700">
-                <li>✓ Todo lo desarrollado</li>
-                <li>✓ Transferencia completa</li>
-                <li>✓ Documentación 38 archivos</li>
-                <li>✓ <strong>3 meses de soporte</strong></li>
-                <li>✓ <strong>Formación 4 horas</strong></li>
-              </ul>
-              <div className="mt-4 text-xs text-gray-700 bg-gold/10 p-3 rounded font-semibold">
-                2,400€/día • Equilibrio perfecto
-              </div>
-            </div>
-
-            {/* Opción C */}
-            <div className="bg-white rounded-xl shadow-lg p-6 border-2 border-gray-300">
-              <h3 className="text-xl font-bold text-forest-dark mb-2">OPCIÓN C</h3>
-              <p className="text-sm text-gray-600 mb-4">Premium</p>
-              <div className="text-4xl font-bold text-forest mb-2">15,000€</div>
-              <div className="text-sm text-gray-600 mb-4">+ IVA = 18,150€ TOTAL</div>
-              <ul className="space-y-2 text-sm text-gray-700">
-                <li>✓ Todo incluido</li>
-                <li>✓ <strong>6 meses de soporte</strong></li>
-                <li>✓ <strong>Formación 8 horas</strong></li>
-                <li>✓ Auditorías trimestrales</li>
-                <li>✓ Consultoría marketing</li>
-              </ul>
-              <div className="mt-4 text-xs text-gray-500 bg-gray-50 p-3 rounded">
-                3,000€/día • Máximo justificable
-              </div>
-            </div>
+            <h2 className="text-5xl md:text-6xl font-black text-forest-dark">
+              ¿QUÉ LLEVAS EN EL PACK?
+            </h2>
           </div>
 
-          {/* Desglose Facturación */}
-          <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
-            <h3 className="text-2xl font-bold text-forest-dark mb-6 text-center">
-              DESGLOSE DE FACTURACIÓN (Opción B)
-            </h3>
-            <div className="space-y-3 text-lg">
-              <div className="flex justify-between py-2 border-b">
-                <span>Desarrollo plataforma completa Hakadogs.com</span>
-                <span className="font-bold">12,000.00€</span>
-              </div>
-              <div className="flex justify-between py-2 border-b text-sm text-gray-600">
-                <span className="italic">• Metodología con IA (40 horas en 5 días)</span>
-                <span></span>
-              </div>
-              <div className="flex justify-between py-2 border-b text-sm text-gray-600">
-                <span className="italic">• Academia online + gamificación única</span>
-                <span></span>
-              </div>
-              <div className="flex justify-between py-2 border-b text-sm text-gray-600">
-                <span className="italic">• Panel administrativo + Blog + SEO 54 ciudades</span>
-                <span></span>
-              </div>
-              <div className="flex justify-between py-2 border-b text-sm text-gray-600">
-                <span className="italic">• Performance 95/100 + SEO 100/100</span>
-                <span></span>
-              </div>
-              <div className="flex justify-between py-2 border-b text-sm text-gray-600">
-                <span className="italic">• Documentación completa + 3 meses soporte</span>
-                <span></span>
-              </div>
-              <div className="flex justify-between py-2 border-b mt-4">
-                <span>IVA (21%)</span>
-                <span className="font-bold">2,520.00€</span>
-              </div>
-              <div className="flex justify-between py-3 border-t-2 border-gold text-2xl font-bold text-gold">
-                <span>TOTAL A FACTURAR</span>
-                <span>14,520.00€</span>
-              </div>
-            </div>
-
-            <div className="mt-8 bg-sage/10 rounded-lg p-6">
-              <h4 className="font-bold text-forest-dark mb-4">FORMA DE PAGO SUGERIDA:</h4>
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span>• 50% al inicio del proyecto:</span>
-                  <span className="font-bold">7,260.00€</span>
+          {/* Módulo 1 */}
+          <div className="mb-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-3xl shadow-2xl overflow-hidden hover-grow animate-pop-in">
+            <div className="p-8 text-white">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div className="flex items-center gap-4">
+                  <Award className="w-20 h-20 animate-spin-slow" />
+                  <div>
+                    <h3 className="text-4xl font-black">1. ACADEMIA ONLINE COMPLETA</h3>
+                    <p className="text-2xl text-yellow-300">🎓 Sistema de Venta de Cursos</p>
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <span>• 50% al finalizar y entregar:</span>
-                  <span className="font-bold">7,260.00€</span>
-                </div>
-                <div className="flex justify-between pt-3 border-t border-forest/20 font-bold text-lg">
-                  <span>TOTAL:</span>
-                  <span className="text-gold">14,520.00€</span>
+                <div className="text-center">
+                  <div className="text-6xl font-black text-yellow-300 animate-bounce-crazy">25.000€</div>
+                  <div className="text-xl">Valor de mercado</div>
                 </div>
               </div>
+
+              <div className="mt-8 grid md:grid-cols-2 gap-6">
+                {[
+                  { title: '📚 Cursos Ilimitados', items: ['Crear cursos sin límite', 'Videos + Audios', 'Recursos descargables', 'Precios flexibles'] },
+                  { title: '🎓 Área del Alumno', items: ['Dashboard personal', 'Progreso automático', 'Acceso 24/7', 'Experiencia móvil'] },
+                  { title: '💰 Sistema de Compra', items: ['Carrito profesional', 'Pago rápido', 'Registro automático', 'Control total'] },
+                  { title: '🎮 Gamificación ÚNICA', items: ['15 medallas', 'Ranking en tiempo real', 'Sistema de rachas', '+40% retención'] }
+                ].map((feature, idx) => (
+                  <div
+                    key={idx}
+                    className="bg-white/20 backdrop-blur-md rounded-xl p-6 hover:bg-white/30 transition-all hover-grow"
+                    style={{ animationDelay: `${idx * 0.1}s` }}
+                  >
+                    <h4 className="text-2xl font-bold mb-4">{feature.title}</h4>
+                    <ul className="space-y-2">
+                      {feature.items.map((item, i) => (
+                        <li key={i} className="flex items-start gap-2">
+                          <CheckCircle className="w-5 h-5 mt-1 flex-shrink-0" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
-          {/* ROI */}
-          <div className="bg-gradient-to-r from-green-600 to-green-700 text-white rounded-2xl p-8 text-center">
-            <h3 className="text-3xl font-bold mb-4">💰 RETORNO DE INVERSIÓN</h3>
-            <p className="text-xl mb-6">La inversión de 12,000€ se amortiza con:</p>
-            <div className="grid md:grid-cols-3 gap-4 text-lg">
-              <div className="bg-white/20 rounded-lg p-4">
-                <div className="text-3xl font-bold mb-2">60</div>
-                <div>ventas de curso de 200€</div>
+          {/* Módulo 2 */}
+          <div className="mb-10 bg-gradient-to-br from-green-500 to-teal-600 rounded-3xl shadow-2xl overflow-hidden hover-grow">
+            <div className="p-8 text-white">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div className="flex items-center gap-4">
+                  <Target className="w-20 h-20 animate-wiggle" />
+                  <div>
+                    <h3 className="text-4xl font-black">2. PANEL ADMIN PRO</h3>
+                    <p className="text-2xl text-yellow-300">🎛️ Tu Centro de Control</p>
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div className="text-6xl font-black text-yellow-300 animate-shake">18.000€</div>
+                  <div className="text-xl">Valor de mercado</div>
+                </div>
               </div>
-              <div className="bg-white/20 rounded-lg p-4">
-                <div className="text-3xl font-bold mb-2">48</div>
-                <div>ventas de curso de 250€</div>
-              </div>
-              <div className="bg-white/20 rounded-lg p-4">
-                <div className="text-3xl font-bold mb-2">O</div>
-                <div>Combinación ventas + servicios presenciales</div>
-              </div>
-            </div>
-            <div className="mt-6 text-2xl font-bold text-yellow-300">
-              ROI ESTIMADO: 6-12 meses
-            </div>
-            <div className="mt-4 text-sm bg-white/10 rounded-lg p-4">
-              <p className="mb-2">🎯 <strong>Comparativa con competencia:</strong></p>
-              <p>• SaaS como Kajabi/Teachable: 1,788€ - 3,588€/año (5-8 años para igualar)</p>
-              <p>• Desarrollo tradicional: 59,200€ - 95,000€ (ahorro inmediato de 47,200€)</p>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Costes Recurrentes */}
-      <section className="max-w-6xl mx-auto px-4 py-16">
-        <h2 className="text-4xl font-bold text-forest-dark mb-12 text-center">
-          COSTES RECURRENTES MENSUALES
-        </h2>
-        <div className="bg-white rounded-xl shadow-lg p-8">
-          <div className="grid md:grid-cols-3 gap-6 mb-8">
-            <div className="text-center p-6 bg-green-50 rounded-lg border-2 border-green-200">
-              <div className="text-4xl font-bold text-green-600 mb-2">0€/mes</div>
-              <div className="text-sm text-gray-600 mb-4">&lt; 1,000 visitas/mes</div>
-              <ul className="text-sm text-gray-700 text-left">
-                <li>✓ Vercel: Gratis</li>
-                <li>✓ Supabase: Gratis</li>
-                <li>✓ SSL: Gratis</li>
-              </ul>
-            </div>
-            <div className="text-center p-6 bg-blue-50 rounded-lg border-2 border-blue-200">
-              <div className="text-4xl font-bold text-blue-600 mb-2">0-20€/mes</div>
-              <div className="text-sm text-gray-600 mb-4">1,000-5,000 visitas/mes</div>
-              <ul className="text-sm text-gray-700 text-left">
-                <li>✓ Vercel: 0-20€</li>
-                <li>✓ Supabase: Gratis</li>
-                <li>✓ SSL: Gratis</li>
-              </ul>
-            </div>
-            <div className="text-center p-6 bg-orange-50 rounded-lg border-2 border-orange-200">
-              <div className="text-4xl font-bold text-orange-600 mb-2">45€/mes</div>
-              <div className="text-sm text-gray-600 mb-4">&gt; 5,000 visitas/mes</div>
-              <ul className="text-sm text-gray-700 text-left">
-                <li>✓ Vercel Pro: 20€</li>
-                <li>✓ Supabase Pro: 25€</li>
-                <li>✓ SSL: Gratis</li>
-              </ul>
+              <div className="mt-8 grid md:grid-cols-2 gap-6">
+                {[
+                  '📊 Dashboard con estadísticas',
+                  '👥 Gestión de usuarios',
+                  '📚 Cursos avanzados con IA',
+                  '📰 Blog profesional integrado'
+                ].map((feature, idx) => (
+                  <div
+                    key={idx}
+                    className="bg-white/20 backdrop-blur-md rounded-xl p-4 flex items-center gap-3 hover:bg-white/30 transition-all hover-grow"
+                  >
+                    <CheckCircle className="w-8 h-8 flex-shrink-0 animate-spin-slow" />
+                    <span className="text-xl font-semibold">{feature}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-          <div className="bg-gold/10 border-2 border-gold rounded-lg p-6 text-center">
-            <p className="text-lg text-gray-700">
-              💡 <strong>NOTA:</strong> Los costes mensuales son bajísimos comparados con otras plataformas
-            </p>
-            <p className="text-sm text-gray-600 mt-2">
-              (Kajabi: 149$/mes, Teachable: 119$/mes, Thinkific: 149$/mes)
-            </p>
-          </div>
-        </div>
-      </section>
 
-      {/* Garantías */}
-      <section className="bg-gradient-to-b from-forest-dark to-forest text-white py-16">
-        <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-4xl font-bold mb-12 text-center">GARANTÍAS OFRECIDAS</h2>
+          {/* Módulo 3-10 en grid compacto */}
           <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-              <h3 className="font-bold text-xl mb-4 text-gold">Calidad Técnica</h3>
-              <ul className="space-y-2">
-                <li>✅ Código limpio y documentado</li>
-                <li>✅ Performance superior a 90/100</li>
-                <li>✅ SEO score 100/100</li>
-              </ul>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-              <h3 className="font-bold text-xl mb-4 text-gold">Compatibilidad</h3>
-              <ul className="space-y-2">
-                <li>✅ Todos los navegadores modernos</li>
-                <li>✅ Responsive en todos los dispositivos</li>
-                <li>✅ Accesibilidad WCAG 2.1 AA</li>
-              </ul>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-              <h3 className="font-bold text-xl mb-4 text-gold">Seguridad y Legal</h3>
-              <ul className="space-y-2">
-                <li>✅ Cumplimiento GDPR y LOPD</li>
-                <li>✅ Seguridad OWASP implementada</li>
-                <li>✅ Backups automáticos configurados</li>
-              </ul>
-            </div>
+            {[
+              { title: '3. Web Marketing', value: '8.000€', icon: '🌐', color: 'from-orange-500 to-red-600' },
+              { title: '4. Blog SEO', value: '6.500€', icon: '📝', color: 'from-pink-500 to-purple-600' },
+              { title: '5. SEO 54 Ciudades', value: '12.000€', icon: '🗺️', color: 'from-cyan-500 to-blue-600' },
+              { title: '6. Performance 95/100', value: '9.500€', icon: '⚡', color: 'from-yellow-500 to-orange-600' },
+              { title: '7. Seguridad Total', value: '5.500€', icon: '🔒', color: 'from-red-500 to-pink-600' },
+              { title: '8. Infraestructura', value: '4.500€', icon: '☁️', color: 'from-blue-500 to-cyan-600' },
+              { title: '9. Analítica', value: '2.500€', icon: '📈', color: 'from-green-500 to-emerald-600' },
+              { title: '10. Documentación', value: '3.500€', icon: '📚', color: 'from-purple-500 to-indigo-600' }
+            ].map((module, idx) => (
+              <div
+                key={idx}
+                className={`bg-gradient-to-br ${module.color} rounded-2xl p-6 text-white hover-grow cursor-pointer shadow-xl`}
+              >
+                <div className="text-5xl mb-3 animate-wiggle">{module.icon}</div>
+                <h3 className="text-xl font-bold mb-2">{module.title}</h3>
+                <div className="text-4xl font-black text-yellow-300">{module.value}</div>
+              </div>
+            ))}
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Próximos Pasos */}
-      <section className="max-w-4xl mx-auto px-4 py-16">
-        <h2 className="text-4xl font-bold text-forest-dark mb-12 text-center">
-          PRÓXIMOS PASOS
-        </h2>
-        <div className="space-y-4">
-          <div className="bg-white rounded-lg shadow-lg p-6 flex items-center gap-4 border-l-4 border-forest">
-            <div className="text-3xl font-bold text-forest-dark bg-sage rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0">1</div>
-            <div>
-              <h3 className="font-bold text-lg text-forest-dark">Revisión y Aprobación</h3>
-              <p className="text-gray-600">Revisar este presupuesto y confirmar la opción elegida</p>
-            </div>
+        {/* PRECIO FINAL - MEGA EXPLOSIÓN */}
+        <section className="bg-gradient-to-br from-yellow-200 via-orange-200 to-red-200 py-20 relative overflow-hidden">
+          {/* Lluvia de dinero */}
+          <div className="absolute inset-0 pointer-events-none">
+            {[...Array(30)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute text-5xl"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animation: `floatUp ${2 + Math.random() * 2}s linear infinite`,
+                  animationDelay: `${Math.random() * 3}s`
+                }}
+              >
+                💰
+              </div>
+            ))}
           </div>
-          <div className="bg-white rounded-lg shadow-lg p-6 flex items-center gap-4 border-l-4 border-forest">
-            <div className="text-3xl font-bold text-forest-dark bg-sage rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0">2</div>
-            <div>
-              <h3 className="font-bold text-lg text-forest-dark">Firma del Contrato</h3>
-              <p className="text-gray-600">Contrato de servicios profesionales</p>
-            </div>
-          </div>
-          <div className="bg-white rounded-lg shadow-lg p-6 flex items-center gap-4 border-l-4 border-forest">
-            <div className="text-3xl font-bold text-forest-dark bg-sage rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0">3</div>
-            <div>
-              <h3 className="font-bold text-lg text-forest-dark">Facturación Inicial</h3>
-              <p className="text-gray-600">50% inicial (7,260€) para comenzar el traspaso</p>
-            </div>
-          </div>
-          <div className="bg-white rounded-lg shadow-lg p-6 flex items-center gap-4 border-l-4 border-forest">
-            <div className="text-3xl font-bold text-forest-dark bg-sage rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0">4</div>
-            <div>
-              <h3 className="font-bold text-lg text-forest-dark">Transferencia Completa</h3>
-              <p className="text-gray-600">Código completo, accesos y documentación</p>
-            </div>
-          </div>
-          <div className="bg-white rounded-lg shadow-lg p-6 flex items-center gap-4 border-l-4 border-forest">
-            <div className="text-3xl font-bold text-forest-dark bg-sage rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0">5</div>
-            <div>
-              <h3 className="font-bold text-lg text-forest-dark">Formación Personalizada</h3>
-              <p className="text-gray-600">4 horas de formación en panel administrativo</p>
-            </div>
-          </div>
-          <div className="bg-white rounded-lg shadow-lg p-6 flex items-center gap-4 border-l-4 border-forest">
-            <div className="text-3xl font-bold text-forest-dark bg-sage rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0">6</div>
-            <div>
-              <h3 className="font-bold text-lg text-forest-dark">Inicio del Soporte</h3>
-              <p className="text-gray-600">3 meses de soporte técnico incluido</p>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Conclusión Final */}
-      <section className="bg-gradient-to-r from-gold/20 via-cream to-gold/20 py-20">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-5xl font-bold text-forest-dark mb-8">CONCLUSIÓN EJECUTIVA</h2>
-          <div className="bg-white rounded-2xl shadow-2xl p-8 md:p-12 border-2 border-gold">
-            <p className="text-2xl text-gray-700 mb-6 leading-relaxed">
-              <strong>Hakadogs.com no es solo una web,</strong><br />
-              es una <span className="text-gold font-bold">PLATAFORMA DE NEGOCIO COMPLETA</span>
-            </p>
-            <div className="grid md:grid-cols-2 gap-4 text-left mb-8">
-              <div className="flex items-start gap-3">
-                <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
-                <span>Generar ingresos pasivos 24/7</span>
+          <div className="max-w-5xl mx-auto px-4 relative z-10">
+            <div className="text-center mb-10">
+              <div className="inline-block bg-red-600 text-white px-12 py-6 rounded-2xl text-5xl font-black animate-bounce-crazy shadow-2xl mb-6">
+                🚨 ¡ALFREDO PAGA YA! 🚨
               </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
-                <span>Competir con academias grandes</span>
-              </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
-                <span>Posicionarte en 54 ciudades</span>
-              </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
-                <span>Automatizar gestión de alumnos</span>
-              </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
-                <span>Escalar sin aumentar costes</span>
-              </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
-                <span>Diferenciarte con gamificación única</span>
+              <div className="inline-block bg-yellow-400 text-black px-8 py-4 rounded-xl text-3xl font-black animate-shake ml-4">
+                💸 ¡O DAME LA PISCINA! 🏊‍♂️
               </div>
             </div>
-            <div className="border-t-2 border-gold pt-6">
-              <p className="text-xl text-gray-700 italic mb-4">
-                &ldquo;Tu inversión en educación canina,<br />
-                nuestra inversión en excelencia técnica&rdquo;
+
+            <h2 className="text-6xl font-black text-center mb-12 text-forest-dark">
+              💰 INVERSIÓN Y FACTURACIÓN 💰
+            </h2>
+
+            {/* Precio principal */}
+            <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 border-4 border-gold mb-10 hover-grow">
+              <div className="text-center">
+                <div className="text-7xl mb-6 animate-bounce-crazy">🤖💰🎉</div>
+
+                <div className="mb-6">
+                  <span className="inline-block bg-gradient-to-r from-red-500 to-orange-500 text-white px-8 py-4 rounded-full text-2xl font-black animate-pulse shadow-xl">
+                    ¡¡LA IA DICE QUE VALE 14.000€!!
+                  </span>
+                </div>
+
+                <div className="text-lg text-gray-600 mb-3">VALOR TRADICIONAL</div>
+                <div className="text-5xl font-bold text-gray-400 line-through mb-4">95.000€</div>
+                <div className="text-xl text-green-600 font-bold mb-8">
+                  Con IA: 40 horas en 5 días (18.5x más rápido)
+                </div>
+
+                <div className="border-t-4 border-gold pt-8 mb-8">
+                  <div className="text-3xl font-bold text-forest-dark mb-4">PRECIO RECOMENDADO ⭐</div>
+                  <div className="text-9xl font-black text-gold mb-4 animate-pulse text-shadow-glow">
+                    12.000€
+                  </div>
+                  <div className="text-3xl text-gray-600 mb-2">+ IVA (21%)</div>
+                  <div className="text-6xl font-black text-forest-dark mb-6 animate-bounce-crazy">
+                    14.520€ TOTAL
+                  </div>
+
+                  <div className="mt-8">
+                    <span className="inline-block bg-green-500 text-white px-10 py-5 rounded-xl text-3xl font-black animate-pulse shadow-2xl">
+                      🎊 ¡ACEPTO LA RANCHERA! 🚜
+                    </span>
+                  </div>
+                </div>
+
+                <div className="bg-green-50 border-4 border-green-400 rounded-2xl p-6">
+                  <div className="text-2xl font-bold text-gray-800 mb-2">
+                    💰 AHORRO DE 81.000€ (83%)
+                  </div>
+                  <div className="text-xl text-gray-700">
+                    ⚡ Entrega en 5 días vs 4.5 meses tradicional
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Opciones de precio */}
+            <div className="grid md:grid-cols-3 gap-8 mb-12">
+              {/* Opción A */}
+              <div className="bg-white rounded-2xl shadow-xl p-6 border-2 border-gray-300 hover-grow">
+                <h3 className="text-2xl font-bold mb-2">OPCIÓN A</h3>
+                <p className="text-lg text-gray-600 mb-4">🏊‍♂️ La Piscina Edition</p>
+                <div className="text-5xl font-bold text-forest mb-3">10.000€</div>
+                <div className="text-sm text-gray-600 mb-4">+ IVA = 12.100€</div>
+                <ul className="space-y-2 text-sm mb-4">
+                  <li>✓ Todo lo desarrollado</li>
+                  <li>✓ Transferencia completa</li>
+                  <li>✓ 1 mes de soporte</li>
+                </ul>
+                <div className="bg-gray-100 p-3 rounded text-center">
+                  <div className="font-bold">2.000€/día</div>
+                  <div className="text-xs">¡Dame la piscina! 🏊</div>
+                </div>
+              </div>
+
+              {/* Opción B - RECOMENDADA */}
+              <div className="bg-gradient-to-br from-yellow-100 to-orange-200 rounded-2xl shadow-2xl p-6 border-4 border-gold relative transform scale-110">
+                <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-6 py-2 rounded-full text-sm font-black animate-bounce-crazy">
+                  ⭐ ¡¡ELIGE ESTA ALFREDO!! ⭐
+                </div>
+                <h3 className="text-2xl font-bold mb-2 mt-4">OPCIÓN B</h3>
+                <p className="text-lg text-gray-700 mb-4">💎 La Ranchera Edition 🚜</p>
+                <div className="text-6xl font-bold text-gold mb-3 animate-pulse">12.000€</div>
+                <div className="text-sm text-gray-700 mb-4">+ IVA = <strong>14.520€</strong></div>
+                <ul className="space-y-2 text-sm mb-4">
+                  <li>✓ Todo lo desarrollado</li>
+                  <li>✓ <strong>3 meses de soporte</strong></li>
+                  <li>✓ <strong>Formación 4 horas</strong></li>
+                </ul>
+                <div className="bg-gold/20 p-3 rounded text-center mb-3">
+                  <div className="font-bold">2.400€/día</div>
+                  <div className="text-xs font-bold">¡DICE LA IA QUE PERFECTO!</div>
+                </div>
+                <div className="text-center">
+                  <span className="inline-block bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-bold animate-pulse">
+                    💰 ¡PAGA YA! 💰
+                  </span>
+                </div>
+              </div>
+
+              {/* Opción C */}
+              <div className="bg-white rounded-2xl shadow-xl p-6 border-2 border-gray-300 hover-grow">
+                <h3 className="text-2xl font-bold mb-2">OPCIÓN C</h3>
+                <p className="text-lg text-gray-600 mb-4">🚗 La Tesla Edition</p>
+                <div className="text-5xl font-bold text-forest mb-3">15.000€</div>
+                <div className="text-sm text-gray-600 mb-4">+ IVA = 18.150€</div>
+                <ul className="space-y-2 text-sm mb-4">
+                  <li>✓ Todo incluido</li>
+                  <li>✓ <strong>6 meses soporte</strong></li>
+                  <li>✓ Consultoría marketing</li>
+                </ul>
+                <div className="bg-gray-100 p-3 rounded text-center">
+                  <div className="font-bold">3.000€/día</div>
+                  <div className="text-xs">¡Para los ricos! 💎</div>
+                </div>
+              </div>
+            </div>
+
+            {/* ROI */}
+            <div className="bg-gradient-to-r from-green-600 to-emerald-700 text-white rounded-3xl p-10 relative overflow-hidden">
+              <div className="absolute inset-0 pointer-events-none opacity-20">
+                {[...Array(20)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="absolute text-6xl animate-spin-slow"
+                    style={{
+                      left: `${Math.random() * 100}%`,
+                      top: `${Math.random() * 100}%`,
+                      animationDuration: `${3 + Math.random() * 3}s`
+                    }}
+                  >
+                    {['🚜', '🏊‍♂️', '💰', '🐕'][i % 4]}
+                  </div>
+                ))}
+              </div>
+
+              <div className="relative z-10 text-center">
+                <div className="mb-6">
+                  <span className="inline-block bg-yellow-400 text-black px-8 py-4 rounded-full text-3xl font-black animate-bounce-crazy">
+                    🎉 ¡LA IA LO CALCULÓ! 🎉
+                  </span>
+                </div>
+
+                <h3 className="text-4xl font-bold mb-6">💰 RETORNO DE INVERSIÓN</h3>
+                <p className="text-2xl mb-8">La inversión de 12.000€ se amortiza con:</p>
+
+                <div className="grid md:grid-cols-3 gap-6 mb-8">
+                  <div className="bg-white/20 backdrop-blur-md rounded-xl p-6 hover-grow">
+                    <div className="text-5xl font-bold mb-3">120</div>
+                    <div className="text-xl">ventas de cursos básicos (100€)</div>
+                    <div className="text-sm mt-2">🐕 10 ventas al mes = 1 año</div>
+                  </div>
+                  <div className="bg-white/20 backdrop-blur-md rounded-xl p-6 hover-grow">
+                    <div className="text-5xl font-bold mb-3">80</div>
+                    <div className="text-xl">ventas de cursos avanzados (150€)</div>
+                    <div className="text-sm mt-2">🚀 7 ventas al mes = 1 año</div>
+                  </div>
+                  <div className="bg-white/20 backdrop-blur-md rounded-xl p-6 hover-grow">
+                    <div className="text-5xl font-bold mb-3">MIX</div>
+                    <div className="text-xl">Cursos online + servicios presenciales</div>
+                    <div className="text-sm mt-2">💪 ¡Lo tienes chupado!</div>
+                  </div>
+                </div>
+
+                <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 mb-8">
+                  <div className="text-xl font-bold mb-3">📊 Escenario Realista:</div>
+                  <div className="grid md:grid-cols-2 gap-4 text-left">
+                    <div>
+                      <div className="font-semibold mb-2">• 5 cursos básicos/mes (100€)</div>
+                      <div className="text-sm">= 500€/mes = 6.000€/año</div>
+                    </div>
+                    <div>
+                      <div className="font-semibold mb-2">• 3 cursos premium/mes (150€)</div>
+                      <div className="text-sm">= 450€/mes = 5.400€/año</div>
+                    </div>
+                    <div className="md:col-span-2 text-center mt-4 pt-4 border-t border-white/20">
+                      <div className="text-2xl font-black text-yellow-300">
+                        TOTAL: 11.400€/año = ROI en 13 meses
+                      </div>
+                      <div className="text-sm mt-2">¡Y eso solo con cursos online! 🎯</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="text-3xl font-bold text-yellow-300 mb-6 animate-pulse">
+                  ROI ESTIMADO: 6-12 MESES
+                </div>
+
+                <div className="mt-8">
+                  <span className="inline-block bg-orange-500 text-white px-10 py-5 rounded-xl text-2xl font-black animate-shake shadow-2xl">
+                    💸 ¡DAME LA PISCINA ALFREDO! 🏊‍♂️
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* COMPARATIVA COMPETENCIA */}
+        <section className="max-w-6xl mx-auto px-4 py-16">
+          <h2 className="text-5xl font-black text-center mb-12 text-forest-dark">
+            🏆 VS COMPETENCIA 🏆
+          </h2>
+
+          <div className="overflow-x-auto">
+            <table className="w-full bg-white rounded-3xl shadow-2xl overflow-hidden text-center">
+              <thead className="bg-gradient-to-r from-forest-dark to-forest text-white text-lg">
+                <tr>
+                  <th className="px-6 py-5">CARACTERÍSTICA</th>
+                  <th className="px-6 py-5">EDUCANINE</th>
+                  <th className="px-6 py-5">SENDA CANINA</th>
+                  <th className="px-6 py-5 bg-gold text-forest-dark">
+                    <div className="animate-bounce-crazy">HAKADOGS ⭐</div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200 text-lg">
+                {[
+                  { name: 'Performance', others: ['65', '72'], hakadogs: '95 ✅' },
+                  { name: 'SEO Score', others: ['78', '85'], hakadogs: '100 ✅' },
+                  { name: 'Mobile', others: ['⚠️', '✅'], hakadogs: '✅' },
+                  { name: 'Gamificación', others: ['❌', '❌'], hakadogs: '✅ 🎮' },
+                  { name: 'IA Integrada', others: ['❌', '❌'], hakadogs: '✅ 🤖' },
+                  { name: 'SEO 54 ciudades', others: ['❌', '❌'], hakadogs: '✅ 🗺️' }
+                ].map((row, idx) => (
+                  <tr key={idx} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-6 py-4 font-bold">{row.name}</td>
+                    <td className="px-6 py-4">{row.others[0]}</td>
+                    <td className="px-6 py-4">{row.others[1]}</td>
+                    <td className="px-6 py-4 bg-green-50 font-bold text-green-700 text-xl">
+                      {row.hakadogs}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <p className="text-center mt-8 text-2xl font-bold text-gray-700">
+            🏆 <strong className="text-gold">HAKADOGS DESTROZA A LA COMPETENCIA</strong> 🏆
+          </p>
+        </section>
+
+        {/* CONCLUSIÓN FINAL ÉPICA */}
+        <section className="bg-gradient-to-br from-purple-200 via-pink-200 to-yellow-200 py-20 relative overflow-hidden">
+          {/* Confetti */}
+          <div className="absolute inset-0 pointer-events-none">
+            {[...Array(100)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute w-3 h-3 rounded-full"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  backgroundColor: ['#FFD700', '#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#FF1493'][i % 6],
+                  animation: `floatUp ${2 + Math.random() * 2}s linear infinite`,
+                  animationDelay: `${Math.random() * 3}s`
+                }}
+              />
+            ))}
+          </div>
+
+          <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
+            <div className="mb-8">
+              <span className="inline-block bg-gradient-to-r from-red-600 to-pink-600 text-white px-12 py-6 rounded-full text-4xl font-black animate-pulse-rainbow shadow-2xl">
+                🎊 ¡ALFREDO, ESTO ES UN CHOLLAZO! 🎊
+              </span>
+            </div>
+
+            <h2 className="text-6xl font-black mb-10 text-forest-dark">
+              CONCLUSIÓN FINAL
+            </h2>
+
+            <div className="bg-white rounded-3xl shadow-2xl p-10 md:p-14 border-4 border-gold hover-grow">
+              <div className="text-8xl mb-6 animate-bounce-crazy">
+                🚜🏊‍♂️💰
+              </div>
+
+              <p className="text-3xl font-bold text-gray-800 mb-6">
+                Hakadogs.com NO es solo una web,<br />
+                es una <span className="text-gold text-4xl">MÁQUINA DE HACER DINERO</span>
               </p>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Footer de presupuesto */}
-      <footer className="bg-forest-dark text-white py-12">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <div className="mb-6">
-            <p className="text-lg font-bold text-gold mb-2">PRESUPUESTO VÁLIDO HASTA: 28 de Febrero de 2026</p>
-          </div>
-          <div className="grid md:grid-cols-2 gap-8 text-left">
-            <div>
-              <h3 className="font-bold text-sage mb-2">DESARROLLADO POR:</h3>
-              <p>Narciso Pardo Buendía</p>
-              <p className="text-sm text-sage">Desarrollador Full Stack</p>
-              <p className="text-sm text-sage mt-2">Email: [tu email]</p>
-              <p className="text-sm text-sage">Teléfono: [tu teléfono]</p>
+              <div className="mb-8">
+                <span className="inline-block bg-yellow-400 text-black px-8 py-4 rounded-xl text-2xl font-black animate-bounce-crazy">
+                  💎 ¡VALE 14.000€ SEGÚN LA IA! 💎
+                </span>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-4 text-left mb-8">
+                {[
+                  'Generar ingresos 24/7 💰',
+                  'Competir con los grandes 🏆',
+                  'Posicionarte en 54 ciudades 🗺️',
+                  'Automatizar todo ⚙️',
+                  'Escalar sin límites 🚀',
+                  'Gamificación única 🎮'
+                ].map((item, idx) => (
+                  <div key={idx} className="flex items-center gap-3 bg-green-50 rounded-xl p-4 hover-grow">
+                    <CheckCircle className="w-8 h-8 text-green-600 animate-spin-slow" />
+                    <span className="text-xl font-semibold">{item}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="border-t-4 border-gold pt-8">
+                <p className="text-2xl italic text-gray-700 mb-6">
+                  &ldquo;Tu inversión en educación canina,<br />
+                  nuestra inversión en excelencia técnica&rdquo;
+                </p>
+
+                <div className="space-y-4">
+                  <span className="inline-block bg-green-600 text-white px-10 py-5 rounded-xl text-3xl font-black animate-pulse shadow-2xl">
+                    🚨 ¡ACEPTO LA RANCHERA! 🚜
+                  </span>
+                  <br />
+                  <span className="inline-block bg-blue-600 text-white px-8 py-4 rounded-xl text-2xl font-black animate-shake">
+                    🏊‍♂️ ¡O LA PISCINA! 🏊‍♂️
+                  </span>
+                  <br />
+                  <span className="inline-block bg-orange-600 text-white px-8 py-4 rounded-xl text-2xl font-black animate-wiggle">
+                    💸 ¡ALFREDO PAGA! 💸
+                  </span>
+                </div>
+              </div>
             </div>
-            <div>
-              <h3 className="font-bold text-sage mb-2">PARA:</h3>
-              <p>Hakadogs - Alfredo García</p>
-              <p className="text-sm text-sage">Email: contacto@hakadogs.com</p>
-              <p className="text-sm text-sage">Web: www.hakadogs.com</p>
-              <p className="text-sm text-sage mt-2">Enero 2026 • Versión 3.0.1</p>
+          </div>
+        </section>
+
+        {/* FOOTER */}
+        <footer className="bg-forest-dark text-white py-12">
+          <div className="max-w-4xl mx-auto px-4 text-center">
+            <div className="mb-6">
+              <p className="text-2xl font-bold text-gold mb-4 animate-pulse">
+                PRESUPUESTO VÁLIDO HASTA: 28 de Febrero de 2026
+              </p>
+              <div className="text-4xl mb-4 animate-bounce-crazy">
+                🤖💰🚀
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-8 text-left mb-8">
+              <div>
+                <h3 className="font-bold text-sage text-xl mb-3">DESARROLLADO POR:</h3>
+                <p className="text-lg">Narciso Pardo Buendía</p>
+                <p className="text-sage">Desarrollador Full Stack + IA 🤖</p>
+              </div>
+              <div>
+                <h3 className="font-bold text-sage text-xl mb-3">PARA:</h3>
+                <p className="text-lg">Hakadogs - Alfredo García 🐕</p>
+                <p className="text-sage">contacto@hakadogs.com</p>
+                <p className="text-sage">www.hakadogs.com</p>
+              </div>
+            </div>
+
+            <div className="text-3xl font-black text-yellow-300 animate-pulse">
+              🎊 ¡ALFREDO, DAME TU RANCHERA! 🚜
             </div>
           </div>
-        </div>
-      </footer>
-    </div>
+        </footer>
+      </div>
+    </>
   );
 }
