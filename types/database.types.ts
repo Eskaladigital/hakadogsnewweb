@@ -488,7 +488,7 @@ export interface Database {
         Args: {
           p_user_id: string
         }
-        Returns: void
+        Returns: undefined
       }
       get_leaderboard: {
         Args: {

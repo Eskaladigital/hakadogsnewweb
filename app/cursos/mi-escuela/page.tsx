@@ -8,6 +8,10 @@ import { motion } from 'framer-motion'
 import { getSession } from '@/lib/supabase/auth'
 import { getUserPurchases, getAllCourses, getUserCourseProgress } from '@/lib/supabase/courses'
 import type { Course, UserCourseProgress } from '@/lib/supabase/courses'
+import { getUserStats, getUserBadges } from '@/lib/supabase/gamification'
+import UserStatsCard from '@/components/gamification/UserStatsCard'
+import StreakCounter from '@/components/gamification/StreakCounter'
+import BadgeCard from '@/components/gamification/BadgeCard'
 
 interface CursoConProgreso extends Course {
   progress: number
@@ -27,6 +31,8 @@ export default function MiEscuelaPage() {
     horasTotales: 0,
     progresoGeneral: 0
   })
+  const [userStats, setUserStats] = useState<any>(null)
+  const [recentBadges, setRecentBadges] = useState<any[]>([])
 
   useEffect(() => {
     async function loadData() {
@@ -40,6 +46,14 @@ export default function MiEscuelaPage() {
 
         const userId = sessionData.session.user.id
         setUserName(sessionData.session.user.user_metadata.name || sessionData.session.user.email.split('@')[0])
+
+        // Cargar gamificación
+        const [gamificationStats, badges] = await Promise.all([
+          getUserStats(userId),
+          getUserBadges(userId)
+        ])
+        setUserStats(gamificationStats)
+        setRecentBadges(badges.slice(0, 6)) // Últimos 6 badges
 
         // Cargar todos los cursos
         const allCourses = await getAllCourses(false) // Solo publicados
@@ -182,6 +196,78 @@ export default function MiEscuelaPage() {
           </div>
         </div>
       </section>
+
+      {/* Gamificación Section */}
+      {userStats && (
+        <section className="py-8 sm:py-12 bg-gray-50">
+          <div className="container mx-auto px-4 sm:px-6">
+            <div className="max-w-full lg:max-w-7xl mx-auto">
+              <div className="grid lg:grid-cols-3 gap-6">
+                {/* User Stats Card */}
+                <div className="lg:col-span-2">
+                  <UserStatsCard 
+                    stats={userStats} 
+                    userName={userName}
+                    compact={false}
+                  />
+                </div>
+
+                {/* Streak Counter */}
+                <div>
+                  <StreakCounter
+                    currentStreak={userStats.current_streak_days}
+                    longestStreak={userStats.longest_streak_days}
+                    compact={false}
+                    showMotivation={true}
+                  />
+                </div>
+              </div>
+
+              {/* Recent Badges */}
+              {recentBadges.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="mt-8 bg-white rounded-2xl shadow-lg p-6"
+                >
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center space-x-3">
+                      <Award className="w-6 h-6 text-forest" />
+                      <h3 className="text-2xl font-bold text-gray-900">Badges Recientes</h3>
+                    </div>
+                    <Link
+                      href="/cursos/badges"
+                      className="text-forest font-semibold hover:text-forest-dark transition flex items-center text-sm"
+                    >
+                      Ver todos
+                      <Award className="w-4 h-4 ml-1" />
+                    </Link>
+                  </div>
+
+                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
+                    {recentBadges.map((badge) => (
+                      <BadgeCard
+                        key={badge.id}
+                        badge={{ ...badge, is_unlocked: true }}
+                        size="md"
+                      />
+                    ))}
+                  </div>
+
+                  {recentBadges.length === 0 && (
+                    <div className="text-center py-8">
+                      <Award className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                      <p className="text-gray-500">Aún no tienes badges</p>
+                      <p className="text-sm text-gray-400 mt-1">¡Completa lecciones para desbloquear logros!</p>
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Mis Cursos */}
       <section className="py-8 sm:py-12">
