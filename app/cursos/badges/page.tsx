@@ -256,20 +256,28 @@ export default function BadgesPage() {
                     ¿Cómo conseguir badges?
                   </h3>
                   <p className="text-blue-800 mb-3">
-                    Pasa el cursor sobre cualquier badge para ver los requisitos exactos. Aquí tienes una guía rápida:
+                    Haz clic en cualquier badge para ver cómo conseguirlo. Aquí tienes una guía rápida:
                   </p>
-                  <div className="grid md:grid-cols-3 gap-4">
+                  <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-3">
                     <div className="bg-white rounded-lg p-3 border border-blue-200">
                       <p className="font-semibold text-gray-900 mb-1">🎯 Progreso</p>
-                      <p className="text-sm text-gray-600">Completa lecciones y cursos</p>
+                      <p className="text-xs text-gray-600">Completa lecciones y cursos</p>
                     </div>
                     <div className="bg-white rounded-lg p-3 border border-blue-200">
-                      <p className="font-semibold text-gray-900 mb-1">🔥 Racha</p>
-                      <p className="text-sm text-gray-600">Estudia días consecutivos</p>
+                      <p className="font-semibold text-gray-900 mb-1">🔥 Constancia</p>
+                      <p className="text-xs text-gray-600">Estudia días consecutivos</p>
                     </div>
                     <div className="bg-white rounded-lg p-3 border border-blue-200">
-                      <p className="font-semibold text-gray-900 mb-1">✨ Especiales</p>
-                      <p className="text-sm text-gray-600">Cumple retos únicos</p>
+                      <p className="font-semibold text-gray-900 mb-1">⚡ Velocidad</p>
+                      <p className="text-xs text-gray-600">Completa cursos rápido</p>
+                    </div>
+                    <div className="bg-white rounded-lg p-3 border border-blue-200">
+                      <p className="font-semibold text-gray-900 mb-1">🎓 Especialización</p>
+                      <p className="text-xs text-gray-600">Domina áreas específicas</p>
+                    </div>
+                    <div className="bg-white rounded-lg p-3 border border-blue-200">
+                      <p className="font-semibold text-gray-900 mb-1">💎 Dedicación</p>
+                      <p className="text-xs text-gray-600">Horas de estudio totales</p>
                     </div>
                   </div>
                 </div>
