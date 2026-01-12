@@ -5,9 +5,8 @@ const nextConfig = {
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 60,
+    minimumCacheTTL: 31536000, // 1 año de caché para imágenes
     dangerouslyAllowSVG: false,
-    // Optimización adicional para imágenes
     unoptimized: false,
   },
   
@@ -46,9 +45,9 @@ const nextConfig = {
   // Headers de seguridad y performance
   async headers() {
     return [
-      // Imágenes y assets estáticos - caché larga
+      // Imágenes optimizadas por Next.js - caché 1 año
       {
-        source: '/:all*(svg|jpg|jpeg|png|webp|avif|gif|ico)',
+        source: '/_next/image:path*',
         headers: [
           {
             key: 'Cache-Control',
@@ -56,6 +55,17 @@ const nextConfig = {
           },
         ],
       },
+      // Imágenes y assets estáticos - caché 1 año
+      {
+        source: '/:all*(svg|jpg|jpeg|png|webp|avif|gif|ico|woff|woff2)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      // JS y CSS estáticos de Next.js - caché 1 año
       {
         source: '/_next/static/:path*',
         headers: [
@@ -65,13 +75,13 @@ const nextConfig = {
           },
         ],
       },
-      // Páginas HTML - caché corta pero HABILITADA para performance
+      // Páginas HTML - caché corta con revalidación inteligente
       {
         source: '/:path*',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=60, s-maxage=3600, stale-while-revalidate=86400',
+            value: 'public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800',
           },
           {
             key: 'X-DNS-Prefetch-Control',
