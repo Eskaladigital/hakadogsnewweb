@@ -105,15 +105,11 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://cdn.tiny.cloud; style-src 'self' 'unsafe-inline' https://cdn.tiny.cloud; img-src 'self' data: https: blob:; font-src 'self' data: https://cdn.tiny.cloud; connect-src 'self' https://jshqrsnzxzbizgjyfsde.supabase.co https://www.google-analytics.com https://api.openai.com https://cdn.tiny.cloud; frame-src 'self' https://www.youtube.com; object-src 'none'; base-uri 'self'; form-action 'self';"
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://cdn.tiny.cloud; style-src 'self' 'unsafe-inline' https://cdn.tiny.cloud https://fonts.googleapis.com; img-src 'self' data: https://images.unsplash.com https://jshqrsnzxzbizgjyfsde.supabase.co https://www.googletagmanager.com https://www.google-analytics.com blob:; font-src 'self' data: https://cdn.tiny.cloud https://fonts.gstatic.com; connect-src 'self' https://jshqrsnzxzbizgjyfsde.supabase.co https://www.google-analytics.com https://api.openai.com https://cdn.tiny.cloud https://www.googletagmanager.com; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests;"
           },
           {
             key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=(), payment=()'
-          },
-          {
-            key: 'X-XSS-Protection',
-            value: '1; mode=block'
+            value: 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=(), magnetometer=(), gyroscope=(), accelerometer=(), ambient-light-sensor=()'
           }
         ],
       },
