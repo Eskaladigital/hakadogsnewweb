@@ -46,7 +46,7 @@ const nextConfig = {
   // Headers de seguridad y performance
   async headers() {
     return [
-      // Solo imágenes y assets estáticos tienen caché larga
+      // Imágenes y assets estáticos - caché larga
       {
         source: '/:all*(svg|jpg|jpeg|png|webp|avif|gif|ico)',
         headers: [
@@ -65,49 +65,13 @@ const nextConfig = {
           },
         ],
       },
-      // CACHÉ MÍNIMA PARA DESARROLLO: Sin caché para todas las páginas HTML
-      {
-        source: '/blog/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'no-cache, no-store, must-revalidate, max-age=0',
-          },
-        ],
-      },
-      {
-        source: '/cursos/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'no-cache, no-store, must-revalidate, max-age=0',
-          },
-        ],
-      },
-      {
-        source: '/servicios/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'no-cache, no-store, must-revalidate, max-age=0',
-          },
-        ],
-      },
-      {
-        source: '/administrator/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'no-cache, no-store, must-revalidate, max-age=0',
-          },
-        ],
-      },
+      // Páginas HTML - caché corta pero HABILITADA para performance
       {
         source: '/:path*',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'no-cache, no-store, must-revalidate, max-age=0',
+            value: 'public, max-age=60, s-maxage=3600, stale-while-revalidate=86400',
           },
           {
             key: 'X-DNS-Prefetch-Control',
@@ -131,7 +95,7 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: blob:; font-src 'self' data:; connect-src 'self' https://jshqrsnzxzbizgjyfsde.supabase.co https://www.google-analytics.com; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;"
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://cdn.tiny.cloud; style-src 'self' 'unsafe-inline' https://cdn.tiny.cloud; img-src 'self' data: https: blob:; font-src 'self' data: https://cdn.tiny.cloud; connect-src 'self' https://jshqrsnzxzbizgjyfsde.supabase.co https://www.google-analytics.com https://api.openai.com https://cdn.tiny.cloud; frame-src 'self' https://www.youtube.com; object-src 'none'; base-uri 'self'; form-action 'self';"
           },
           {
             key: 'Permissions-Policy',

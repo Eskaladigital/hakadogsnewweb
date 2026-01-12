@@ -108,33 +108,9 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="theme-color" content="#059669" />
         
-        {/* Preconnect a dominios externos para reducir latencia */}
-        <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-        <link rel="preconnect" href="https://www.google-analytics.com" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
-        
-        {/* Preconnect Supabase para autenticación */}
-        <link rel="preconnect" href="https://jshqrsnzxzbizgjyfsde.supabase.co" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://jshqrsnzxzbizgjyfsde.supabase.co" />
-        
-        {/* Preload imagen crítica Hero para mejorar LCP */}
-        <link 
-          rel="preload" 
-          as="image" 
-          href="/images/hakadogs_educacion_canina_home_2.png"
-          type="image/png"
-          fetchPriority="high"
-        />
-        
-        {/* Preload logo crítico para mejorar LCP con fetchpriority */}
-        <link 
-          rel="preload" 
-          as="image" 
-          href="/images/logo_definitivo_hakadogs.webp"
-          type="image/webp"
-          fetchPriority="high"
-        />
+        {/* Preconnect a dominios externos críticos */}
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://jshqrsnzxzbizgjyfsde.supabase.co" />
         
         {/* Schema.org Structured Data - Datos estructurados para SEO */}
         <Script
