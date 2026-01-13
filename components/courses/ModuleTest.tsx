@@ -36,6 +36,7 @@ export default function ModuleTestComponent({
     new Array(test.questions.length).fill(null)
   )
   const [selectedOption, setSelectedOption] = useState<number | null>(null)
+  const [showFeedback, setShowFeedback] = useState(false) // Mostrar feedback inmediato
   const [showResults, setShowResults] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [result, setResult] = useState<{ score: number; passed: boolean } | null>(null)
@@ -59,7 +60,8 @@ export default function ModuleTestComponent({
 
   const currentQuestion = shuffledQuestions[currentQuestionIndex]
   const progress = ((currentQuestionIndex + 1) / shuffledQuestions.length) * 100
-  const answeredCount = answers.filter(a => a !== null).length
+  const isCorrect = selectedOption === currentQuestion?.correct_answer
+  const isLastQuestion = currentQuestionIndex === shuffledQuestions.length - 1
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60)
@@ -68,36 +70,36 @@ export default function ModuleTestComponent({
   }
 
   const handleSelectOption = (optionIndex: number) => {
-    setSelectedOption(optionIndex)
+    if (!showFeedback) { // Solo permitir seleccionar si aún no ha confirmado
+      setSelectedOption(optionIndex)
+    }
   }
 
   const handleConfirmAnswer = () => {
     if (selectedOption === null) return
 
+    // Guardar respuesta
     const newAnswers = [...answers]
     newAnswers[currentQuestionIndex] = selectedOption
     setAnswers(newAnswers)
 
-    // Avanzar a la siguiente pregunta o mostrar resumen
-    if (currentQuestionIndex < shuffledQuestions.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1)
-      setSelectedOption(null)
-    }
+    // Mostrar feedback inmediato
+    setShowFeedback(true)
   }
 
-  const handleGoToQuestion = (index: number) => {
-    setCurrentQuestionIndex(index)
-    setSelectedOption(answers[index])
+  const handleNextQuestion = () => {
+    if (isLastQuestion) {
+      // Si es la última pregunta, enviar el test
+      handleSubmitTest()
+    } else {
+      // Avanzar a la siguiente pregunta
+      setCurrentQuestionIndex(prev => prev + 1)
+      setSelectedOption(null)
+      setShowFeedback(false)
+    }
   }
 
   const handleSubmitTest = async () => {
-    // Verificar que todas las preguntas estén respondidas
-    const unanswered = answers.findIndex(a => a === null)
-    if (unanswered !== -1) {
-      setCurrentQuestionIndex(unanswered)
-      return
-    }
-
     setSubmitting(true)
 
     try {
@@ -261,7 +263,7 @@ export default function ModuleTestComponent({
         </div>
         <div className="flex justify-between mt-2 text-sm text-white/80">
           <span>Pregunta {currentQuestionIndex + 1} de {shuffledQuestions.length}</span>
-          <span>{answeredCount} respondidas</span>
+          <span>Puntuación mínima: {test.passing_score}%</span>
         </div>
       </div>
 
@@ -282,117 +284,128 @@ export default function ModuleTestComponent({
 
             {/* Opciones */}
             <div className="space-y-3 mb-8">
-              {currentQuestion.options.map((option, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleSelectOption(index)}
-                  className={`w-full text-left p-4 rounded-xl border-2 transition-all ${
-                    selectedOption === index
-                      ? 'border-forest bg-forest/5'
-                      : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                  }`}
-                >
-                  <div className="flex items-center gap-4">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-medium text-sm ${
-                      selectedOption === index
-                        ? 'bg-forest text-white'
-                        : 'bg-gray-100 text-gray-600'
-                    }`}>
-                      {String.fromCharCode(65 + index)}
+              {currentQuestion.options.map((option, index) => {
+                const isSelected = selectedOption === index
+                const isCorrectAnswer = index === currentQuestion.correct_answer
+                const showAsCorrect = showFeedback && isCorrectAnswer
+                const showAsIncorrect = showFeedback && isSelected && !isCorrect
+
+                return (
+                  <button
+                    key={index}
+                    onClick={() => handleSelectOption(index)}
+                    disabled={showFeedback}
+                    className={`w-full text-left p-4 rounded-xl border-2 transition-all ${
+                      showAsCorrect
+                        ? 'border-green-500 bg-green-50'
+                        : showAsIncorrect
+                          ? 'border-red-500 bg-red-50'
+                          : isSelected
+                            ? 'border-forest bg-forest/5'
+                            : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                    } ${showFeedback ? 'cursor-default' : 'cursor-pointer'}`}
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center font-medium text-sm ${
+                        showAsCorrect
+                          ? 'bg-green-500 text-white'
+                          : showAsIncorrect
+                            ? 'bg-red-500 text-white'
+                            : isSelected
+                              ? 'bg-forest text-white'
+                              : 'bg-gray-100 text-gray-600'
+                      }`}>
+                        {String.fromCharCode(65 + index)}
+                      </div>
+                      <span className="flex-1">{option}</span>
+                      {showAsCorrect && (
+                        <CheckCircle className="w-5 h-5 text-green-500" />
+                      )}
+                      {showAsIncorrect && (
+                        <XCircle className="w-5 h-5 text-red-500" />
+                      )}
                     </div>
-                    <span className="flex-1">{option}</span>
-                    {selectedOption === index && (
-                      <CheckCircle className="w-5 h-5 text-forest" />
+                  </button>
+                )
+              })}
+            </div>
+
+            {/* Feedback inmediato */}
+            {showFeedback && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={`p-4 rounded-xl mb-6 ${
+                  isCorrect ? 'bg-green-50 border-2 border-green-200' : 'bg-red-50 border-2 border-red-200'
+                }`}
+              >
+                <div className="flex items-start gap-3">
+                  {isCorrect ? (
+                    <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
+                  ) : (
+                    <XCircle className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" />
+                  )}
+                  <div className="flex-1">
+                    <h4 className={`font-bold mb-2 ${isCorrect ? 'text-green-800' : 'text-red-800'}`}>
+                      {isCorrect ? '¡Correcto!' : 'Incorrecto'}
+                    </h4>
+                    {!isCorrect && (
+                      <p className="text-red-700 mb-2">
+                        La respuesta correcta es: <span className="font-semibold">
+                          {String.fromCharCode(65 + currentQuestion.correct_answer)}. {currentQuestion.options[currentQuestion.correct_answer]}
+                        </span>
+                      </p>
+                    )}
+                    {currentQuestion.explanation && (
+                      <div className="mt-2 pt-2 border-t border-green-200">
+                        <p className="text-sm text-gray-700">
+                          <span className="font-semibold">Explicación:</span> {currentQuestion.explanation}
+                        </p>
+                      </div>
                     )}
                   </div>
-                </button>
-              ))}
-            </div>
+                </div>
+              </motion.div>
+            )}
           </motion.div>
         </AnimatePresence>
 
-        {/* Navegación entre preguntas */}
-        <div className="flex flex-wrap gap-2 mb-6 pb-6 border-b">
-          {shuffledQuestions.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => handleGoToQuestion(index)}
-              className={`w-10 h-10 rounded-lg font-medium text-sm transition-all ${
-                index === currentQuestionIndex
-                  ? 'bg-forest text-white'
-                  : answers[index] !== null
-                    ? 'bg-forest/20 text-forest'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              {index + 1}
-            </button>
-          ))}
-        </div>
-
         {/* Botones de acción */}
-        <div className="flex justify-between items-center">
-          <button
-            onClick={() => {
-              if (currentQuestionIndex > 0) {
-                setCurrentQuestionIndex(prev => prev - 1)
-                setSelectedOption(answers[currentQuestionIndex - 1])
-              }
-            }}
-            disabled={currentQuestionIndex === 0}
-            className="px-4 py-2 text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed hover:text-gray-800"
-          >
-            ← Anterior
-          </button>
-
-          <div className="flex gap-3">
-            {currentQuestionIndex < shuffledQuestions.length - 1 ? (
-              <button
-                onClick={handleConfirmAnswer}
-                disabled={selectedOption === null}
-                className="px-6 py-3 bg-forest text-white rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-forest/90 transition-colors flex items-center gap-2"
-              >
-                Siguiente
-                <ChevronRight className="w-5 h-5" />
-              </button>
-            ) : (
-              <button
-                onClick={() => {
-                  if (selectedOption !== null) {
-                    const newAnswers = [...answers]
-                    newAnswers[currentQuestionIndex] = selectedOption
-                    setAnswers(newAnswers)
-                  }
-                  handleSubmitTest()
-                }}
-                disabled={submitting || answeredCount < shuffledQuestions.length - 1}
-                className="px-6 py-3 bg-gradient-to-r from-forest to-sage text-white rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg transition-all flex items-center gap-2"
-              >
-                {submitting ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    Enviando...
-                  </>
-                ) : (
-                  <>
-                    Finalizar Test
-                    <CheckCircle className="w-5 h-5" />
-                  </>
-                )}
-              </button>
-            )}
-          </div>
+        <div className="flex justify-end">
+          {!showFeedback ? (
+            <button
+              onClick={handleConfirmAnswer}
+              disabled={selectedOption === null}
+              className="px-6 py-3 bg-forest text-white rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-forest/90 transition-colors flex items-center gap-2"
+            >
+              Confirmar respuesta
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          ) : (
+            <button
+              onClick={handleNextQuestion}
+              disabled={submitting}
+              className="px-6 py-3 bg-forest text-white rounded-xl font-medium hover:bg-forest/90 transition-colors flex items-center gap-2"
+            >
+              {submitting ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Enviando...
+                </>
+              ) : isLastQuestion ? (
+                <>
+                  Finalizar test
+                  <Trophy className="w-5 h-5" />
+                </>
+              ) : (
+                <>
+                  Siguiente pregunta
+                  <ChevronRight className="w-5 h-5" />
+                </>
+              )}
+            </button>
+          )}
         </div>
-
-        {/* Aviso de preguntas sin responder */}
-        {answeredCount < shuffledQuestions.length && (
-          <div className="mt-4 flex items-center gap-2 text-amber-600 text-sm">
-            <AlertCircle className="w-4 h-4" />
-            <span>
-              {shuffledQuestions.length - answeredCount} pregunta(s) sin responder
-            </span>
-          </div>
-        )}
       </div>
     </div>
   )
