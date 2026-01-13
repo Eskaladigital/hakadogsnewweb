@@ -154,6 +154,14 @@ export async function getDashboardStats(): Promise<DashboardStats> {
       sales: { total: 0, today: 0, this_week: 0, this_month: 0, revenue_total: 0, revenue_today: 0, revenue_month: 0 },
       contacts: { total: 0, pending: 0, in_progress: 0, responded: 0, today: 0, this_week: 0 },
       progress: { completed_courses: 0, in_progress: 0, avg_completion: 0 },
+      tests: {
+        total_tests: 0,
+        published_tests: 0,
+        total_attempts: 0,
+        unique_users_attempting: 0,
+        overall_pass_rate: 0,
+        overall_avg_score: 0
+      },
       blog: blogStats
     }
   }
