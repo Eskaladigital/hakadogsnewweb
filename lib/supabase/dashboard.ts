@@ -48,6 +48,14 @@ export interface DashboardStats {
     categories: number
     total_views: number
   }
+  tests: {
+    total_tests: number
+    published_tests: number
+    total_attempts: number
+    unique_users: number
+    avg_pass_rate: number
+    avg_score: number
+  }
 }
 
 export interface RecentUser {
@@ -150,10 +158,74 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     }
   }
   
+  // Obtener estadísticas de tests
+  const testsStats = await getTestsStats()
+  
   return {
     ...data,
-    blog: blogStats
+    blog: blogStats,
+    tests: testsStats
   } as DashboardStats
+}
+
+/**
+ * Obtiene estadísticas de los tests de módulos
+ */
+async function getTestsStats() {
+  const defaultStats = {
+    total_tests: 0,
+    published_tests: 0,
+    total_attempts: 0,
+    unique_users: 0,
+    avg_pass_rate: 0,
+    avg_score: 0
+  }
+
+  try {
+    // Obtener tests
+    const { data: tests, error: testsError } = await supabase
+      .from('module_tests')
+      .select('id, is_published')
+    
+    if (testsError) {
+      console.warn('⚠️ Error obteniendo tests:', testsError)
+      return defaultStats
+    }
+
+    const totalTests = tests?.length || 0
+    const publishedTests = tests?.filter(t => t.is_published).length || 0
+
+    if (totalTests === 0) {
+      return { ...defaultStats, total_tests: 0, published_tests: 0 }
+    }
+
+    // Obtener intentos de tests
+    const { data: attempts, error: attemptsError } = await supabase
+      .from('user_test_attempts')
+      .select('id, user_id, score, passed')
+    
+    if (attemptsError) {
+      console.warn('⚠️ Error obteniendo intentos:', attemptsError)
+      return { ...defaultStats, total_tests: totalTests, published_tests: publishedTests }
+    }
+
+    const totalAttempts = attempts?.length || 0
+    const uniqueUsers = new Set(attempts?.map(a => a.user_id) || []).size
+    const passedAttempts = attempts?.filter(a => a.passed).length || 0
+    const totalScore = attempts?.reduce((sum, a) => sum + (a.score || 0), 0) || 0
+
+    return {
+      total_tests: totalTests,
+      published_tests: publishedTests,
+      total_attempts: totalAttempts,
+      unique_users: uniqueUsers,
+      avg_pass_rate: totalAttempts > 0 ? Math.round((passedAttempts / totalAttempts) * 100) : 0,
+      avg_score: totalAttempts > 0 ? Math.round(totalScore / totalAttempts) : 0
+    }
+  } catch (error) {
+    console.warn('⚠️ Error en getTestsStats:', error)
+    return defaultStats
+  }
 }
 
 /**

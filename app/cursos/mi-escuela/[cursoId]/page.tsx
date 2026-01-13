@@ -3,11 +3,21 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Play, CheckCircle, Lock, Download, FileText, Clock, Loader2, AlertCircle, Video, Headphones, ChevronLeft, ChevronRight, ChevronDown, ChevronUp, BookOpen, FolderOpen } from 'lucide-react'
+import { 
+  ArrowLeft, Play, CheckCircle, Download, FileText, Clock, Loader2, 
+  AlertCircle, Video, Headphones, ChevronLeft, ChevronRight, ChevronDown, 
+  ChevronUp, BookOpen, FolderOpen, ClipboardCheck, Trophy
+} from 'lucide-react'
 import { motion } from 'framer-motion'
 import { getSession } from '@/lib/supabase/auth'
-import { getCourseBySlug, getCourseLessons, getUserCourseProgress, markLessonComplete, getLessonResources, getUserLessonsProgressBulk, courseHasModules, getCourseModulesWithStats, getLessonsByModule } from '@/lib/supabase/courses'
+import { 
+  getCourseBySlug, getCourseLessons, getUserCourseProgress, 
+  getLessonResources, getUserLessonsProgressBulk, courseHasModules, 
+  getCourseModulesWithStats, getLessonsByModule 
+} from '@/lib/supabase/courses'
 import type { Course, Lesson, Resource, ModuleWithStats } from '@/lib/supabase/courses'
+import { getModuleTest, getModulesTestStatus, type ModuleTestStatus, type ModuleTest } from '@/lib/supabase/tests'
+import ModuleTestComponent from '@/components/courses/ModuleTest'
 import { useSwipe } from '@/lib/hooks/useSwipe'
 
 export default function CursoDetailPage({ params }: { params: { cursoId: string } }) {
@@ -21,22 +31,26 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
   const [progreso, setProgreso] = useState<any>(null)
   const [userId, setUserId] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<'video' | 'audio' | 'content' | 'resources'>('content')
-  const [completing, setCompleting] = useState(false)
   const [lessonProgress, setLessonProgress] = useState<Record<string, boolean>>({})
   const [hasModules, setHasModules] = useState(false)
   const [modules, setModules] = useState<ModuleWithStats[]>([])
   const [expandedModules, setExpandedModules] = useState<Record<string, boolean>>({})
   const [moduleLoading, setModuleLoading] = useState<Record<string, boolean>>({})
   const [moduleLessons, setModuleLessons] = useState<Record<string, Lesson[]>>({})
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true) // Colapsado por defecto en móvil
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true)
   const contentRef = useRef<HTMLDivElement>(null)
+  
+  // Estado para tests
+  const [modulesTestStatus, setModulesTestStatus] = useState<Record<string, ModuleTestStatus>>({})
+  const [showingTest, setShowingTest] = useState(false)
+  const [currentTest, setCurrentTest] = useState<ModuleTest | null>(null)
+  const [currentTestModuleName, setCurrentTestModuleName] = useState('')
 
-  // Funciones para navegación con gestos
+  // Funciones para navegación
   const goToNextLesson = async () => {
     if (!leccionActual) return
     
     if (hasModules) {
-      // NAVEGACIÓN CON MÓDULOS: permitir avanzar al siguiente módulo
       const currentModuleIndex = modules.findIndex(module => {
         const lessons = moduleLessons[module.id] || []
         return lessons.some(l => l.id === leccionActual.id)
@@ -48,9 +62,6 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
       const currentModuleLessons = moduleLessons[currentModule.id] || []
       const currentLessonIndex = currentModuleLessons.findIndex(l => l.id === leccionActual.id)
       
-      // Verificar si la lección actual está completada
-      if (!lessonProgress[leccionActual.id]) return
-      
       // ¿Hay una siguiente lección en el módulo actual?
       if (currentLessonIndex < currentModuleLessons.length - 1) {
         const nextLesson = currentModuleLessons[currentLessonIndex + 1]
@@ -61,12 +72,10 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
       else if (currentModuleIndex < modules.length - 1) {
         const nextModule = modules[currentModuleIndex + 1]
         
-        // Expandir el siguiente módulo si no está expandido
         if (!expandedModules[nextModule.id]) {
           setExpandedModules(prev => ({ ...prev, [nextModule.id]: true }))
         }
         
-        // Cargar lecciones del siguiente módulo si no están cargadas
         let nextModuleLessons = moduleLessons[nextModule.id]
         if (!nextModuleLessons) {
           setModuleLoading(prev => ({ ...prev, [nextModule.id]: true }))
@@ -77,7 +86,6 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
               [nextModule.id]: nextModuleLessons
             }))
             
-            // Cargar progreso de las nuevas lecciones
             if (userId && nextModuleLessons.length > 0) {
               const lessonIds = nextModuleLessons.map(l => l.id)
               const progressMap = await getUserLessonsProgressBulk(userId, lessonIds)
@@ -91,23 +99,17 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
           }
         }
         
-        // Navegar a la primera lección del siguiente módulo
         if (nextModuleLessons && nextModuleLessons.length > 0) {
           handleSelectLesson(nextModuleLessons[0])
           window.scrollTo({ top: 0, behavior: 'smooth' })
         }
       }
     } else {
-      // NAVEGACIÓN SIN MÓDULOS (original)
       const currentIndex = lecciones.findIndex(l => l.id === leccionActual.id)
       if (currentIndex < lecciones.length - 1) {
         const nextLesson = lecciones[currentIndex + 1]
-        
-        // Verificar si está desbloqueada
-        if (currentIndex >= 0 && lessonProgress[leccionActual.id]) {
-          handleSelectLesson(nextLesson)
-          window.scrollTo({ top: 0, behavior: 'smooth' })
-        }
+        handleSelectLesson(nextLesson)
+        window.scrollTo({ top: 0, behavior: 'smooth' })
       }
     }
   }
@@ -116,7 +118,6 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
     if (!leccionActual) return
     
     if (hasModules) {
-      // NAVEGACIÓN CON MÓDULOS: permitir retroceder al módulo anterior
       const currentModuleIndex = modules.findIndex(module => {
         const lessons = moduleLessons[module.id] || []
         return lessons.some(l => l.id === leccionActual.id)
@@ -128,22 +129,18 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
       const currentModuleLessons = moduleLessons[currentModule.id] || []
       const currentLessonIndex = currentModuleLessons.findIndex(l => l.id === leccionActual.id)
       
-      // ¿Hay una lección anterior en el módulo actual?
       if (currentLessonIndex > 0) {
         const previousLesson = currentModuleLessons[currentLessonIndex - 1]
         handleSelectLesson(previousLesson)
         window.scrollTo({ top: 0, behavior: 'smooth' })
       }
-      // ¿Es la primera lección del módulo? → Ir al módulo anterior
       else if (currentModuleIndex > 0) {
         const previousModule = modules[currentModuleIndex - 1]
         
-        // Expandir el módulo anterior si no está expandido
         if (!expandedModules[previousModule.id]) {
           setExpandedModules(prev => ({ ...prev, [previousModule.id]: true }))
         }
         
-        // Cargar lecciones del módulo anterior si no están cargadas
         let previousModuleLessons = moduleLessons[previousModule.id]
         if (!previousModuleLessons) {
           setModuleLoading(prev => ({ ...prev, [previousModule.id]: true }))
@@ -161,7 +158,6 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
           }
         }
         
-        // Navegar a la ÚLTIMA lección del módulo anterior
         if (previousModuleLessons && previousModuleLessons.length > 0) {
           const lastLesson = previousModuleLessons[previousModuleLessons.length - 1]
           handleSelectLesson(lastLesson)
@@ -169,7 +165,6 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
         }
       }
     } else {
-      // NAVEGACIÓN SIN MÓDULOS (original)
       const currentIndex = lecciones.findIndex(l => l.id === leccionActual.id)
       if (currentIndex > 0) {
         const previousLesson = lecciones[currentIndex - 1]
@@ -184,142 +179,122 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
     onSwipeLeft: goToNextLesson,
     onSwipeRight: goToPreviousLesson,
   }, {
-    threshold: 80, // Requiere 80px de swipe
-    timeout: 400,  // Máximo 400ms
+    threshold: 80,
+    timeout: 400,
   })
 
-  // Función para alternar expansión de módulos (lazy loading de lecciones)
-  const toggleModule = async (moduleId: string, moduleIndex: number) => {
+  // Función para alternar expansión de módulos (sin bloqueos)
+  const toggleModule = async (moduleId: string) => {
     const isExpanded = expandedModules[moduleId]
     
-    // Verificar si el módulo está desbloqueado
-    if (moduleIndex > 0) {
-      const previousModule = modules[moduleIndex - 1]
-      const isUnlocked = previousModule.total_lessons > 0 && 
-                        previousModule.completed_lessons === previousModule.total_lessons
-      
-      if (!isUnlocked) {
-        // Módulo bloqueado - no expandir
-        return
-      }
-    }
-    
-    setExpandedModules(prev => ({
-      ...prev,
-      [moduleId]: !isExpanded
-    }))
-
-    // Si se está expandiendo y aún no se cargaron las lecciones, cargarlas
     if (!isExpanded && !moduleLessons[moduleId]) {
       setModuleLoading(prev => ({ ...prev, [moduleId]: true }))
       try {
         const lessons = await getLessonsByModule(moduleId)
-        setModuleLessons(prev => ({
-          ...prev,
-          [moduleId]: lessons
-        }))
+        setModuleLessons(prev => ({ ...prev, [moduleId]: lessons }))
+        
+        if (userId && lessons.length > 0) {
+          const lessonIds = lessons.map(l => l.id)
+          const progressMap = await getUserLessonsProgressBulk(userId, lessonIds)
+          setLessonProgress(prev => ({ ...prev, ...progressMap }))
+        }
       } catch (error) {
         console.error('Error cargando lecciones del módulo:', error)
       } finally {
         setModuleLoading(prev => ({ ...prev, [moduleId]: false }))
       }
     }
+
+    setExpandedModules(prev => ({
+      ...prev,
+      [moduleId]: !prev[moduleId]
+    }))
   }
 
+  // Cargar datos del curso
   useEffect(() => {
     async function loadData() {
       try {
-        // Verificar autenticación
-        const { data: sessionData } = await getSession()
-        if (!sessionData?.session) {
-          router.push(`/cursos/auth/login?redirect=/cursos/mi-escuela/${cursoId}`)
+        const session = await getSession()
+        
+        if (!session?.user) {
+          router.push('/cursos')
           return
         }
 
-        const uid = sessionData.session.user.id
+        const uid = session.user.id
         setUserId(uid)
 
-        // Cargar curso
         const courseData = await getCourseBySlug(cursoId)
         if (!courseData) {
+          setCurso(null)
           setLoading(false)
           return
         }
         setCurso(courseData)
 
-        // Verificar si el curso tiene módulos
-        const hasModulesFlag = await courseHasModules(courseData.id)
-        setHasModules(hasModulesFlag)
+        // Verificar si tiene módulos
+        const hasModulesResult = await courseHasModules(courseData.id)
+        setHasModules(hasModulesResult)
 
-        if (hasModulesFlag) {
-          // Curso con módulos: cargar módulos y estadísticas
+        if (hasModulesResult) {
+          // Cargar módulos con estadísticas
           const modulesData = await getCourseModulesWithStats(courseData.id, uid)
           setModules(modulesData)
-
-          // Expandir automáticamente el primer módulo
+          
+          // Cargar estado de tests de todos los módulos
           if (modulesData.length > 0) {
-            const firstModuleId = modulesData[0].id
-            setExpandedModules({ [firstModuleId]: true })
-            
-            // Cargar lecciones del primer módulo
-            const firstModuleLessons = await getLessonsByModule(firstModuleId)
-            setModuleLessons({ [firstModuleId]: firstModuleLessons })
-            setLecciones(firstModuleLessons)
+            const moduleIds = modulesData.map(m => m.id)
+            const testStatus = await getModulesTestStatus(moduleIds, uid)
+            setModulesTestStatus(testStatus)
+          }
 
-            // Cargar progreso de lecciones del primer módulo
+          // Expandir y cargar primer módulo
+          if (modulesData.length > 0) {
+            const firstModule = modulesData[0]
+            setExpandedModules({ [firstModule.id]: true })
+            
+            const firstModuleLessons = await getLessonsByModule(firstModule.id)
+            setModuleLessons({ [firstModule.id]: firstModuleLessons })
+            setLecciones(firstModuleLessons)
+            
             if (firstModuleLessons.length > 0) {
+              setLeccionActual(firstModuleLessons[0])
+              const resourcesData = await getLessonResources(firstModuleLessons[0].id)
+              setRecursos(resourcesData)
+              
+              // Cargar progreso
               const lessonIds = firstModuleLessons.map(l => l.id)
               const progressMap = await getUserLessonsProgressBulk(uid, lessonIds)
               setLessonProgress(progressMap)
-
-              // Seleccionar primera lección
-              setLeccionActual(firstModuleLessons[0])
-              if (firstModuleLessons[0].video_url) {
-                setActiveTab('video')
-              } else if (firstModuleLessons[0].audio_url) {
-                setActiveTab('audio')
-              } else {
-                setActiveTab('content')
-              }
-
-              const resourcesData = await getLessonResources(firstModuleLessons[0].id)
-              setRecursos(resourcesData)
             }
           }
         } else {
-          // Curso sin módulos (estructura antigua/simple)
+          // Sin módulos - cargar todas las lecciones
           const lessonsData = await getCourseLessons(courseData.id)
           setLecciones(lessonsData)
-
-          // OPTIMIZACIÓN: Cargar progreso de TODAS las lecciones en UNA SOLA petición
-          const lessonIds = lessonsData.map(lesson => lesson.id)
-          const progressMap = await getUserLessonsProgressBulk(uid, lessonIds)
-          setLessonProgress(progressMap)
-
-          // Seleccionar primera lección
+          
           if (lessonsData.length > 0) {
-            const firstLesson = lessonsData[0]
-            setLeccionActual(firstLesson)
-            
-            if (firstLesson.video_url) {
-              setActiveTab('video')
-            } else if (firstLesson.audio_url) {
-              setActiveTab('audio')
-            } else {
-              setActiveTab('content')
-            }
-
-            const resourcesData = await getLessonResources(firstLesson.id)
+            setLeccionActual(lessonsData[0])
+            const resourcesData = await getLessonResources(lessonsData[0].id)
             setRecursos(resourcesData)
+            
+            const lessonIds = lessonsData.map(l => l.id)
+            const progressMap = await getUserLessonsProgressBulk(uid, lessonIds)
+            setLessonProgress(progressMap)
           }
         }
 
-        // Cargar progreso del curso
-        const progressData = await getUserCourseProgress(uid, courseData.id)
-        setProgreso(progressData)
+        // Cargar progreso general del curso
+        try {
+          const progressData = await getUserCourseProgress(uid, courseData.id)
+          setProgreso(progressData)
+        } catch (error) {
+          console.warn('No se pudo cargar el progreso del curso:', error)
+        }
 
       } catch (error) {
-        console.error('Error cargando datos:', error)
+        console.error('Error cargando datos del curso:', error)
       } finally {
         setLoading(false)
       }
@@ -328,27 +303,11 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
     loadData()
   }, [cursoId, router])
 
+  // Seleccionar lección (SIN bloqueos)
   const handleSelectLesson = async (lesson: Lesson) => {
-    // Verificar si la lección está desbloqueada
-    const leccionIndex = lecciones.findIndex(l => l.id === lesson.id)
-    
-    // La primera lección siempre está disponible
-    if (leccionIndex > 0) {
-      // Verificar si la lección anterior está completada
-      const previousLesson = lecciones[leccionIndex - 1]
-      if (!lessonProgress[previousLesson.id]) {
-        // Lección bloqueada - no hacer nada
-        return
-      }
-    }
-    
-    // Lección desbloqueada
     setLeccionActual(lesson)
-    
-    // Scroll al top de la página
     window.scrollTo({ top: 0, behavior: 'smooth' })
     
-    // Determinar pestaña según contenido disponible
     if (lesson.video_url) {
       setActiveTab('video')
     } else if (lesson.audio_url) {
@@ -357,42 +316,57 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
       setActiveTab('content')
     }
 
-    // Cargar recursos de esta lección
     const resourcesData = await getLessonResources(lesson.id)
     setRecursos(resourcesData)
   }
 
-  const handleMarkComplete = async () => {
-    if (!leccionActual || !userId) return
+  // Iniciar test de un módulo
+  const handleStartTest = async (moduleId: string, moduleName: string) => {
+    const test = await getModuleTest(moduleId)
+    if (test) {
+      setCurrentTest(test)
+      setCurrentTestModuleName(moduleName)
+      setShowingTest(true)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } else {
+      alert('Este módulo aún no tiene test disponible.')
+    }
+  }
 
-    setCompleting(true)
-    try {
-      await markLessonComplete(userId, leccionActual.id)
+  // Cuando se completa el test
+  const handleTestComplete = async (passed: boolean, score: number) => {
+    setShowingTest(false)
+    setCurrentTest(null)
+    
+    if (passed && userId && curso) {
+      // Actualizar estado local de tests
+      const moduleId = currentTest?.module_id
+      if (moduleId) {
+        setModulesTestStatus(prev => ({
+          ...prev,
+          [moduleId]: {
+            ...prev[moduleId],
+            user_passed: true,
+            best_score: Math.max(prev[moduleId]?.best_score || 0, score)
+          }
+        }))
+        
+        // Marcar todas las lecciones del módulo como completadas en el estado local
+        const lessons = moduleLessons[moduleId] || []
+        const newProgress: Record<string, boolean> = {}
+        lessons.forEach(l => {
+          newProgress[l.id] = true
+        })
+        setLessonProgress(prev => ({ ...prev, ...newProgress }))
+      }
       
-      // Actualizar estado local
-      setLessonProgress(prev => ({
-        ...prev,
-        [leccionActual.id]: true
-      }))
-
       // Recargar progreso del curso
-      if (curso) {
+      try {
         const progressData = await getUserCourseProgress(userId, curso.id)
         setProgreso(progressData)
+      } catch (error) {
+        console.error('Error recargando progreso:', error)
       }
-
-      // Verificar si hay una siguiente lección para desbloquear
-      const currentIndex = lecciones.findIndex(l => l.id === leccionActual.id)
-      const hasNextLesson = currentIndex < lecciones.length - 1
-      
-      if (hasNextLesson) {
-        // Pequeña notificación visual de que la siguiente lección se desbloqueó
-        console.log('¡Siguiente lección desbloqueada!')
-      }
-    } catch (error) {
-      console.error('Error marcando lección:', error)
-    } finally {
-      setCompleting(false)
     }
   }
 
@@ -453,8 +427,7 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
     )
   }
 
-  // Si el curso existe pero no tiene lecciones
-  if (lecciones.length === 0) {
+  if (lecciones.length === 0 && modules.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50 pt-20">
         <div className={`bg-gradient-to-r ${getDifficultyColor(curso.difficulty)} text-white py-8`}>
@@ -468,10 +441,6 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                 Volver a Mi Escuela
               </Link>
               <h1 className="text-3xl md:text-4xl font-bold mb-2">{curso.title}</h1>
-              <div 
-                className="text-white/90"
-                dangerouslySetInnerHTML={{ __html: curso.short_description || curso.description || '' }}
-              />
             </div>
           </div>
         </div>
@@ -483,7 +452,7 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
               Este curso aún no tiene contenido
             </h2>
             <p className="text-gray-600 mb-8">
-              Las lecciones de este curso están siendo preparadas. Por favor, vuelve más tarde.
+              Las lecciones de este curso están siendo preparadas.
             </p>
             <Link
               href="/cursos/mi-escuela"
@@ -497,13 +466,43 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
     )
   }
 
+  // Si está mostrando un test
+  if (showingTest && currentTest && userId) {
+    return (
+      <div className="min-h-screen bg-gray-100 pt-20">
+        <div className="container mx-auto px-4 py-8">
+          <button
+            onClick={() => {
+              setShowingTest(false)
+              setCurrentTest(null)
+            }}
+            className="mb-6 flex items-center text-gray-600 hover:text-forest transition"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Volver al contenido
+          </button>
+          
+          <ModuleTestComponent
+            test={currentTest}
+            userId={userId}
+            moduleName={currentTestModuleName}
+            onComplete={handleTestComplete}
+            onCancel={() => {
+              setShowingTest(false)
+              setCurrentTest(null)
+            }}
+          />
+        </div>
+      </div>
+    )
+  }
+
   if (!leccionActual) {
-    return null // No debería llegar aquí si hay lecciones
+    return null
   }
 
   const colorGradient = getDifficultyColor(curso.difficulty)
   const completedCount = Object.values(lessonProgress).filter(Boolean).length
-  // Usar progreso global del curso en lugar de contar lecciones en memoria
   const progressPercentage = progreso ? Math.round(progreso.progress_percentage) : 0
 
   // Determinar qué pestañas mostrar
@@ -541,7 +540,7 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                     {curso.duration_minutes} min
                   </span>
                   <span>{getDifficultyLabel(curso.difficulty)}</span>
-                  <span>{completedCount}/{lecciones.length} completadas</span>
+                  <span>{completedCount} lecciones completadas</span>
                 </div>
               </div>
             </div>
@@ -563,12 +562,11 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
         </div>
       </div>
 
-      {/* Breadcrumb - Indicador de ubicación en forma de árbol */}
+      {/* Breadcrumb */}
       <div className="bg-gradient-to-r from-gray-50 to-white border-b border-gray-200">
         <div className="container mx-auto px-4 sm:px-6 py-2 sm:py-3 md:py-4">
           <div className="max-w-full lg:max-w-7xl mx-auto">
             <div className="flex flex-col gap-1 sm:gap-2">
-              {/* Nivel 1: Curso */}
               <div className="flex items-center gap-1 sm:gap-2">
                 <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
                   <BookOpen className="w-3 sm:w-4 h-3 sm:h-4 text-forest" />
@@ -583,12 +581,9 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                 })
                 return currentModule ? (
                   <>
-                    {/* Flecha vertical */}
                     <div className="flex items-center gap-2 ml-2">
                       <div className="w-px h-4 bg-gray-300"></div>
                     </div>
-                    
-                    {/* Nivel 2: Módulo */}
                     <div className="flex items-center gap-2 ml-2">
                       <div className="w-4 h-px bg-gray-300"></div>
                       <div className="flex items-center gap-2 text-sm bg-forest/5 px-3 py-1 rounded-md">
@@ -600,12 +595,10 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                 ) : null
               })()}
               
-              {/* Flecha vertical */}
               <div className="flex items-center gap-2 ml-2">
                 <div className="w-px h-4 bg-gray-300"></div>
               </div>
               
-              {/* Nivel 3: Lección actual */}
               <div className="flex items-center gap-1 sm:gap-2 ml-2">
                 <div className="w-3 sm:w-4 h-px bg-gray-300"></div>
                 <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm bg-gradient-to-r from-forest to-sage px-2 sm:px-3 py-1 sm:py-1.5 rounded-md text-white shadow-sm">
@@ -618,15 +611,13 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
         </div>
       </div>
 
-      {/* Navegación rápida con flechas (debajo del breadcrumb) */}
+      {/* Navegación rápida */}
       <div className="bg-white border-b border-gray-100">
         <div className="container mx-auto px-4 sm:px-6 py-3">
           <div className="max-w-full lg:max-w-7xl mx-auto">
             <div className="flex items-center justify-between">
-              {/* Flecha Anterior */}
               {(() => {
                 if (hasModules) {
-                  // Navegación con módulos
                   const currentModuleIndex = modules.findIndex(module => {
                     const lessons = moduleLessons[module.id] || []
                     return lessons.some(l => l.id === leccionActual.id)
@@ -638,7 +629,6 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                   const currentModuleLessons = moduleLessons[currentModule.id] || []
                   const currentLessonIndex = currentModuleLessons.findIndex(l => l.id === leccionActual.id)
                   
-                  // Verificar si hay lección anterior en el módulo actual o en el anterior
                   const hasPreviousInModule = currentLessonIndex > 0
                   const hasPreviousModule = currentModuleIndex > 0
                   const canGoPrevious = hasPreviousInModule || hasPreviousModule
@@ -657,7 +647,6 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                     </button>
                   )
                 } else {
-                  // Navegación sin módulos (original)
                   const hasPrevious = lecciones.findIndex(l => l.id === leccionActual.id) > 0
                   
                   if (!hasPrevious) {
@@ -676,10 +665,8 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                 }
               })()}
               
-              {/* Flecha Siguiente */}
               {(() => {
                 if (hasModules) {
-                  // Navegación con módulos
                   const currentModuleIndex = modules.findIndex(module => {
                     const lessons = moduleLessons[module.id] || []
                     return lessons.some(l => l.id === leccionActual.id)
@@ -691,12 +678,8 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                   const currentModuleLessons = moduleLessons[currentModule.id] || []
                   const currentLessonIndex = currentModuleLessons.findIndex(l => l.id === leccionActual.id)
                   
-                  // Verificar si hay siguiente lección en el módulo actual
                   const hasNextInModule = currentLessonIndex < currentModuleLessons.length - 1
-                  // Verificar si hay siguiente módulo
                   const hasNextModule = currentModuleIndex < modules.length - 1
-                  
-                  const canGoNext = lessonProgress[leccionActual.id] && (hasNextInModule || hasNextModule)
                   const isLastOverall = !hasNextInModule && !hasNextModule
                   
                   if (isLastOverall) {
@@ -706,25 +689,14 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                   return (
                     <button
                       onClick={goToNextLesson}
-                      disabled={!canGoNext}
-                      className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all group ${
-                        canGoNext 
-                          ? 'text-forest hover:bg-forest/5' 
-                          : 'text-gray-400 cursor-not-allowed'
-                      }`}
+                      className="flex items-center gap-2 px-4 py-2 text-forest hover:bg-forest/5 rounded-lg transition-all group"
                     >
                       <span className="text-sm font-medium">Siguiente</span>
-                      {canGoNext ? (
-                        <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                      ) : (
-                        <Lock className="w-4 h-4" />
-                      )}
+                      <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </button>
                   )
                 } else {
-                  // Navegación sin módulos (original)
                   const currentIndex = lecciones.findIndex(l => l.id === leccionActual.id)
-                  const canGoNext = currentIndex < lecciones.length - 1 && lessonProgress[leccionActual.id]
                   const isLastLesson = currentIndex >= lecciones.length - 1
                   
                   if (isLastLesson) {
@@ -734,19 +706,10 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                   return (
                     <button
                       onClick={goToNextLesson}
-                      disabled={!canGoNext}
-                      className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all group ${
-                        canGoNext 
-                          ? 'text-forest hover:bg-forest/5' 
-                          : 'text-gray-400 cursor-not-allowed'
-                      }`}
+                      className="flex items-center gap-2 px-4 py-2 text-forest hover:bg-forest/5 rounded-lg transition-all group"
                     >
                       <span className="text-sm font-medium">Siguiente</span>
-                      {canGoNext ? (
-                        <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                      ) : (
-                        <Lock className="w-4 h-4" />
-                      )}
+                      <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </button>
                   )
                 }
@@ -763,7 +726,7 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
             {/* Main Content */}
             <div className="lg:col-span-2 order-2 lg:order-1">
               <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-                {/* Video/Audio/Content Area */}
+                {/* Video */}
                 {activeTab === 'video' && leccionActual.video_url && (
                   <div className="aspect-video bg-gray-900">
                     {leccionActual.video_provider === 'youtube' ? (
@@ -790,6 +753,7 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                   </div>
                 )}
 
+                {/* Audio */}
                 {activeTab === 'audio' && leccionActual.audio_url && (
                   <div className="bg-gradient-to-br from-forest/10 to-sage/10 p-12 flex items-center justify-center">
                     <div className="w-full max-w-2xl">
@@ -808,7 +772,7 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                   </div>
                 )}
 
-                {/* Tabs - Solo mostrar si hay más de una opción */}
+                {/* Tabs */}
                 {availableTabs.length > 1 && (
                   <div className="border-b border-gray-200 overflow-x-auto">
                     <div className="flex min-w-max">
@@ -875,7 +839,6 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                       <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-3 sm:mb-4 md:mb-6">
                         {leccionActual.title}
                       </h2>
-                      {/* Renderizar HTML de TinyMCE - OPTIMIZADO PARA MÓVIL */}
                       <div 
                         className="responsive-prose prose prose-sm sm:prose-base md:prose-lg max-w-none
                           prose-headings:font-black prose-headings:tracking-tight
@@ -929,27 +892,7 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                     </div>
                   )}
 
-                  {/* Botón Marcar como Completada */}
-                  {!lessonProgress[leccionActual.id] && (
-                    <button
-                      onClick={handleMarkComplete}
-                      disabled={completing}
-                      className="w-full mt-6 sm:mt-8 bg-gradient-to-r from-forest to-sage text-white font-bold py-3 sm:py-4 px-6 rounded-lg hover:opacity-90 transition-all flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
-                    >
-                      {completing ? (
-                        <>
-                          <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                          Guardando...
-                        </>
-                      ) : (
-                        <>
-                          <CheckCircle className="w-5 h-5 mr-2" />
-                          Marcar como Completada
-                        </>
-                      )}
-                    </button>
-                  )}
-
+                  {/* Indicador de lección completada (si aplica) */}
                   {lessonProgress[leccionActual.id] && (
                     <div className="w-full mt-6 sm:mt-8 bg-green-50 border border-green-200 text-green-800 font-semibold py-3 sm:py-4 px-6 rounded-lg flex items-center justify-center text-sm sm:text-base">
                       <CheckCircle className="w-5 h-5 mr-2" />
@@ -962,7 +905,6 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                     <div className="flex items-center justify-between gap-4">
                       {(() => {
                         if (hasModules) {
-                          // NAVEGACIÓN CON MÓDULOS
                           const currentModuleIndex = modules.findIndex(module => {
                             const lessons = moduleLessons[module.id] || []
                             return lessons.some(l => l.id === leccionActual.id)
@@ -974,13 +916,10 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                           const currentModuleLessons = moduleLessons[currentModule.id] || []
                           const currentLessonIndex = currentModuleLessons.findIndex(l => l.id === leccionActual.id)
                           
-                          // Determinar lección anterior
                           let previousLesson = null
                           if (currentLessonIndex > 0) {
-                            // Hay lección anterior en el mismo módulo
                             previousLesson = currentModuleLessons[currentLessonIndex - 1]
                           } else if (currentModuleIndex > 0) {
-                            // Es la primera del módulo, buscar en el módulo anterior
                             const previousModule = modules[currentModuleIndex - 1]
                             const previousModuleLessons = moduleLessons[previousModule.id] || []
                             if (previousModuleLessons.length > 0) {
@@ -988,28 +927,23 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                             }
                           }
                           
-                          // Determinar lección siguiente
                           let nextLesson = null
                           let nextLessonTitle = ''
                           const hasNextInModule = currentLessonIndex < currentModuleLessons.length - 1
                           const hasNextModule = currentModuleIndex < modules.length - 1
                           
                           if (hasNextInModule) {
-                            // Hay siguiente lección en el mismo módulo
                             nextLesson = currentModuleLessons[currentLessonIndex + 1]
                             nextLessonTitle = nextLesson.title
                           } else if (hasNextModule) {
-                            // Es la última del módulo, mostrar que sigue otro módulo
                             const nextModule = modules[currentModuleIndex + 1]
-                            nextLessonTitle = `Módulo ${nextModule.order_index}: ${nextModule.title}`
+                            nextLessonTitle = `Módulo: ${nextModule.title}`
                           }
                           
-                          const canGoNext = lessonProgress[leccionActual.id] && (hasNextInModule || hasNextModule)
                           const isLastOverall = !hasNextInModule && !hasNextModule
                           
                           return (
                             <>
-                              {/* Botón Anterior */}
                               {previousLesson ? (
                                 <button
                                   onClick={goToPreviousLesson}
@@ -1025,28 +959,16 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                                 <div className="flex-1"></div>
                               )}
 
-                              {/* Botón Siguiente */}
                               {!isLastOverall ? (
                                 <button
                                   onClick={goToNextLesson}
-                                  disabled={!canGoNext}
-                                  className={`flex-1 flex items-center justify-end gap-2 px-4 py-3 rounded-lg transition-all group ${
-                                    canGoNext 
-                                      ? 'bg-gradient-to-r from-forest to-sage text-white hover:opacity-90' 
-                                      : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                  }`}
+                                  className="flex-1 flex items-center justify-end gap-2 px-4 py-3 bg-gradient-to-r from-forest to-sage text-white hover:opacity-90 rounded-lg transition-all group"
                                 >
                                   <div className="text-right">
-                                    <p className={`text-xs font-medium ${canGoNext ? 'text-white/80' : 'text-gray-400'}`}>
-                                      {canGoNext ? 'Siguiente' : 'Completa esta lección'}
-                                    </p>
+                                    <p className="text-xs text-white/80 font-medium">Siguiente</p>
                                     <p className="text-sm font-semibold line-clamp-1">{nextLessonTitle}</p>
                                   </div>
-                                  {canGoNext ? (
-                                    <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                                  ) : (
-                                    <Lock className="w-5 h-5" />
-                                  )}
+                                  <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                                 </button>
                               ) : (
                                 <div className="flex-1 flex items-center justify-end">
@@ -1059,15 +981,12 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                             </>
                           )
                         } else {
-                          // NAVEGACIÓN SIN MÓDULOS (original)
                           const currentIndex = lecciones.findIndex(l => l.id === leccionActual.id)
                           const previousLesson = currentIndex > 0 ? lecciones[currentIndex - 1] : null
                           const nextLesson = currentIndex < lecciones.length - 1 ? lecciones[currentIndex + 1] : null
-                          const canGoNext = lessonProgress[leccionActual.id] && nextLesson
                           
                           return (
                             <>
-                              {/* Botón Anterior */}
                               {previousLesson ? (
                                 <button
                                   onClick={goToPreviousLesson}
@@ -1083,28 +1002,16 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                                 <div className="flex-1"></div>
                               )}
 
-                              {/* Botón Siguiente */}
                               {nextLesson ? (
                                 <button
                                   onClick={goToNextLesson}
-                                  disabled={!canGoNext}
-                                  className={`flex-1 flex items-center justify-end gap-2 px-4 py-3 rounded-lg transition-all group ${
-                                    canGoNext 
-                                      ? 'bg-gradient-to-r from-forest to-sage text-white hover:opacity-90' 
-                                      : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                  }`}
+                                  className="flex-1 flex items-center justify-end gap-2 px-4 py-3 bg-gradient-to-r from-forest to-sage text-white hover:opacity-90 rounded-lg transition-all group"
                                 >
                                   <div className="text-right">
-                                    <p className={`text-xs font-medium ${canGoNext ? 'text-white/80' : 'text-gray-400'}`}>
-                                      {canGoNext ? 'Siguiente' : 'Completa esta lección'}
-                                    </p>
+                                    <p className="text-xs text-white/80 font-medium">Siguiente</p>
                                     <p className="text-sm font-semibold line-clamp-1">{nextLesson.title}</p>
                                   </div>
-                                  {canGoNext ? (
-                                    <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                                  ) : (
-                                    <Lock className="w-5 h-5" />
-                                  )}
+                                  <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                                 </button>
                               ) : (
                                 <div className="flex-1 flex items-center justify-end">
@@ -1133,10 +1040,9 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
               </div>
             </div>
 
-            {/* Sidebar - Lecciones (con/sin módulos) */}
+            {/* Sidebar */}
             <div className="lg:col-span-1 order-1 lg:order-2">
               <div className="bg-white rounded-xl shadow-lg p-3 sm:p-4 lg:p-6 lg:sticky lg:top-24">
-                {/* Header con toggle para móvil */}
                 <button
                   onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
                   className="w-full flex items-center justify-between mb-4 sm:mb-6 lg:cursor-default"
@@ -1144,7 +1050,6 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                   <h3 className="text-lg sm:text-xl font-bold text-gray-900">
                     Contenido del Curso
                   </h3>
-                  {/* Icono de expand/collapse solo visible en móvil */}
                   <div className="lg:hidden">
                     {isSidebarCollapsed ? (
                       <ChevronDown className="w-6 h-6 text-forest" />
@@ -1154,7 +1059,6 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                   </div>
                 </button>
 
-                {/* Progreso compacto cuando está colapsado (solo móvil) */}
                 {isSidebarCollapsed && progreso && (
                   <div className="lg:hidden mb-4 p-3 bg-forest/5 rounded-lg">
                     <div className="flex items-center justify-between text-sm mb-2">
@@ -1169,101 +1073,73 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                         style={{ width: `${progreso.progress_percentage}%` }}
                       />
                     </div>
-                    <p className="text-xs text-gray-600 mt-2">
-                      {progreso.completed_lessons} de {progreso.total_lessons} lecciones completadas
-                    </p>
                   </div>
                 )}
 
-                {/* Contenido colapsable */}
                 <div className={`${isSidebarCollapsed ? 'hidden lg:block' : 'block'}`}>
                 
                 {hasModules ? (
                   /* VISTA CON MÓDULOS */
                   <div className="space-y-3">
-                    {modules.map((module, moduleIndex) => {
+                    {modules.map((module) => {
                       const isExpanded = expandedModules[module.id]
                       const lessons = moduleLessons[module.id] || []
                       const isLoading = moduleLoading[module.id]
+                      const testStatus = modulesTestStatus[module.id]
+                      const moduleCompleted = testStatus?.user_passed || false
                       const completionPercentage = module.total_lessons > 0 
                         ? Math.round((module.completed_lessons / module.total_lessons) * 100) 
                         : 0
-                      
-                      // Determinar si el módulo está bloqueado
-                      const isLocked = moduleIndex > 0 && (
-                        modules[moduleIndex - 1].total_lessons === 0 || 
-                        modules[moduleIndex - 1].completed_lessons < modules[moduleIndex - 1].total_lessons
-                      )
 
                       return (
-                        <div key={module.id} className={`border rounded-lg overflow-hidden ${
-                          isLocked 
-                            ? 'border-gray-300 bg-gray-50/50 opacity-70' 
-                            : 'border-gray-200'
-                        }`}>
-                          {/* Header del Módulo (siempre visible) */}
+                        <div key={module.id} className="border rounded-lg overflow-hidden border-gray-200">
+                          {/* Header del Módulo */}
                           <button
-                            onClick={() => toggleModule(module.id, moduleIndex)}
-                            disabled={isLocked}
-                            className={`w-full p-4 transition flex items-center justify-between group ${
-                              isLocked
-                                ? 'bg-gray-100 cursor-not-allowed'
-                                : 'bg-gray-50 hover:bg-gray-100'
-                            }`}
+                            onClick={() => toggleModule(module.id)}
+                            className="w-full p-4 transition flex items-center justify-between group bg-gray-50 hover:bg-gray-100"
                           >
                             <div className="flex-1 text-left">
                               <div className="flex items-center gap-2 mb-1">
-                                <span className={`text-xs font-bold uppercase ${
-                                  isLocked ? 'text-gray-400' : 'text-forest'
-                                }`}>
+                                <span className="text-xs font-bold uppercase text-forest">
                                   Módulo {module.order_index}
                                 </span>
-                                {isLocked && (
-                                  <Lock className="w-4 h-4 text-gray-400" />
-                                )}
-                                {!isLocked && completionPercentage === 100 && (
-                                  <CheckCircle className="w-4 h-4 text-green-600" />
+                                {moduleCompleted && (
+                                  <Trophy className="w-4 h-4 text-amber-500" />
                                 )}
                               </div>
-                              <h4 className={`font-bold text-sm sm:text-base transition ${
-                                isLocked 
-                                  ? 'text-gray-500' 
-                                  : 'text-gray-900 group-hover:text-forest'
-                              }`}>
+                              <h4 className="font-bold text-sm sm:text-base transition text-gray-900 group-hover:text-forest">
                                 {module.title}
                               </h4>
                               <div className="flex items-center gap-3 mt-2 text-xs text-gray-500">
                                 <span>{module.total_lessons} lecciones</span>
                                 <span>•</span>
                                 <span>{module.duration_minutes} min</span>
-                                {!isLocked && (
+                                {testStatus?.has_test && (
                                   <>
                                     <span>•</span>
-                                    <span className={completionPercentage === 100 ? 'text-green-600 font-semibold' : ''}>
-                                      {completionPercentage}% completado
-                                    </span>
+                                    {moduleCompleted ? (
+                                      <span className="text-green-600 font-semibold flex items-center gap-1">
+                                        <CheckCircle className="w-3 h-3" />
+                                        Test aprobado ({testStatus.best_score}%)
+                                      </span>
+                                    ) : (
+                                      <span className="text-amber-600 font-medium">Test pendiente</span>
+                                    )}
                                   </>
                                 )}
                               </div>
-                              {isLocked && (
-                                <p className="text-xs text-gray-500 mt-2 italic">
-                                  🔒 Completa el módulo anterior para desbloquear
-                                </p>
-                              )}
                             </div>
                             <div className="ml-3 flex-shrink-0">
-                              {!isLocked && (
-                                isExpanded ? (
-                                  <ChevronUp className="w-5 h-5 text-forest" />
-                                ) : (
-                                  <ChevronDown className="w-5 h-5 text-gray-400 group-hover:text-forest transition" />
-                                )
+                              {isExpanded ? (
+                                <ChevronUp className="w-5 h-5 text-forest" />
+                              ) : (
+                                <ChevronDown className="w-5 h-5 text-gray-400 group-hover:text-forest transition" />
                               )}
                             </div>
                           </button>
 
-                          {/* Lecciones del Módulo (colapsables) */}
-                          {!isLocked && isExpanded && (
+                          {/* Lecciones del Módulo */}
+                          {isExpanded && (
                             <div className="border-t border-gray-200 bg-white">
                               {isLoading ? (
                                 <div className="p-6 text-center">
@@ -1271,67 +1147,81 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                                   <p className="text-sm text-gray-500 mt-2">Cargando lecciones...</p>
                                 </div>
                               ) : (
-                                <div className="p-2 space-y-2">
-                                  {lessons.map((leccion, index) => {
-                                    const isLocked = index > 0 && !lessonProgress[lessons[index - 1].id]
-                                    const isCompleted = lessonProgress[leccion.id]
-                                    const isActive = leccionActual?.id === leccion.id
-                                    
-                                    return (
-                                      <div key={leccion.id} className="relative group">
-                                        <motion.button
-                                          onClick={() => handleSelectLesson(leccion)}
-                                          disabled={isLocked}
-                                          className={`w-full text-left p-3 rounded-lg transition-all ${
-                                            isActive
-                                              ? 'bg-forest/10 border-2 border-forest'
-                                              : isLocked
-                                              ? 'bg-gray-100 opacity-60 cursor-not-allowed'
-                                              : 'bg-gray-50 hover:bg-gray-100'
-                                          }`}
-                                          whileHover={isLocked ? {} : { scale: 1.02 }}
-                                          whileTap={isLocked ? {} : { scale: 0.98 }}
-                                        >
-                                          <div className="flex items-start">
-                                            <div className="mr-2 sm:mr-3 mt-0.5 flex-shrink-0">
-                                              {isLocked ? (
-                                                <Lock className="w-4 sm:w-5 h-4 sm:h-5 text-gray-400" />
-                                              ) : isCompleted ? (
-                                                <CheckCircle className="w-4 sm:w-5 h-4 sm:h-5 text-green-600" />
-                                              ) : (
-                                                <Play className="w-4 sm:w-5 h-4 sm:h-5 text-forest" />
-                                              )}
-                                            </div>
-                                            <div className="flex-1 min-w-0">
-                                              <div className="flex items-center justify-between mb-1">
-                                                <span className={`text-xs font-semibold ${
-                                                  isLocked ? 'text-gray-400' : 'text-gray-500'
-                                                }`}>
-                                                  Lección {index + 1}
-                                                  {isLocked && ' • Bloqueada'}
-                                                </span>
-                                                <span className={`text-xs whitespace-nowrap ml-2 ${
-                                                  isLocked ? 'text-gray-400' : 'text-gray-500'
-                                                }`}>
-                                                  {leccion.duration_minutes} min
-                                                </span>
+                                <>
+                                  <div className="p-2 space-y-2">
+                                    {lessons.map((leccion, index) => {
+                                      const isCompleted = lessonProgress[leccion.id]
+                                      const isActive = leccionActual?.id === leccion.id
+                                      
+                                      return (
+                                        <div key={leccion.id} className="relative group">
+                                          <motion.button
+                                            onClick={() => handleSelectLesson(leccion)}
+                                            className={`w-full text-left p-3 rounded-lg transition-all ${
+                                              isActive
+                                                ? 'bg-forest/10 border-2 border-forest'
+                                                : 'bg-gray-50 hover:bg-gray-100'
+                                            }`}
+                                            whileHover={{ scale: 1.02 }}
+                                            whileTap={{ scale: 0.98 }}
+                                          >
+                                            <div className="flex items-start">
+                                              <div className="mr-2 sm:mr-3 mt-0.5 flex-shrink-0">
+                                                {isCompleted ? (
+                                                  <CheckCircle className="w-4 sm:w-5 h-4 sm:h-5 text-green-600" />
+                                                ) : (
+                                                  <Play className="w-4 sm:w-5 h-4 sm:h-5 text-forest" />
+                                                )}
                                               </div>
-                                              <p className={`text-sm font-semibold ${
-                                                isActive 
-                                                  ? 'text-forest' 
-                                                  : isLocked 
-                                                  ? 'text-gray-400' 
-                                                  : 'text-gray-900'
-                                              }`}>
-                                                {leccion.title}
-                                              </p>
+                                              <div className="flex-1 min-w-0">
+                                                <div className="flex items-center justify-between mb-1">
+                                                  <span className="text-xs font-semibold text-gray-500">
+                                                    Lección {index + 1}
+                                                  </span>
+                                                  <span className="text-xs whitespace-nowrap ml-2 text-gray-500">
+                                                    {leccion.duration_minutes} min
+                                                  </span>
+                                                </div>
+                                                <p className={`text-sm font-semibold ${
+                                                  isActive ? 'text-forest' : 'text-gray-900'
+                                                }`}>
+                                                  {leccion.title}
+                                                </p>
+                                              </div>
                                             </div>
+                                          </motion.button>
+                                        </div>
+                                      )
+                                    })}
+                                  </div>
+                                  
+                                  {/* Botón de Test del Módulo */}
+                                  {testStatus?.has_test && testStatus.is_published && (
+                                    <div className="p-3 border-t border-gray-100">
+                                      {moduleCompleted ? (
+                                        <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                                          <div className="flex items-center gap-2">
+                                            <Trophy className="w-5 h-5 text-amber-500" />
+                                            <span className="font-semibold text-green-700">
+                                              Test Aprobado
+                                            </span>
                                           </div>
-                                        </motion.button>
-                                      </div>
-                                    )
-                                  })}
-                                </div>
+                                          <span className="text-green-600 font-bold">
+                                            {testStatus.best_score}%
+                                          </span>
+                                        </div>
+                                      ) : (
+                                        <button
+                                          onClick={() => handleStartTest(module.id, module.title)}
+                                          className="w-full flex items-center justify-center gap-2 p-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
+                                        >
+                                          <ClipboardCheck className="w-5 h-5" />
+                                          Realizar Test del Módulo
+                                        </button>
+                                      )}
+                                    </div>
+                                  )}
+                                </>
                               )}
                             </div>
                           )}
@@ -1340,10 +1230,9 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                     })}
                   </div>
                 ) : (
-                  /* VISTA SIN MÓDULOS (estructura simple) */
+                  /* VISTA SIN MÓDULOS */
                   <div className="space-y-2">
                     {lecciones.map((leccion, index) => {
-                      const isLocked = index > 0 && !lessonProgress[lecciones[index - 1].id]
                       const isCompleted = lessonProgress[leccion.id]
                       const isActive = leccionActual?.id === leccion.id
                       
@@ -1351,22 +1240,17 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                         <div key={leccion.id} className="relative group">
                           <motion.button
                             onClick={() => handleSelectLesson(leccion)}
-                            disabled={isLocked}
                             className={`w-full text-left p-3 sm:p-4 rounded-lg transition-all ${
                               isActive
                                 ? 'bg-forest/10 border-2 border-forest'
-                                : isLocked
-                                ? 'bg-gray-100 opacity-60 cursor-not-allowed'
                                 : 'bg-gray-50 hover:bg-gray-100'
                             }`}
-                            whileHover={isLocked ? {} : { scale: 1.02 }}
-                            whileTap={isLocked ? {} : { scale: 0.98 }}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
                           >
                             <div className="flex items-start">
                               <div className="mr-2 sm:mr-3 mt-0.5 flex-shrink-0">
-                                {isLocked ? (
-                                  <Lock className="w-4 sm:w-5 h-4 sm:h-5 text-gray-400" />
-                                ) : isCompleted ? (
+                                {isCompleted ? (
                                   <CheckCircle className="w-4 sm:w-5 h-4 sm:h-5 text-green-600" />
                                 ) : (
                                   <Play className="w-4 sm:w-5 h-4 sm:h-5 text-forest" />
@@ -1374,49 +1258,27 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                               </div>
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center justify-between mb-1">
-                                  <span className={`text-xs font-semibold ${
-                                    isLocked ? 'text-gray-400' : 'text-gray-500'
-                                  }`}>
+                                  <span className="text-xs font-semibold text-gray-500">
                                     Lección {index + 1}
-                                    {isLocked && ' • Bloqueada'}
                                   </span>
-                                  <span className={`text-xs whitespace-nowrap ml-2 ${
-                                    isLocked ? 'text-gray-400' : 'text-gray-500'
-                                  }`}>
+                                  <span className="text-xs whitespace-nowrap ml-2 text-gray-500">
                                     {leccion.duration_minutes} min
                                   </span>
                                 </div>
                                 <p className={`text-sm sm:text-base font-semibold truncate ${
-                                  isActive 
-                                    ? 'text-forest' 
-                                    : isLocked 
-                                    ? 'text-gray-400' 
-                                    : 'text-gray-900'
+                                  isActive ? 'text-forest' : 'text-gray-900'
                                 }`}>
                                   {leccion.title}
                                 </p>
                               </div>
                             </div>
                           </motion.button>
-                          
-                          {/* Tooltip para lecciones bloqueadas */}
-                          {isLocked && (
-                            <div className="hidden lg:block absolute left-full ml-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                              <div className="bg-gray-900 text-white text-sm px-4 py-3 rounded-lg shadow-xl whitespace-nowrap">
-                                <div className="flex items-center">
-                                  <Lock className="w-4 h-4 mr-2 flex-shrink-0" />
-                                  <span>Completa la lección anterior</span>
-                                </div>
-                                <div className="absolute right-full top-1/2 -translate-y-1/2 border-8 border-transparent border-r-gray-900"></div>
-                              </div>
-                            </div>
-                          )}
                         </div>
                       )
                     })}
                   </div>
                 )}
-                </div> {/* Cierre del div colapsable */}
+                </div>
               </div>
             </div>
           </div>

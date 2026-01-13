@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { 
   Users, BookOpen, Mail, TrendingUp, DollarSign, 
-  CheckCircle, Clock, AlertCircle, Eye, ArrowRight, FileText
+  CheckCircle, Clock, AlertCircle, Eye, ArrowRight, FileText,
+  ClipboardCheck, Trophy
 } from 'lucide-react'
 import { getDashboardStats, getRecentUsers, getRecentSales, getRecentContacts, type DashboardStats } from '@/lib/supabase/dashboard'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
@@ -126,6 +127,22 @@ export default function DashboardPage() {
       icon: Mail,
       color: 'bg-red-500',
       href: '/administrator/contactos'
+    },
+    {
+      title: 'Tests de Módulos',
+      value: stats.tests?.total_tests || 0,
+      change: `${stats.tests?.published_tests || 0} publicados`,
+      icon: ClipboardCheck,
+      color: 'bg-orange-500',
+      href: '/administrator/tests'
+    },
+    {
+      title: 'Intentos de Tests',
+      value: stats.tests?.total_attempts || 0,
+      change: `${stats.tests?.avg_pass_rate || 0}% aprobados`,
+      icon: Trophy,
+      color: 'bg-teal-500',
+      href: '/administrator/tests'
     }
   ]
 
