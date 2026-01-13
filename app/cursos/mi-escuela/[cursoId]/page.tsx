@@ -215,7 +215,8 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
   useEffect(() => {
     async function loadData() {
       try {
-        const session = await getSession()
+        const { data } = await getSession()
+        const session = data?.session
         
         if (!session?.user) {
           router.push('/cursos')
