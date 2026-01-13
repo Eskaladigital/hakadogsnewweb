@@ -59,22 +59,22 @@ export default function ModulesManager({
   // Cargar información de tests de los módulos
   useEffect(() => {
     async function loadModuleTests() {
-      for (const module of modules) {
+      for (const mod of modules) {
         try {
-          const test = await getModuleTestAdmin(module.id)
+          const test = await getModuleTestAdmin(mod.id)
           let stats = null
           if (test) {
             stats = await getTestStats(test.id)
           }
           setModuleTests(prev => ({
             ...prev,
-            [module.id]: { test, stats, loading: false }
+            [mod.id]: { test, stats, loading: false }
           }))
         } catch (error) {
-          console.error(`Error cargando test del módulo ${module.id}:`, error)
+          console.error(`Error cargando test del módulo ${mod.id}:`, error)
           setModuleTests(prev => ({
             ...prev,
-            [module.id]: { test: null, stats: null, loading: false }
+            [mod.id]: { test: null, stats: null, loading: false }
           }))
         }
       }
