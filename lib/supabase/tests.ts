@@ -152,7 +152,7 @@ export async function getModulesTestStatus(
   const statusMap: Record<string, ModuleTestStatus> = {}
 
   for (const moduleId of moduleIds) {
-    const test = tests?.find((t: any) => t.module_id === moduleId)
+    const test: any = tests?.find((t: any) => t.module_id === moduleId)
     const moduleAttempts = test 
       ? attempts.filter((a: any) => a.test_id === test.id)
       : []
