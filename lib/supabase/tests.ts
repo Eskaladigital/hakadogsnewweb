@@ -234,21 +234,23 @@ export async function submitTestAttempt(
     const passed = score >= testData.passing_score
 
     // Guardar el intento
-    const { error: insertError } = await (supabase as any)
+    const { data: insertData, error: insertError } = await (supabase as any)
       .from('user_test_attempts')
       .insert({
         user_id: userId,
         test_id: testId,
         score,
         passed,
-        answers,
+        answers: JSON.stringify(answers), // Convertir a JSON string explícitamente
         time_spent_seconds: timeSpentSeconds,
         completed_at: new Date().toISOString()
       })
+      .select()
 
     if (insertError) {
       console.error('Error guardando intento:', insertError)
-      return { success: false, score, passed, error: 'Error guardando resultado' }
+      console.error('Detalles del error:', JSON.stringify(insertError, null, 2))
+      return { success: false, score, passed, error: `Error guardando resultado: ${insertError.message || insertError.code}` }
     }
 
     // Si aprobó, marcar todas las lecciones del módulo como completadas
