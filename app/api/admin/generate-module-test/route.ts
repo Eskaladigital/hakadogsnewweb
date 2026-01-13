@@ -140,17 +140,19 @@ ${lessonsContent}
 
 ## Instrucciones para las preguntas:
 
-1. Genera EXACTAMENTE 20 preguntas de opción múltiple
-2. Cada pregunta debe tener 4 opciones (A, B, C, D)
-3. Solo UNA opción es correcta por pregunta
-4. Las preguntas deben cubrir TODO el contenido del módulo de forma equilibrada
-5. Incluye preguntas de diferentes niveles:
+1. Genera EXACTAMENTE 20 preguntas de opción múltiple **ÚNICAS Y DIFERENTES**
+2. **CRÍTICO: NO REPITAS PREGUNTAS - Cada pregunta debe ser completamente diferente**
+3. Cada pregunta debe tener 4 opciones (A, B, C, D)
+4. Solo UNA opción es correcta por pregunta
+5. Las preguntas deben cubrir TODO el contenido del módulo de forma equilibrada
+6. Incluye preguntas de diferentes niveles:
    - 6 preguntas fáciles (comprensión básica)
    - 8 preguntas de dificultad media (aplicación de conceptos)
    - 6 preguntas difíciles (análisis y síntesis)
-6. Cada pregunta debe ser clara y sin ambigüedades
-7. Las opciones incorrectas deben ser plausibles pero claramente erróneas
-8. Incluye una breve explicación de por qué la respuesta correcta es la correcta
+7. Cada pregunta debe ser clara y sin ambigüedades
+8. Las opciones incorrectas deben ser plausibles pero claramente erróneas
+9. Incluye una breve explicación de por qué la respuesta correcta es la correcta
+10. **VERIFICA que no haya dos preguntas que evalúen exactamente lo mismo**
 
 ## Formato de respuesta (JSON estricto):
 
@@ -170,7 +172,8 @@ Responde ÚNICAMENTE con un JSON válido con esta estructura exacta:
 IMPORTANTE: 
 - correct_answer es el ÍNDICE (0-3) de la opción correcta
 - No incluyas ningún texto fuera del JSON
-- Asegúrate de que el JSON sea válido`
+- Asegúrate de que el JSON sea válido
+- VERIFICA que todas las preguntas sean únicas y no se repitan`
 
     console.log(`✅ Admin ${user.email} generando test para módulo: "${moduleData.title}"`)
 
@@ -185,7 +188,7 @@ IMPORTANTE:
         messages: [
           {
             role: 'system',
-            content: 'Eres un experto en educación canina y diseño de evaluaciones. Siempre respondes con JSON válido y bien formateado.'
+            content: 'Eres un experto en educación canina y diseño de evaluaciones. Creas preguntas de test únicas y variadas, NUNCA repites preguntas. Siempre respondes con JSON válido y bien formateado.'
           },
           {
             role: 'user',
@@ -234,6 +237,26 @@ IMPORTANTE:
       return NextResponse.json(
         { error: 'El test generado no tiene preguntas válidas' },
         { status: 500 }
+      )
+    }
+
+    // ✅ NUEVA VALIDACIÓN: Detectar preguntas duplicadas
+    const questionTexts = testData.questions.map(q => q.question.toLowerCase().trim())
+    const uniqueQuestions = new Set(questionTexts)
+    
+    if (uniqueQuestions.size !== questionTexts.length) {
+      console.error('⚠️ OpenAI generó preguntas duplicadas. Regenerando...')
+      return NextResponse.json(
+        { error: 'Se detectaron preguntas duplicadas. Por favor, regenera el test.' },
+        { status: 400 }
+      )
+    }
+
+    // Validar que hay exactamente 20 preguntas
+    if (testData.questions.length !== 20) {
+      return NextResponse.json(
+        { error: `Se esperaban 20 preguntas pero se generaron ${testData.questions.length}` },
+        { status: 400 }
       )
     }
 
