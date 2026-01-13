@@ -56,6 +56,13 @@ export interface DashboardStats {
     overall_pass_rate: number
     overall_avg_score: number
   }
+  reviews: {
+    total_reviews: number
+    avg_overall_rating: number
+    courses_with_reviews: number
+    high_engagement_reviews: number
+    low_engagement_reviews: number
+  }
 }
 
 export interface RecentUser {
@@ -162,17 +169,28 @@ export async function getDashboardStats(): Promise<DashboardStats> {
         overall_pass_rate: 0,
         overall_avg_score: 0
       },
+      reviews: {
+        total_reviews: 0,
+        avg_overall_rating: 0,
+        courses_with_reviews: 0,
+        high_engagement_reviews: 0,
+        low_engagement_reviews: 0
+      },
       blog: blogStats
     }
   }
   
-  // Obtener estadísticas de tests
-  const testsStats = await getTestsStats()
+  // Obtener estadísticas de tests y reviews
+  const [testsStats, reviewsStats] = await Promise.all([
+    getTestsStats(),
+    getReviewsStats()
+  ])
   
   return {
     ...data,
     blog: blogStats,
-    tests: testsStats
+    tests: testsStats,
+    reviews: reviewsStats
   } as DashboardStats
 }
 
@@ -215,6 +233,47 @@ async function getTestsStats() {
 
   } catch (error) {
     console.error('Error obteniendo estadísticas de tests:', error)
+    return defaultStats
+  }
+}
+
+/**
+ * Obtiene estadísticas de las valoraciones de cursos usando la función RPC de Supabase
+ */
+async function getReviewsStats() {
+  const defaultStats = {
+    total_reviews: 0,
+    avg_overall_rating: 0,
+    courses_with_reviews: 0,
+    high_engagement_reviews: 0,
+    low_engagement_reviews: 0
+  }
+
+  try {
+    const { data, error } = await (supabase as any).rpc('get_overall_review_stats')
+    
+    if (error) {
+      console.warn('⚠️ Error obteniendo estadísticas de reviews:', error)
+      return defaultStats
+    }
+
+    // La función RPC devuelve un array con un solo objeto
+    const stats = data?.[0]
+    
+    if (!stats) {
+      return defaultStats
+    }
+
+    return {
+      total_reviews: stats.total_reviews || 0,
+      avg_overall_rating: parseFloat(stats.avg_overall_rating) || 0,
+      courses_with_reviews: stats.courses_with_reviews || 0,
+      high_engagement_reviews: stats.high_engagement_reviews || 0,
+      low_engagement_reviews: stats.low_engagement_reviews || 0
+    }
+
+  } catch (error) {
+    console.error('Error obteniendo estadísticas de reviews:', error)
     return defaultStats
   }
 }

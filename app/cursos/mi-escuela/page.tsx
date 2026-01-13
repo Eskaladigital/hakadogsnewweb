@@ -3,26 +3,30 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { BookOpen, ShoppingCart, Clock, CheckCircle, Lock, Award, TrendingUp, Play, Loader2 } from 'lucide-react'
+import { BookOpen, ShoppingCart, Clock, CheckCircle, Lock, Award, TrendingUp, Play, Loader2, Star } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { getSession } from '@/lib/supabase/auth'
 import { getUserPurchases, getAllCourses, getUserCourseProgress } from '@/lib/supabase/courses'
 import type { Course, UserCourseProgress } from '@/lib/supabase/courses'
 import { getUserStats, getUserBadges } from '@/lib/supabase/gamification'
+import { getUserReview } from '@/lib/supabase/reviews'
 import UserStatsCard from '@/components/gamification/UserStatsCard'
 import StreakCounter from '@/components/gamification/StreakCounter'
 import BadgeCard from '@/components/gamification/BadgeCard'
+import CourseReviewModal from '@/components/courses/CourseReviewModal'
 
 interface CursoConProgreso extends Course {
   progress: number
   completedLessons: number
   isPurchased: boolean
+  userRating?: number | null
 }
 
 export default function MiEscuelaPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [userName, setUserName] = useState('')
+  const [userId, setUserId] = useState('')
   const [cursosComprados, setCursosComprados] = useState<CursoConProgreso[]>([])
   const [cursosDisponibles, setCursosDisponibles] = useState<Course[]>([])
   const [stats, setStats] = useState({
@@ -33,6 +37,10 @@ export default function MiEscuelaPage() {
   })
   const [userStats, setUserStats] = useState<any>(null)
   const [recentBadges, setRecentBadges] = useState<any[]>([])
+  
+  // Modal de valoración
+  const [reviewModalOpen, setReviewModalOpen] = useState(false)
+  const [selectedCourse, setSelectedCourse] = useState<{ id: string; title: string } | null>(null)
 
   useEffect(() => {
     async function loadData() {
@@ -45,6 +53,7 @@ export default function MiEscuelaPage() {
         }
 
         const userId = sessionData.session.user.id
+        setUserId(userId)
         setUserName(sessionData.session.user.user_metadata.name || sessionData.session.user.email.split('@')[0])
 
         // Cargar gamificación
@@ -71,7 +80,10 @@ export default function MiEscuelaPage() {
         
         // SIEMPRE incluir el curso gratuito si existe
         if (freeCourse) {
-          const progress = await getUserCourseProgress(userId, freeCourse.id)
+          const [progress, review] = await Promise.all([
+            getUserCourseProgress(userId, freeCourse.id),
+            getUserReview(userId, freeCourse.id)
+          ])
           console.log('📊 Progreso curso gratuito:', {
             courseId: freeCourse.id,
             progress: progress
@@ -80,14 +92,18 @@ export default function MiEscuelaPage() {
             ...freeCourse,
             progress: progress?.progress_percentage || 0,
             completedLessons: progress?.completed_lessons || 0,
-            isPurchased: true
+            isPurchased: true,
+            userRating: review?.overall_rating || null
           })
         }
         
         // Agregar cursos comprados (de pago)
         for (const course of paidCourses) {
           if (purchasedCourseIds.has(course.id)) {
-            const progress = await getUserCourseProgress(userId, course.id)
+            const [progress, review] = await Promise.all([
+              getUserCourseProgress(userId, course.id),
+              getUserReview(userId, course.id)
+            ])
             console.log('📊 Progreso curso de pago:', {
               courseId: course.id,
               courseTitle: course.title,
@@ -97,7 +113,8 @@ export default function MiEscuelaPage() {
               ...course,
               progress: progress?.progress_percentage || 0,
               completedLessons: progress?.completed_lessons || 0,
-              isPurchased: true
+              isPurchased: true,
+              userRating: review?.overall_rating || null
             })
           }
         }
@@ -134,6 +151,16 @@ export default function MiEscuelaPage() {
 
     loadData()
   }, [router])
+
+  const handleOpenReviewModal = (courseId: string, courseTitle: string) => {
+    setSelectedCourse({ id: courseId, title: courseTitle })
+    setReviewModalOpen(true)
+  }
+
+  const handleReviewSubmitted = () => {
+    // Recargar datos para actualizar la valoración
+    window.location.reload()
+  }
 
   if (loading) {
     return (
@@ -363,7 +390,7 @@ export default function MiEscuelaPage() {
                       </div>
 
                       {/* Footer */}
-                      <div className="p-6 bg-white">
+                      <div className="p-6 bg-white space-y-3">
                         <Link
                           href={`/cursos/mi-escuela/${curso.slug}`}
                           className="w-full bg-gradient-to-r from-forest to-sage text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-all flex items-center justify-center whitespace-nowrap"
@@ -371,6 +398,15 @@ export default function MiEscuelaPage() {
                           <Play className="w-5 h-5 mr-2 flex-shrink-0" />
                           {curso.progress === 0 ? 'Comenzar Curso' : curso.progress === 100 ? 'Revisar Curso' : 'Continuar Curso'}
                         </Link>
+                        
+                        {/* Botón de valoración */}
+                        <button
+                          onClick={() => handleOpenReviewModal(curso.id, curso.title)}
+                          className="w-full border-2 border-gray-300 text-gray-700 font-medium py-2.5 px-6 rounded-lg hover:border-gold hover:text-gold transition-all flex items-center justify-center whitespace-nowrap"
+                        >
+                          <Star className={`w-5 h-5 mr-2 flex-shrink-0 ${curso.userRating ? 'fill-gold text-gold' : ''}`} />
+                          {curso.userRating ? `Tu valoración: ${curso.userRating.toFixed(1)} ⭐` : 'Valorar Curso'}
+                        </button>
                       </div>
                     </motion.div>
                   )
@@ -493,6 +529,18 @@ export default function MiEscuelaPage() {
           </div>
         </div>
       </section>
+
+      {/* Modal de Valoración */}
+      {selectedCourse && (
+        <CourseReviewModal
+          isOpen={reviewModalOpen}
+          onClose={() => setReviewModalOpen(false)}
+          userId={userId}
+          courseId={selectedCourse.id}
+          courseTitle={selectedCourse.title}
+          onReviewSubmitted={handleReviewSubmitted}
+        />
+      )}
     </div>
   )
 }

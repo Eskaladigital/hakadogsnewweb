@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { 
   Users, BookOpen, Mail, TrendingUp, DollarSign, 
   CheckCircle, Clock, AlertCircle, Eye, ArrowRight, FileText,
-  ClipboardCheck, Trophy
+  ClipboardCheck, Trophy, Star
 } from 'lucide-react'
 import { getDashboardStats, getRecentUsers, getRecentSales, getRecentContacts, type DashboardStats } from '@/lib/supabase/dashboard'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
@@ -143,6 +143,14 @@ export default function DashboardPage() {
       icon: Trophy,
       color: 'bg-teal-500',
       href: '/administrator/tests'
+    },
+    {
+      title: 'Valoraciones',
+      value: stats.reviews?.total_reviews || 0,
+      change: `${stats.reviews?.avg_overall_rating?.toFixed(1) || 0} ⭐ promedio`,
+      icon: Star,
+      color: 'bg-gold',
+      href: '/administrator/valoraciones'
     }
   ]
 
