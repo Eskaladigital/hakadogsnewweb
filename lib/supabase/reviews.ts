@@ -53,19 +53,24 @@ export interface AdminReviewData {
 
 // Obtener valoración del usuario para un curso
 export async function getUserReview(userId: string, courseId: string): Promise<CourseReview | null> {
-  const { data, error } = await supabase
-    .from('course_reviews')
-    .select('*')
-    .eq('user_id', userId)
-    .eq('course_id', courseId)
-    .single()
+  try {
+    const { data, error } = await supabase
+      .from('course_reviews')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('course_id', courseId)
+      .maybeSingle() // maybeSingle() permite 0 o 1 resultados sin error
 
-  if (error) {
-    if (error.code === 'PGRST116') return null // No existe
-    throw error
+    if (error) {
+      console.warn('Error getting user review:', error)
+      return null
+    }
+
+    return data as CourseReview | null
+  } catch (error) {
+    console.warn('Error getting user review:', error)
+    return null
   }
-
-  return data as CourseReview
 }
 
 // Crear o actualizar valoración
