@@ -258,7 +258,7 @@ IMPORTANTE:
       module_id: moduleId,
       title: `Test: ${moduleData.title}`,
       description: `Evaluación de conocimientos del módulo "${moduleData.title}". Aprueba con un 80% para completar el módulo.`,
-      passing_score: 80,
+      passing_score: 70,
       questions: testData.questions,
       is_generated: true,
       is_published: false, // Por defecto no publicado para revisión

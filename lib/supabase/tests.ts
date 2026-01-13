@@ -15,7 +15,7 @@ export interface ModuleTest {
   module_id: string
   title: string
   description: string | null
-  passing_score: number  // Porcentaje mínimo para aprobar (ej: 80)
+  passing_score: number  // Porcentaje mínimo para aprobar (ej: 70)
   time_limit_minutes: number | null
   questions: TestQuestion[]
   is_generated: boolean
@@ -325,7 +325,7 @@ export async function upsertModuleTest(
       module_id: moduleId,
       title: testData.title,
       description: testData.description || null,
-      passing_score: testData.passing_score || 80,
+      passing_score: testData.passing_score || 70,
       time_limit_minutes: testData.time_limit_minutes || null,
       questions: testData.questions,
       is_generated: testData.is_generated || false,

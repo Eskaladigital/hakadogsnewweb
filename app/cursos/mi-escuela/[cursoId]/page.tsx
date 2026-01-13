@@ -1124,7 +1124,11 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
                                         Test aprobado ({testStatus.best_score}%)
                                       </span>
                                     ) : (
-                                      <span className="text-amber-600 font-medium">Test pendiente</span>
+                                      <span className="text-amber-600 font-medium">
+                                        {testStatus.best_score !== null 
+                                          ? `Último intento: ${testStatus.best_score}%` 
+                                          : 'Test pendiente'}
+                                      </span>
                                     )}
                                   </>
                                 )}
