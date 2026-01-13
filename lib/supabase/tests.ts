@@ -132,7 +132,7 @@ export async function getModulesTestStatus(
     return {}
   }
 
-  const testIds = (tests || []).map(t => t.id)
+  const testIds = (tests || []).map((t: any) => t.id)
   
   // Obtener intentos del usuario para estos tests
   let attempts: any[] = []
@@ -152,13 +152,13 @@ export async function getModulesTestStatus(
   const statusMap: Record<string, ModuleTestStatus> = {}
 
   for (const moduleId of moduleIds) {
-    const test = tests?.find(t => t.module_id === moduleId)
+    const test = tests?.find((t: any) => t.module_id === moduleId)
     const moduleAttempts = test 
-      ? attempts.filter(a => a.test_id === test.id)
+      ? attempts.filter((a: any) => a.test_id === test.id)
       : []
     
-    const passed = moduleAttempts.some(a => a.passed)
-    const scores = moduleAttempts.map(a => a.score)
+    const passed = moduleAttempts.some((a: any) => a.passed)
+    const scores = moduleAttempts.map((a: any) => a.score)
     const bestScore = scores.length > 0 ? Math.max(...scores) : null
 
     statusMap[moduleId] = {
