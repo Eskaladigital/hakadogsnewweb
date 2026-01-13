@@ -177,61 +177,44 @@ export async function getDashboardStats(): Promise<DashboardStats> {
 }
 
 /**
- * Obtiene estadísticas de los tests de módulos
+ * Obtiene estadísticas de los tests de módulos usando la función RPC de Supabase
  */
 async function getTestsStats() {
   const defaultStats = {
     total_tests: 0,
     published_tests: 0,
     total_attempts: 0,
-    unique_users: 0,
-    avg_pass_rate: 0,
-    avg_score: 0
+    unique_users_attempting: 0,
+    overall_pass_rate: 0,
+    overall_avg_score: 0
   }
 
   try {
-    // Obtener tests
-    const { data: tests, error: testsError } = await supabase
-      .from('module_tests')
-      .select('id, is_published')
+    const { data, error } = await (supabase as any).rpc('get_overall_test_stats')
     
-    if (testsError) {
-      console.warn('⚠️ Error obteniendo tests:', testsError)
+    if (error) {
+      console.warn('⚠️ Error obteniendo estadísticas de tests:', error)
       return defaultStats
     }
 
-    const totalTests = tests?.length || 0
-    const publishedTests = tests?.filter(t => t.is_published).length || 0
-
-    if (totalTests === 0) {
-      return { ...defaultStats, total_tests: 0, published_tests: 0 }
-    }
-
-    // Obtener intentos de tests
-    const { data: attempts, error: attemptsError } = await supabase
-      .from('user_test_attempts')
-      .select('id, user_id, score, passed')
+    // La función RPC devuelve un array con un solo objeto
+    const stats = data?.[0]
     
-    if (attemptsError) {
-      console.warn('⚠️ Error obteniendo intentos:', attemptsError)
-      return { ...defaultStats, total_tests: totalTests, published_tests: publishedTests }
+    if (!stats) {
+      return defaultStats
     }
-
-    const totalAttempts = attempts?.length || 0
-    const uniqueUsers = new Set(attempts?.map(a => a.user_id) || []).size
-    const passedAttempts = attempts?.filter(a => a.passed).length || 0
-    const totalScore = attempts?.reduce((sum, a) => sum + (a.score || 0), 0) || 0
 
     return {
-      total_tests: totalTests,
-      published_tests: publishedTests,
-      total_attempts: totalAttempts,
-      unique_users: uniqueUsers,
-      avg_pass_rate: totalAttempts > 0 ? Math.round((passedAttempts / totalAttempts) * 100) : 0,
-      avg_score: totalAttempts > 0 ? Math.round(totalScore / totalAttempts) : 0
+      total_tests: stats.total_tests || 0,
+      published_tests: stats.published_tests || 0,
+      total_attempts: stats.total_attempts || 0,
+      unique_users_attempting: stats.unique_users_attempting || 0,
+      overall_pass_rate: parseFloat(stats.overall_pass_rate) || 0,
+      overall_avg_score: parseFloat(stats.overall_avg_score) || 0
     }
+
   } catch (error) {
-    console.warn('⚠️ Error en getTestsStats:', error)
+    console.error('Error obteniendo estadísticas de tests:', error)
     return defaultStats
   }
 }
