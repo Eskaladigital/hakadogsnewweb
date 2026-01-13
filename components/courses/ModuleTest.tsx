@@ -43,6 +43,42 @@ export default function ModuleTestComponent({
   const [timeElapsed, setTimeElapsed] = useState(0)
   const [shuffledQuestions, setShuffledQuestions] = useState<TestQuestion[]>([])
 
+  // Persistir respuestas en localStorage
+  useEffect(() => {
+    // Cargar respuestas guardadas al inicio
+    const savedAnswers = localStorage.getItem(`test_${test.id}_answers`)
+    const savedIndex = localStorage.getItem(`test_${test.id}_index`)
+    const savedTime = localStorage.getItem(`test_${test.id}_time`)
+    
+    if (savedAnswers) {
+      try {
+        setAnswers(JSON.parse(savedAnswers))
+        if (savedIndex) setCurrentQuestionIndex(parseInt(savedIndex))
+        if (savedTime) setTimeElapsed(parseInt(savedTime))
+      } catch (e) {
+        console.error('Error cargando progreso guardado:', e)
+      }
+    }
+  }, [test.id])
+
+  // Guardar progreso automáticamente
+  useEffect(() => {
+    if (answers.some(a => a !== null)) {
+      localStorage.setItem(`test_${test.id}_answers`, JSON.stringify(answers))
+      localStorage.setItem(`test_${test.id}_index`, currentQuestionIndex.toString())
+      localStorage.setItem(`test_${test.id}_time`, timeElapsed.toString())
+    }
+  }, [answers, currentQuestionIndex, timeElapsed, test.id])
+
+  // Limpiar progreso al completar
+  useEffect(() => {
+    if (showResults) {
+      localStorage.removeItem(`test_${test.id}_answers`)
+      localStorage.removeItem(`test_${test.id}_index`)
+      localStorage.removeItem(`test_${test.id}_time`)
+    }
+  }, [showResults, test.id])
+
   // Mezclar preguntas al inicio
   useEffect(() => {
     const shuffled = [...test.questions].sort(() => Math.random() - 0.5)
