@@ -219,7 +219,8 @@ export async function submitTestAttempt(
       return { success: false, score: 0, passed: false, error: 'Test no encontrado' }
     }
 
-    const questions = test.questions as TestQuestion[]
+    const testData: any = test
+    const questions = testData.questions as TestQuestion[]
     
     // Calcular puntuación
     let correctAnswers = 0
@@ -230,10 +231,10 @@ export async function submitTestAttempt(
     }
 
     const score = Math.round((correctAnswers / questions.length) * 100)
-    const passed = score >= test.passing_score
+    const passed = score >= testData.passing_score
 
     // Guardar el intento
-    const { error: insertError } = await supabase
+    const { error: insertError } = await (supabase as any)
       .from('user_test_attempts')
       .insert({
         user_id: userId,
@@ -254,7 +255,7 @@ export async function submitTestAttempt(
     if (passed) {
       // El trigger en la BD debería hacer esto automáticamente,
       // pero lo hacemos también desde el cliente por si acaso
-      await markModuleLessonsComplete(userId, test.module_id)
+      await markModuleLessonsComplete(userId, testData.module_id)
     }
 
     return { success: true, score, passed }
@@ -281,7 +282,7 @@ async function markModuleLessonsComplete(userId: string, moduleId: string): Prom
     }
 
     // Marcar cada lección como completada
-    const upsertData = lessons.map(lesson => ({
+    const upsertData = lessons.map((lesson: any) => ({
       user_id: userId,
       lesson_id: lesson.id,
       completed: true,
@@ -289,7 +290,7 @@ async function markModuleLessonsComplete(userId: string, moduleId: string): Prom
       updated_at: new Date().toISOString()
     }))
 
-    const { error: upsertError } = await supabase
+    const { error: upsertError } = await (supabase as any)
       .from('user_lesson_progress')
       .upsert(upsertData, { onConflict: 'user_id,lesson_id' })
 
@@ -318,7 +319,7 @@ export async function upsertModuleTest(
     is_published?: boolean
   }
 ): Promise<ModuleTest | null> {
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('module_tests')
     .upsert({
       module_id: moduleId,
@@ -346,7 +347,7 @@ export async function upsertModuleTest(
  * Publicar/despublicar un test
  */
 export async function toggleTestPublished(testId: string, isPublished: boolean): Promise<boolean> {
-  const { error } = await supabase
+  const { error } = await (supabase as any)
     .from('module_tests')
     .update({ is_published: isPublished, updated_at: new Date().toISOString() })
     .eq('id', testId)
@@ -363,7 +364,7 @@ export async function toggleTestPublished(testId: string, isPublished: boolean):
  * Eliminar un test de módulo
  */
 export async function deleteModuleTest(testId: string): Promise<boolean> {
-  const { error } = await supabase
+  const { error } = await (supabase as any)
     .from('module_tests')
     .delete()
     .eq('id', testId)
@@ -404,9 +405,9 @@ export async function getTestStats(testId: string): Promise<{
     }
   }
 
-  const uniqueUsers = new Set(data.map(d => d.user_id)).size
-  const passedAttempts = data.filter(d => d.passed).length
-  const totalScore = data.reduce((sum, d) => sum + d.score, 0)
+  const uniqueUsers = new Set(data.map((d: any) => d.user_id)).size
+  const passedAttempts = data.filter((d: any) => d.passed).length
+  const totalScore = data.reduce((sum: number, d: any) => sum + d.score, 0)
 
   return {
     total_attempts: data.length,
