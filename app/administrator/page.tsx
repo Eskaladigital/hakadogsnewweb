@@ -139,7 +139,7 @@ export default function DashboardPage() {
     {
       title: 'Intentos de Tests',
       value: stats.tests?.total_attempts || 0,
-      change: `${stats.tests?.avg_pass_rate || 0}% aprobados`,
+      change: `${stats.tests?.overall_pass_rate?.toFixed(1) || 0}% aprobados`,
       icon: Trophy,
       color: 'bg-teal-500',
       href: '/administrator/tests'

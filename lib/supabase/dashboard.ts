@@ -52,9 +52,9 @@ export interface DashboardStats {
     total_tests: number
     published_tests: number
     total_attempts: number
-    unique_users: number
-    avg_pass_rate: number
-    avg_score: number
+    unique_users_attempting: number
+    overall_pass_rate: number
+    overall_avg_score: number
   }
 }
 
