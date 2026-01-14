@@ -7,17 +7,17 @@ import { Camera } from 'lucide-react'
 export default function SessionsShowcase() {
   const sessions = [
     {
-      image: '/images/images_Foto 26-3-21 17 03 23.jpg',
+      image: '/images/hakadogs/6694D2C8-51F8-42C0-867C-D48893A11691.jpeg',
       title: 'Trabajo en Exterior',
       description: 'Sesiones al aire libre para socialización y control en entornos reales'
     },
     {
-      image: '/images/EwXEDf2XMAMGhqN.jpg',
+      image: '/images/hakadogs/IMG_2775.jpeg',
       title: 'Educación Personalizada',
       description: 'Atención individual adaptada a cada perro y familia'
     },
     {
-      image: '/images/d60234abc4831dfd6d07b333f8a73110.jpg',
+      image: '/images/hakadogs/IMG_9864.jpeg',
       title: 'Conexión y Vínculo',
       description: 'Fortalecemos la relación entre perro y propietario'
     }
