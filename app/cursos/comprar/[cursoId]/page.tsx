@@ -635,7 +635,7 @@ export default function ComprarCursoPage({ params }: { params: { cursoId: string
                         Procesando...
                       </>
                     ) : (
-                      <>Completar Compra - {curso.price.toFixed(2)}€</>
+                      <>Completar Compra - {curso.price.toFixed(2)}€ (IVA incluido)</>
                     )}
                   </button>
 
@@ -653,17 +653,17 @@ export default function ComprarCursoPage({ params }: { params: { cursoId: string
                 
                 <div className="mb-6">
                   <div className="flex justify-between text-gray-700 mb-2">
-                    <span>Precio del curso:</span>
-                    <span className="font-semibold">{curso.price.toFixed(2)}€</span>
+                    <span>Base imponible:</span>
+                    <span className="font-semibold">{(curso.price / 1.21).toFixed(2)}€</span>
                   </div>
                   <div className="flex justify-between text-gray-700 mb-2">
                     <span>IVA (21%):</span>
-                    <span className="font-semibold">{(curso.price * 0.21).toFixed(2)}€</span>
+                    <span className="font-semibold">{(curso.price - (curso.price / 1.21)).toFixed(2)}€</span>
                   </div>
                   <div className="border-t border-gray-200 my-4"></div>
                   <div className="flex justify-between text-xl font-bold text-gray-900">
-                    <span>Total:</span>
-                    <span>{(curso.price * 1.21).toFixed(2)}€</span>
+                    <span>Total (IVA incluido):</span>
+                    <span>{curso.price.toFixed(2)}€</span>
                   </div>
                 </div>
 
