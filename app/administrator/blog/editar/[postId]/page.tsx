@@ -174,7 +174,7 @@ export default function EditarArticuloPage() {
         .from('blog_posts')
         .select('status, published_at, created_at, updated_at')
         .eq('id', postId)
-        .single()
+        .single() as { data: { status: string; published_at: string; created_at: string; updated_at: string } | null }
 
       // Solo establecer published_at si se está publicando por PRIMERA vez (de draft a published)
       const isFirstTimePublishing = currentPost?.status !== 'published' && formData.status === 'published'
