@@ -59,7 +59,10 @@ export default function EditarArticuloPage() {
     isFeatured: false,
     seoTitle: '',
     seoDescription: '',
-    seoKeywords: ''
+    seoKeywords: '',
+    createdAt: '',
+    publishedAt: '',
+    updatedAt: ''
   })
 
   useEffect(() => {
@@ -106,7 +109,10 @@ export default function EditarArticuloPage() {
         isFeatured: post.is_featured,
         seoTitle: post.seo_title || '',
         seoDescription: post.seo_description || '',
-        seoKeywords: post.seo_keywords || ''
+        seoKeywords: post.seo_keywords || '',
+        createdAt: post.created_at ? new Date(post.created_at).toISOString().slice(0, 16) : '',
+        publishedAt: post.published_at ? new Date(post.published_at).toISOString().slice(0, 16) : '',
+        updatedAt: post.updated_at ? new Date(post.updated_at).toISOString().slice(0, 16) : ''
       })
 
     } catch (error) {
@@ -186,10 +192,10 @@ export default function EditarArticuloPage() {
         seo_description: formData.seoDescription || formData.excerpt,
         seo_keywords: formData.seoKeywords || null,
         reading_time_minutes: readingTime,
-        // Solo actualizar published_at si es la primera publicación
-        ...(isFirstTimePublishing && { published_at: new Date().toISOString() }),
-        // Mantener el updated_at original para no afectar el orden
-        updated_at: currentPost?.published_at || currentPost?.updated_at || currentPost?.created_at
+        // Usar las fechas del formulario (editables)
+        created_at: formData.createdAt ? new Date(formData.createdAt).toISOString() : currentPost?.created_at,
+        published_at: formData.publishedAt ? new Date(formData.publishedAt).toISOString() : (isFirstTimePublishing ? new Date().toISOString() : currentPost?.published_at),
+        updated_at: formData.updatedAt ? new Date(formData.updatedAt).toISOString() : currentPost?.updated_at
       }
 
       const { error } = await supabase
@@ -446,6 +452,51 @@ export default function EditarArticuloPage() {
                     <p className="text-xs text-gray-500 mt-1">
                       Aparecerá en la parte superior del blog
                     </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Sección de Fechas */}
+              <div className="border-t pt-4">
+                <h4 className="font-semibold text-gray-700 mb-3">Fechas</h4>
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-600 mb-1">
+                      Fecha de Creación
+                    </label>
+                    <input
+                      type="datetime-local"
+                      value={formData.createdAt}
+                      onChange={(e) => handleInputChange('createdAt', e.target.value)}
+                      className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-600 mb-1">
+                      Fecha de Publicación
+                    </label>
+                    <input
+                      type="datetime-local"
+                      value={formData.publishedAt}
+                      onChange={(e) => handleInputChange('publishedAt', e.target.value)}
+                      className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Afecta al orden en el blog
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-600 mb-1">
+                      Fecha de Modificación
+                    </label>
+                    <input
+                      type="datetime-local"
+                      value={formData.updatedAt}
+                      onChange={(e) => handleInputChange('updatedAt', e.target.value)}
+                      className="w-full px-2 py-1.5 border border-gray-300 rounded text-sm"
+                    />
                   </div>
                 </div>
               </div>
