@@ -85,7 +85,12 @@ export default function ModulesManager({
     }
   }, [modules])
 
-  const toggleModule = (moduleId: string) => {
+  const toggleModule = (moduleId: string, e?: React.MouseEvent) => {
+    // Prevenir propagación del evento para evitar guardados no deseados
+    if (e) {
+      e.preventDefault()
+      e.stopPropagation()
+    }
     setExpandedModules(prev => ({
       ...prev,
       [moduleId]: !prev[moduleId]
@@ -230,6 +235,7 @@ export default function ModulesManager({
         </div>
         {!isCreating && (
           <button
+            type="button"
             onClick={() => setIsCreating(true)}
             className="flex items-center gap-2 px-4 py-2 bg-forest text-white rounded-lg hover:bg-forest/90 transition"
           >
@@ -248,6 +254,7 @@ export default function ModulesManager({
             <p className="text-red-600 text-sm">{testError}</p>
           </div>
           <button 
+            type="button"
             onClick={() => setTestError(null)}
             className="ml-auto text-red-400 hover:text-red-600"
           >
@@ -293,6 +300,7 @@ export default function ModulesManager({
               </div>
               <div className="flex gap-2">
                 <button
+                  type="button"
                   onClick={handleCreateModule}
                   disabled={!newModuleForm.title.trim()}
                   className="flex items-center gap-2 px-4 py-2 bg-forest text-white rounded-lg hover:bg-forest/90 transition disabled:opacity-50 disabled:cursor-not-allowed"
@@ -301,6 +309,7 @@ export default function ModulesManager({
                   Crear Módulo
                 </button>
                 <button
+                  type="button"
                   onClick={() => {
                     setIsCreating(false)
                     setNewModuleForm({ title: '', description: '' })
@@ -355,6 +364,7 @@ export default function ModulesManager({
                       />
                       <div className="flex gap-2">
                         <button
+                          type="button"
                           onClick={() => saveEdit(module.id)}
                           className="flex items-center gap-2 px-3 py-1.5 bg-forest text-white rounded-lg hover:bg-forest/90 transition text-sm"
                         >
@@ -362,6 +372,7 @@ export default function ModulesManager({
                           Guardar
                         </button>
                         <button
+                          type="button"
                           onClick={cancelEdit}
                           className="flex items-center gap-2 px-3 py-1.5 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition text-sm"
                         >
@@ -403,6 +414,7 @@ export default function ModulesManager({
                       </div>
                       <div className="flex items-center gap-2">
                         <button
+                          type="button"
                           onClick={() => startEdit(module)}
                           className="p-2 text-gray-600 hover:bg-gray-200 rounded-lg transition"
                           title="Editar módulo"
@@ -410,6 +422,7 @@ export default function ModulesManager({
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button
+                          type="button"
                           onClick={() => handleDelete(module.id)}
                           className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
                           title="Eliminar módulo"
@@ -417,7 +430,8 @@ export default function ModulesManager({
                           <Trash2 className="w-4 h-4" />
                         </button>
                         <button
-                          onClick={() => toggleModule(module.id)}
+                          type="button"
+                          onClick={(e) => toggleModule(module.id, e)}
                           className="p-2 text-gray-600 hover:bg-gray-200 rounded-lg transition"
                         >
                           {isExpanded ? (
@@ -470,6 +484,7 @@ export default function ModulesManager({
                               </div>
                               <div className="flex items-center gap-2">
                                 <button
+                                  type="button"
                                   onClick={() => handleTogglePublish(module.id, testInfo.test!.id, testInfo.test!.is_published)}
                                   className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium transition ${
                                     testInfo.test.is_published
@@ -512,6 +527,7 @@ export default function ModulesManager({
                             {/* Acciones */}
                             <div className="flex gap-2 mt-4 pt-3 border-t border-gray-100">
                               <button
+                                type="button"
                                 onClick={() => handleGenerateTest(module.id, true)}
                                 className="flex items-center gap-2 px-3 py-1.5 bg-amber-100 text-amber-700 rounded-lg hover:bg-amber-200 transition text-sm"
                               >
@@ -519,6 +535,7 @@ export default function ModulesManager({
                                 Regenerar
                               </button>
                               <button
+                                type="button"
                                 onClick={() => handleDeleteTest(module.id, testInfo.test!.id)}
                                 className="flex items-center gap-2 px-3 py-1.5 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition text-sm"
                               >
@@ -534,6 +551,7 @@ export default function ModulesManager({
                               Este módulo aún no tiene test. Genera uno automáticamente con IA basado en el contenido de las lecciones.
                             </p>
                             <button
+                              type="button"
                               onClick={() => handleGenerateTest(module.id)}
                               disabled={moduleLessons.length === 0}
                               className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-lg hover:shadow-lg transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
@@ -574,6 +592,7 @@ export default function ModulesManager({
                                 </p>
                               </div>
                               <button
+                                type="button"
                                 onClick={() => handleAssignLesson(lesson.id, null)}
                                 className="text-xs text-red-600 hover:underline"
                               >
