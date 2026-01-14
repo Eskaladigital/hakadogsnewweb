@@ -268,14 +268,15 @@ async function main() {
     .eq('role', 'admin')
     .limit(1)
   
-  if (adminError || !adminUsers || adminUsers.length === 0) {
-    console.error('❌ No se encontró ningún usuario admin')
-    console.error('   Crea un admin primero o modifica el script para usar otro user_id')
-    process.exit(1)
-  }
+  let authorId = null
   
-  const authorId = adminUsers[0].user_id
-  console.log(`✅ Usando admin como autor: ${authorId}\n`)
+  if (adminError || !adminUsers || adminUsers.length === 0) {
+    console.warn('⚠️  No se encontró usuario admin - los posts se insertarán con author_id = null')
+    console.warn('   Puedes asignar el autor manualmente después desde el panel de administración\n')
+  } else {
+    authorId = adminUsers[0].user_id
+    console.log(`✅ Usando admin como autor: ${authorId}\n`)
+  }
   
   // 4. Leer y parsear CSV
   console.log('📖 Leyendo archivo CSV...')

@@ -225,7 +225,7 @@ export default function BlogPage() {
               )}
             </div>
 
-            {/* Lista de artículos */}
+            {/* Lista de artículos - Grid de 2 columnas */}
             {posts.length === 0 ? (
               <div className="bg-white rounded-xl shadow-sm p-12 text-center">
                 <Search className="w-16 h-16 text-gray-300 mx-auto mb-4" />
@@ -243,56 +243,50 @@ export default function BlogPage() {
                 </button>
               </div>
             ) : (
-              <div className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
                 {posts.map((post, index) => (
                   // Saltar el primer post si es featured y no hay búsqueda
                   (!searchQuery && index === 0 && featuredPosts.length > 0 && post.id === featuredPosts[0].id) ? null : (
                     <Link
                       key={post.id}
                       href={`/blog/${post.slug}`}
-                      className="group block bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300 border border-gray-100"
+                      className="group block bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300 border border-gray-100 flex flex-col"
                     >
-                      <div className="flex flex-col sm:flex-row gap-6 p-6">
-                        {post.featured_image_url && (
-                          <div className="sm:w-64 h-48 sm:h-auto bg-gray-200 rounded-lg overflow-hidden flex-shrink-0 relative">
-                            <Image
-                              src={post.featured_image_url}
-                              alt={post.title}
-                              fill
-                              className="object-cover group-hover:scale-105 transition-transform duration-300"
-                              sizes="(max-width: 640px) 100vw, 256px"
-                              loading="lazy"
-                              quality={80}
-                            />
-                          </div>
+                      {post.featured_image_url && (
+                        <div className="aspect-video bg-gray-200 overflow-hidden relative">
+                          <Image
+                            src={post.featured_image_url}
+                            alt={post.title}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-300"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 400px"
+                            loading="lazy"
+                            quality={80}
+                          />
+                        </div>
+                      )}
+                      <div className="p-6 flex flex-col flex-1">
+                        {post.category && (
+                          <span
+                            className="inline-block px-3 py-1 rounded-full text-xs font-semibold text-white mb-3 w-fit"
+                            style={{ backgroundColor: post.category.color }}
+                          >
+                            {post.category.name}
+                          </span>
                         )}
-                        <div className="flex-1 flex flex-col justify-center">
-                          {post.category && (
-                            <span
-                              className="inline-block px-3 py-1 rounded-full text-xs font-semibold text-white mb-3 w-fit"
-                              style={{ backgroundColor: post.category.color }}
-                            >
-                              {post.category.name}
-                            </span>
-                          )}
-                          <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 mb-2 sm:mb-3 group-hover:text-forest transition line-clamp-2">
-                            {post.title}
-                          </h3>
-                          <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4 line-clamp-2">{post.excerpt}</p>
-                          <div className="flex items-center gap-4 text-sm text-gray-500">
-                            <span className="flex items-center">
-                              <Calendar className="w-4 h-4 mr-1.5" />
-                              {formatDate(post.published_at || post.created_at)}
-                            </span>
-                            <span className="flex items-center">
-                              <Clock className="w-4 h-4 mr-1.5" />
-                              {post.reading_time_minutes} min
-                            </span>
-                            <span className="flex items-center">
-                              <Eye className="w-4 h-4 mr-1.5" />
-                              {post.views_count}
-                            </span>
-                          </div>
+                        <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-forest transition line-clamp-2">
+                          {post.title}
+                        </h3>
+                        <p className="text-sm text-gray-600 mb-4 line-clamp-3 flex-1">{post.excerpt}</p>
+                        <div className="flex items-center gap-4 text-sm text-gray-500 mt-auto">
+                          <span className="flex items-center">
+                            <Calendar className="w-4 h-4 mr-1.5" />
+                            {formatDate(post.published_at || post.created_at)}
+                          </span>
+                          <span className="flex items-center">
+                            <Clock className="w-4 h-4 mr-1.5" />
+                            {post.reading_time_minutes} min
+                          </span>
                         </div>
                       </div>
                     </Link>
