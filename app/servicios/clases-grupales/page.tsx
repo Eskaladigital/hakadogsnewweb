@@ -69,7 +69,7 @@ export default function ClasesGrupalesPage() {
           <div className="mb-16">
             <div className="relative aspect-[21/9] rounded-3xl overflow-hidden shadow-2xl">
               <Image
-                src="/images/d60234abc4831dfd6d07b333f8a73110.jpg"
+                src="/images/hakadogs/IMG_5942.jpeg"
                 alt="Clases Grupales - Socialización"
                 fill
                 className="object-cover"
@@ -119,7 +119,7 @@ export default function ClasesGrupalesPage() {
           <div className="grid md:grid-cols-3 gap-4 mb-12">
             <div className="relative aspect-square rounded-2xl overflow-hidden shadow-lg">
               <Image
-                src="/images/images_Foto 26-3-21 17 03 23.jpg"
+                src="/images/hakadogs/6694D2C8-51F8-42C0-867C-D48893A11691.jpeg"
                 alt="Clase grupal en exterior"
                 fill
                 className="object-cover"
@@ -128,7 +128,7 @@ export default function ClasesGrupalesPage() {
             </div>
             <div className="relative aspect-square rounded-2xl overflow-hidden shadow-lg">
               <Image
-                src="/images/7c96a9_0fb8981c949d418fb3191508ae90a7c5_mv2_d_1402_1600_s_2.jpg"
+                src="/images/hakadogs/IMG_9864.jpeg"
                 alt="Socialización de perros"
                 fill
                 className="object-cover"
@@ -137,7 +137,7 @@ export default function ClasesGrupalesPage() {
             </div>
             <div className="relative aspect-square rounded-2xl overflow-hidden shadow-lg">
               <Image
-                src="/images/d2nomd8-0c6985e4-6016-47e3-a07a-92b7826da4ca.jpg"
+                src="/images/hakadogs/IMG_7864.jpeg"
                 alt="Trabajo en grupo"
                 fill
                 className="object-cover"

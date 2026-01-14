@@ -76,7 +76,7 @@ export default function EducacionBasicaPage() {
           <div className="mb-16">
             <div className="relative aspect-[21/9] rounded-3xl overflow-hidden shadow-2xl">
               <Image
-                src="/images/EwXEDf2XMAMGhqN.jpg"
+                src="/images/hakadogs/IMG_2775.jpeg"
                 alt="Educación Básica - Sesión de trabajo"
                 fill
                 className="object-cover"
@@ -199,7 +199,7 @@ export default function EducacionBasicaPage() {
           <div className="grid md:grid-cols-2 gap-6 mb-12">
             <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-lg">
               <Image
-                src="/images/d60234abc4831dfd6d07b333f8a73110.jpg"
+                src="/images/hakadogs/IMG_5942.jpeg"
                 alt="Trabajo de obediencia"
                 fill
                 className="object-cover"
@@ -208,7 +208,7 @@ export default function EducacionBasicaPage() {
             </div>
             <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-lg">
               <Image
-                src="/images/57c5c9f809d29326008b53ad.jpg"
+                src="/images/hakadogs/6694D2C8-51F8-42C0-867C-D48893A11691.jpeg"
                 alt="Entrenamiento en exterior"
                 fill
                 className="object-cover"

@@ -69,7 +69,7 @@ export default function CachorrosPage() {
           <div className="mb-16">
             <div className="relative aspect-[21/9] rounded-3xl overflow-hidden shadow-2xl">
               <Image
-                src="/images/hakadogs_educacion_canina_home_1.png"
+                src="/images/hakadogs/1e6a0b3a-db28-45da-902a-0e6fd90dc3f9.jpeg"
                 alt="Educación de Cachorros"
                 fill
                 className="object-cover"
@@ -116,7 +116,7 @@ export default function CachorrosPage() {
           <div className="grid md:grid-cols-3 gap-4 mb-12">
             <div className="relative aspect-square rounded-2xl overflow-hidden shadow-lg">
               <Image
-                src="/images/57c5c9f809d29326008b53ad.jpg"
+                src="/images/hakadogs/6694D2C8-51F8-42C0-867C-D48893A11691.jpeg"
                 alt="Cachorro en entrenamiento"
                 fill
                 className="object-cover"
@@ -125,7 +125,7 @@ export default function CachorrosPage() {
             </div>
             <div className="relative aspect-square rounded-2xl overflow-hidden shadow-lg">
               <Image
-                src="/images/d2nomd8-0c6985e4-6016-47e3-a07a-92b7826da4ca.jpg"
+                src="/images/hakadogs/IMG_5942.jpeg"
                 alt="Socialización de cachorros"
                 fill
                 className="object-cover"
@@ -134,7 +134,7 @@ export default function CachorrosPage() {
             </div>
             <div className="relative aspect-square rounded-2xl overflow-hidden shadow-lg">
               <Image
-                src="/images/EwXEDf2XMAMGhqN.jpg"
+                src="/images/hakadogs/IMG_2775.jpeg"
                 alt="Trabajo con cachorros"
                 fill
                 className="object-cover"

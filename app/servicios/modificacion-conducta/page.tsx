@@ -72,7 +72,7 @@ export default function ModificacionConductaPage() {
           <div className="mb-16">
             <div className="relative aspect-[21/9] rounded-3xl overflow-hidden shadow-2xl">
               <Image
-                src="/images/images_Foto 26-3-21 17 03 23.jpg"
+                src="/images/hakadogs/IMG_5217.jpeg"
                 alt="Modificación de Conducta - Trabajo profesional"
                 fill
                 className="object-cover"
@@ -245,7 +245,7 @@ export default function ModificacionConductaPage() {
             <div className="grid md:grid-cols-2 gap-6 mb-12 not-prose">
               <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-lg">
                 <Image
-                  src="/images/d2nomd8-0c6985e4-6016-47e3-a07a-92b7826da4ca.jpg"
+                  src="/images/hakadogs/IMG_7864.jpeg"
                   alt="Trabajo de socialización"
                   fill
                   className="object-cover"
@@ -254,7 +254,7 @@ export default function ModificacionConductaPage() {
               </div>
               <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-lg">
                 <Image
-                  src="/images/7c96a9_0fb8981c949d418fb3191508ae90a7c5_mv2_d_1402_1600_s_2.jpg"
+                  src="/images/hakadogs/IMG_9864.jpeg"
                   alt="Sesión de modificación de conducta"
                   fill
                   className="object-cover"
