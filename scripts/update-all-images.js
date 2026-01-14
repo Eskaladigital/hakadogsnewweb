@@ -1,17 +1,11 @@
 /**
- * Script para asignar imágenes de portada a los artículos del blog
- * 
- * Genera URLs de imágenes de Unsplash basadas en el título del artículo
+ * Script para ACTUALIZAR todas las imágenes de portada con nuevas URLs verificadas
  * 
  * Uso:
- *   node scripts/add-featured-images.js
+ *   node scripts/update-all-images.js
  */
 
 const { createClient } = require('@supabase/supabase-js')
-
-// ============================================
-// CONFIGURACIÓN
-// ============================================
 
 // URLs completas de imágenes de perros verificadas de Unsplash
 const PERROS_PHOTOS = [
@@ -90,7 +84,6 @@ function selectImageForPost(title, index) {
   // Buscar palabra clave en el título y seleccionar aleatoriamente de las opciones
   for (const [keyword, photoIndices] of Object.entries(KEYWORD_TO_PHOTO)) {
     if (titleLower.includes(keyword)) {
-      // Si hay múltiples opciones, seleccionar basándose en el índice del post
       const indices = Array.isArray(photoIndices) ? photoIndices : [photoIndices]
       const selectedIndex = indices[index % indices.length]
       return PERROS_PHOTOS[selectedIndex]
@@ -102,14 +95,9 @@ function selectImageForPost(title, index) {
   return PERROS_PHOTOS[photoIndex]
 }
 
-// ============================================
-// SCRIPT PRINCIPAL
-// ============================================
-
 async function main() {
-  console.log('🚀 Iniciando asignación de imágenes de portada...\n')
+  console.log('🚀 Actualizando TODAS las imágenes de portada...\n')
   
-  // 1. Verificar variables de entorno
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
   
@@ -118,7 +106,6 @@ async function main() {
     process.exit(1)
   }
   
-  // 2. Crear cliente de Supabase
   const supabase = createClient(supabaseUrl, supabaseServiceKey, {
     auth: {
       autoRefreshToken: false,
@@ -127,13 +114,11 @@ async function main() {
   })
   
   console.log('✅ Cliente de Supabase creado\n')
-  
-  // 3. Obtener todos los posts sin imagen de portada
-  console.log('📖 Obteniendo artículos...')
+  console.log('📖 Obteniendo todos los artículos...')
   
   const { data: posts, error: fetchError } = await supabase
     .from('blog_posts')
-    .select('id, title, slug, featured_image_url')
+    .select('id, title, slug')
     .order('created_at', { ascending: true })
   
   if (fetchError) {
@@ -141,45 +126,28 @@ async function main() {
     process.exit(1)
   }
   
-  // Filtrar posts sin imagen o con imagen genérica
-  const postsToUpdate = posts.filter(post => {
-    return !post.featured_image_url || 
-           post.featured_image_url.includes('placeholder') ||
-           post.featured_image_url.includes('example')
-  })
-  
-  console.log(`✅ Se encontraron ${posts.length} artículos totales`)
-  console.log(`📝 ${postsToUpdate.length} necesitan imagen de portada\n`)
-  
-  if (postsToUpdate.length === 0) {
-    console.log('✅ Todos los artículos ya tienen imagen de portada')
-    return
-  }
-  
-  // 4. Preview de las primeras asignaciones
-  console.log('📝 Preview de imágenes asignadas:')
+  console.log(`✅ Se encontraron ${posts.length} artículos\n`)
+  console.log('📝 Preview de nuevas asignaciones (primeros 5):')
   console.log('='.repeat(80))
   
-  postsToUpdate.slice(0, 5).forEach((post, idx) => {
+  posts.slice(0, 5).forEach((post, idx) => {
     const imageUrl = selectImageForPost(post.title, idx)
     console.log(`\n${idx + 1}. ${post.title}`)
-    console.log(`   URL: ${imageUrl.substring(0, 80)}...`)
+    console.log(`   Nueva URL: ${imageUrl.substring(0, 70)}...`)
   })
   console.log('\n' + '='.repeat(80) + '\n')
   
-  // 5. Actualizar todos los posts
-  console.log(`📤 Asignando imágenes a ${postsToUpdate.length} artículos...\n`)
+  console.log(`📤 Actualizando ${posts.length} artículos...\n`)
   
   let actualizados = 0
   let errores = 0
   
-  for (let i = 0; i < postsToUpdate.length; i++) {
-    const post = postsToUpdate[i]
+  for (let i = 0; i < posts.length; i++) {
+    const post = posts[i]
     
     try {
       const imageUrl = selectImageForPost(post.title, i)
       
-      // Actualizar en Supabase
       const { error } = await supabase
         .from('blog_posts')
         .update({ 
@@ -193,7 +161,7 @@ async function main() {
         errores++
       } else {
         actualizados++
-        console.log(`   ✅ ${actualizados}/${postsToUpdate.length} - ${post.title.substring(0, 60)}...`)
+        console.log(`   ✅ ${actualizados}/${posts.length} - ${post.title.substring(0, 60)}...`)
       }
       
     } catch (error) {
@@ -201,36 +169,27 @@ async function main() {
       errores++
     }
     
-    // Pequeña pausa para no saturar
     if (i % 10 === 0 && i > 0) {
       await new Promise(resolve => setTimeout(resolve, 100))
     }
   }
   
-  // 6. Resumen final
   console.log('\n' + '='.repeat(80))
-  console.log('🎉 ASIGNACIÓN DE IMÁGENES COMPLETADA')
+  console.log('🎉 ACTUALIZACIÓN COMPLETADA')
   console.log('='.repeat(80))
   console.log(`✅ Artículos actualizados: ${actualizados}`)
   if (errores > 0) {
     console.log(`❌ Errores: ${errores}`)
   }
   
-  console.log('\n💡 Características de las imágenes:')
-  console.log('   • Fuente: Unsplash (alta calidad)')
-  console.log('   • Tamaño: 1200x600px (optimizado para web)')
-  console.log('   • Selección: Basada en palabras clave del título')
-  console.log('   • Variedad: 40 fotos diferentes verificadas de perros')
-  console.log('   • Garantizado: Solo perros, sin gatos u otros animales')
-  console.log('   • Múltiples opciones por palabra clave para mayor variedad')
-  
-  console.log('\n💡 Próximos pasos:')
-  console.log('   1. Verifica las imágenes en /administrator/blog')
-  console.log('   2. Las imágenes se verán en el listado y detalle de posts')
-  console.log('   3. Puedes cambiar manualmente cualquier imagen si lo deseas\n')
+  console.log('\n💡 Mejoras aplicadas:')
+  console.log('   • 40 fotos diferentes verificadas (solo perros)')
+  console.log('   • Sin gatos ni otros animales')
+  console.log('   • Múltiples opciones por palabra clave')
+  console.log('   • Mayor variedad y menos repeticiones')
+  console.log('   • URLs verificadas y funcionales\n')
 }
 
-// Ejecutar
 main().catch(error => {
   console.error('❌ Error fatal:', error)
   process.exit(1)
