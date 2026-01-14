@@ -78,11 +78,12 @@ export default function SobreNosotrosPage() {
             <div className="relative">
               <div className="aspect-[4/5] relative rounded-3xl shadow-2xl overflow-hidden">
                 <Image
-                  src="/images/hakadogs_logo_fondo_color_2.jpg"
-                  alt="Hakadogs - Educación Canina Profesional"
+                  src="/images/hakadogs/IMG_2775.jpeg"
+                  alt="Alfredo García - Educador Canino Profesional"
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"
+                  priority
                 />
               </div>
               
@@ -306,6 +307,112 @@ export default function SobreNosotrosPage() {
               Conocer Metodología Completa
               <ArrowRight size={18} />
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Galería de Trabajo Real */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-forest-dark mb-4">
+              Nuestro Día a Día
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Fotos reales de nuestras sesiones de trabajo. Así es como transformamos la vida de perros y familias
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-xl group">
+              <Image
+                src="/images/hakadogs/6694D2C8-51F8-42C0-867C-D48893A11691.jpeg"
+                alt="Sesión de educación canina en exterior"
+                fill
+                className="object-cover group-hover:scale-110 transition-transform duration-500"
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-forest-dark/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="absolute bottom-6 left-6 right-6 text-white">
+                  <p className="text-sm font-semibold">Trabajo en Exterior</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-xl group">
+              <Image
+                src="/images/hakadogs/IMG_5217.jpeg"
+                alt="Entrenamiento personalizado"
+                fill
+                className="object-cover group-hover:scale-110 transition-transform duration-500"
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-forest-dark/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="absolute bottom-6 left-6 right-6 text-white">
+                  <p className="text-sm font-semibold">Educación Personalizada</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-xl group">
+              <Image
+                src="/images/hakadogs/IMG_9864.jpeg"
+                alt="Trabajo con agua y natación"
+                fill
+                className="object-cover group-hover:scale-110 transition-transform duration-500"
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-forest-dark/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="absolute bottom-6 left-6 right-6 text-white">
+                  <p className="text-sm font-semibold">Actividades Acuáticas</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-xl group">
+              <Image
+                src="/images/hakadogs/1e6a0b3a-db28-45da-902a-0e6fd90dc3f9.jpeg"
+                alt="Conexión perro-guía"
+                fill
+                className="object-cover group-hover:scale-110 transition-transform duration-500"
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-forest-dark/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="absolute bottom-6 left-6 right-6 text-white">
+                  <p className="text-sm font-semibold">Binomio Perro-Guía</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-xl group">
+              <Image
+                src="/images/hakadogs/IMG_5942.jpeg"
+                alt="Socialización controlada"
+                fill
+                className="object-cover group-hover:scale-110 transition-transform duration-500"
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-forest-dark/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="absolute bottom-6 left-6 right-6 text-white">
+                  <p className="text-sm font-semibold">Socialización</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-xl group">
+              <Image
+                src="/images/hakadogs/IMG_7864.jpeg"
+                alt="Juego estructurado"
+                fill
+                className="object-cover group-hover:scale-110 transition-transform duration-500"
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-forest-dark/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="absolute bottom-6 left-6 right-6 text-white">
+                  <p className="text-sm font-semibold">Juego Estructurado</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
