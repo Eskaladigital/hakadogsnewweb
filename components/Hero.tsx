@@ -39,7 +39,7 @@ export default function Hero({
     { value: '+8', label: 'Años Experiencia' },
     { value: '100%', label: 'Satisfacción' }
   ],
-  image = '/images/hakadogs_educacion_canina_home_2.png',
+  image = '/images/hakadogs/5D1795D7-8557-4E5D-A50F-E0C56157FD8E.jpeg',
   floatingBadge = {
     emoji: '🏆',
     title: 'BE HAKA!',

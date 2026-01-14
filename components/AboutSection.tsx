@@ -21,7 +21,7 @@ export default function AboutSection() {
             <div className="relative rounded-3xl overflow-hidden shadow-2xl">
               <div className="aspect-[4/3] relative">
                 <Image
-                  src="/images/EwXEDf2XMAMGhqN.jpg"
+                  src="/images/hakadogs/IMG_2775.jpeg"
                   alt="Alfredo - Educador Canino Profesional"
                   fill
                   className="object-cover"

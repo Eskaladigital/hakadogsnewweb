@@ -5,28 +5,28 @@ import { motion } from 'framer-motion'
 
 const galleryImages = [
   {
-    src: '/images/images_Foto 26-3-21 17 03 23.jpg',
-    alt: 'Sesión de educación canina - Hakadogs'
+    src: '/images/hakadogs/6694D2C8-51F8-42C0-867C-D48893A11691.jpeg',
+    alt: 'Sesión de educación canina profesional - Hakadogs'
   },
   {
-    src: '/images/57c5c9f809d29326008b53ad.jpg',
-    alt: 'Entrenamiento con perro - Hakadogs'
+    src: '/images/hakadogs/IMG_5217.jpeg',
+    alt: 'Pastor alemán en entrenamiento - Hakadogs'
   },
   {
-    src: '/images/EwXEDf2XMAMGhqN.jpg',
-    alt: 'Educación canina profesional'
+    src: '/images/hakadogs/1e6a0b3a-db28-45da-902a-0e6fd90dc3f9.jpeg',
+    alt: 'Educación canina con técnicas positivas'
   },
   {
-    src: '/images/d60234abc4831dfd6d07b333f8a73110.jpg',
-    alt: 'Sesión de socialización canina'
+    src: '/images/hakadogs/IMG_7864.jpeg',
+    alt: 'Sesión de juego educativo con perro'
   },
   {
-    src: '/images/d2nomd8-0c6985e4-6016-47e3-a07a-92b7826da4ca.jpg',
-    alt: 'Trabajo con cachorros - Hakadogs'
+    src: '/images/hakadogs/IMG_5942.jpeg',
+    alt: 'Trabajo con múltiples perros - Hakadogs'
   },
   {
-    src: '/images/7c96a9_0fb8981c949d418fb3191508ae90a7c5_mv2_d_1402_1600_s_2.jpg',
-    alt: 'Educación canina en Murcia'
+    src: '/images/hakadogs/IMG_9864.jpeg',
+    alt: 'Natación y ejercicio canino en Murcia'
   }
 ]
 
