@@ -238,7 +238,7 @@ export default function TestsAdminPage() {
 
   // Calcular totales
   const totalAttempts = tests.reduce((sum, t) => sum + (t.stats?.total_attempts || 0), 0)
-  const totalUniqueUsers = new Set(tests.flatMap(t => t.stats?.unique_users || 0)).size
+  const totalUniqueUsers = tests.reduce((sum, t) => sum + (t.stats?.unique_users || 0), 0)
   const avgPassRate = tests.length > 0 
     ? Math.round(tests.reduce((sum, t) => sum + (t.stats?.pass_rate || 0), 0) / tests.filter(t => t.stats?.total_attempts).length || 0)
     : 0
