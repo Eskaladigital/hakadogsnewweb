@@ -91,12 +91,12 @@ export default function TestsAdminPage() {
         .from('module_tests')
         .select(`
           *,
-          course_modules!inner (
+          course_modules (
             id,
             title,
             order_index,
             course_id,
-            courses!inner (
+            courses (
               id,
               title,
               slug
@@ -116,6 +116,9 @@ export default function TestsAdminPage() {
         (testsData || []).map(async (test: any) => {
           const stats = await getTestStats(test.id)
           
+          // Manejar casos donde las relaciones puedan ser null
+          const hasModule = test.course_modules && test.course_modules.courses
+          
           return {
             id: test.id,
             module_id: test.module_id,
@@ -127,11 +130,11 @@ export default function TestsAdminPage() {
             is_published: test.is_published,
             created_at: test.created_at,
             updated_at: test.updated_at,
-            module_title: test.course_modules.title,
-            module_order: test.course_modules.order_index,
-            course_id: test.course_modules.courses.id,
-            course_title: test.course_modules.courses.title,
-            course_slug: test.course_modules.courses.slug,
+            module_title: hasModule ? test.course_modules.title : 'Módulo no disponible',
+            module_order: hasModule ? test.course_modules.order_index : 0,
+            course_id: hasModule ? test.course_modules.courses.id : '',
+            course_title: hasModule ? test.course_modules.courses.title : 'Curso no disponible',
+            course_slug: hasModule ? test.course_modules.courses.slug : '',
             stats
           }
         })
