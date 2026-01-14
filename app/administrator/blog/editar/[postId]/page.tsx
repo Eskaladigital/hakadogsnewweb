@@ -163,8 +163,15 @@ export default function EditarArticuloPage() {
     try {
       const readingTime = calculateReadingTime(formData.content)
 
-      // Si el artículo está siendo publicado por primera vez, establecer published_at
-      const shouldSetPublishedAt = formData.status === 'published'
+      // Obtener el artículo actual para preservar fechas
+      const { data: currentPost } = await supabase
+        .from('blog_posts')
+        .select('status, published_at, created_at, updated_at')
+        .eq('id', postId)
+        .single()
+
+      // Solo establecer published_at si se está publicando por PRIMERA vez (de draft a published)
+      const isFirstTimePublishing = currentPost?.status !== 'published' && formData.status === 'published'
       
       const updateData = {
         title: formData.title,
@@ -179,7 +186,10 @@ export default function EditarArticuloPage() {
         seo_description: formData.seoDescription || formData.excerpt,
         seo_keywords: formData.seoKeywords || null,
         reading_time_minutes: readingTime,
-        ...(shouldSetPublishedAt && { published_at: new Date().toISOString() })
+        // Solo actualizar published_at si es la primera publicación
+        ...(isFirstTimePublishing && { published_at: new Date().toISOString() }),
+        // Mantener el updated_at original para no afectar el orden
+        updated_at: currentPost?.published_at || currentPost?.updated_at || currentPost?.created_at
       }
 
       const { error } = await supabase
