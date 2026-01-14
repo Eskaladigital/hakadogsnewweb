@@ -294,9 +294,9 @@ BEGIN
     mt.is_published,
     mt.created_at,
     mt.updated_at,
-    cm.title AS module_title,
+    COALESCE(cm.title, 'Módulo no disponible') AS module_title,
     cm.course_id,
-    c.title AS course_title,
+    COALESCE(c.title, 'Curso no disponible') AS course_title,
     COALESCE(COUNT(uta.id), 0)::BIGINT AS total_attempts,
     COALESCE(COUNT(DISTINCT uta.user_id), 0)::BIGINT AS unique_users,
     COALESCE(
@@ -309,8 +309,8 @@ BEGIN
     ) AS pass_rate,
     COALESCE(ROUND(AVG(uta.score), 2), 0) AS average_score
   FROM module_tests mt
-  INNER JOIN course_modules cm ON mt.module_id = cm.id
-  INNER JOIN courses c ON cm.course_id = c.id
+  LEFT JOIN course_modules cm ON mt.module_id = cm.id
+  LEFT JOIN courses c ON cm.course_id = c.id
   LEFT JOIN user_test_attempts uta ON mt.id = uta.test_id
   GROUP BY 
     mt.id, 

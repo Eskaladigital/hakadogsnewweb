@@ -86,24 +86,9 @@ export default function TestsAdminPage() {
   const loadTests = async () => {
     setLoading(true)
     try {
-      // Obtener tests con información del módulo y curso
+      // Usar la función RPC que evita problemas de RLS y trae las estadísticas
       const { data: testsData, error: testsError } = await supabase
-        .from('module_tests')
-        .select(`
-          *,
-          course_modules (
-            id,
-            title,
-            order_index,
-            course_id,
-            courses (
-              id,
-              title,
-              slug
-            )
-          )
-        `)
-        .order('created_at', { ascending: false })
+        .rpc('get_all_module_tests_with_stats')
 
       if (testsError) {
         console.error('Error cargando tests:', testsError)
@@ -111,34 +96,30 @@ export default function TestsAdminPage() {
         return
       }
 
-      // Procesar y añadir estadísticas
-      const testsWithStats: TestWithDetails[] = await Promise.all(
-        (testsData || []).map(async (test: any) => {
-          const stats = await getTestStats(test.id)
-          
-          // Manejar casos donde las relaciones puedan ser null
-          const hasModule = test.course_modules && test.course_modules.courses
-          
-          return {
-            id: test.id,
-            module_id: test.module_id,
-            title: test.title,
-            description: test.description,
-            passing_score: test.passing_score,
-            questions: test.questions || [],
-            is_generated: test.is_generated,
-            is_published: test.is_published,
-            created_at: test.created_at,
-            updated_at: test.updated_at,
-            module_title: hasModule ? test.course_modules.title : 'Módulo no disponible',
-            module_order: hasModule ? test.course_modules.order_index : 0,
-            course_id: hasModule ? test.course_modules.courses.id : '',
-            course_title: hasModule ? test.course_modules.courses.title : 'Curso no disponible',
-            course_slug: hasModule ? test.course_modules.courses.slug : '',
-            stats
-          }
-        })
-      )
+      // Procesar datos desde el RPC
+      const testsWithStats: TestWithDetails[] = ((testsData as any[]) || []).map((test: any) => ({
+        id: test.id,
+        module_id: test.module_id,
+        title: test.title,
+        description: test.description,
+        passing_score: test.passing_score,
+        questions: test.questions || [],
+        is_generated: test.is_generated,
+        is_published: test.is_published,
+        created_at: test.created_at,
+        updated_at: test.updated_at,
+        module_title: test.module_title || 'Módulo no disponible',
+        module_order: 0, // No disponible en el RPC, pero no es crítico
+        course_id: test.course_id || '',
+        course_title: test.course_title || 'Curso no disponible',
+        course_slug: '', // No disponible en el RPC
+        stats: {
+          total_attempts: test.total_attempts || 0,
+          unique_users: test.unique_users || 0,
+          pass_rate: test.pass_rate || 0,
+          average_score: test.average_score || 0
+        }
+      }))
 
       setTests(testsWithStats)
     } catch (error) {
