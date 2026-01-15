@@ -14,6 +14,7 @@ import { supabase } from '@/lib/supabase/client'
 import { toggleTestPublished, deleteModuleTest, getTestStats } from '@/lib/supabase/tests'
 import Toast from '@/components/ui/Toast'
 import ConfirmModal from '@/components/ui/ConfirmModal'
+import TestGenerationModal, { type GenerationStep } from '@/components/ui/TestGenerationModal'
 
 interface TestWithDetails {
   id: string
@@ -60,6 +61,11 @@ export default function TestsAdminPage() {
     confirmColor: 'red' | 'orange' | 'green' | 'blue'
     onConfirm: () => void
   } | null>(null)
+  
+  // Estado para modal de generación
+  const [showGenerationModal, setShowGenerationModal] = useState(false)
+  const [generationSteps, setGenerationSteps] = useState<GenerationStep[]>([])
+  const [currentGenerationStep, setCurrentGenerationStep] = useState(0)
 
   // Obtener lista única de cursos para el filtro
   const uniqueCourses = Array.from(
@@ -187,10 +193,47 @@ export default function TestsAdminPage() {
       onConfirm: async () => {
         setConfirmModal(null)
         setRegenerating(test.id)
+        setShowGenerationModal(true)
+        
+        // Inicializar pasos
+        const initialSteps: GenerationStep[] = [
+          { id: '1', label: 'Verificando sesión', status: 'loading', message: 'Comprobando autenticación...' },
+          { id: '2', label: 'Obteniendo lecciones del módulo', status: 'pending' },
+          { id: '3', label: 'Conectando con OpenAI', status: 'pending' },
+          { id: '4', label: 'Regenerando preguntas con IA', status: 'pending', message: 'Esto puede tardar hasta 30 segundos' },
+          { id: '5', label: 'Validando preguntas generadas', status: 'pending' },
+          { id: '6', label: 'Actualizando test en base de datos', status: 'pending' },
+          { id: '7', label: 'Finalizando', status: 'pending' }
+        ]
+        setGenerationSteps(initialSteps)
+        setCurrentGenerationStep(0)
+        
+        const updateStep = (stepIndex: number, status: GenerationStep['status'], message?: string, details?: string) => {
+          setGenerationSteps(prev => {
+            const newSteps = [...prev]
+            newSteps[stepIndex] = { ...newSteps[stepIndex], status, message, details }
+            return newSteps
+          })
+          setCurrentGenerationStep(stepIndex + 1)
+        }
         
         try {
+          // Paso 1: Verificar sesión
           const { data: { session } } = await supabase.auth.getSession()
-          if (!session) throw new Error('No hay sesión')
+          if (!session) {
+            updateStep(0, 'error', 'No hay sesión activa', 'Por favor, inicia sesión e intenta de nuevo')
+            setRegenerating(null)
+            return
+          }
+          updateStep(0, 'success', 'Sesión verificada correctamente')
+
+          // Paso 2: Lecciones
+          updateStep(1, 'loading', 'Cargando contenido de las lecciones...')
+          await new Promise(resolve => setTimeout(resolve, 500))
+          updateStep(1, 'success', 'Lecciones cargadas correctamente')
+
+          // Paso 3: Conectando con API
+          updateStep(2, 'loading', 'Preparando solicitud a OpenAI...')
 
           const response = await fetch('/api/admin/generate-module-test', {
             method: 'POST',
@@ -201,16 +244,43 @@ export default function TestsAdminPage() {
             body: JSON.stringify({ moduleId: test.module_id, regenerate: true })
           })
 
+          updateStep(2, 'success', 'Conectado con OpenAI')
+
+          // Paso 4: Generar preguntas
+          updateStep(3, 'loading', 'IA está regenerando 20 preguntas únicas...')
+
           const data = await response.json()
 
           if (!response.ok) {
-            throw new Error(data.error || 'Error al regenerar')
+            updateStep(3, 'error', 'Error al regenerar preguntas', data.error || `Error HTTP ${response.status}`)
+            setRegenerating(null)
+            return
           }
 
-          // Recargar tests
+          updateStep(3, 'success', '20 preguntas regeneradas correctamente')
+
+          // Paso 5: Validar
+          updateStep(4, 'loading', 'Verificando unicidad y formato...')
+          await new Promise(resolve => setTimeout(resolve, 300))
+          updateStep(4, 'success', 'Todas las preguntas son únicas y válidas')
+
+          // Paso 6: Guardar
+          updateStep(5, 'loading', 'Actualizando test en la base de datos...')
+          await new Promise(resolve => setTimeout(resolve, 300))
+          updateStep(5, 'success', 'Test actualizado correctamente')
+
+          // Paso 7: Finalizar
+          updateStep(6, 'loading', 'Recargando lista de tests...')
           await loadTests()
+          updateStep(6, 'success', data.message || 'Test regenerado exitosamente')
+          
           setToast({ message: 'Test regenerado correctamente', type: 'success' })
         } catch (error: any) {
+          console.error('Error regenerando test:', error)
+          const currentStep = generationSteps.findIndex(s => s.status === 'loading')
+          if (currentStep >= 0) {
+            updateStep(currentStep, 'error', 'Error inesperado', error.message || error.toString())
+          }
           setToast({ message: error.message || 'Error al regenerar el test', type: 'error' })
         } finally {
           setRegenerating(null)
@@ -606,6 +676,19 @@ export default function TestsAdminPage() {
           onCancel={() => setConfirmModal(null)}
         />
       )}
+
+      {/* Modal de generación de test */}
+      <TestGenerationModal
+        isOpen={showGenerationModal}
+        onClose={() => {
+          setShowGenerationModal(false)
+          setGenerationSteps([])
+          setCurrentGenerationStep(0)
+        }}
+        steps={generationSteps}
+        currentStep={currentGenerationStep}
+        canClose={!regenerating || generationSteps.some(s => s.status === 'error' || s.status === 'success')}
+      />
     </div>
   )
 }

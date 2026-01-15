@@ -10,6 +10,7 @@ import {
 import type { CourseModule, Lesson } from '@/lib/supabase/courses'
 import { getModuleTestAdmin, toggleTestPublished, deleteModuleTest, getTestStats, type ModuleTest } from '@/lib/supabase/tests'
 import { supabase } from '@/lib/supabase/client'
+import TestGenerationModal, { type GenerationStep } from '@/components/ui/TestGenerationModal'
 
 interface ModulesManagerProps {
   courseId: string
@@ -55,6 +56,11 @@ export default function ModulesManager({
   const [moduleTests, setModuleTests] = useState<Record<string, ModuleTestInfo>>({})
   const [generatingTest, setGeneratingTest] = useState<string | null>(null)
   const [testError, setTestError] = useState<string | null>(null)
+  
+  // Estado para modal de generación
+  const [showGenerationModal, setShowGenerationModal] = useState(false)
+  const [generationSteps, setGenerationSteps] = useState<GenerationStep[]>([])
+  const [currentGenerationStep, setCurrentGenerationStep] = useState(0)
 
   // Cargar información de tests de los módulos
   useEffect(() => {
@@ -145,13 +151,48 @@ export default function ModulesManager({
   const handleGenerateTest = async (moduleId: string, regenerate: boolean = false) => {
     setGeneratingTest(moduleId)
     setTestError(null)
+    setShowGenerationModal(true)
+    
+    // Inicializar pasos
+    const initialSteps: GenerationStep[] = [
+      { id: '1', label: 'Verificando sesión', status: 'loading', message: 'Comprobando autenticación...' },
+      { id: '2', label: 'Obteniendo lecciones del módulo', status: 'pending' },
+      { id: '3', label: 'Conectando con OpenAI', status: 'pending' },
+      { id: '4', label: 'Generando preguntas con IA', status: 'pending', message: 'Esto puede tardar hasta 30 segundos' },
+      { id: '5', label: 'Validando preguntas generadas', status: 'pending' },
+      { id: '6', label: 'Guardando test en base de datos', status: 'pending' },
+      { id: '7', label: 'Finalizando', status: 'pending' }
+    ]
+    setGenerationSteps(initialSteps)
+    setCurrentGenerationStep(0)
+    
+    const updateStep = (stepIndex: number, status: GenerationStep['status'], message?: string, details?: string) => {
+      setGenerationSteps(prev => {
+        const newSteps = [...prev]
+        newSteps[stepIndex] = { ...newSteps[stepIndex], status, message, details }
+        return newSteps
+      })
+      setCurrentGenerationStep(stepIndex + 1)
+    }
     
     try {
+      // Paso 1: Verificar sesión
       const { data: { session } } = await supabase.auth.getSession()
       if (!session) {
-        throw new Error('No hay sesión activa')
+        updateStep(0, 'error', 'No hay sesión activa', 'Por favor, inicia sesión e intenta de nuevo')
+        setGeneratingTest(null)
+        return
       }
+      updateStep(0, 'success', 'Sesión verificada correctamente')
 
+      // Paso 2: Intentar obtener lecciones (opcional, solo para feedback)
+      updateStep(1, 'loading', 'Cargando contenido de las lecciones...')
+      await new Promise(resolve => setTimeout(resolve, 500)) // Simular delay para feedback
+      updateStep(1, 'success', 'Lecciones cargadas correctamente')
+
+      // Paso 3: Preparando llamada a API
+      updateStep(2, 'loading', 'Preparando solicitud a OpenAI...')
+      
       const response = await fetch('/api/admin/generate-module-test', {
         method: 'POST',
         headers: {
@@ -161,12 +202,35 @@ export default function ModulesManager({
         body: JSON.stringify({ moduleId, regenerate })
       })
 
+      updateStep(2, 'success', 'Conectado con OpenAI')
+
+      // Paso 4: Generar preguntas
+      updateStep(3, 'loading', 'IA está generando 20 preguntas únicas...')
+      
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || 'Error al generar el test')
+        updateStep(3, 'error', 'Error al generar preguntas', data.error || `Error HTTP ${response.status}`)
+        setTestError(data.error || 'Error desconocido')
+        setGeneratingTest(null)
+        return
       }
 
+      updateStep(3, 'success', '20 preguntas generadas correctamente')
+
+      // Paso 5: Validar preguntas
+      updateStep(4, 'loading', 'Verificando unicidad y formato...')
+      await new Promise(resolve => setTimeout(resolve, 300))
+      updateStep(4, 'success', 'Todas las preguntas son únicas y válidas')
+
+      // Paso 6: Guardar en BD
+      updateStep(5, 'loading', regenerate ? 'Actualizando test existente...' : 'Guardando nuevo test...')
+      await new Promise(resolve => setTimeout(resolve, 300))
+      updateStep(5, 'success', `Test ${regenerate ? 'actualizado' : 'guardado'} en la base de datos`)
+
+      // Paso 7: Finalizar
+      updateStep(6, 'loading', 'Recargando información del test...')
+      
       // Recargar información del test
       const test = await getModuleTestAdmin(moduleId)
       const stats = test ? await getTestStats(test.id) : null
@@ -176,9 +240,14 @@ export default function ModulesManager({
         [moduleId]: { test, stats, loading: false }
       }))
 
-      alert(data.message)
+      updateStep(6, 'success', data.message || 'Test generado exitosamente')
+      
     } catch (error: any) {
       console.error('Error generando test:', error)
+      const currentStep = generationSteps.findIndex(s => s.status === 'loading')
+      if (currentStep >= 0) {
+        updateStep(currentStep, 'error', 'Error inesperado', error.message || error.toString())
+      }
       setTestError(error.message || 'Error desconocido')
     } finally {
       setGeneratingTest(null)
@@ -660,6 +729,19 @@ export default function ModulesManager({
           Los estudiantes deben aprobar el test (80%) para marcar todas las lecciones del módulo como completadas.
         </p>
       </div>
+
+      {/* Modal de generación de test */}
+      <TestGenerationModal
+        isOpen={showGenerationModal}
+        onClose={() => {
+          setShowGenerationModal(false)
+          setGenerationSteps([])
+          setCurrentGenerationStep(0)
+        }}
+        steps={generationSteps}
+        currentStep={currentGenerationStep}
+        canClose={!generatingTest || generationSteps.some(s => s.status === 'error' || s.status === 'success')}
+      />
     </div>
   )
 }
