@@ -23,6 +23,7 @@ export async function POST(request: NextRequest) {
     // Crear cliente de Supabase con el token del usuario
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
     const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
     const token = authHeader.replace('Bearer ', '')
 
     const supabase = createClient(supabaseUrl, supabaseKey, {
@@ -32,6 +33,9 @@ export async function POST(request: NextRequest) {
         }
       }
     })
+    const supabaseAdmin = serviceRoleKey
+      ? createClient(supabaseUrl, serviceRoleKey)
+      : supabase
 
     // Verificar sesión
     const { data: { user }, error: authError } = await supabase.auth.getUser()
@@ -64,7 +68,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Verificar que el módulo existe
-    const { data: moduleData, error: moduleError } = await supabase
+    const { data: moduleData, error: moduleError } = await supabaseAdmin
       .from('course_modules')
       .select('id, title, description, course_id')
       .eq('id', moduleId)
@@ -79,11 +83,11 @@ export async function POST(request: NextRequest) {
 
     // Verificar si ya existe un test (si no es regeneración)
     if (!regenerate) {
-      const { data: existingTest } = await supabase
+      const { data: existingTest } = await supabaseAdmin
         .from('module_tests')
         .select('id')
         .eq('module_id', moduleId)
-        .single()
+        .maybeSingle()
 
       if (existingTest) {
         return NextResponse.json(
@@ -94,7 +98,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Obtener las lecciones del módulo
-    const { data: lessons, error: lessonsError } = await supabase
+    const { data: lessons, error: lessonsError } = await supabaseAdmin
       .from('course_lessons')
       .select('id, title, content, duration_minutes')
       .eq('module_id', moduleId)
@@ -291,7 +295,7 @@ IMPORTANTE:
     let savedTest
     if (regenerate) {
       // Actualizar test existente
-      const { data: updated, error: updateError } = await supabase
+      const { data: updated, error: updateError } = await supabaseAdmin
         .from('module_tests')
         .update(testPayload)
         .eq('module_id', moduleId)
@@ -301,14 +305,14 @@ IMPORTANTE:
       if (updateError) {
         console.error('Error actualizando test:', updateError)
         return NextResponse.json(
-          { error: 'Error al guardar el test regenerado' },
+          { error: updateError.message || 'Error al guardar el test regenerado' },
           { status: 500 }
         )
       }
       savedTest = updated
     } else {
       // Crear nuevo test
-      const { data: created, error: createError } = await supabase
+      const { data: created, error: createError } = await supabaseAdmin
         .from('module_tests')
         .insert(testPayload)
         .select()
@@ -317,7 +321,7 @@ IMPORTANTE:
       if (createError) {
         console.error('Error creando test:', createError)
         return NextResponse.json(
-          { error: 'Error al guardar el test' },
+          { error: createError.message || 'Error al guardar el test' },
           { status: 500 }
         )
       }
@@ -337,10 +341,11 @@ IMPORTANTE:
       message: `Test ${regenerate ? 'regenerado' : 'generado'} exitosamente con ${testData.questions.length} preguntas. Revísalo y publícalo cuando esté listo.`
     })
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('❌ Error generando test:', error)
+    const errorMessage = error?.message || error?.toString() || 'Error interno del servidor'
     return NextResponse.json(
-      { error: 'Error interno del servidor' },
+      { error: `Error interno: ${errorMessage}` },
       { status: 500 }
     )
   }

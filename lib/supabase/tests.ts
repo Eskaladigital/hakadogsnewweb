@@ -58,7 +58,7 @@ export async function getModuleTest(moduleId: string): Promise<ModuleTest | null
     .select('*')
     .eq('module_id', moduleId)
     .eq('is_published', true)
-    .single()
+    .maybeSingle()
 
   if (error) {
     if (error.code === 'PGRST116') return null
@@ -66,7 +66,7 @@ export async function getModuleTest(moduleId: string): Promise<ModuleTest | null
     return null
   }
 
-  return data as ModuleTest
+  return data ? (data as ModuleTest) : null
 }
 
 /**
@@ -77,7 +77,7 @@ export async function getModuleTestAdmin(moduleId: string): Promise<ModuleTest |
     .from('module_tests')
     .select('*')
     .eq('module_id', moduleId)
-    .single()
+    .maybeSingle()
 
   if (error) {
     if (error.code === 'PGRST116') return null
@@ -85,7 +85,7 @@ export async function getModuleTestAdmin(moduleId: string): Promise<ModuleTest |
     return null
   }
 
-  return data as ModuleTest
+  return data ? (data as ModuleTest) : null
 }
 
 /**
