@@ -8,6 +8,7 @@
 5. [Experiencia del estudiante](#experiencia-del-estudiante)
 6. [Implementación técnica](#implementación-técnica)
 7. [Problemas resueltos](#problemas-resueltos)
+8. [Modal de progreso de generación](#modal-de-progreso-de-generación)
 
 ---
 
@@ -25,6 +26,7 @@
 - ✅ **Test de 20 preguntas** al final de cada módulo
 - ✅ Aprobar test (70%) → Marca TODAS las lecciones del módulo como completadas
 - ✅ **Feedback inmediato** en cada pregunta (correcto/incorrecto + explicación)
+- ✅ **Modal de progreso en tiempo real** durante la generación
 - ✅ Validación real del aprendizaje
 
 ---
@@ -35,6 +37,7 @@
 
 **¿Cómo funciona?**
 - Admin hace clic en "Generar Test con IA" en cualquier módulo
+- **Se abre un modal de progreso** que muestra cada paso en tiempo real
 - El sistema envía todo el contenido de las lecciones del módulo a OpenAI
 - GPT-4o genera 20 preguntas únicas de opción múltiple:
   - 6 preguntas fáciles (comprensión básica)
@@ -46,6 +49,7 @@
 - ✅ Solo una respuesta correcta por pregunta
 - ✅ **Anti-duplicados**: Valida que no haya preguntas repetidas
 - ✅ Incluye explicación pedagógica de por qué es correcta
+- ✅ **Diagnóstico de errores en tiempo real**
 
 **Configuración:**
 - Passing score: **70%** (14 de 20 preguntas correctas)
@@ -829,7 +833,152 @@ Ver sección [Problemas resueltos](#problemas-resueltos)
 
 ---
 
+## 🎯 Modal de progreso de generación
+
+### Descripción
+
+Cuando un administrador genera o regenera un test, se muestra un **modal interactivo en tiempo real** que detalla cada paso del proceso. Esto permite:
+
+- ✅ Saber exactamente qué está haciendo el sistema
+- ✅ Identificar dónde ocurre un error si algo falla
+- ✅ Ver el progreso visual con barra de avance
+- ✅ Obtener mensajes descriptivos de cada paso
+
+### Pasos del proceso
+
+El modal muestra estos 7 pasos en secuencia:
+
+1. **Verificando sesión** 🔐
+   - Comprueba que el usuario está autenticado
+   - Valida que tiene permisos de administrador
+
+2. **Obteniendo lecciones del módulo** 📚
+   - Carga el contenido de todas las lecciones del módulo
+   - Limpia el HTML y prepara el texto para IA
+
+3. **Conectando con OpenAI** 🤖
+   - Establece conexión con la API de OpenAI
+   - Verifica que `OPENAI_API_KEY` está configurada
+
+4. **Generando preguntas con IA** ✨
+   - GPT-4o genera las 20 preguntas únicas
+   - Este paso puede tardar hasta 30 segundos
+   - Muestra mensaje: "IA está generando 20 preguntas únicas..."
+
+5. **Validando preguntas generadas** ✅
+   - Verifica que hay exactamente 20 preguntas
+   - Valida que no hay preguntas duplicadas
+   - Comprueba el formato de cada pregunta
+
+6. **Guardando test en base de datos** 💾
+   - Inserta o actualiza el test en Supabase
+   - Usa `SUPABASE_SERVICE_ROLE_KEY` para evitar problemas RLS
+
+7. **Finalizando** 🎉
+   - Recarga la información del test
+   - Muestra mensaje de éxito
+
+### Estados visuales
+
+Cada paso puede tener estos estados:
+
+- ⚪ **Pendiente**: Círculo gris (aún no ha comenzado)
+- 🔵 **Cargando**: Spinner azul animado (en progreso)
+- 🟢 **Éxito**: Check verde (completado correctamente)
+- 🔴 **Error**: X roja (falló con detalles del error)
+- 🟠 **Advertencia**: Triángulo naranja (completó con warnings)
+
+### Componente
+
+**Archivo**: `components/ui/TestGenerationModal.tsx`
+
+**Props**:
+```typescript
+interface TestGenerationModalProps {
+  isOpen: boolean
+  onClose: () => void
+  steps: GenerationStep[]
+  currentStep: number
+  canClose: boolean
+}
+
+interface GenerationStep {
+  id: string
+  label: string
+  status: 'pending' | 'loading' | 'success' | 'error' | 'warning'
+  message?: string
+  details?: string
+}
+```
+
+### Uso en código
+
+**En `ModulesManager.tsx` y `app/administrator/tests/page.tsx`**:
+
+```typescript
+// Inicializar pasos
+const initialSteps: GenerationStep[] = [
+  { id: '1', label: 'Verificando sesión', status: 'loading', message: '...' },
+  { id: '2', label: 'Obteniendo lecciones', status: 'pending' },
+  // ... resto de pasos
+]
+
+// Actualizar paso específico
+const updateStep = (stepIndex: number, status: Status, message?: string) => {
+  setGenerationSteps(prev => {
+    const newSteps = [...prev]
+    newSteps[stepIndex] = { ...newSteps[stepIndex], status, message }
+    return newSteps
+  })
+}
+
+// Mostrar modal
+setShowGenerationModal(true)
+```
+
+### Manejo de errores
+
+Si ocurre un error en cualquier paso:
+
+1. El paso actual se marca como `error` en rojo
+2. Se muestra el mensaje de error específico
+3. Se detiene el proceso (no continúa a los siguientes pasos)
+4. El modal se puede cerrar para revisar el problema
+5. Los logs completos aparecen en la consola del navegador
+
+**Ejemplo de error común**:
+```
+❌ Paso 3: Conectando con OpenAI
+   Error: Servicio de IA no disponible
+   Detalles: OPENAI_API_KEY no está configurada
+```
+
+### Script de diagnóstico
+
+Se incluye un script para probar la configuración localmente:
+
+```bash
+node scripts/test-module-test-api.js
+```
+
+Este script verifica:
+- ✅ Variables de entorno configuradas
+- ✅ Conexión a Supabase
+- ✅ Permisos de lectura/escritura en `module_tests`
+- ✅ OpenAI API key válida
+
+---
+
 ## 📜 Changelog
+
+**Versión 1.1 - 15 Enero 2026**
+- ✅ **Modal de progreso en tiempo real** durante generación de tests
+- ✅ Diagnóstico detallado de cada paso del proceso
+- ✅ Mensajes de error específicos y claros
+- ✅ Script de verificación de configuración
+- ✅ Mejores mensajes de error en API
+- ✅ Uso de `SUPABASE_SERVICE_ROLE_KEY` para evitar problemas RLS
+- ✅ Cambio de `.single()` a `.maybeSingle()` para evitar error 406
 
 **Versión 1.0 - 13 Enero 2026**
 - ✅ Sistema completo de tests por módulo

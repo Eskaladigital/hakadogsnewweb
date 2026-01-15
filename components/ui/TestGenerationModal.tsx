@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Loader2, CheckCircle, XCircle, AlertTriangle } from 'lucide-react'
 
@@ -17,6 +18,7 @@ interface TestGenerationModalProps {
   steps: GenerationStep[]
   currentStep: number
   canClose: boolean
+  isGenerating: boolean
 }
 
 export default function TestGenerationModal({
@@ -24,8 +26,30 @@ export default function TestGenerationModal({
   onClose,
   steps,
   currentStep,
-  canClose
+  canClose,
+  isGenerating
 }: TestGenerationModalProps) {
+  const [showConfirmClose, setShowConfirmClose] = useState(false)
+
+  const handleCloseClick = () => {
+    if (isGenerating) {
+      // Si está generando, pedir confirmación
+      setShowConfirmClose(true)
+    } else {
+      // Si ya terminó (error o éxito), cerrar directamente
+      onClose()
+    }
+  }
+
+  const confirmClose = () => {
+    setShowConfirmClose(false)
+    onClose()
+  }
+
+  const cancelClose = () => {
+    setShowConfirmClose(false)
+  }
+
   const getStepIcon = (step: GenerationStep) => {
     switch (step.status) {
       case 'loading':
@@ -67,49 +91,58 @@ export default function TestGenerationModal({
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
+          {/* Backdrop COMPLETAMENTE BLOQUEANTE */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
-            onClick={canClose ? onClose : undefined}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9998]"
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              // No hacer nada al hacer clic en el backdrop
+            }}
           />
 
-          {/* Modal */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl bg-white rounded-2xl shadow-2xl z-50 max-h-[90vh] overflow-hidden"
-          >
-            {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
-              <div className="flex items-center gap-3">
-                {hasError ? (
-                  <XCircle className="w-6 h-6 text-red-500" />
-                ) : isComplete ? (
-                  <CheckCircle className="w-6 h-6 text-green-500" />
-                ) : (
-                  <Loader2 className="w-6 h-6 animate-spin text-blue-500" />
+          {/* Modal CENTRADO */}
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl max-h-[90vh] overflow-hidden"
+              onClick={(e) => {
+                e.stopPropagation()
+              }}
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between p-6 border-b border-gray-200">
+                <div className="flex items-center gap-3">
+                  {hasError ? (
+                    <XCircle className="w-6 h-6 text-red-500" />
+                  ) : isComplete ? (
+                    <CheckCircle className="w-6 h-6 text-green-500" />
+                  ) : (
+                    <Loader2 className="w-6 h-6 animate-spin text-blue-500" />
+                  )}
+                  <h2 className="text-xl font-bold text-gray-900">
+                    {hasError
+                      ? 'Error al generar el test'
+                      : isComplete
+                      ? 'Test generado exitosamente'
+                      : 'Generando test con IA...'}
+                  </h2>
+                </div>
+                {canClose && (
+                  <button
+                    onClick={handleCloseClick}
+                    className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition"
+                    title={isGenerating ? "Cancelar generación" : "Cerrar"}
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
                 )}
-                <h2 className="text-xl font-bold text-gray-900">
-                  {hasError
-                    ? 'Error al generar el test'
-                    : isComplete
-                    ? 'Test generado exitosamente'
-                    : 'Generando test con IA...'}
-                </h2>
               </div>
-              {canClose && (
-                <button
-                  onClick={onClose}
-                  className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              )}
-            </div>
 
             {/* Steps */}
             <div className="p-6 max-h-[calc(90vh-180px)] overflow-y-auto">
@@ -173,7 +206,7 @@ export default function TestGenerationModal({
               )}
               {canClose && (
                 <button
-                  onClick={onClose}
+                  onClick={handleCloseClick}
                   className={`px-6 py-2.5 rounded-lg font-medium transition ${
                     hasError
                       ? 'bg-red-600 hover:bg-red-700 text-white'
@@ -187,8 +220,57 @@ export default function TestGenerationModal({
               )}
             </div>
           </motion.div>
-        </>
-      )}
-    </AnimatePresence>
+        </div>
+
+        {/* Modal de confirmación de cierre */}
+        <AnimatePresence>
+          {showConfirmClose && (
+            <>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 bg-black/70 z-[10000]"
+                onClick={cancelClose}
+              />
+              <div className="fixed inset-0 z-[10001] flex items-center justify-center p-4">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  className="bg-white rounded-xl shadow-2xl p-6 max-w-md w-full"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="flex items-center gap-3 mb-4">
+                    <AlertTriangle className="w-6 h-6 text-amber-500" />
+                    <h3 className="text-lg font-bold text-gray-900">
+                      ¿Cancelar generación?
+                    </h3>
+                  </div>
+                  <p className="text-gray-600 mb-6">
+                    El test se está generando con IA. Si cierras ahora, se cancelará el proceso y tendrás que empezar de nuevo.
+                  </p>
+                  <div className="flex gap-3 justify-end">
+                    <button
+                      onClick={cancelClose}
+                      className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-medium transition"
+                    >
+                      Continuar generando
+                    </button>
+                    <button
+                      onClick={confirmClose}
+                      className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition"
+                    >
+                      Sí, cancelar
+                    </button>
+                  </div>
+                </motion.div>
+              </div>
+            </>
+          )}
+        </AnimatePresence>
+      </>
+    )}
+  </AnimatePresence>
   )
 }

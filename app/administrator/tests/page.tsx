@@ -688,6 +688,7 @@ export default function TestsAdminPage() {
         steps={generationSteps}
         currentStep={currentGenerationStep}
         canClose={!regenerating || generationSteps.some(s => s.status === 'error' || s.status === 'success')}
+        isGenerating={!!regenerating}
       />
     </div>
   )

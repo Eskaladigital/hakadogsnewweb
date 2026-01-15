@@ -741,6 +741,7 @@ export default function ModulesManager({
         steps={generationSteps}
         currentStep={currentGenerationStep}
         canClose={!generatingTest || generationSteps.some(s => s.status === 'error' || s.status === 'success')}
+        isGenerating={!!generatingTest}
       />
     </div>
   )

@@ -1,16 +1,49 @@
 # 🐕 HAKADOGS - Plataforma de Educación Canina
 
-**Versión**: 3.4.0 TESTS IA + VALORACIONES  
-**Fecha Actualización**: 14 Enero 2026  
-**Estado**: ✅ **LIVE EN HAKADOGS.COM - TESTS CON IA - SISTEMA DE VALORACIONES - PAGESPEED 90-95 MÓVIL**
+**Versión**: 3.4.1 TESTS IA CON MODAL + VALORACIONES  
+**Fecha Actualización**: 15 Enero 2026  
+**Estado**: ✅ **LIVE EN HAKADOGS.COM - TESTS CON IA Y MODAL DE PROGRESO - SISTEMA DE VALORACIONES - PAGESPEED 90-95 MÓVIL**
 
 ---
 
 ## 🎯 RESUMEN EJECUTIVO
 
-Hakadogs es una plataforma web completa para educación canina profesional que integra sistema de cursos online con módulos organizados, **tests automáticos con IA (OpenAI GPT-4o)**, **sistema de valoraciones con engagement scoring**, **gamificación totalmente automática**, gestión de usuarios y panel administrativo avanzado. **Optimizada para máximo rendimiento (95+ Google PageSpeed), SEO técnico avanzado con Schema.org, accesibilidad WCAG 2.1 AA compliant y experiencia móvil excepcional.**
+Hakadogs es una plataforma web completa para educación canina profesional que integra sistema de cursos online con módulos organizados, **tests automáticos con IA (OpenAI GPT-4o) con modal de progreso en tiempo real**, **sistema de valoraciones con engagement scoring**, **gamificación totalmente automática**, gestión de usuarios y panel administrativo avanzado. **Optimizada para máximo rendimiento (95+ Google PageSpeed), SEO técnico avanzado con Schema.org, accesibilidad WCAG 2.1 AA compliant y experiencia móvil excepcional.**
 
-### 🆕 ÚLTIMA ACTUALIZACIÓN: TESTS CON IA + VALORACIONES ⭐🤖
+### 🆕 ÚLTIMA ACTUALIZACIÓN: MODAL DE PROGRESO PARA TESTS IA 🎯🤖
+
+**✅ Modal de Progreso en Tiempo Real (v3.4.1):**
+
+- 🎯 **Visibilidad total**: Modal interactivo muestra cada paso de la generación
+- ✅ **7 pasos detallados**: Desde verificación de sesión hasta guardado final
+- 🔍 **Diagnóstico de errores**: Identifica exactamente dónde falla el proceso
+- 📊 **Barra de progreso visual**: Muestra avance en tiempo real
+- 🎨 **Estados dinámicos**: Pending, Loading, Success, Error con iconos
+- 🚫 **No cancelable**: Modal se bloquea durante generación (evita interrupciones)
+- 💬 **Mensajes descriptivos**: Cada paso incluye mensaje específico
+- 📋 **Detalles de errores**: Si falla, muestra mensaje técnico completo
+
+**Pasos del modal**:
+1. 🔐 Verificando sesión
+2. 📚 Obteniendo lecciones del módulo  
+3. 🤖 Conectando con OpenAI
+4. ✨ Generando 20 preguntas únicas (hasta 30s)
+5. ✅ Validando preguntas generadas
+6. 💾 Guardando test en base de datos
+7. 🎉 Finalizando
+
+**Componente**: `components/ui/TestGenerationModal.tsx`  
+**Integración**: 
+- `components/admin/ModulesManager.tsx` (generación)
+- `app/administrator/tests/page.tsx` (regeneración)
+
+**✅ Problemas Resueltos (v3.4.1):**
+
+- 🔧 **Error 406 eliminado**: Cambio de `.single()` a `.maybeSingle()`
+- 🔐 **RLS mejorado**: Uso de `SUPABASE_SERVICE_ROLE_KEY` para admin
+- 📝 **Mensajes claros**: Errores específicos en lugar de "Error 500"
+- 🧪 **Script de diagnóstico**: `test-module-test-api.js` verifica configuración
+- 📚 **Documentación completa**: `RESOLUCION_PROBLEMAS_TESTS.md`
 
 **✅ Sistema de Tests por Módulo con IA (v3.4.0):**
 
@@ -36,10 +69,19 @@ Hakadogs es una plataforma web completa para educación canina profesional que i
 
 **Beneficios para el Negocio:**
 - ✅ **Evaluación automática**: Tests generados por IA sin esfuerzo manual
+- ✅ **Visibilidad total**: Admin sabe exactamente qué está pasando en cada generación
+- ✅ **Diagnóstico rápido**: Errores específicos en lugar de mensajes genéricos
 - ✅ **Feedback continuo**: Conocer qué cursos funcionan mejor
 - ✅ **Engagement tracking**: Identificar usuarios comprometidos vs. pasivos
 - ✅ **Mejora continua**: Ajustar contenido basado en valoraciones reales
 - ✅ **Pedagogía reforzada**: Explicaciones en cada pregunta mejoran aprendizaje
+- ✅ **Mantenibilidad**: Script de diagnóstico facilita troubleshooting
+
+**📂 Documentación Tests IA:**
+- `docs/SISTEMA_TESTS_MODULOS.md` - Sistema completo (actualizado con modal)
+- `docs/RESOLUCION_PROBLEMAS_TESTS.md` - ⭐ NUEVO - Guía troubleshooting
+- `scripts/test-module-test-api.js` - ⭐ NUEVO - Script diagnóstico configuración
+- `components/ui/TestGenerationModal.tsx` - ⭐ NUEVO - Modal de progreso
 
 **Optimizaciones previas (v3.2.0):**
 - ⚡ **Score Móvil**: 81 → 90-95 (+11%)
