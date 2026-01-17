@@ -4,13 +4,13 @@ import Image from 'next/image'
 import { Award, Heart, TrendingUp, Users, Target, BookOpen, ArrowRight, Gamepad2, BarChart3, MapPin, GraduationCap, Zap } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Sobre Nosotros - Alfredo García',
-  description: 'Alfredo García, educador canino profesional en Archena-Murcia. +8 años transformando perros con metodología BE HAKA. Binomio perro-guía. ¡Conoce mi historia!',
+  title: 'Sobre Nosotros - Alfredo Gandolfo',
+  description: 'Alfredo Gandolfo, educador canino profesional en Archena-Murcia. +8 años transformando perros con metodología BE HAKA. Binomio perro-guía. ¡Conoce mi historia!',
   alternates: {
     canonical: 'https://www.hakadogs.com/sobre-nosotros',
   },
   openGraph: {
-    title: 'Sobre Nosotros - Alfredo García | Hakadogs',
+    title: 'Sobre Nosotros - Alfredo Gandolfo | Hakadogs',
     description: 'Conoce a Alfredo y la metodología BE HAKA: binomio perro-guía, juego estructurado y resultados medibles. +8 años de experiencia, +500 perros educados.',
     url: 'https://www.hakadogs.com/sobre-nosotros',
     images: [
@@ -18,13 +18,13 @@ export const metadata: Metadata = {
         url: 'https://www.hakadogs.com/images/logo_facebook_1200_630.jpg',
         width: 1200,
         height: 630,
-        alt: 'Hakadogs - Alfredo García - Educador Canino Profesional',
+        alt: 'Hakadogs - Alfredo Gandolfo - Educador Canino Profesional',
       }
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Sobre Nosotros - Alfredo García | Hakadogs',
+    title: 'Sobre Nosotros - Alfredo Gandolfo | Hakadogs',
     description: 'Conoce a Alfredo y la metodología BE HAKA. +8 años de experiencia, +500 perros educados.',
     images: ['https://www.hakadogs.com/images/logo_facebook_1200_630.jpg'],
   },
@@ -43,12 +43,12 @@ export default function SobreNosotrosPage() {
               </div>
               
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-forest-dark mb-4 sm:mb-6">
-                Alfredo García
+                Alfredo Gandolfo
                 <span className="block text-xl sm:text-2xl md:text-3xl lg:text-4xl text-sage mt-2">Educador Canino Profesional</span>
               </h1>
               
               <p className="text-base sm:text-lg md:text-xl text-gray-700 leading-relaxed mb-4 sm:mb-6">
-                Con más de <strong className="text-forest">8 años de experiencia</strong> y más de <strong className="text-forest">500 perros educados</strong>, he desarrollado la <strong>metodología BE HAKA</strong>: un sistema basado en el binomio perro-guía, juego estructurado y resultados medibles.
+                Con más de <strong className="text-forest">8 años de experiencia</strong> y más de <strong className="text-forest">500 perros educados</strong>, he desarrollado la <strong className="text-forest">metodología BE HAKA</strong>: un sistema basado en el binomio perro-guía, juego estructurado y resultados medibles.
               </p>
 
               <p className="text-sm sm:text-base md:text-lg text-gray-600 leading-relaxed mb-6 sm:mb-8">
@@ -79,7 +79,7 @@ export default function SobreNosotrosPage() {
               <div className="aspect-[4/5] relative rounded-3xl shadow-2xl overflow-hidden">
                 <Image
                   src="/images/hakadogs/IMG_2775.jpeg"
-                  alt="Alfredo García - Educador Canino Profesional"
+                  alt="Alfredo Gandolfo - Educador Canino Profesional"
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"
