@@ -1,0 +1,162 @@
+# 📁 Índice de Archivos SQL - Supabase
+
+**Actualizado:** 15 Enero 2026  
+**Versión:** 2.7.0 - RLS Simplificado
+
+---
+
+## 🎯 Archivos Principales
+
+### ⭐ Políticas RLS (NUEVO - v2.7.0)
+
+| Archivo | Tipo | Usar Para |
+|---------|------|-----------|
+| **`POLITICAS_RLS_DEFINITIVAS.sql`** | ⭐ PRINCIPAL | Aplicar políticas RLS definitivas |
+| `POLITICAS_RLS_EXPLICADAS.md` | 📖 Docs | Entender el sistema completo |
+| `REFERENCIA_RAPIDA_RLS.md` | 📋 Ref | Comandos rápidos y troubleshooting |
+| `RESUMEN_VISUAL_RLS.txt` | 📊 Visual | Diagrama ASCII del sistema |
+
+---
+
+## 📦 Schema Completo
+
+| Archivo | Descripción | Estado |
+|---------|-------------|--------|
+| `setup_completo.sql` | Base de cursos completa | ✅ Activo |
+| `gamification_system.sql` | Sistema de gamificación | ✅ Activo |
+| `blog_schema.sql` | Sistema de blog | ✅ Activo |
+| `user_roles_table.sql` | Roles de usuario | ✅ Activo |
+| `contacts_table.sql` | Sistema de contactos | ✅ Activo |
+| `dashboard_functions.sql` | Funciones RPC del dashboard | ✅ Activo |
+| `city_content_cache.sql` | Caché de contenido IA | ✅ Activo |
+
+---
+
+## 🔧 Scripts de Fixes Específicos
+
+| Archivo | Para qué sirve | Cuándo usar |
+|---------|---------------|-------------|
+| `module_tests_rls.sql` | RLS para tests de módulos | Si reinstalar tests |
+| `blog_storage_SOLO_RLS.sql` | RLS para imágenes blog | Si reinstalar blog |
+| `fix_badge_counter.sql` | Fix contador de badges | Si falla contador |
+| `fix_streak_realista.sql` | Fix rachas realistas | Si fallan rachas |
+| `badges_mejorados.sql` | Badges optimizados | Si reinstalar badges |
+| `FIX_GAMIFICACION_TRIGGER.sql` | Fix triggers gamificación | Si fallan triggers |
+| `FIX_MODULE_TESTS_RPC.sql` | Fix funciones RPC tests | Si fallan RPCs |
+| `FIX_REGISTRO_USUARIOS.sql` | Fix registro usuarios | Si falla registro |
+| `FIX_ERROR_406.sql` | Fix error 406 específico | Si error 406 persiste |
+
+---
+
+## 🗄️ Archivos Archivados
+
+📁 **`_archivos_antiguos_rls/`** - Scripts RLS obsoletos
+
+**⚠️ NO USAR** - Contiene versiones antiguas con 40+ políticas que causaban problemas.
+
+Archivos dentro:
+- `fix_rls_policies.sql` (obsoleto)
+- `DESHABILITAR_RLS_AHORA.sql` (obsoleto)
+- `FIX_ALTERNATIVO_*.sql` (obsoletos)
+- `SOLUCION_DEFINITIVA.sql` (obsoleto)
+- Y otros 6 scripts antiguos
+
+**Usar en su lugar:** `POLITICAS_RLS_DEFINITIVAS.sql`
+
+---
+
+## 🚀 Guía Rápida de Uso
+
+### Instalación Nueva
+
+```
+1. setup_completo.sql           - Base de cursos
+2. user_roles_table.sql          - Roles
+3. contacts_table.sql            - Contactos
+4. dashboard_functions.sql       - Dashboard
+5. blog_schema.sql               - Blog
+6. city_content_cache.sql        - Caché IA
+7. gamification_system.sql       - Gamificación
+8. POLITICAS_RLS_DEFINITIVAS.sql - RLS (IMPORTANTE)
+```
+
+### Solo Aplicar Políticas RLS
+
+```
+1. Ejecutar: POLITICAS_RLS_DEFINITIVAS.sql
+2. Verificar con comandos de: REFERENCIA_RAPIDA_RLS.md
+```
+
+### Solucionar Problema RLS
+
+```
+1. Consultar: POLITICAS_RLS_EXPLICADAS.md (Sección 7)
+2. Ejecutar comandos de: REFERENCIA_RAPIDA_RLS.md
+3. Si persiste: Re-ejecutar POLITICAS_RLS_DEFINITIVAS.sql
+```
+
+---
+
+## ⚠️ Reglas Importantes
+
+### ✅ USAR
+
+- `POLITICAS_RLS_DEFINITIVAS.sql` - Para políticas RLS
+- Archivos en la raíz de `/supabase/` (excepto `_archivos_antiguos_rls/`)
+- Documentación `.md` reciente
+
+### ❌ NO USAR
+
+- Nada dentro de `_archivos_antiguos_rls/`
+- Scripts con nombres como `FIX_ALTERNATIVO_*`
+- Versiones viejas de `fix_rls_policies.sql`
+
+### 🤔 Si tienes duda
+
+1. Pregunta antes de ejecutar
+2. Consulta `README.md` principal
+3. Revisa fecha del archivo (usar los más recientes)
+
+---
+
+## 📊 Estadísticas
+
+| Categoría | Cantidad |
+|-----------|----------|
+| Scripts activos principales | 7 |
+| Scripts de fixes específicos | 9 |
+| Scripts RLS definitivos | 4 (1 SQL + 3 docs) |
+| Scripts archivados (obsoletos) | 10 |
+| **Total archivos útiles** | **20** |
+
+---
+
+## 📞 Soporte
+
+**¿Qué archivo usar?**
+- Para RLS: `POLITICAS_RLS_DEFINITIVAS.sql`
+- Para instalación completa: Orden indicado en "Instalación Nueva"
+- Para fixes: Según el problema específico
+
+**¿Tengo que ejecutar todos los archivos?**
+- No, solo los necesarios según tu situación
+- Si instalas desde cero: sí, ejecutar en orden
+- Si solo actualizas RLS: solo `POLITICAS_RLS_DEFINITIVAS.sql`
+
+**¿Puedo borrar `_archivos_antiguos_rls/`?**
+- Sí, pero no es urgente
+- Se mantiene solo como referencia histórica
+
+---
+
+## 🔄 Última Actualización
+
+- **Fecha:** 15 Enero 2026
+- **Cambio principal:** Simplificación RLS de 40+ a 11 políticas
+- **Archivos movidos:** 10 scripts antiguos a `_archivos_antiguos_rls/`
+- **Estado:** ✅ Estructura limpia y organizada
+
+---
+
+**Proyecto:** Hakadogs - Educación Canina Profesional  
+**Mantener actualizado:** Sí, con cada cambio importante

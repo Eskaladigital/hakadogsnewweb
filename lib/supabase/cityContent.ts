@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/client'
+import { createClient } from '@supabase/supabase-js'
 
 export interface CityContent {
   introText: string
@@ -23,27 +23,44 @@ export interface CityContent {
 
 /**
  * Obtiene contenido único de ciudad desde Supabase (si existe)
+ * NOTA: Esta función se ejecuta en el servidor (Server Component)
  */
 export async function getCityContent(citySlug: string): Promise<CityContent | null> {
-  const supabase = createClient()
-  
-  const { data, error } = await supabase
-    .from('city_content_cache')
-    .select('*')
-    .eq('city_slug', citySlug)
-    .single()
+  try {
+    // Crear cliente de Supabase para servidor con credenciales de env
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
+    
+    const { data, error } = await supabase
+      .from('city_content_cache')
+      .select('*')
+      .eq('city_slug', citySlug)
+      .maybeSingle() // Usar maybeSingle en lugar de single para evitar error si no existe
 
-  if (error || !data) {
+    if (error) {
+      console.error(`Error obteniendo contenido para ${citySlug}:`, error)
+      return null
+    }
+
+    if (!data) {
+      console.log(`No hay contenido en caché para: ${citySlug}`)
+      return null
+    }
+
+    // Mapear los campos de snake_case a camelCase
+    return {
+      introText: data.intro_text || '',
+      localBenefits: data.local_benefits || [],
+      localInfo: data.local_info || { pipicanes: '', normativas: '', clima: '', playas: '' },
+      challenges: data.challenges || [],
+      testimonial: data.testimonial || { text: '', author: '', neighborhood: '' },
+      faqs: data.faqs || [],
+    }
+  } catch (error) {
+    console.error(`Error fatal obteniendo contenido para ${citySlug}:`, error)
     return null
-  }
-
-  return {
-    introText: (data as any).intro_text,
-    localBenefits: (data as any).local_benefits,
-    localInfo: (data as any).local_info,
-    challenges: (data as any).challenges,
-    testimonial: (data as any).testimonial,
-    faqs: (data as any).faqs,
   }
 }
 
