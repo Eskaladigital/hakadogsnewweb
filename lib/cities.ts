@@ -307,7 +307,7 @@ export const cities: CityData[] = [
     isRemoteMarket: false
   },
   {
-    slug: 'abarán',
+    slug: 'abaran',
     name: 'Abarán',
     province: 'Murcia',
     region: 'Región de Murcia',
