@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { Suspense } from 'react'
-import { ArrowRight, CheckCircle2, MapPin, Clock, Globe, Users, Waves, CloudRain, Dog, FileText, AlertCircle, Sunrise } from 'lucide-react'
+import { ArrowRight, CheckCircle2, MapPin, Clock, Globe, Users, Waves, CloudRain, Dog, FileText, Sunrise } from 'lucide-react'
 import { getCityBySlug } from '@/lib/cities'
 import { getExtendedCityData } from '@/lib/extendedCityData'
 import { getCityContent } from '@/lib/supabase/cityContent'
@@ -378,37 +378,6 @@ export default async function LocalidadPage({ params }: { params: { ciudad: stri
               </div>
             </div>
           </section>
-
-          {/* Desafíos Locales que Solucionamos */}
-          {uniqueContent.challenges.length > 0 && (
-            <section className="py-16 bg-gradient-to-br from-cream to-sage/5">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="bg-white rounded-2xl p-8 md:p-12 shadow-lg border-2 border-gold/20">
-                  <div className="flex items-center gap-3 mb-8">
-                    <AlertCircle className="w-8 h-8 text-gold" />
-                    <div>
-                      <h2 className="text-2xl md:text-3xl font-bold text-forest-dark">
-                        Desafíos Comunes en {city.name}
-                      </h2>
-                      <p className="text-gray-600">Que nuestros cursos online te ayudan a superar</p>
-                    </div>
-                  </div>
-                  <div className="grid md:grid-cols-3 gap-6">
-                    {uniqueContent.challenges.map((challenge: string, index: number) => (
-                      <div key={index} className="bg-gradient-to-br from-gold/5 to-gold/10 rounded-xl p-6 border-2 border-gold/20 hover:border-gold/30 transition-all">
-                        <div className="flex items-start gap-3">
-                          <div className="bg-gold/20 rounded-full p-2 mt-1">
-                            <CheckCircle2 className="w-5 h-5 text-gold" />
-                          </div>
-                          <p className="text-gray-700 leading-relaxed">{challenge}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </section>
-          )}
 
           {/* CTA Cursos Online */}
           <Suspense fallback={<div className="h-96 bg-gray-50 animate-pulse" />}>
