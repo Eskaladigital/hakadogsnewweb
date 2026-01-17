@@ -32,8 +32,8 @@ export default function OnlineCoursesCtaSection({ cityName }: OnlineCoursesCtaSe
   ]
 
   return (
-    <section className="py-20 bg-gradient-to-br from-forest/5 via-sage/10 to-cream relative overflow-hidden">
-      <div className="container mx-auto px-4 relative z-10">
+    <section className="py-16 bg-gradient-to-br from-forest/5 via-sage/10 to-cream relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Badge informativo */}
         <div className="text-center mb-8">
           <span className="inline-flex items-center gap-2 bg-white px-6 py-3 rounded-full shadow-lg border-2 border-forest/20">
