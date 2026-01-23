@@ -1,6 +1,10 @@
 import { Metadata } from 'next'
 import { createClient } from '@supabase/supabase-js'
 
+// Generar TODAS las páginas estáticas para mejor SEO
+export const dynamicParams = false // Solo rutas pre-generadas, el resto 404
+export const revalidate = 86400 // Revalidar cada 24 horas
+
 // Cliente de Supabase para server-side
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!

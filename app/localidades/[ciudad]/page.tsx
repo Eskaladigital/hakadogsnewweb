@@ -48,10 +48,9 @@ const OnlineCoursesCtaSection = dynamic(() => import('@/components/OnlineCourses
   loading: () => <div className="h-96 bg-gray-50 animate-pulse rounded-3xl" />
 })
 
-// Generamos páginas estáticas para ciudades locales (mejor SEO)
-// Las ciudades remotas se generan bajo demanda con ISR
-export const dynamicParams = true
-export const revalidate = 3600 // Revalidar cada hora (ISR)
+// Generamos TODAS las páginas estáticas para mejor SEO
+export const dynamicParams = false // Solo rutas pre-generadas, el resto 404
+export const revalidate = 86400 // Revalidar cada 24 horas
 
 export async function generateMetadata({ params }: { params: { ciudad: string } }): Promise<Metadata> {
   const city = getCityBySlug(params.ciudad)
@@ -90,13 +89,9 @@ export async function generateMetadata({ params }: { params: { ciudad: string } 
   }
 }
 
-// Pre-generar rutas estáticas para ciudades del mercado LOCAL (mejor SEO)
-// Las ciudades remotas se generan bajo demanda con ISR
+// Pre-generar rutas estáticas para TODAS las ciudades (mejor SEO)
 export async function generateStaticParams() {
-  // Solo pre-generar las ciudades locales (isRemoteMarket: false)
-  const localCities = cities.filter(city => city.isRemoteMarket === false)
-  
-  return localCities.map((city) => ({
+  return cities.map((city) => ({
     ciudad: city.slug,
   }))
 }
