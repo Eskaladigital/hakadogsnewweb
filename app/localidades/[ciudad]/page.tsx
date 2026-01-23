@@ -4,7 +4,7 @@ import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { Suspense } from 'react'
 import { ArrowRight, CheckCircle2, MapPin, Clock, Globe, Users, Waves, CloudRain, Dog, FileText, Sunrise } from 'lucide-react'
-import { getCityBySlug } from '@/lib/cities'
+import { getCityBySlug, cities } from '@/lib/cities'
 import { getExtendedCityData } from '@/lib/extendedCityData'
 import { getCityContent } from '@/lib/supabase/cityContent'
 import Hero from '@/components/Hero'
@@ -48,10 +48,10 @@ const OnlineCoursesCtaSection = dynamic(() => import('@/components/OnlineCourses
   loading: () => <div className="h-96 bg-gray-50 animate-pulse rounded-3xl" />
 })
 
-// NO generamos páginas estáticas - se renderizan dinámicamente
-// Esto reduce el build time de minutos a segundos
+// Generamos páginas estáticas para ciudades locales (mejor SEO)
+// Las ciudades remotas se generan bajo demanda con ISR
 export const dynamicParams = true
-export const revalidate = 0
+export const revalidate = 3600 // Revalidar cada hora (ISR)
 
 export async function generateMetadata({ params }: { params: { ciudad: string } }): Promise<Metadata> {
   const city = getCityBySlug(params.ciudad)
@@ -88,6 +88,17 @@ export async function generateMetadata({ params }: { params: { ciudad: string } 
       images: ['https://www.hakadogs.com/images/logo_facebook_1200_630.jpg'],
     },
   }
+}
+
+// Pre-generar rutas estáticas para ciudades del mercado LOCAL (mejor SEO)
+// Las ciudades remotas se generan bajo demanda con ISR
+export async function generateStaticParams() {
+  // Solo pre-generar las ciudades locales (isRemoteMarket: false)
+  const localCities = cities.filter(city => city.isRemoteMarket === false)
+  
+  return localCities.map((city) => ({
+    ciudad: city.slug,
+  }))
 }
 
 export default async function LocalidadPage({ params }: { params: { ciudad: string } }) {

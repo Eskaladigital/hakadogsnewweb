@@ -2,11 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { BookOpen, Download, ShoppingCart, CheckCircle, Mail, Clock, Loader2, ChevronDown, MapPin, Phone, Calendar, ArrowRight, Info, GraduationCap, Target, PlayCircle, ChevronRight } from 'lucide-react'
+import { BookOpen, Download, ShoppingCart, CheckCircle, Mail, Clock, Loader2, ChevronDown, MapPin, Phone, ArrowRight, Info } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { getAllCourses, getCourseModules, courseHasModules } from '@/lib/supabase/courses'
-import type { Course, CourseModule, Lesson } from '@/lib/supabase/courses'
-import Modal from '@/components/ui/Modal'
+import { getAllCourses } from '@/lib/supabase/courses'
+import type { Course } from '@/lib/supabase/courses'
 import { supabase } from '@/lib/supabase/client'
 
 export default function CursosPage() {
@@ -16,13 +15,6 @@ export default function CursosPage() {
   const [cursosGratuitos, setCursosGratuitos] = useState<Course[]>([])
   const [cursosPago, setCursosPago] = useState<Course[]>([])
   const [openFaq, setOpenFaq] = useState<number | null>(null)
-  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null)
-  const [courseModules, setCourseModules] = useState<CourseModule[]>([])
-  const [moduleLessons, setModuleLessons] = useState<Record<string, Lesson[]>>({})
-  const [lessonsWithoutModule, setLessonsWithoutModule] = useState<Lesson[]>([])
-  const [loadingLessons, setLoadingLessons] = useState(false)
-  const [expandedModules, setExpandedModules] = useState<Set<string>>(new Set())
-  const [hasModules, setHasModules] = useState(false)
 
   useEffect(() => {
     async function loadCursos() {
@@ -101,90 +93,6 @@ export default function CursosPage() {
 
   const toggleFaq = (index: number) => {
     setOpenFaq(openFaq === index ? null : index)
-  }
-
-  const handleOpenCourseModal = async (curso: Course) => {
-    setSelectedCourse(curso)
-    setLoadingLessons(true)
-    
-    try {
-      // Verificar si el curso tiene módulos
-      const hasModulesConfig = await courseHasModules(curso.id)
-      setHasModules(hasModulesConfig)
-
-      if (hasModulesConfig) {
-        // Cargar módulos
-        const modules = await getCourseModules(curso.id)
-        setCourseModules(modules)
-
-        // NO expandir ningún módulo por defecto (todos contraídos)
-        setExpandedModules(new Set())
-
-        // Cargar lecciones de cada módulo
-        const { supabase } = await import('@/lib/supabase/client')
-        const lessonsMap: Record<string, Lesson[]> = {}
-        
-        for (const courseModule of modules) {
-          const { data } = await supabase
-            .from('course_lessons')
-            .select('*')
-            .eq('course_id', curso.id)
-            .eq('module_id', courseModule.id)
-            .order('order_index', { ascending: true })
-          
-          if (data) {
-            lessonsMap[courseModule.id] = data as Lesson[]
-          }
-        }
-
-        // Cargar lecciones sin módulo
-        const { data: lessonsWithoutMod } = await supabase
-          .from('course_lessons')
-          .select('*')
-          .eq('course_id', curso.id)
-          .is('module_id', null)
-          .order('order_index', { ascending: true })
-
-        setModuleLessons(lessonsMap)
-        setLessonsWithoutModule((lessonsWithoutMod || []) as Lesson[])
-      } else {
-        // Cargar todas las lecciones sin módulos
-        const { supabase } = await import('@/lib/supabase/client')
-        const { data } = await supabase
-          .from('course_lessons')
-          .select('*')
-          .eq('course_id', curso.id)
-          .order('order_index', { ascending: true })
-        
-        setLessonsWithoutModule((data || []) as Lesson[])
-      }
-    } catch (error) {
-      console.error('Error cargando temario:', error)
-      setCourseModules([])
-      setModuleLessons({})
-      setLessonsWithoutModule([])
-    } finally {
-      setLoadingLessons(false)
-    }
-  }
-
-  const handleCloseCourseModal = () => {
-    setSelectedCourse(null)
-    setCourseModules([])
-    setModuleLessons({})
-    setLessonsWithoutModule([])
-    setExpandedModules(new Set())
-    setHasModules(false)
-  }
-
-  const toggleModule = (moduleId: string) => {
-    const newExpanded = new Set(expandedModules)
-    if (newExpanded.has(moduleId)) {
-      newExpanded.delete(moduleId)
-    } else {
-      newExpanded.add(moduleId)
-    }
-    setExpandedModules(newExpanded)
   }
 
   // Función para truncar descripción
@@ -366,30 +274,31 @@ export default function CursosPage() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all flex flex-col border border-gray-100 cursor-pointer"
-                    onClick={() => handleOpenCourseModal(curso)}
+                    className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all flex flex-col border border-gray-100"
                   >
-                    {/* Header con dificultad */}
-                    <div className="bg-gradient-to-br from-gray-50 to-white p-4 sm:p-6 border-b border-gray-100">
-                      <div className="flex items-center justify-between mb-3 sm:mb-4">
-                        <span className={`px-2 sm:px-3 py-1 rounded-full text-xs font-semibold ${difficultyColor}`}>
-                          {difficultyLabel}
-                        </span>
+                    {/* Header con dificultad - Enlace a página del curso */}
+                    <Link href={`/cursos/${curso.slug}`} className="block">
+                      <div className="bg-gradient-to-br from-gray-50 to-white p-4 sm:p-6 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors">
+                        <div className="flex items-center justify-between mb-3 sm:mb-4">
+                          <span className={`px-2 sm:px-3 py-1 rounded-full text-xs font-semibold ${difficultyColor}`}>
+                            {difficultyLabel}
+                          </span>
+                        </div>
+                        <h3 className="text-base sm:text-lg md:text-xl font-bold mb-2 text-gray-900">{curso.title}</h3>
+                        <div 
+                          className="responsive-prose text-gray-600 text-xs sm:text-sm prose max-w-none line-clamp-3"
+                          style={{ fontSize: 'clamp(0.75rem, 2vw, 0.875rem)' }}
+                          dangerouslySetInnerHTML={{ 
+                            __html: truncateDescription(curso.short_description || curso.description, 150) 
+                          }}
+                        />
+                        {/* Badge "Ver detalles" */}
+                        <div className="mt-2 sm:mt-3 flex items-center text-forest hover:text-forest-dark font-medium text-xs sm:text-sm transition-colors">
+                          <Info className="w-3 sm:w-4 h-3 sm:h-4 mr-1" />
+                          Ver más detalles
+                        </div>
                       </div>
-                      <h3 className="text-base sm:text-lg md:text-xl font-bold mb-2 text-gray-900">{curso.title}</h3>
-                      <div 
-                        className="responsive-prose text-gray-600 text-xs sm:text-sm prose max-w-none line-clamp-3"
-                        style={{ fontSize: 'clamp(0.75rem, 2vw, 0.875rem)' }}
-                        dangerouslySetInnerHTML={{ 
-                          __html: truncateDescription(curso.short_description || curso.description, 150) 
-                        }}
-                      />
-                      {/* Badge "Ver detalles" */}
-                      <div className="mt-2 sm:mt-3 flex items-center text-forest hover:text-forest-dark font-medium text-xs sm:text-sm transition-colors">
-                        <Info className="w-3 sm:w-4 h-3 sm:h-4 mr-1" />
-                        Ver más detalles
-                      </div>
-                    </div>
+                    </Link>
 
                     {/* Contenido */}
                     <div className="p-4 sm:p-6 flex-grow">
@@ -415,7 +324,7 @@ export default function CursosPage() {
                       )}
                     </div>
 
-                    {/* Footer con precio y botón */}
+                    {/* Footer con precio y botones */}
                     <div className="p-4 sm:p-6 border-t border-gray-100 bg-gray-50">
                       <div className="flex items-center justify-between mb-3 sm:mb-4">
                         <div>
@@ -423,16 +332,22 @@ export default function CursosPage() {
                           <span className="text-gray-600 text-xs sm:text-sm ml-1">/único pago</span>
                         </div>
                       </div>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation() // Evita que se abra el modal
-                          handleBuyCourse(curso.slug)
-                        }}
-                        className="w-full bg-gradient-to-r from-forest to-sage text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-all flex items-center justify-center whitespace-nowrap shadow-md hover:shadow-lg"
-                      >
-                        <ShoppingCart className="w-5 h-5 mr-2" />
-                        Comprar Curso
-                      </button>
+                      <div className="flex flex-col gap-2">
+                        <button
+                          onClick={() => handleBuyCourse(curso.slug)}
+                          className="w-full bg-gradient-to-r from-forest to-sage text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-all flex items-center justify-center whitespace-nowrap shadow-md hover:shadow-lg"
+                        >
+                          <ShoppingCart className="w-5 h-5 mr-2" />
+                          Comprar Curso
+                        </button>
+                        <Link
+                          href={`/cursos/${curso.slug}`}
+                          className="w-full bg-white border-2 border-forest text-forest font-semibold py-2.5 px-6 rounded-lg hover:bg-forest/5 transition-all flex items-center justify-center text-sm"
+                        >
+                          <Info className="w-4 h-4 mr-2" />
+                          Ver detalles del curso
+                        </Link>
+                      </div>
                     </div>
                   </motion.div>
                 )
@@ -575,276 +490,6 @@ export default function CursosPage() {
         </div>
       </section>
 
-      {/* Modal de Detalles del Curso */}
-      {selectedCourse && (
-        <Modal
-          isOpen={!!selectedCourse}
-          onClose={handleCloseCourseModal}
-          title={selectedCourse.title}
-          size="lg"
-        >
-          <div className="space-y-6">
-            {/* Badges de información */}
-            <div className="flex flex-wrap gap-3">
-              <div className={`px-4 py-2 rounded-full text-sm font-semibold ${getDifficultyColor(selectedCourse.difficulty)}`}>
-                {getDifficultyLabel(selectedCourse.difficulty)}
-              </div>
-              <div className="px-4 py-2 rounded-full text-sm font-semibold bg-blue-100 text-blue-700 flex items-center">
-                <Clock className="w-4 h-4 mr-2" />
-                {selectedCourse.duration_minutes} minutos
-              </div>
-              <div className="px-4 py-2 rounded-full text-sm font-semibold bg-purple-100 text-purple-700 flex items-center">
-                <PlayCircle className="w-4 h-4 mr-2" />
-                {selectedCourse.total_lessons} lecciones
-              </div>
-            </div>
-
-            {/* Precio */}
-            <div className="bg-gradient-to-br from-forest/5 to-sage/5 rounded-xl p-4 sm:p-6 border-2 border-forest/20">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Precio del curso</p>
-                  <div className="flex items-baseline">
-                    <span className="text-4xl font-bold text-forest-dark">{selectedCourse.price.toFixed(2)}€</span>
-                    <span className="text-gray-600 ml-2">pago único</span>
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1">Acceso de por vida</p>
-                </div>
-                <button
-                  onClick={() => {
-                    handleCloseCourseModal()
-                    handleBuyCourse(selectedCourse.slug)
-                  }}
-                  className="w-full sm:w-auto bg-gradient-to-r from-forest to-sage text-white font-bold py-3 px-6 rounded-lg hover:opacity-90 transition-all flex items-center justify-center shadow-md hover:shadow-lg whitespace-nowrap"
-                >
-                  <ShoppingCart className="w-5 h-5 mr-2" />
-                  Comprar Ahora
-                </button>
-              </div>
-            </div>
-
-            {/* Descripción completa */}
-            <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center">
-                <BookOpen className="w-5 h-5 mr-2 text-forest" />
-                Descripción del Curso
-              </h3>
-              <div 
-                className="prose prose-sm max-w-none text-gray-700 leading-relaxed"
-                dangerouslySetInnerHTML={{ 
-                  __html: selectedCourse.short_description || selectedCourse.description || 'No hay descripción disponible.' 
-                }}
-              />
-            </div>
-
-            {/* Qué aprenderás */}
-            {selectedCourse.what_you_learn && selectedCourse.what_you_learn.length > 0 && (
-              <div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-                  <Target className="w-5 h-5 mr-2 text-forest" />
-                  Qué Aprenderás
-                </h3>
-                <div className="grid md:grid-cols-2 gap-3">
-                  {selectedCourse.what_you_learn.map((item, idx) => (
-                    <div key={idx} className="flex items-start bg-gray-50 rounded-lg p-3">
-                      <CheckCircle className="w-5 h-5 text-forest mr-3 flex-shrink-0 mt-0.5" />
-                      <span className="text-sm text-gray-700">{item}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Temario - Listado de Lecciones por Módulos */}
-            <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-                <GraduationCap className="w-5 h-5 mr-2 text-forest" />
-                Temario del Curso
-              </h3>
-              
-              {loadingLessons ? (
-                <div className="text-center py-8">
-                  <Loader2 className="w-8 h-8 animate-spin text-forest mx-auto mb-2" />
-                  <p className="text-gray-600 text-sm">Cargando temario...</p>
-                </div>
-              ) : hasModules ? (
-                // VISTA CON MÓDULOS (ACORDEÓN)
-                <div className="space-y-3">
-                  {courseModules.length === 0 && lessonsWithoutModule.length === 0 ? (
-                    <div className="bg-gray-50 rounded-lg p-6 text-center">
-                      <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-                      <p className="text-gray-600">No hay lecciones disponibles aún.</p>
-                    </div>
-                  ) : (
-                    <>
-                      {/* Módulos con lecciones agrupadas */}
-                      {courseModules.map((courseModule, moduleIdx) => {
-                        const isExpanded = expandedModules.has(courseModule.id)
-                        const lessons = moduleLessons[courseModule.id] || []
-                        const totalDuration = lessons.reduce((sum, l) => sum + l.duration_minutes, 0)
-                        
-                        return (
-                          <div key={courseModule.id} className="border border-gray-200 rounded-lg overflow-hidden">
-                            {/* Header del Módulo */}
-                            <button
-                              onClick={() => toggleModule(courseModule.id)}
-                              className="w-full bg-gradient-to-r from-forest/5 to-sage/5 hover:from-forest/10 hover:to-sage/10 p-3 sm:p-4 flex items-center justify-between transition-colors"
-                            >
-                              <div className="flex items-center gap-2 sm:gap-3">
-                                <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-forest text-white rounded-full flex items-center justify-center font-bold text-xs sm:text-sm">
-                                  {moduleIdx + 1}
-                                </div>
-                                <div className="text-left">
-                                  <h4 className="font-bold text-gray-900 text-sm sm:text-base">{courseModule.title}</h4>
-                                  <p className="text-xs text-gray-600 mt-0.5">
-                                    {lessons.length} lección{lessons.length !== 1 ? 'es' : ''}
-                                    {totalDuration > 0 && ` • ${totalDuration} min`}
-                                  </p>
-                                </div>
-                              </div>
-                              <ChevronRight 
-                                className={`w-4 h-4 sm:w-5 sm:h-5 text-gray-600 transition-transform flex-shrink-0 ${
-                                  isExpanded ? 'rotate-90' : ''
-                                }`}
-                              />
-                            </button>
-
-                            {/* Lecciones del Módulo (Desplegable) */}
-                            {isExpanded && (
-                              <div className="bg-white divide-y divide-gray-100">
-                                {lessons.length === 0 ? (
-                                  <div className="p-4 text-center text-sm text-gray-500">
-                                    No hay lecciones en este módulo
-                                  </div>
-                                ) : (
-                                  lessons.map((lesson, lessonIdx) => (
-                                    <div
-                                      key={lesson.id}
-                                      className="flex items-start p-2.5 sm:p-3 hover:bg-gray-50 transition-colors"
-                                    >
-                                      <div className="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 bg-gray-100 rounded-full flex items-center justify-center mr-2 sm:mr-3 mt-0.5">
-                                        <span className="text-xs font-semibold text-gray-600">{lessonIdx + 1}</span>
-                                      </div>
-                                      <div className="flex-grow min-w-0">
-                                        <h5 className="text-xs sm:text-sm font-medium text-gray-900 break-words">{lesson.title}</h5>
-                                        {lesson.duration_minutes > 0 && (
-                                          <div className="flex items-center text-xs text-gray-500 mt-1">
-                                            <Clock className="w-3 h-3 mr-1 flex-shrink-0" />
-                                            <span>{lesson.duration_minutes} min</span>
-                                            {lesson.is_free_preview && (
-                                              <span className="ml-2 px-2 py-0.5 bg-gold/20 text-gold rounded-full font-medium text-xs">
-                                                Vista previa gratuita
-                                              </span>
-                                            )}
-                                          </div>
-                                        )}
-                                      </div>
-                                    </div>
-                                  ))
-                                )}
-                              </div>
-                            )}
-                          </div>
-                        )
-                      })}
-
-                      {/* Lecciones sin módulo */}
-                      {lessonsWithoutModule.length > 0 && (
-                        <div className="border border-gray-200 rounded-lg overflow-hidden">
-                          <div className="bg-gray-50 p-3 sm:p-4">
-                            <h4 className="font-bold text-gray-900 text-sm">Lecciones adicionales</h4>
-                            <p className="text-xs text-gray-600 mt-0.5">
-                              {lessonsWithoutModule.length} lección{lessonsWithoutModule.length !== 1 ? 'es' : ''}
-                            </p>
-                          </div>
-                          <div className="bg-white divide-y divide-gray-100">
-                            {lessonsWithoutModule.map((lesson, idx) => (
-                              <div
-                                key={lesson.id}
-                                className="flex items-start p-2.5 sm:p-3 hover:bg-gray-50 transition-colors"
-                              >
-                                <div className="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 bg-gray-100 rounded-full flex items-center justify-center mr-2 sm:mr-3 mt-0.5">
-                                  <span className="text-xs font-semibold text-gray-600">{idx + 1}</span>
-                                </div>
-                                <div className="flex-grow min-w-0">
-                                  <h5 className="text-xs sm:text-sm font-medium text-gray-900 break-words">{lesson.title}</h5>
-                                  {lesson.duration_minutes > 0 && (
-                                    <div className="flex items-center text-xs text-gray-500 mt-1">
-                                      <Clock className="w-3 h-3 mr-1 flex-shrink-0" />
-                                      <span>{lesson.duration_minutes} min</span>
-                                      {lesson.is_free_preview && (
-                                        <span className="ml-2 px-2 py-0.5 bg-gold/20 text-gold rounded-full font-medium text-xs">
-                                          Vista previa gratuita
-                                        </span>
-                                      )}
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </>
-                  )}
-                </div>
-              ) : (
-                // VISTA SIN MÓDULOS (LISTA SIMPLE)
-                <div className="space-y-2">
-                  {lessonsWithoutModule.length === 0 ? (
-                    <div className="bg-gray-50 rounded-lg p-6 text-center">
-                      <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-                      <p className="text-gray-600">No hay lecciones disponibles aún.</p>
-                    </div>
-                  ) : (
-                    lessonsWithoutModule.map((lesson, idx) => (
-                      <div
-                        key={lesson.id}
-                        className="flex items-start bg-white border border-gray-200 rounded-lg p-3 sm:p-4 hover:border-forest/30 hover:shadow-sm transition-all"
-                      >
-                        <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 bg-forest/10 rounded-full flex items-center justify-center mr-2 sm:mr-3">
-                          <span className="text-xs sm:text-sm font-bold text-forest">{idx + 1}</span>
-                        </div>
-                        <div className="flex-grow min-w-0">
-                          <h4 className="font-semibold text-gray-900 mb-1 text-sm sm:text-base break-words">{lesson.title}</h4>
-                          {lesson.duration_minutes > 0 && (
-                            <div className="flex items-center text-xs text-gray-500 flex-wrap">
-                              <Clock className="w-3 h-3 mr-1 flex-shrink-0" />
-                              <span>{lesson.duration_minutes} min</span>
-                              {lesson.is_free_preview && (
-                                <span className="ml-2 px-2 py-0.5 bg-gold/20 text-gold rounded-full font-medium text-xs">
-                                  Vista previa gratuita
-                                </span>
-                              )}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-              )}
-            </div>
-
-            {/* CTA Final */}
-            <div className="bg-gradient-to-br from-forest to-forest-dark rounded-xl p-6 text-white text-center">
-              <h4 className="text-xl font-bold mb-2">¿Listo para empezar?</h4>
-              <p className="text-white/90 mb-4">Obtén acceso instantáneo a todas las lecciones</p>
-              <button
-                onClick={() => {
-                  handleCloseCourseModal()
-                  handleBuyCourse(selectedCourse.slug)
-                }}
-                className="w-full bg-white text-forest font-bold py-3 px-6 rounded-lg hover:bg-white/90 transition-all flex items-center justify-center shadow-lg"
-              >
-                <ShoppingCart className="w-5 h-5 mr-2" />
-                Comprar Curso por {selectedCourse.price.toFixed(2)}€
-              </button>
-              <p className="text-xs text-white/70 mt-3">Acceso de por vida • Todas las actualizaciones incluidas</p>
-            </div>
-          </div>
-        </Modal>
-      )}
     </div>
   )
 }
