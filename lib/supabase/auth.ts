@@ -35,7 +35,7 @@ export const signIn = async (email: string, password: string) => {
       let errorMessage = error.message
       
       if (error.message.includes('Email not confirmed') || error.status === 400) {
-        errorMessage = '⚠️ Tu email aún no está confirmado. Por favor, confirma tu email o contacta al administrador para activar tu cuenta.'
+        errorMessage = '⚠️ Tu email aún no está confirmado. Si eres administrador, contacta al equipo técnico para activar tu cuenta inmediatamente desde cualquier dispositivo.'
       } else if (error.message.includes('Invalid login credentials')) {
         errorMessage = '❌ Email o contraseña incorrectos. Verifica tus credenciales.'
       } else if (error.status === 400) {
