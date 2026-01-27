@@ -79,6 +79,16 @@ Estos archivos están consolidados en `SCHEMA_COMPLETO.sql` pero se mantienen pa
 - `blog_storage_SOLO_RLS.sql` - RLS para blog-images
 - `city_content_cache.sql` - Caché de contenido IA
 - `gamification_system.sql` - Sistema de gamificación
+- `module_tests_rls.sql` - Tests por módulo con RLS
+- `fix_badge_counter.sql` - Fix contador de badges
+- `fix_streak_realista.sql` - Fix de rachas realistas
+- `FIX_ADMIN_EMAIL_CONFIRMATION.sql` - ⭐ Confirmar emails de administradores
+- `FIX_ADMIN_METADATA_URGENTE.sql` - ⭐ Sincronizar rol en metadata (CRÍTICO)
+- `HACER_USUARIO_ADMIN.sql` - ⭐ Utilidad para asignar rol admin
+
+### 📁 Archivos Archivados
+
+- `_archivos_antiguos_rls/` - Scripts RLS antiguos (obsoletos, no usar)
 
 ---
 
@@ -101,16 +111,62 @@ Estos archivos están consolidados en `SCHEMA_COMPLETO.sql` pero se mantienen pa
 
 ### Paso 3: Crear Usuario Admin
 
-```sql
--- Reemplaza con tu email
-WITH user_data AS (
-  SELECT id FROM auth.users 
-  WHERE email = 'tu-email@ejemplo.com'
-)
-INSERT INTO public.user_roles (user_id, role)
-SELECT id, 'admin' FROM user_data
-ON CONFLICT (user_id) DO UPDATE SET role = 'admin';
+**⚠️ IMPORTANTE:** Para que un administrador pueda acceder desde cualquier dispositivo, el rol debe estar en DOS lugares:
+
+1. **En la tabla `user_roles`** (para gestión interna)
+2. **En los `user_metadata` de Supabase Auth** (para el login)
+
+**Usar el script completo:**
+
+```bash
+# Ejecutar en orden:
+1. supabase/HACER_USUARIO_ADMIN.sql
+2. supabase/FIX_ADMIN_EMAIL_CONFIRMATION.sql  
+3. supabase/FIX_ADMIN_METADATA_URGENTE.sql
 ```
+
+**O ejecutar manualmente:**
+
+```sql
+-- 1. Asignar rol admin en tabla user_roles
+INSERT INTO public.user_roles (user_id, role)
+SELECT id, 'admin'
+FROM auth.users
+WHERE email = 'tu-email@ejemplo.com'
+ON CONFLICT (user_id) 
+DO UPDATE SET role = 'admin';
+
+-- 2. Confirmar email del administrador
+UPDATE auth.users
+SET email_confirmed_at = NOW()
+WHERE email = 'tu-email@ejemplo.com'
+  AND email_confirmed_at IS NULL;
+
+-- 3. CRÍTICO: Actualizar user_metadata con el rol
+UPDATE auth.users
+SET raw_user_meta_data = 
+  CASE 
+    WHEN raw_user_meta_data IS NULL THEN '{"role": "admin"}'::jsonb
+    ELSE raw_user_meta_data || '{"role": "admin"}'::jsonb
+  END
+WHERE email = 'tu-email@ejemplo.com';
+
+-- 4. Verificar que todo está correcto
+SELECT 
+  u.id,
+  u.email,
+  u.raw_user_meta_data->>'role' as role_metadata,
+  ur.role as role_tabla,
+  u.email_confirmed_at IS NOT NULL as email_confirmado
+FROM auth.users u
+LEFT JOIN public.user_roles ur ON u.id = ur.user_id
+WHERE u.email = 'tu-email@ejemplo.com';
+```
+
+**Resultado esperado:** 
+- ✅ `role_metadata = 'admin'`
+- ✅ `role_tabla = 'admin'`
+- ✅ `email_confirmado = true`
 
 ### Paso 4: Configurar Variables de Entorno
 
@@ -206,34 +262,51 @@ dashboard_functions.sql:
 
 ## 🔒 SEGURIDAD (RLS)
 
-### Políticas Implementadas:
+### Filosofía de Seguridad Simplificada
 
-✅ **Cursos:**
-- Lectura: Todos ven publicados, admin ve todo
-- Escritura: Solo admin
+**Versión:** 1.0 DEFINITIVA (15 Enero 2026)  
+**Estado:** ✅ Probado y funcionando
 
-✅ **Lecciones:**
-- Lectura: Solo con curso comprado o admin o preview gratuita
-- Escritura: Solo admin
+#### Enfoque Pragmático:
 
-✅ **Recursos:**
-- Lectura: Solo con curso comprado o admin
-- Escritura: Solo admin
+1. **RLS Deshabilitado en contenido público/administrativo** (10 tablas)
+   - courses, course_lessons, course_modules, course_resources
+   - module_tests, badges, blog_posts, blog_categories, blog_tags
+   - **Razón:** Contenido público + Admin protegido por autenticación de la app
 
-✅ **Progreso:**
-- Lectura/Escritura: Solo el propio usuario (o admin ve todo)
+2. **RLS Habilitado solo en datos personales** (8 tablas)
+   - user_lesson_progress, user_course_progress, course_purchases
+   - user_test_attempts, user_badges, user_roles
+   - blog_comments, contacts
+   - **Razón:** Evitar que un usuario vea datos de otro
 
-✅ **Compras:**
-- Lectura: Solo propias compras (o admin ve todo)
-- Escritura: Usuario puede crear, solo admin modifica/elimina
+#### Políticas Activas:
 
-✅ **Blog:**
-- Lectura: Todos
-- Escritura: Solo admin
+| Tabla | Políticas | Descripción |
+|-------|-----------|-------------|
+| `user_lesson_progress` | 1 | Solo ver/modificar propio progreso |
+| `user_course_progress` | 1 | Solo ver/modificar propio progreso |
+| `course_purchases` | 1 | Solo ver/crear propias compras |
+| `user_test_attempts` | 1 | Solo ver/crear propios intentos |
+| `user_badges` | 2 | Ver propios + Sistema inserta auto |
+| `user_roles` | 1 | Solo ver propio rol |
+| `blog_comments` | 2 | Público lee aprobados + Gestionar propios |
+| `contacts` | 1 | Cualquiera puede enviar contacto |
 
-✅ **Gamificación:**
-- Lectura: Todos ven leaderboard y badges públicos
-- Escritura: Sistema automático + admin
+**Total: 11 políticas** (reducido de 40+ a 11 para simplicidad)
+
+#### Documentación Completa:
+
+- 📄 `POLITICAS_RLS_DEFINITIVAS.sql` - Script SQL completo
+- 📖 `POLITICAS_RLS_EXPLICADAS.md` - Guía detallada con ejemplos
+
+#### Comportamiento:
+
+✅ **Admin logueado** → Acceso total sin restricciones  
+✅ **Usuario normal** → Solo ve sus propios datos  
+✅ **Usuario anónimo** → Ve contenido público (cursos, blog)  
+✅ **Sin errores 403, 406 o 500**  
+✅ **JOINs funcionan correctamente**
 
 ---
 
@@ -361,7 +434,19 @@ DROP TABLE IF EXISTS city_content_cache CASCADE;
 - Solución: Ejecuta todo el script `SCHEMA_COMPLETO.sql`, no solo partes.
 
 **No puedo acceder al panel admin**
-- Solución: Verifica que tu usuario tenga rol 'admin' en la tabla `user_roles`.
+- **Causa:** Usuario no tiene rol 'admin' correctamente configurado
+- **Solución completa:**
+  1. Ejecutar `supabase/HACER_USUARIO_ADMIN.sql` (cambiar email)
+  2. Ejecutar `supabase/FIX_ADMIN_EMAIL_CONFIRMATION.sql` (cambiar email)
+  3. Ejecutar `supabase/FIX_ADMIN_METADATA_URGENTE.sql` (cambiar email)
+  4. Cerrar sesión completamente
+  5. Iniciar sesión de nuevo
+- **Verificación:** El rol debe estar en `user_roles` Y en `auth.users.raw_user_meta_data`
+
+**Admin no puede acceder desde otros dispositivos**
+- **Síntoma:** Error "Email not confirmed" al iniciar sesión desde nueva IP/dispositivo
+- **Solución:** Ejecutar `supabase/FIX_ADMIN_EMAIL_CONFIRMATION.sql` + `FIX_ADMIN_METADATA_URGENTE.sql`
+- **Resultado:** Admin puede acceder desde cualquier lugar
 
 ### Enlaces Útiles:
 - **Supabase Dashboard:** https://supabase.com/dashboard

@@ -769,7 +769,36 @@ Ver **[`/supabase/README.md`](./supabase/README.md)** para documentación comple
 - `calculate_user_engagement(user_id, course_id)` - Calcula engagement score (0-100)
 
 ### Seguridad
-- ✅ Row Level Security (RLS)
+
+#### 🔒 Políticas RLS Simplificadas (v2.7.0)
+
+**Nueva configuración optimizada (15 Enero 2026):**
+
+- ✅ **Reducción de 40+ a 11 políticas** (72% menos complejidad)
+- ✅ **RLS deshabilitado** en 10 tablas públicas/administrativas
+- ✅ **RLS habilitado** solo en 8 tablas con datos personales
+- ✅ **Sin errores 403/406/500** - Todo funciona correctamente
+
+**Filosofía:** Seguridad donde realmente importa, simplicidad ante todo.
+
+**Tablas protegidas (con RLS):**
+- user_lesson_progress, user_course_progress, course_purchases
+- user_test_attempts, user_badges, user_roles
+- blog_comments, contacts
+
+**Tablas públicas (sin RLS):**
+- courses, course_lessons, course_modules, badges
+- blog_posts, blog_categories, etc.
+
+**📂 Documentación completa:**
+- `supabase/POLITICAS_RLS_DEFINITIVAS.sql` - Script SQL completo
+- `supabase/POLITICAS_RLS_EXPLICADAS.md` - Guía detallada
+- `supabase/REFERENCIA_RAPIDA_RLS.md` - Comandos rápidos
+- `docs/POLITICAS_RLS_RESUMEN.md` - Resumen ejecutivo
+
+#### Seguridad General
+
+- ✅ Row Level Security (RLS) en datos personales
 - ✅ Políticas de acceso por rol
 - ✅ Validación server-side
 - ✅ Triggers automáticos para cálculo de progreso
@@ -1019,7 +1048,7 @@ Ver **[índice completo de documentación](./docs/README.md)** para acceder a to
 
 ## 👥 EQUIPO
 
-**Cliente:** Alfredo García - Hakadogs  
+**Cliente:** Alfredo Gandolfo - Hakadogs  
 **Desarrollador:** Narciso Pardo Buendía  
 **Diseño:** Hakadogs + Narciso  
 
@@ -1109,6 +1138,35 @@ Este proyecto es propiedad privada de Hakadogs y no puede ser reproducido, distr
 ---
 
 ## 🔧 TROUBLESHOOTING
+
+### ❌ Error: Administrador no puede iniciar sesión desde otros dispositivos
+
+**Síntoma:** Error "Tu email no está confirmado" al intentar iniciar sesión como administrador desde diferentes dispositivos o IPs.
+
+**Solución Rápida:** ⚡
+
+1. **Ir a Supabase SQL Editor**
+2. **Ejecutar el script completo:**
+   ```bash
+   supabase/FIX_ADMIN_EMAIL_CONFIRMATION.sql
+   ```
+3. **Cambiar el email** en las líneas indicadas por tu email de admin
+4. **Ejecutar el segundo script:**
+   ```bash
+   supabase/FIX_ADMIN_METADATA_URGENTE.sql
+   ```
+5. **Cerrar sesión** y volver a iniciar sesión ✅
+
+**Scripts disponibles:**
+- `supabase/FIX_ADMIN_EMAIL_CONFIRMATION.sql` - ⭐ Confirma emails de administradores automáticamente
+- `supabase/FIX_ADMIN_METADATA_URGENTE.sql` - ⭐ Sincroniza rol en user_metadata (CRÍTICO)
+- `supabase/HACER_USUARIO_ADMIN.sql` - Utilidad para asignar rol admin a usuarios
+
+**Causa:** El rol admin debe estar en DOS lugares: `user_roles` table Y `auth.users.raw_user_meta_data`. El script sincroniza ambos y confirma el email automáticamente.
+
+**Resultado:** Los administradores pueden acceder desde cualquier dispositivo/IP sin problemas.
+
+---
 
 ### ❌ Error 500 al Subir Imágenes al Blog
 
