@@ -7,6 +7,48 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-12-15.clover'
 })
 
+// Función para limpiar HTML y convertir a texto plano
+function stripHtml(html: string | null | undefined): string | undefined {
+  if (!html) return undefined
+  
+  // Eliminar etiquetas HTML
+  let text = html.replace(/<[^>]*>/g, '')
+  
+  // Decodificar entidades HTML comunes
+  const entities: Record<string, string> = {
+    '&amp;': '&',
+    '&lt;': '<',
+    '&gt;': '>',
+    '&quot;': '"',
+    '&#39;': "'",
+    '&apos;': "'",
+    '&nbsp;': ' ',
+    '&aacute;': 'á',
+    '&eacute;': 'é',
+    '&iacute;': 'í',
+    '&oacute;': 'ó',
+    '&uacute;': 'ú',
+    '&ntilde;': 'ñ',
+    '&Aacute;': 'Á',
+    '&Eacute;': 'É',
+    '&Iacute;': 'Í',
+    '&Oacute;': 'Ó',
+    '&Uacute;': 'Ú',
+    '&Ntilde;': 'Ñ',
+    '&iexcl;': '¡',
+    '&iquest;': '¿',
+  }
+  
+  for (const [entity, char] of Object.entries(entities)) {
+    text = text.replace(new RegExp(entity, 'g'), char)
+  }
+  
+  // Limpiar espacios extra
+  text = text.replace(/\s+/g, ' ').trim()
+  
+  return text || undefined
+}
+
 export async function POST(req: NextRequest) {
   try {
     console.log('🔍 === STRIPE CHECKOUT ===')
@@ -84,6 +126,9 @@ export async function POST(req: NextRequest) {
     // Obtener el dominio base para las URLs de retorno
     const origin = req.headers.get('origin') || 'https://www.hakadogs.com'
 
+    // Limpiar HTML de la descripción para Stripe
+    const cleanDescription = stripHtml(course.short_description) || stripHtml(course.description)
+
     // Crear sesión de checkout de Stripe
     const session = await stripe.checkout.sessions.create({
       customer_email: userEmail,
@@ -94,7 +139,7 @@ export async function POST(req: NextRequest) {
             currency: 'eur',
             product_data: {
               name: course.title,
-              description: course.short_description || course.description || undefined,
+              description: cleanDescription,
               images: course.cover_image_url ? [course.cover_image_url] : undefined,
             },
             unit_amount: Math.round(course.price * 100), // Stripe usa centavos
