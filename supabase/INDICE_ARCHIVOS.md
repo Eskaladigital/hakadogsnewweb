@@ -1,13 +1,20 @@
 # 📁 Índice de Archivos SQL - Supabase
 
-**Actualizado:** 15 Enero 2026  
-**Versión:** 2.7.0 - RLS Simplificado
+**Actualizado:** 28 Enero 2026  
+**Versión:** 3.1.0 - Integración Stripe + Fix Dashboard
 
 ---
 
 ## 🎯 Archivos Principales
 
-### ⭐ Políticas RLS (NUEVO - v2.7.0)
+### 💳 Stripe y Pagos (NUEVO - v3.1.0)
+
+| Archivo | Tipo | Usar Para |
+|---------|------|-----------|
+| **`FIX_COURSE_PURCHASES_RLS.sql`** | ⭐ NUEVO | Fix RLS para compras con Stripe |
+| **`FIX_DASHBOARD_RLS.sql`** | ⭐ NUEVO | Fix estadísticas dashboard y valoraciones |
+
+### ⭐ Políticas RLS
 
 | Archivo | Tipo | Usar Para |
 |---------|------|-----------|
@@ -36,6 +43,8 @@
 
 | Archivo | Para qué sirve | Cuándo usar |
 |---------|---------------|-------------|
+| **`FIX_DASHBOARD_RLS.sql`** | ⭐ Fix dashboard y valoraciones | Si estadísticas muestran 0 |
+| **`FIX_COURSE_PURCHASES_RLS.sql`** | ⭐ Fix compras Stripe | Si error 406 en compras |
 | `module_tests_rls.sql` | RLS para tests de módulos | Si reinstalar tests |
 | `blog_storage_SOLO_RLS.sql` | RLS para imágenes blog | Si reinstalar blog |
 | `fix_badge_counter.sql` | Fix contador de badges | Si falla contador |
@@ -124,10 +133,11 @@ Archivos dentro:
 | Categoría | Cantidad |
 |-----------|----------|
 | Scripts activos principales | 7 |
-| Scripts de fixes específicos | 9 |
+| Scripts de fixes específicos | 11 |
 | Scripts RLS definitivos | 4 (1 SQL + 3 docs) |
+| Scripts Stripe/Dashboard | 2 |
 | Scripts archivados (obsoletos) | 10 |
-| **Total archivos útiles** | **20** |
+| **Total archivos útiles** | **24** |
 
 ---
 
@@ -135,6 +145,8 @@ Archivos dentro:
 
 **¿Qué archivo usar?**
 - Para RLS: `POLITICAS_RLS_DEFINITIVAS.sql`
+- Para Stripe/Pagos: `FIX_COURSE_PURCHASES_RLS.sql`
+- Para Dashboard: `FIX_DASHBOARD_RLS.sql`
 - Para instalación completa: Orden indicado en "Instalación Nueva"
 - Para fixes: Según el problema específico
 
@@ -151,10 +163,10 @@ Archivos dentro:
 
 ## 🔄 Última Actualización
 
-- **Fecha:** 15 Enero 2026
-- **Cambio principal:** Simplificación RLS de 40+ a 11 políticas
-- **Archivos movidos:** 10 scripts antiguos a `_archivos_antiguos_rls/`
-- **Estado:** ✅ Estructura limpia y organizada
+- **Fecha:** 28 Enero 2026
+- **Cambio principal:** Integración Stripe + Fix Dashboard/Valoraciones
+- **Archivos nuevos:** `FIX_DASHBOARD_RLS.sql`, `FIX_COURSE_PURCHASES_RLS.sql`
+- **Estado:** ✅ Stripe funcionando en producción
 
 ---
 

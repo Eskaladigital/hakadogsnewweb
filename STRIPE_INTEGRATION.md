@@ -4,34 +4,55 @@
 
 Se ha implementado Stripe como sistema de pagos para los cursos de HakaDogs. Esta integración permite procesar pagos con tarjeta de crédito/débito de forma segura.
 
-## 🔧 Archivos Creados/Modificados
+**Última actualización:** 28 enero 2026
 
-### Nuevos Archivos
+## ✅ Estado Actual
+
+- ✅ **Stripe Checkout funcionando** en producción
+- ✅ **Autenticación** via Bearer Token (localStorage → server)
+- ✅ **Webhook** configurado y recibiendo eventos
+- ✅ **Link** de Stripe habilitado (pago rápido)
+- ✅ **Descripción limpia** (sin HTML) en checkout
+
+## 🔧 Archivos del Sistema
+
+### API Routes
 
 1. **`app/api/stripe/create-checkout-session/route.ts`**
-   - API route para crear sesiones de Stripe Checkout
-   - Recibe courseId y crea una sesión de pago
-   - Retorna sessionId y URL para redirigir al usuario
+   - Crea sesiones de Stripe Checkout
+   - **Autenticación:** Bearer Token en header `Authorization`
+   - Valida usuario con `supabase.auth.getUser(token)`
+   - Limpia HTML de descripciones con `stripHtml()`
+   - Retorna `{ sessionId, url }` para redirigir
 
 2. **`app/api/stripe/webhook/route.ts`**
-   - Webhook para procesar eventos de Stripe
-   - Escucha el evento `checkout.session.completed`
-   - Registra automáticamente las compras en la base de datos cuando el pago se completa
+   - Recibe eventos de Stripe
+   - Procesa `checkout.session.completed`
+   - Registra compras en `course_purchases`
+   - Usa `STRIPE_WEBHOOK_SECRET` para verificar firma
 
-3. **`app/cursos/comprar/[cursoId]/success/page.tsx`**
-   - Página de éxito mostrada después de completar el pago
-   - Verifica la sesión y muestra confirmación
-   - Proporciona enlaces para acceder al curso
+### Páginas
 
-### Archivos Modificados
+3. **`app/cursos/comprar/[cursoId]/page.tsx`**
+   - Página de compra con resumen del curso
+   - Obtiene token con `supabase.auth.getSession()`
+   - Envía token en header al crear checkout
+   - Redirige a `session.url` de Stripe
 
-1. **`app/cursos/comprar/[cursoId]/page.tsx`**
-   - Eliminado el flujo de pago simulado
-   - Integrada redirección a Stripe Checkout
-   - Simplificado el flujo de compra
+4. **`app/cursos/comprar/[cursoId]/success/page.tsx`**
+   - Página de confirmación post-pago
+   - Verifica session_id de Stripe
+   - Muestra acceso al curso
 
-2. **`package.json`**
-   - Agregadas dependencias: `stripe` y `@stripe/stripe-js`
+### Dependencias
+
+```json
+{
+  "stripe": "^15.x.x",
+  "@stripe/stripe-js": "^3.x.x",
+  "@supabase/ssr": "^0.x.x"
+}
+```
 
 ## 🔑 Variables de Entorno Necesarias
 
@@ -136,10 +157,29 @@ git push
 
 ### Protección de API Routes
 
-Las rutas `/api/stripe/create-checkout-session` verifican:
-- ✅ Usuario autenticado con Supabase
+La ruta `/api/stripe/create-checkout-session` verifica:
+- ✅ **Token Bearer** en header `Authorization`
+- ✅ Token válido con `supabase.auth.getUser(token)`
+- ✅ Usuario autenticado
 - ✅ Curso existe y no es gratuito
 - ✅ Precio correcto del curso
+
+**Importante:** El cliente de Supabase usa `localStorage` para la sesión, NO cookies.
+Por eso se envía el token explícitamente en el header:
+
+```typescript
+// En el cliente
+const { data: { session } } = await supabase.auth.getSession()
+fetch('/api/stripe/create-checkout-session', {
+  headers: {
+    'Authorization': `Bearer ${session.access_token}`,
+  }
+})
+
+// En el servidor
+const token = req.headers.get('authorization')?.replace('Bearer ', '')
+const { data: { user } } = await supabase.auth.getUser(token)
+```
 
 El webhook `/api/stripe/webhook` verifica:
 - ✅ Firma de Stripe válida

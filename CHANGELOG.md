@@ -4,6 +4,56 @@ Todos los cambios importantes del proyecto Hakadogs documentados en orden cronol
 
 ---
 
+## [3.1.0] - 2026-01-28 💳 STRIPE: Integración de Pagos en Producción
+
+### 🎯 Cambios Principales
+
+#### Integración Completa de Stripe
+- ✅ **Stripe Checkout** funcionando en producción
+- ✅ **Autenticación Bearer Token** - Envío de token desde cliente al servidor
+- ✅ **Webhook** configurado y procesando pagos
+- ✅ **Link de Stripe** habilitado para pago rápido
+- ✅ **Limpieza de HTML** en descripciones enviadas a Stripe
+
+#### Archivos Creados/Modificados
+- 📄 `app/api/stripe/create-checkout-session/route.ts` - API para crear sesiones
+- 📄 `app/api/stripe/webhook/route.ts` - Webhook para procesar pagos
+- 📄 `app/cursos/comprar/[cursoId]/page.tsx` - Envío de Bearer token
+- 📄 `app/cursos/comprar/[cursoId]/success/page.tsx` - Página de éxito
+
+#### Funciones Helper Añadidas
+- `stripHtml()` - Limpia etiquetas HTML y decodifica entidades
+
+#### Dependencias Nuevas
+- `stripe` - SDK de Stripe para servidor
+- `@stripe/stripe-js` - SDK de Stripe para cliente
+- `@supabase/ssr` - Cliente de Supabase para SSR
+
+#### Variables de Entorno (Vercel)
+```
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_...
+STRIPE_SECRET_KEY=sk_live_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+```
+
+#### Fix de Autenticación
+- **Problema:** El cliente Supabase usa localStorage, no cookies
+- **Solución:** Enviar `access_token` en header `Authorization: Bearer`
+- **Validación:** `supabase.auth.getUser(token)` en el servidor
+
+### 📊 Fix Dashboard y Estadísticas
+
+#### Políticas RLS Corregidas
+- 📄 `supabase/FIX_DASHBOARD_RLS.sql` - Script completo
+- 📄 `supabase/FIX_COURSE_PURCHASES_RLS.sql` - Políticas de compras
+
+#### Funciones RPC con SECURITY DEFINER
+- `get_overall_review_stats()` - Estadísticas de valoraciones
+- `get_dashboard_stats()` - Estadísticas del dashboard
+- `get_recent_sales()` - Ventas recientes
+
+---
+
 ## [2.7.0] - 2026-01-15 🔒 SEGURIDAD: Simplificación de Políticas RLS
 
 ### 🎯 Cambios Principales
