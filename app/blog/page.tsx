@@ -12,7 +12,7 @@ import { Suspense } from 'react'
 function BlogLoadingSkeleton() {
   return (
     <div className="min-h-screen bg-gray-50 pt-28 animate-pulse">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6">
         <div className="h-64 bg-gray-200 rounded-2xl mb-8"></div>
         <div className="grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
@@ -130,8 +130,8 @@ export default function BlogPage() {
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section - Más compacto */}
       <section className="bg-gradient-to-r from-forest to-sage text-white pt-28 pb-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="text-center">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6">
+          <div className="text-center w-full overflow-hidden">
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">Blog de Educación Canina</h1>
             <p className="text-sm sm:text-base md:text-lg text-white/90">
               Consejos profesionales, guías y recursos para educar a tu perro
@@ -142,10 +142,10 @@ export default function BlogPage() {
 
       {/* Artículo Destacado Principal */}
       {featuredPosts.length > 0 && !searchQuery && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 -mt-8">
+        <section className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 -mt-8">
           <Link
             href={`/blog/${featuredPosts[0].slug}`}
-            className="group block bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300"
+            className="group block bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 w-full"
           >
             <div className="grid md:grid-cols-2 gap-0">
               {featuredPosts[0].featured_image_url && (
@@ -209,11 +209,11 @@ export default function BlogPage() {
       )}
 
       {/* Layout Principal: 2 Columnas */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-        <div className="grid lg:grid-cols-3 gap-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-12">
+        <div className="grid lg:grid-cols-3 gap-6 sm:gap-8 w-full overflow-hidden">
           
           {/* COLUMNA PRINCIPAL - Artículos */}
-          <div className="lg:col-span-2 space-y-8">
+          <div className="lg:col-span-2 space-y-6 sm:space-y-8 w-full overflow-hidden">
             
             {/* Título de sección */}
             <div className="flex items-center justify-between">
@@ -243,14 +243,14 @@ export default function BlogPage() {
                 </button>
               </div>
             ) : (
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid md:grid-cols-2 gap-4 sm:gap-6 w-full overflow-hidden">
                 {posts.map((post, index) => (
                   // Saltar el primer post si es featured y no hay búsqueda
                   (!searchQuery && index === 0 && featuredPosts.length > 0 && post.id === featuredPosts[0].id) ? null : (
                     <Link
                       key={post.id}
                       href={`/blog/${post.slug}`}
-                      className="group block bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300 border border-gray-100 flex flex-col"
+                      className="group block bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300 border border-gray-100 flex flex-col w-full"
                     >
                       {post.featured_image_url && (
                         <div className="aspect-video bg-gray-200 overflow-hidden relative">
@@ -297,7 +297,7 @@ export default function BlogPage() {
           </div>
 
           {/* SIDEBAR DERECHA */}
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6 w-full overflow-hidden">
             
             {/* Widget: Búsqueda */}
             <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 sticky top-24">

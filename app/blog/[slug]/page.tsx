@@ -143,7 +143,7 @@ export default function BlogPostPage() {
 
       {/* Header compacto con breadcrumb */}
       <div className="bg-white border-b border-gray-100 pt-24 pb-6 sticky top-0 z-40 backdrop-blur-lg bg-white/90">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 w-full overflow-hidden">
           <nav className="flex items-center gap-2 text-sm text-gray-600">
             <Link href="/" className="hover:text-forest transition">Inicio</Link>
             <ChevronRight className="w-4 h-4" />
@@ -159,8 +159,8 @@ export default function BlogPostPage() {
       </div>
 
       {/* Hero minimalista */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-12 pb-8">
-        <div className="max-w-4xl mx-auto">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 pt-12 pb-8">
+        <div className="max-w-4xl mx-auto w-full overflow-hidden">
           {/* Categoría */}
           {post.category && (
             <div className="mb-6">
@@ -280,8 +280,8 @@ export default function BlogPostPage() {
 
       {/* Imagen destacada full-width con efecto parallax */}
       {post.featured_image_url && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-16">
-          <div className="relative aspect-[21/9] bg-gray-900 rounded-3xl overflow-hidden shadow-2xl">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 mb-12 sm:mb-16">
+          <div className="relative aspect-[21/9] bg-gray-900 rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl w-full">
             <Image
               src={post.featured_image_url}
               alt={post.title}
@@ -299,16 +299,16 @@ export default function BlogPostPage() {
       )}
 
       {/* Layout con sidebar derecho solamente */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-20">
-        <div className="grid lg:grid-cols-12 gap-12">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 pb-20">
+        <div className="grid lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 w-full overflow-hidden">
           
           {/* Contenido principal - MÁS ANCHO */}
-          <article className="lg:col-span-8">
-            <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
-              <div className="p-8 md:p-12">
+          <article className="lg:col-span-8 w-full">
+            <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden w-full">
+              <div className="p-4 sm:p-6 md:p-8 lg:p-12 w-full">
                 {/* Contenido HTML con estilos mejorados y responsive */}
                 <div
-                  className="responsive-prose prose prose-sm sm:prose-base md:prose-lg max-w-none
+                  className="responsive-prose prose prose-sm sm:prose-base md:prose-lg max-w-none w-full
                     prose-headings:font-black prose-headings:tracking-tight
                     prose-h2:text-xl sm:prose-h2:text-2xl md:prose-h2:text-3xl prose-h2:mt-8 sm:prose-h2:mt-12 prose-h2:mb-4 sm:prose-h2:mb-6 prose-h2:text-gray-900
                     prose-h3:text-lg sm:prose-h3:text-xl md:prose-h3:text-2xl prose-h3:mt-6 sm:prose-h3:mt-8 prose-h3:mb-3 sm:prose-h3:mb-4 prose-h3:text-gray-800
@@ -321,20 +321,21 @@ export default function BlogPostPage() {
                     prose-blockquote:border-l-4 prose-blockquote:border-forest prose-blockquote:bg-forest/5 prose-blockquote:py-3 sm:prose-blockquote:py-4 prose-blockquote:px-4 sm:prose-blockquote:px-6 prose-blockquote:rounded-r-xl prose-blockquote:not-italic prose-blockquote:text-sm sm:prose-blockquote:text-base
                     prose-img:rounded-xl sm:prose-img:rounded-2xl prose-img:shadow-lg prose-img:my-6 sm:prose-img:my-8
                     prose-code:text-forest prose-code:bg-gray-50 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:font-mono prose-code:text-xs sm:prose-code:text-sm
-                    prose-pre:bg-gray-900 prose-pre:rounded-xl sm:prose-pre:rounded-2xl prose-pre:shadow-lg prose-pre:text-xs sm:prose-pre:text-sm"
+                    prose-pre:bg-gray-900 prose-pre:rounded-xl sm:prose-pre:rounded-2xl prose-pre:shadow-lg prose-pre:text-xs sm:prose-pre:text-sm
+                    overflow-hidden"
                   dangerouslySetInnerHTML={{ __html: post.content }}
                 />
               </div>
             </div>
 
             {/* Compartir al final del artículo */}
-            <div className="mt-8 sm:mt-12 bg-gradient-to-br from-forest/5 via-sage/5 to-forest/5 rounded-xl sm:rounded-2xl p-6 sm:p-8 border border-forest/10">
+            <div className="mt-8 sm:mt-12 bg-gradient-to-br from-forest/5 via-sage/5 to-forest/5 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 border border-forest/10 w-full overflow-hidden">
               <div className="flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6">
-                <div>
-                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-1 sm:mb-2">¿Te ha resultado útil?</h3>
-                  <p className="text-sm sm:text-base text-gray-600">Comparte este artículo con otros amantes de los perros</p>
+                <div className="text-center md:text-left">
+                  <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 mb-1 sm:mb-2">¿Te ha resultado útil?</h3>
+                  <p className="text-xs sm:text-sm md:text-base text-gray-600">Comparte este artículo con otros amantes de los perros</p>
                 </div>
-                <div className="flex gap-3">
+                <div className="flex gap-2 sm:gap-3">
                   <button
                     onClick={() => sharePost('facebook')}
                     className="p-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition shadow-md hover:shadow-lg"
@@ -362,8 +363,8 @@ export default function BlogPostPage() {
           </article>
 
           {/* Sidebar derecho - Info adicional */}
-          <aside className="lg:col-span-4">
-            <div className="sticky top-32 space-y-6">
+          <aside className="lg:col-span-4 w-full overflow-hidden">
+            <div className="sticky top-32 space-y-4 sm:space-y-6">
               
               {/* Artículos Relacionados */}
               {relatedPosts.length > 0 && (
@@ -466,7 +467,7 @@ export default function BlogPostPage() {
 
       {/* CTA Final */}
       <section className="bg-gradient-to-r from-forest via-sage to-forest text-white py-12 sm:py-16 md:py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+        <div className="max-w-4xl mx-auto px-3 sm:px-4 md:px-6 text-center w-full overflow-hidden">
           <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black mb-4 sm:mb-6">¿Listo para transformar la vida con tu perro?</h2>
           <p className="text-base sm:text-lg md:text-xl text-white/90 mb-6 sm:mb-8 leading-relaxed">
             Únete a miles de personas que ya han mejorado la relación con sus perros gracias a nuestros cursos profesionales
