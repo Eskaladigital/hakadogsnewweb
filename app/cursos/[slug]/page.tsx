@@ -274,12 +274,10 @@ export default async function CursoPage({ params }: Props) {
                 {/* CTA en hero solo en móvil */}
                 <div className="lg:hidden pt-4">
                   <CourseClientActions 
-                    courseId={course.id}
                     courseTitle={course.title} 
                     courseSlug={course.slug} 
-                    coursePrice={course.price}
-                    isFree={course.is_free}
-                    actionType="purchase" 
+                    actionType="buy" 
+                    price={course.price}
                   />
                 </div>
               </div>
