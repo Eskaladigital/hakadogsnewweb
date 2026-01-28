@@ -74,6 +74,23 @@ export default function MediaLibrary({ onSelect, onClose, currentImage }: MediaL
     setUploading(true)
 
     try {
+      // Verificar autenticación y rol antes de intentar subir
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) {
+        throw new Error('No estás autenticado. Por favor, inicia sesión.')
+      }
+
+      // Verificar que el bucket existe
+      const { data: buckets, error: bucketError } = await supabase.storage.listBuckets()
+      if (bucketError) {
+        console.error('Error verificando buckets:', bucketError)
+      } else {
+        const blogImagesBucket = buckets?.find(b => b.id === 'blog-images')
+        if (!blogImagesBucket) {
+          throw new Error('El bucket "blog-images" no existe. Contacta al administrador del sistema.')
+        }
+      }
+
       const uploadPromises = Array.from(files).map(async (file) => {
         // Validar tipo de archivo
         const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif']
@@ -100,7 +117,23 @@ export default function MediaLibrary({ onSelect, onClose, currentImage }: MediaL
 
         if (error) {
           console.error('Supabase upload error:', error)
-          throw new Error(error.message || 'Error al subir la imagen')
+          
+          // Mensajes de error más específicos
+          let errorMessage = error.message || 'Error al subir la imagen'
+          
+          if (error.message?.includes('row-level security') || error.message?.includes('RLS')) {
+            errorMessage = `Error de seguridad (RLS): ${error.message}\n\n` +
+              `Esto generalmente significa que:\n` +
+              `1. No tienes rol de administrador asignado\n` +
+              `2. Las políticas RLS no están configuradas correctamente\n` +
+              `3. Tu sesión no está autenticada correctamente\n\n` +
+              `Solución: Ejecuta el script SQL "FIX_BLOG_IMAGES_RLS.sql" en Supabase`
+          } else if (error.message?.includes('bucket') || error.message?.includes('not found')) {
+            errorMessage = `El bucket "blog-images" no existe o no tienes acceso.\n\n` +
+              `Solución: Ejecuta el script SQL "setup_blog_images_bucket.sql" en Supabase`
+          }
+          
+          throw new Error(errorMessage)
         }
         
         return fileName
@@ -113,7 +146,11 @@ export default function MediaLibrary({ onSelect, onClose, currentImage }: MediaL
     } catch (error: any) {
       console.error('Error uploading:', error)
       const errorMessage = error.message || 'Error desconocido al subir las imágenes'
-      alert(`❌ Error al subir las imágenes:\n\n${errorMessage}\n\nVerifica que:\n1. El bucket 'blog-images' existe\n2. Tienes rol de administrador\n3. Las políticas RLS están configuradas`)
+      alert(`❌ Error al subir las imágenes:\n\n${errorMessage}\n\n` +
+        `Si el problema persiste:\n` +
+        `1. Verifica que tienes rol de administrador\n` +
+        `2. Ejecuta el script SQL "FIX_BLOG_IMAGES_RLS.sql" en Supabase\n` +
+        `3. Contacta al administrador del sistema`)
     } finally {
       setUploading(false)
     }

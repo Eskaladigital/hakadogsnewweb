@@ -138,28 +138,37 @@ export async function isAdmin(userId: string): Promise<boolean> {
 
 /**
  * Actualiza el rol de un usuario (solo admin)
+ * Usa la función SQL admin_update_user_role que actualiza tanto user_roles como metadata
  */
 export async function updateUserRole(
   userId: string,
   newRole: 'admin' | 'user' | 'instructor'
 ): Promise<UserRole> {
-  const updateData = {
-    role: newRole
-  }
-  
-  const { data, error } = await (supabase as any)
-    .from('user_roles')
-    .update(updateData)
-    .eq('user_id', userId)
-    .select()
-    .single()
+  // Usar la función RPC que actualiza en ambos lugares
+  const { data, error } = await (supabase as any).rpc('admin_update_user_role', {
+    target_user_id: userId,
+    new_role: newRole
+  })
   
   if (error) {
     console.error('Error updating user role:', error)
-    throw error
+    throw new Error(error.message || 'Error al actualizar el rol. Verifica que tienes permisos de administrador.')
   }
   
-  return data as UserRole
+  // Verificar si la respuesta indica error
+  if (data && data.success === false) {
+    console.error('Error en la función:', data.error)
+    throw new Error(data.message || data.error || 'Error al actualizar el rol')
+  }
+  
+  // Retornar un objeto compatible con UserRole
+  return {
+    id: '',
+    user_id: userId,
+    role: newRole,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  } as UserRole
 }
 
 /**
