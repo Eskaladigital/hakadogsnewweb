@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Calendar, Clock, Eye, Share2, Facebook, Twitter, Linkedin, Tag, Loader2, BookOpen, ChevronRight, Mail, Copy, Check } from 'lucide-react'
+import { Calendar, Clock, Eye, Share2, Facebook, Twitter, Linkedin, Tag, Loader2, BookOpen, ChevronRight, Mail, Copy, Check, MessageCircle } from 'lucide-react'
 import { getBlogPostBySlug, getPublishedBlogPosts } from '@/lib/supabase/blog'
 import type { BlogPostWithCategory } from '@/lib/supabase/blog'
 
@@ -70,9 +70,10 @@ export default function BlogPostPage() {
     })
   }
 
-  const sharePost = (platform: 'facebook' | 'twitter' | 'linkedin' | 'copy') => {
+  const sharePost = (platform: 'facebook' | 'twitter' | 'linkedin' | 'whatsapp' | 'copy') => {
     const url = window.location.href
     const title = post?.title || ''
+    const text = `${title} - ${post?.excerpt || ''}`
     
     if (platform === 'copy') {
       navigator.clipboard.writeText(url)
@@ -81,13 +82,29 @@ export default function BlogPostPage() {
       return
     }
 
+    // URLs de compartir que intentarán abrir la app nativa si está instalada
     const shareUrls = {
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
       twitter: `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`,
-      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`
+      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
+      whatsapp: `https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`
     }
     
-    window.open(shareUrls[platform], '_blank', 'width=600,height=400')
+    // En móvil, usar Web Share API si está disponible
+    if (navigator.share && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+      navigator.share({
+        title: title,
+        text: text,
+        url: url
+      }).catch((error) => {
+        // Si falla Web Share API, usar método tradicional
+        console.log('Error compartiendo:', error)
+        window.open(shareUrls[platform], '_blank', 'width=600,height=400')
+      })
+    } else {
+      // Desktop o Web Share API no disponible
+      window.open(shareUrls[platform], '_blank', 'width=600,height=400')
+    }
   }
 
   if (loading) {
@@ -233,6 +250,15 @@ export default function BlogPostPage() {
                       <Linkedin className="w-4 h-4 text-white" />
                     </div>
                     <span className="text-gray-700 font-medium group-hover:text-blue-700">LinkedIn</span>
+                  </button>
+                  <button
+                    onClick={() => sharePost('whatsapp')}
+                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-green-50 rounded-lg transition text-left group"
+                  >
+                    <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+                      <MessageCircle className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="text-gray-700 font-medium group-hover:text-green-600">WhatsApp</span>
                   </button>
                   <button
                     onClick={() => sharePost('copy')}

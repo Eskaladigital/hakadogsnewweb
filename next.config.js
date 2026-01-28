@@ -196,6 +196,24 @@ const nextConfig = {
           }
         ],
       },
+      // Archivos .well-known para Deep Linking (Android App Links y iOS Universal Links)
+      {
+        source: '/.well-known/:path*',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'application/json',
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=3600, must-revalidate',
+          },
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*',
+          }
+        ],
+      },
       // Páginas HTML públicas - caché corta con revalidación inteligente
       {
         source: '/:path*',

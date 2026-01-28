@@ -1,0 +1,20 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "TEAMID.com.hakadogs.app",
+        "paths": [
+          "/blog/*",
+          "/cursos/*",
+          "/servicios/*"
+        ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": [
+      "TEAMID.com.hakadogs.app"
+    ]
+  }
+}
