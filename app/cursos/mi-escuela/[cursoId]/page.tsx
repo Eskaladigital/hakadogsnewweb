@@ -523,9 +523,9 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
             <img
               src={curso.cover_image_url}
               alt={curso.title}
-              className="w-full h-full object-cover opacity-25"
+              className="w-full h-full object-cover opacity-60"
             />
-            <div className={`absolute inset-0 bg-gradient-to-br ${colorGradient} opacity-92`}></div>
+            <div className={`absolute inset-0 bg-gradient-to-br ${colorGradient} opacity-70`}></div>
           </div>
         )}
         
@@ -548,22 +548,22 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
               {/* Columna principal: Info del curso */}
               <div className="lg:col-span-2">
                 <div className="mb-6">
-                  <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 leading-tight">{curso.title}</h1>
+                  <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 leading-tight drop-shadow-lg">{curso.title}</h1>
                   <div 
-                    className="text-white/95 text-lg sm:text-xl leading-relaxed prose prose-invert prose-lg max-w-none"
+                    className="text-white/95 text-lg sm:text-xl leading-relaxed prose prose-invert prose-lg max-w-none drop-shadow-md"
                     dangerouslySetInnerHTML={{ __html: curso.short_description || curso.description || '' }}
                   />
                 </div>
                 
                 <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-sm sm:text-base">
-                  <span className="flex items-center backdrop-blur-sm bg-white/15 px-4 py-2 rounded-full">
+                  <span className="flex items-center backdrop-blur-md bg-white/25 px-4 py-2 rounded-full shadow-lg">
                     <Clock className="w-4 h-4 mr-2" />
                     {curso.duration_minutes} minutos
                   </span>
-                  <span className="backdrop-blur-sm bg-white/15 px-4 py-2 rounded-full font-semibold">
+                  <span className="backdrop-blur-md bg-white/25 px-4 py-2 rounded-full font-semibold shadow-lg">
                     {getDifficultyLabel(curso.difficulty)}
                   </span>
-                  <span className="flex items-center backdrop-blur-sm bg-white/15 px-4 py-2 rounded-full">
+                  <span className="flex items-center backdrop-blur-md bg-white/25 px-4 py-2 rounded-full shadow-lg">
                     <CheckCircle className="w-4 h-4 mr-2" />
                     {completedCount} completadas
                   </span>
@@ -572,18 +572,18 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
 
               {/* Columna derecha: Progreso */}
               <div className="lg:col-span-1">
-                <div className="backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl p-6 shadow-2xl">
+                <div className="backdrop-blur-lg bg-white/20 border-2 border-white/30 rounded-2xl p-6 shadow-2xl">
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-sm font-semibold uppercase tracking-wide">Tu Progreso</span>
-                    <span className="text-3xl font-black">{progressPercentage}%</span>
+                    <span className="text-sm font-semibold uppercase tracking-wide drop-shadow">Tu Progreso</span>
+                    <span className="text-3xl font-black drop-shadow-lg">{progressPercentage}%</span>
                   </div>
-                  <div className="w-full bg-white/20 rounded-full h-4 mb-3">
+                  <div className="w-full bg-white/30 rounded-full h-4 mb-3 shadow-inner">
                     <div 
                       className="bg-white rounded-full h-4 transition-all duration-500 shadow-lg"
                       style={{ width: `${progressPercentage}%` }}
                     />
                   </div>
-                  <div className="flex justify-between text-xs text-white/80">
+                  <div className="flex justify-between text-xs text-white/90 drop-shadow">
                     <span>{completedCount} / {curso.total_lessons || 0} lecciones</span>
                     {progressPercentage === 100 && (
                       <span className="flex items-center font-bold text-white">
