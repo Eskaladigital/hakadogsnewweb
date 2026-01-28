@@ -611,10 +611,10 @@ Escribe "ELIMINAR" para confirmar:`
               {/* VISTA TABLA */}
               {viewMode === 'table' && paginatedPosts.length > 0 && (
                 <div className="overflow-x-auto">
-                  <table className="w-full">
+                  <table className="w-full table-auto">
                     <thead>
                       <tr className="border-b border-gray-200">
-                        <th className="px-4 py-3 text-left">
+                        <th className="px-2 py-3 text-left w-10">
                           <input
                             type="checkbox"
                             checked={paginatedPosts.length > 0 && paginatedPosts.every(p => selectedPosts.includes(p.id))}
@@ -623,11 +623,11 @@ Escribe "ELIMINAR" para confirmar:`
                             title={`Seleccionar todos (${paginatedPosts.length} visibles en esta página)`}
                           />
                         </th>
-                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">
-                          Imagen
+                        <th className="px-2 py-3 text-left text-xs font-semibold text-gray-600 uppercase w-20">
+                          Img
                         </th>
                         <th 
-                          className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase cursor-pointer hover:text-forest transition"
+                          className="px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase cursor-pointer hover:text-forest transition"
                           onClick={() => handleSort('title')}
                         >
                           <div className="flex items-center gap-2">
@@ -636,16 +636,16 @@ Escribe "ELIMINAR" para confirmar:`
                           </div>
                         </th>
                         <th 
-                          className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase cursor-pointer hover:text-forest transition"
+                          className="px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase cursor-pointer hover:text-forest transition w-32"
                           onClick={() => handleSort('category')}
                         >
                           <div className="flex items-center gap-2">
-                            Categoría
+                            Cat.
                             <SortIcon field="category" />
                           </div>
                         </th>
                         <th 
-                          className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase cursor-pointer hover:text-forest transition"
+                          className="px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase cursor-pointer hover:text-forest transition w-28"
                           onClick={() => handleSort('status')}
                         >
                           <div className="flex items-center gap-2">
@@ -654,16 +654,16 @@ Escribe "ELIMINAR" para confirmar:`
                           </div>
                         </th>
                         <th 
-                          className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase cursor-pointer hover:text-forest transition"
+                          className="px-3 py-3 text-center text-xs font-semibold text-gray-600 uppercase cursor-pointer hover:text-forest transition w-20"
                           onClick={() => handleSort('views_count')}
                         >
-                          <div className="flex items-center gap-2">
-                            Vistas
+                          <div className="flex items-center justify-center gap-1">
+                            <Eye className="w-3 h-3" />
                             <SortIcon field="views_count" />
                           </div>
                         </th>
                         <th 
-                          className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase cursor-pointer hover:text-forest transition"
+                          className="px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase cursor-pointer hover:text-forest transition w-28"
                           onClick={() => handleSort('created_at')}
                         >
                           <div className="flex items-center gap-2">
@@ -671,7 +671,7 @@ Escribe "ELIMINAR" para confirmar:`
                             <SortIcon field="created_at" />
                           </div>
                         </th>
-                        <th className="px-4 py-3 text-right text-xs font-semibold text-gray-600 uppercase">
+                        <th className="px-3 py-3 text-center text-xs font-semibold text-gray-600 uppercase w-40">
                           Acciones
                         </th>
                       </tr>
@@ -679,7 +679,8 @@ Escribe "ELIMINAR" para confirmar:`
                     <tbody className="divide-y divide-gray-200">
                       {paginatedPosts.map(post => (
                         <tr key={post.id} className="hover:bg-gray-50 transition">
-                          <td className="px-4 py-4">
+                          {/* Checkbox */}
+                          <td className="px-2 py-3 align-top">
                             <input
                               type="checkbox"
                               checked={selectedPosts.includes(post.id)}
@@ -687,8 +688,10 @@ Escribe "ELIMINAR" para confirmar:`
                               className="w-4 h-4 text-forest border-gray-300 rounded"
                             />
                           </td>
-                          <td className="px-4 py-4">
-                            <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-gray-100">
+                          
+                          {/* Imagen */}
+                          <td className="px-2 py-3 align-top">
+                            <div className="relative w-14 h-14 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
                               {post.featured_image_url ? (
                                 <Image
                                   src={post.featured_image_url}
@@ -698,40 +701,46 @@ Escribe "ELIMINAR" para confirmar:`
                                 />
                               ) : (
                                 <div className="w-full h-full flex items-center justify-center">
-                                  <FileText className="w-6 h-6 text-gray-400" />
+                                  <FileText className="w-5 h-5 text-gray-400" />
                                 </div>
                               )}
                             </div>
                           </td>
-                          <td className="px-4 py-4">
+                          
+                          {/* Título */}
+                          <td className="px-3 py-3 align-top">
                             <div className="flex items-start gap-2">
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2 mb-1">
-                                  <h3 className="font-semibold text-gray-900 truncate">{post.title}</h3>
+                                  <h3 className="font-semibold text-sm text-gray-900 line-clamp-2 leading-tight">{post.title}</h3>
                                   {post.is_featured && (
-                                    <Star className="w-4 h-4 text-yellow-500 fill-yellow-500 flex-shrink-0" />
+                                    <Star className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500 flex-shrink-0" />
                                   )}
                                 </div>
-                                <p className="text-sm text-gray-600 line-clamp-2">{post.excerpt}</p>
+                                <p className="text-xs text-gray-500 line-clamp-1">{post.excerpt}</p>
                               </div>
                             </div>
                           </td>
-                          <td className="px-4 py-4">
+                          
+                          {/* Categoría */}
+                          <td className="px-3 py-3 align-top">
                             {post.category && (
                               <span 
-                                className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold"
+                                className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap"
                                 style={{ 
                                   backgroundColor: post.category.color + '20',
                                   color: post.category.color
                                 }}
                               >
-                                <Folder className="w-3 h-3 mr-1" />
-                                {post.category.name}
+                                <Folder className="w-3 h-3 mr-1 flex-shrink-0" />
+                                <span className="truncate max-w-[100px]">{post.category.name}</span>
                               </span>
                             )}
                           </td>
-                          <td className="px-4 py-4">
-                            <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
+                          
+                          {/* Estado */}
+                          <td className="px-3 py-3 align-top">
+                            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
                               post.status === 'published' ? 'bg-green-100 text-green-800' :
                               post.status === 'draft' ? 'bg-yellow-100 text-yellow-800' :
                               'bg-gray-100 text-gray-800'
@@ -740,14 +749,17 @@ Escribe "ELIMINAR" para confirmar:`
                                post.status === 'draft' ? '📝 Borrador' : '📦 Archivado'}
                             </span>
                           </td>
-                          <td className="px-4 py-4">
-                            <div className="flex items-center gap-1 text-sm text-gray-600">
-                              <Eye className="w-4 h-4" />
+                          
+                          {/* Vistas */}
+                          <td className="px-3 py-3 align-top text-center">
+                            <div className="text-sm font-medium text-gray-700">
                               {post.views_count.toLocaleString()}
                             </div>
                           </td>
-                          <td className="px-4 py-4">
-                            <div className="text-sm text-gray-600">
+                          
+                          {/* Fecha */}
+                          <td className="px-3 py-3 align-top">
+                            <div className="text-xs text-gray-600 whitespace-nowrap">
                               {new Date(post.created_at).toLocaleDateString('es-ES', {
                                 day: '2-digit',
                                 month: 'short',
@@ -755,46 +767,58 @@ Escribe "ELIMINAR" para confirmar:`
                               })}
                             </div>
                           </td>
-                          <td className="px-4 py-4">
-                            <div className="flex items-center justify-end gap-1">
+                          
+                          {/* Acciones - Ahora más compactas y apilables */}
+                          <td className="px-3 py-3 align-top">
+                            <div className="flex flex-wrap items-center justify-center gap-1">
                               <Link
                                 href={`/blog/${post.slug}`}
                                 target="_blank"
-                                className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition"
-                                title="Ver artículo"
+                                className="p-1.5 text-gray-600 hover:bg-gray-100 rounded transition-colors"
+                                title="Ver"
                               >
-                                <ExternalLink className="w-4 h-4" />
+                                <ExternalLink className="w-3.5 h-3.5" />
                               </Link>
                               <button
                                 onClick={() => handleToggleFeatured(post)}
                                 disabled={actionLoading === post.id}
-                                className={`p-2 rounded-lg transition ${
+                                className={`p-1.5 rounded transition-colors ${
                                   post.is_featured 
                                     ? 'text-yellow-500 hover:bg-yellow-50' 
                                     : 'text-gray-600 hover:bg-gray-100'
                                 }`}
                                 title={post.is_featured ? 'Quitar destacado' : 'Destacar'}
                               >
-                                <Star className={`w-4 h-4 ${post.is_featured ? 'fill-yellow-500' : ''}`} />
+                                <Star className={`w-3.5 h-3.5 ${post.is_featured ? 'fill-yellow-500' : ''}`} />
                               </button>
                               <button
                                 onClick={() => handleTogglePublish(post)}
                                 disabled={actionLoading === post.id}
-                                className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition"
+                                className="p-1.5 text-gray-600 hover:bg-gray-100 rounded transition-colors"
                                 title={post.status === 'published' ? 'Despublicar' : 'Publicar'}
                               >
-                                {post.status === 'published' ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                {post.status === 'published' ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                               </button>
                               <Link
                                 href={`/administrator/blog/editar/${post.id}`}
-                                className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                                className="p-1.5 text-blue-600 hover:bg-blue-50 rounded transition-colors"
                                 title="Editar"
                               >
-                                <Edit2 className="w-4 h-4" />
+                                <Edit2 className="w-3.5 h-3.5" />
                               </Link>
                               <button
                                 onClick={() => handleDeletePost(post.id)}
                                 disabled={actionLoading === post.id}
+                                className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors"
+                                title="Eliminar"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
                                 className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
                                 title="Eliminar"
                               >
