@@ -226,86 +226,122 @@ export default async function CursoPage({ params }: Props) {
         </div>
       </div>
 
-      {/* Hero del curso - SSR estático */}
-      <section className="bg-gradient-to-r from-forest to-sage text-white py-12 sm:py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            {/* Imagen de portada si existe */}
-            {course.cover_image_url && (
-              <div className="mb-8 rounded-2xl overflow-hidden shadow-2xl">
-                <img 
-                  src={course.cover_image_url} 
-                  alt={course.title}
-                  className="w-full h-auto object-cover"
-                  style={{ maxHeight: '400px' }}
-                />
-              </div>
-            )}
+      {/* Hero del curso - DISEÑO MEJORADO */}
+      <section className="relative bg-gradient-to-br from-forest via-sage to-forest-dark overflow-hidden">
+        {/* Imagen de fondo con overlay si existe */}
+        {course.cover_image_url && (
+          <div className="absolute inset-0">
+            <img 
+              src={course.cover_image_url} 
+              alt={course.title}
+              className="w-full h-full object-cover opacity-20"
+            />
+            <div className="absolute inset-0 bg-gradient-to-br from-forest/95 via-sage/90 to-forest-dark/95"></div>
+          </div>
+        )}
 
-            <div className="text-center">
-              {/* Badges */}
-              <div className="flex flex-wrap justify-center gap-3 mb-6">
-                <span className={`px-4 py-2 rounded-full text-sm font-semibold ${getDifficultyColor(course.difficulty)}`}>
-                  {getDifficultyLabel(course.difficulty)}
-                </span>
-                <span className="px-4 py-2 rounded-full text-sm font-semibold bg-blue-100 text-blue-700 flex items-center">
-                  <Clock className="w-4 h-4 mr-2" />
-                  {course.duration_minutes} minutos
-                </span>
-                <span className="px-4 py-2 rounded-full text-sm font-semibold bg-purple-100 text-purple-700 flex items-center">
-                  <PlayCircle className="w-4 h-4 mr-2" />
-                  {course.total_lessons} lecciones
-                </span>
+        <div className="relative container mx-auto px-4 py-16 sm:py-24">
+          <div className="max-w-6xl mx-auto">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              {/* Columna izquierda: Contenido */}
+              <div className="text-white space-y-6">
+                {/* Badges */}
+                <div className="flex flex-wrap gap-3">
+                  <span className={`px-4 py-2 rounded-full text-sm font-semibold ${getDifficultyColor(course.difficulty)} backdrop-blur-sm`}>
+                    {getDifficultyLabel(course.difficulty)}
+                  </span>
+                  <span className="px-4 py-2 rounded-full text-sm font-semibold bg-white/20 backdrop-blur-sm text-white flex items-center">
+                    <Clock className="w-4 h-4 mr-2" />
+                    {course.duration_minutes} minutos
+                  </span>
+                  <span className="px-4 py-2 rounded-full text-sm font-semibold bg-white/20 backdrop-blur-sm text-white flex items-center">
+                    <PlayCircle className="w-4 h-4 mr-2" />
+                    {course.total_lessons} lecciones
+                  </span>
+                </div>
+
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
+                  {course.title}
+                </h1>
+                
+                {course.short_description && (
+                  <div 
+                    className="text-lg sm:text-xl text-white/95 prose prose-invert prose-lg max-w-none"
+                    dangerouslySetInnerHTML={{ __html: course.short_description }}
+                  />
+                )}
+
+                {/* CTA en hero solo en móvil */}
+                <div className="lg:hidden pt-4">
+                  <CourseClientActions 
+                    courseId={course.id}
+                    courseTitle={course.title} 
+                    courseSlug={course.slug} 
+                    coursePrice={course.price}
+                    isFree={course.is_free}
+                    actionType="purchase" 
+                  />
+                </div>
               </div>
 
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
-                {course.title}
-              </h1>
-              
-              {course.short_description && (
-                <div 
-                  className="text-lg sm:text-xl text-white/90 max-w-2xl mx-auto prose prose-invert"
-                  dangerouslySetInnerHTML={{ __html: course.short_description }}
-                />
+              {/* Columna derecha: Imagen destacada (solo desktop) */}
+              {course.cover_image_url && (
+                <div className="hidden lg:block">
+                  <div className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white/20 backdrop-blur-sm">
+                    <img 
+                      src={course.cover_image_url} 
+                      alt={course.title}
+                      className="w-full h-auto object-cover"
+                      style={{ maxHeight: '500px' }}
+                    />
+                    {course.is_free && (
+                      <div className="absolute top-4 right-4">
+                        <span className="bg-gold text-white px-6 py-3 rounded-full text-lg font-bold shadow-lg">
+                          GRATUITO
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
               )}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Contenido principal */}
-      <section className="py-8 sm:py-12">
+      {/* Contenido principal - DISEÑO MÁS AMPLIO */}
+      <section className="py-12 sm:py-16">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="grid lg:grid-cols-3 gap-8">
-              {/* Columna principal */}
+          <div className="max-w-7xl mx-auto">
+            <div className="grid lg:grid-cols-3 gap-8 xl:gap-12">
+              {/* Columna principal - MÁS ANCHA */}
               <div className="lg:col-span-2 space-y-8">
                 {/* Descripción completa */}
                 {course.description && (
-                  <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8">
-                    <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 flex items-center">
-                      <BookOpen className="w-6 h-6 mr-3 text-forest" />
+                  <div className="bg-white rounded-2xl shadow-xl p-8 sm:p-10 border border-gray-100">
+                    <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 flex items-center">
+                      <BookOpen className="w-7 h-7 mr-3 text-forest" />
                       Descripción del Curso
                     </h2>
                     <div 
-                      className="prose prose-lg max-w-none text-gray-700 leading-relaxed"
+                      className="prose prose-xl max-w-none text-gray-700 leading-relaxed"
                       dangerouslySetInnerHTML={{ __html: course.description }}
                     />
                   </div>
                 )}
 
-                {/* Qué aprenderás */}
+                {/* Qué aprenderás - GRID MÁS AMPLIO */}
                 {course.what_you_learn && course.what_you_learn.length > 0 && (
-                  <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8">
-                    <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                      <Target className="w-6 h-6 mr-3 text-forest" />
+                  <div className="bg-gradient-to-br from-forest/5 to-sage/5 rounded-2xl shadow-xl p-8 sm:p-10 border border-forest/10">
+                    <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-8 flex items-center">
+                      <Target className="w-7 h-7 mr-3 text-forest" />
                       Qué Aprenderás
                     </h2>
-                    <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="grid sm:grid-cols-2 gap-5">
                       {course.what_you_learn.map((item, idx) => (
-                        <div key={idx} className="flex items-start bg-gray-50 rounded-xl p-4">
-                          <CheckCircle className="w-5 h-5 text-forest mr-3 flex-shrink-0 mt-0.5" />
-                          <span className="text-gray-700">{item}</span>
+                        <div key={idx} className="flex items-start bg-white rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
+                          <CheckCircle className="w-6 h-6 text-forest mr-4 flex-shrink-0 mt-0.5" />
+                          <span className="text-gray-800 font-medium">{item}</span>
                         </div>
                       ))}
                     </div>
@@ -313,9 +349,9 @@ export default async function CursoPage({ params }: Props) {
                 )}
 
                 {/* Temario */}
-                <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8">
-                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                    <GraduationCap className="w-6 h-6 mr-3 text-forest" />
+                <div className="bg-white rounded-2xl shadow-xl p-8 sm:p-10 border border-gray-100">
+                  <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-8 flex items-center">
+                    <GraduationCap className="w-7 h-7 mr-3 text-forest" />
                     Temario del Curso
                   </h2>
                   
@@ -407,39 +443,52 @@ export default async function CursoPage({ params }: Props) {
                 </div>
               </div>
 
-              {/* Sidebar con precio y CTA */}
+              {/* Sidebar con precio y CTA - DISEÑO MEJORADO */}
               <div className="lg:col-span-1">
-                <div className="bg-white rounded-2xl shadow-lg p-6 sticky top-24">
+                <div className="bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-2xl p-8 sticky top-24 border-2 border-forest/10">
                   {/* Precio */}
-                  <div className="text-center mb-6 pb-6 border-b border-gray-100">
-                    <p className="text-sm text-gray-600 mb-2">Precio del curso</p>
-                    <div className="flex items-baseline justify-center">
-                      <span className="text-5xl font-bold text-forest-dark">{course.price.toFixed(2)}€</span>
+                  <div className="text-center mb-8 pb-8 border-b-2 border-gray-200">
+                    <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Precio del curso</p>
+                    <div className="flex items-baseline justify-center mb-2">
+                      <span className="text-6xl font-black text-forest-dark">{course.price.toFixed(2)}</span>
+                      <span className="text-3xl font-bold text-forest-dark ml-1">€</span>
                     </div>
-                    <p className="text-gray-600 mt-1">pago único</p>
-                    <p className="text-sm text-gray-500 mt-2">Acceso de por vida</p>
+                    <p className="text-forest font-semibold mb-1">pago único</p>
+                    <div className="inline-block px-4 py-2 bg-forest/10 rounded-full">
+                      <p className="text-sm text-forest font-bold">✨ Acceso de por vida</p>
+                    </div>
                   </div>
 
                   {/* Botón comprar - Cliente */}
-                  <CourseClientActions courseTitle={course.title} courseSlug={course.slug} actionType="buy" price={course.price} />
+                  <div className="mb-8">
+                    <CourseClientActions courseTitle={course.title} courseSlug={course.slug} actionType="buy" price={course.price} />
+                  </div>
 
-                  {/* Características */}
-                  <div className="space-y-3 text-sm mt-6">
-                    <div className="flex items-center text-gray-600">
-                      <CheckCircle className="w-5 h-5 text-forest mr-3" />
-                      <span>Acceso inmediato</span>
+                  {/* Características - DISEÑO MEJORADO */}
+                  <div className="space-y-4 bg-white rounded-xl p-6 shadow-inner">
+                    <div className="flex items-center text-gray-700 hover:text-forest transition-colors">
+                      <div className="w-10 h-10 bg-forest/10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                        <CheckCircle className="w-5 h-5 text-forest" />
+                      </div>
+                      <span className="font-medium">Acceso inmediato</span>
                     </div>
-                    <div className="flex items-center text-gray-600">
-                      <CheckCircle className="w-5 h-5 text-forest mr-3" />
-                      <span>Actualizaciones incluidas</span>
+                    <div className="flex items-center text-gray-700 hover:text-forest transition-colors">
+                      <div className="w-10 h-10 bg-forest/10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                        <CheckCircle className="w-5 h-5 text-forest" />
+                      </div>
+                      <span className="font-medium">Actualizaciones incluidas</span>
                     </div>
-                    <div className="flex items-center text-gray-600">
-                      <CheckCircle className="w-5 h-5 text-forest mr-3" />
-                      <span>Certificado de finalización</span>
+                    <div className="flex items-center text-gray-700 hover:text-forest transition-colors">
+                      <div className="w-10 h-10 bg-forest/10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                        <CheckCircle className="w-5 h-5 text-forest" />
+                      </div>
+                      <span className="font-medium">Certificado de finalización</span>
                     </div>
-                    <div className="flex items-center text-gray-600">
-                      <CheckCircle className="w-5 h-5 text-forest mr-3" />
-                      <span>Soporte por email</span>
+                    <div className="flex items-center text-gray-700 hover:text-forest transition-colors">
+                      <div className="w-10 h-10 bg-forest/10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                        <CheckCircle className="w-5 h-5 text-forest" />
+                      </div>
+                      <span className="font-medium">Soporte por email</span>
                     </div>
                   </div>
 
@@ -454,14 +503,46 @@ export default async function CursoPage({ params }: Props) {
         </div>
       </section>
 
-      {/* CTA Final */}
-      <section className="py-12 bg-gradient-to-br from-forest to-forest-dark">
-        <div className="container mx-auto px-4">
-          <div className="max-w-2xl mx-auto text-center text-white">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-4">¿Listo para empezar?</h2>
-            <p className="text-white/90 mb-6">Obtén acceso instantáneo a todas las lecciones y transforma el comportamiento de tu perro.</p>
-            <CourseClientActions courseTitle={course.title} courseSlug={course.slug} actionType="buy-cta" price={course.price} />
-            <p className="text-sm text-white/70 mt-4">Acceso de por vida • Todas las actualizaciones incluidas</p>
+      {/* CTA Final - DISEÑO MEJORADO */}
+      <section className="py-16 sm:py-20 bg-gradient-to-br from-forest via-sage to-forest-dark relative overflow-hidden">
+        {/* Patrón de fondo decorativo */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
+        </div>
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="inline-block mb-6">
+              <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto">
+                <GraduationCap className="w-10 h-10 text-white" />
+              </div>
+            </div>
+            
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-white">
+              ¿Listo para empezar?
+            </h2>
+            <p className="text-xl sm:text-2xl text-white/95 mb-8 leading-relaxed">
+              Obtén acceso instantáneo a todas las lecciones y transforma el comportamiento de tu perro.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6">
+              <CourseClientActions courseTitle={course.title} courseSlug={course.slug} actionType="buy-cta" price={course.price} />
+            </div>
+            
+            <div className="flex flex-wrap justify-center gap-6 text-white/90">
+              <div className="flex items-center">
+                <CheckCircle className="w-5 h-5 mr-2" />
+                <span>Acceso de por vida</span>
+              </div>
+              <div className="flex items-center">
+                <CheckCircle className="w-5 h-5 mr-2" />
+                <span>Todas las actualizaciones</span>
+              </div>
+              <div className="flex items-center">
+                <CheckCircle className="w-5 h-5 mr-2" />
+                <span>Soporte incluido</span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
