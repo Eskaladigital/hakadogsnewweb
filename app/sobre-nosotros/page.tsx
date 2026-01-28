@@ -78,7 +78,7 @@ export default function SobreNosotrosPage() {
             <div className="relative">
               <div className="aspect-[4/5] relative rounded-3xl shadow-2xl overflow-hidden">
                 <Image
-                  src="/images/hakadogs/IMG_2775.jpeg"
+                  src="/images/hakadogs_educacion_canina_home_2.png"
                   alt="Alfredo Gandolfo - Educador Canino Profesional"
                   fill
                   className="object-cover"
