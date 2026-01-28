@@ -514,61 +514,85 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
   if (recursos.length > 0) availableTabs.push('resources')
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-20">
-      {/* Header */}
-      <div className={`bg-gradient-to-r ${colorGradient} text-white py-4 sm:py-6 md:py-8 relative overflow-hidden`}>
-        {/* Imagen de portada como fondo */}
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white pt-20">
+      {/* Header - DISEÑO MEJORADO */}
+      <div className={`relative bg-gradient-to-br ${colorGradient} text-white py-8 sm:py-12 lg:py-16 overflow-hidden`}>
+        {/* Imagen de portada como fondo con overlay mejorado */}
         {curso.cover_image_url && (
-          <div className="absolute inset-0 w-full h-full">
+          <div className="absolute inset-0">
             <img
               src={curso.cover_image_url}
               alt={curso.title}
-              className="w-full h-full object-cover opacity-20"
+              className="w-full h-full object-cover opacity-25"
             />
-            <div className={`absolute inset-0 bg-gradient-to-r ${colorGradient} opacity-90`}></div>
+            <div className={`absolute inset-0 bg-gradient-to-br ${colorGradient} opacity-92`}></div>
           </div>
         )}
         
+        {/* Patrón decorativo */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '32px 32px' }}></div>
+        </div>
+        
         <div className="container mx-auto px-4 sm:px-6 relative z-10">
-          <div className="max-w-full lg:max-w-7xl mx-auto">
+          <div className="max-w-7xl mx-auto">
             <Link
               href="/cursos/mi-escuela"
-              className="inline-flex items-center text-white/80 hover:text-white transition mb-3 sm:mb-4 text-xs sm:text-sm md:text-base"
+              className="inline-flex items-center text-white/90 hover:text-white transition mb-6 text-sm md:text-base font-medium backdrop-blur-sm bg-white/10 px-4 py-2 rounded-full"
             >
-              <ArrowLeft className="w-3 sm:w-4 h-3 sm:h-4 mr-2" />
+              <ArrowLeft className="w-4 h-4 mr-2" />
               Volver a Mi Escuela
             </Link>
-            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
-              <div className="flex-1">
-                <div className="mb-2 sm:mb-3 md:mb-4">
-                  <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2">{curso.title}</h1>
+            
+            <div className="grid lg:grid-cols-3 gap-8 items-start">
+              {/* Columna principal: Info del curso */}
+              <div className="lg:col-span-2">
+                <div className="mb-6">
+                  <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 leading-tight">{curso.title}</h1>
                   <div 
-                    className="text-white/90 text-xs sm:text-sm md:text-base"
+                    className="text-white/95 text-lg sm:text-xl leading-relaxed prose prose-invert prose-lg max-w-none"
                     dangerouslySetInnerHTML={{ __html: curso.short_description || curso.description || '' }}
                   />
                 </div>
-                <div className="flex flex-wrap items-center gap-2 sm:gap-3 md:gap-6 text-xs sm:text-sm">
-                  <span className="flex items-center">
-                    <Clock className="w-3 sm:w-4 h-3 sm:h-4 mr-1 sm:mr-2" />
-                    {curso.duration_minutes} min
+                
+                <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-sm sm:text-base">
+                  <span className="flex items-center backdrop-blur-sm bg-white/15 px-4 py-2 rounded-full">
+                    <Clock className="w-4 h-4 mr-2" />
+                    {curso.duration_minutes} minutos
                   </span>
-                  <span>{getDifficultyLabel(curso.difficulty)}</span>
-                  <span>{completedCount} lecciones completadas</span>
+                  <span className="backdrop-blur-sm bg-white/15 px-4 py-2 rounded-full font-semibold">
+                    {getDifficultyLabel(curso.difficulty)}
+                  </span>
+                  <span className="flex items-center backdrop-blur-sm bg-white/15 px-4 py-2 rounded-full">
+                    <CheckCircle className="w-4 h-4 mr-2" />
+                    {completedCount} completadas
+                  </span>
                 </div>
               </div>
-            </div>
 
-            {/* Progress Bar */}
-            <div className="mt-3 sm:mt-4 md:mt-6">
-              <div className="flex items-center justify-between text-xs sm:text-sm mb-1 sm:mb-2">
-                <span>Progreso del curso</span>
-                <span className="font-bold">{progressPercentage}%</span>
-              </div>
-              <div className="w-full bg-white/20 rounded-full h-2 sm:h-3">
-                <div 
-                  className="bg-white rounded-full h-2 sm:h-3 transition-all duration-500"
-                  style={{ width: `${progressPercentage}%` }}
-                />
+              {/* Columna derecha: Progreso */}
+              <div className="lg:col-span-1">
+                <div className="backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl p-6 shadow-2xl">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-sm font-semibold uppercase tracking-wide">Tu Progreso</span>
+                    <span className="text-3xl font-black">{progressPercentage}%</span>
+                  </div>
+                  <div className="w-full bg-white/20 rounded-full h-4 mb-3">
+                    <div 
+                      className="bg-white rounded-full h-4 transition-all duration-500 shadow-lg"
+                      style={{ width: `${progressPercentage}%` }}
+                    />
+                  </div>
+                  <div className="flex justify-between text-xs text-white/80">
+                    <span>{completedCount} / {curso.total_lessons || 0} lecciones</span>
+                    {progressPercentage === 100 && (
+                      <span className="flex items-center font-bold text-white">
+                        <Trophy className="w-4 h-4 mr-1" />
+                        ¡Completado!
+                      </span>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
