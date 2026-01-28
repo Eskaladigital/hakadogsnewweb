@@ -334,26 +334,57 @@ export default function MiEscuelaPage() {
                       transition={{ duration: 0.5, delay: index * 0.1 }}
                       className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all border border-gray-100"
                     >
-                      {/* Header con degradado suave */}
-                      <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-6 relative">
-                        <div className="flex items-start justify-between mb-4">
-                          <div className="flex items-center space-x-3">
-                            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${difficultyColor} capitalize`}>
+                      {/* Imagen de portada */}
+                      {curso.cover_image_url && (
+                        <div className="relative w-full h-48 overflow-hidden bg-gray-100">
+                          <img
+                            src={curso.cover_image_url}
+                            alt={curso.title}
+                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                          />
+                          <div className="absolute top-3 right-3 flex items-center space-x-2">
+                            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${difficultyColor} bg-opacity-90 backdrop-blur-sm capitalize`}>
                               {curso.difficulty}
                             </span>
                             {curso.is_free && (
-                              <span className="bg-gold/20 text-gold px-3 py-1 rounded-full text-xs font-semibold">
+                              <span className="bg-gold/90 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-semibold">
                                 GRATUITO
                               </span>
                             )}
                           </div>
                           {curso.progress === 100 && (
-                            <span className="bg-forest/20 text-forest px-3 py-1 rounded-full text-xs font-semibold flex items-center">
-                              <CheckCircle className="w-3 h-3 mr-1" />
-                              COMPLETADO
-                            </span>
+                            <div className="absolute top-3 left-3">
+                              <span className="bg-forest/90 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-semibold flex items-center">
+                                <CheckCircle className="w-3 h-3 mr-1" />
+                                COMPLETADO
+                              </span>
+                            </div>
                           )}
                         </div>
+                      )}
+                      
+                      {/* Header con degradado suave */}
+                      <div className={`bg-gradient-to-br from-gray-50 to-gray-100 p-6 relative ${curso.cover_image_url ? 'pt-4' : ''}`}>
+                        {!curso.cover_image_url && (
+                          <div className="flex items-start justify-between mb-4">
+                            <div className="flex items-center space-x-3">
+                              <span className={`px-3 py-1 rounded-full text-xs font-semibold ${difficultyColor} capitalize`}>
+                                {curso.difficulty}
+                              </span>
+                              {curso.is_free && (
+                                <span className="bg-gold/20 text-gold px-3 py-1 rounded-full text-xs font-semibold">
+                                  GRATUITO
+                                </span>
+                              )}
+                            </div>
+                            {curso.progress === 100 && (
+                              <span className="bg-forest/20 text-forest px-3 py-1 rounded-full text-xs font-semibold flex items-center">
+                                <CheckCircle className="w-3 h-3 mr-1" />
+                                COMPLETADO
+                              </span>
+                            )}
+                          </div>
+                        )}
                         
                         <div className="mb-4">
                           <h3 className="text-xl font-bold text-gray-900 mb-2">{curso.title}</h3>
@@ -451,13 +482,34 @@ export default function MiEscuelaPage() {
                       transition={{ duration: 0.5, delay: index * 0.1 }}
                       className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all border border-gray-100"
                     >
-                      <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-6 relative">
-                        <div className="flex items-start justify-between mb-4">
-                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${difficultyColor} capitalize`}>
-                            {curso.difficulty}
-                          </span>
-                          <Lock className="w-5 h-5 text-gray-400" />
+                      {/* Imagen de portada */}
+                      {curso.cover_image_url && (
+                        <div className="relative w-full h-48 overflow-hidden bg-gray-100">
+                          <img
+                            src={curso.cover_image_url}
+                            alt={curso.title}
+                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                          />
+                          <div className="absolute top-3 right-3 flex items-center space-x-2">
+                            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${difficultyColor} bg-opacity-90 backdrop-blur-sm capitalize`}>
+                              {curso.difficulty}
+                            </span>
+                            <div className="bg-white/90 backdrop-blur-sm p-1.5 rounded-full">
+                              <Lock className="w-4 h-4 text-gray-600" />
+                            </div>
+                          </div>
                         </div>
+                      )}
+                      
+                      <div className={`bg-gradient-to-br from-gray-50 to-gray-100 p-6 relative ${curso.cover_image_url ? 'pt-4' : ''}`}>
+                        {!curso.cover_image_url && (
+                          <div className="flex items-start justify-between mb-4">
+                            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${difficultyColor} capitalize`}>
+                              {curso.difficulty}
+                            </span>
+                            <Lock className="w-5 h-5 text-gray-400" />
+                          </div>
+                        )}
                         
                         <div className="mb-4">
                           <h3 className="text-xl font-bold text-gray-900 mb-2">{curso.title}</h3>

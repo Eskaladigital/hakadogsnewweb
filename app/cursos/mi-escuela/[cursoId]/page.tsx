@@ -516,8 +516,20 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
   return (
     <div className="min-h-screen bg-gray-50 pt-20">
       {/* Header */}
-      <div className={`bg-gradient-to-r ${colorGradient} text-white py-4 sm:py-6 md:py-8`}>
-        <div className="container mx-auto px-4 sm:px-6">
+      <div className={`bg-gradient-to-r ${colorGradient} text-white py-4 sm:py-6 md:py-8 relative overflow-hidden`}>
+        {/* Imagen de portada como fondo */}
+        {curso.cover_image_url && (
+          <div className="absolute inset-0 w-full h-full">
+            <img
+              src={curso.cover_image_url}
+              alt={curso.title}
+              className="w-full h-full object-cover opacity-20"
+            />
+            <div className={`absolute inset-0 bg-gradient-to-r ${colorGradient} opacity-90`}></div>
+          </div>
+        )}
+        
+        <div className="container mx-auto px-4 sm:px-6 relative z-10">
           <div className="max-w-full lg:max-w-7xl mx-auto">
             <Link
               href="/cursos/mi-escuela"
