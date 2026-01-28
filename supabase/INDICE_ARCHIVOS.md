@@ -13,6 +13,7 @@
 |---------|------|-----------|
 | **`FIX_COURSE_PURCHASES_RLS.sql`** | ⭐ NUEVO | Fix RLS para compras con Stripe |
 | **`FIX_DASHBOARD_RLS.sql`** | ⭐ NUEVO | Fix estadísticas dashboard y valoraciones |
+| **`FIX_ERROR_USUARIO_NO_EXISTE.sql`** | ⭐ NUEVO | Fix error "usuario no existe" al hacer login |
 
 ### ⭐ Políticas RLS
 
@@ -45,6 +46,7 @@
 |---------|---------------|-------------|
 | **`FIX_DASHBOARD_RLS.sql`** | ⭐ Fix dashboard y valoraciones | Si estadísticas muestran 0 |
 | **`FIX_COURSE_PURCHASES_RLS.sql`** | ⭐ Fix compras Stripe | Si error 406 en compras |
+| **`FIX_ERROR_USUARIO_NO_EXISTE.sql`** | ⭐ Fix error login usuario | Si error "usuario no existe" al hacer login |
 | `module_tests_rls.sql` | RLS para tests de módulos | Si reinstalar tests |
 | `blog_storage_SOLO_RLS.sql` | RLS para imágenes blog | Si reinstalar blog |
 | `fix_badge_counter.sql` | Fix contador de badges | Si falla contador |
@@ -133,11 +135,11 @@ Archivos dentro:
 | Categoría | Cantidad |
 |-----------|----------|
 | Scripts activos principales | 7 |
-| Scripts de fixes específicos | 11 |
+| Scripts de fixes específicos | 12 |
 | Scripts RLS definitivos | 4 (1 SQL + 3 docs) |
-| Scripts Stripe/Dashboard | 2 |
+| Scripts Stripe/Dashboard/Auth | 3 |
 | Scripts archivados (obsoletos) | 10 |
-| **Total archivos útiles** | **24** |
+| **Total archivos útiles** | **26** |
 
 ---
 
@@ -147,6 +149,7 @@ Archivos dentro:
 - Para RLS: `POLITICAS_RLS_DEFINITIVAS.sql`
 - Para Stripe/Pagos: `FIX_COURSE_PURCHASES_RLS.sql`
 - Para Dashboard: `FIX_DASHBOARD_RLS.sql`
+- Para error login: `FIX_ERROR_USUARIO_NO_EXISTE.sql`
 - Para instalación completa: Orden indicado en "Instalación Nueva"
 - Para fixes: Según el problema específico
 
@@ -164,8 +167,8 @@ Archivos dentro:
 ## 🔄 Última Actualización
 
 - **Fecha:** 28 Enero 2026
-- **Cambio principal:** Integración Stripe + Fix Dashboard/Valoraciones
-- **Archivos nuevos:** `FIX_DASHBOARD_RLS.sql`, `FIX_COURSE_PURCHASES_RLS.sql`
+- **Cambio principal:** Integración Stripe + Fix Dashboard/Valoraciones + Fix Login
+- **Archivos nuevos:** `FIX_DASHBOARD_RLS.sql`, `FIX_COURSE_PURCHASES_RLS.sql`, `FIX_ERROR_USUARIO_NO_EXISTE.sql`
 - **Estado:** ✅ Stripe funcionando en producción
 
 ---
