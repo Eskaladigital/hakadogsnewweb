@@ -8,6 +8,8 @@ import { ArrowLeft, Save, Loader2, Sparkles, Plus, X } from 'lucide-react'
 import { getCourseById, updateCourse, getCourseLessons, getLessonResources, updateLesson, deleteLesson, createLesson, createResource, bulkCreateResources, bulkCreateLessons, getCourseModules, createModule, updateModule, deleteModule, assignLessonToModule } from '@/lib/supabase/courses'
 import type { Course, Lesson, Resource, CourseModule } from '@/lib/supabase/courses'
 import Toast from '@/components/ui/Toast'
+import ImageUpload from '@/components/ui/ImageUpload'
+import { uploadCourseCoverImage } from '@/lib/storage'
 
 const LessonsManager = dynamic(() => import('@/components/admin/LessonsManager'), {
   ssr: false,
@@ -60,6 +62,7 @@ export default function EditarCursoPage() {
     isFree: false,
     isPublished: false,
     thumbnailUrl: '',
+    coverImageUrl: '',
     whatYouLearn: ['', '', '', '']
   })
 
@@ -92,6 +95,7 @@ export default function EditarCursoPage() {
         isFree: course.is_free,
         isPublished: course.is_published,
         thumbnailUrl: course.thumbnail_url || '',
+        coverImageUrl: course.cover_image_url || '',
         whatYouLearn: course.what_you_learn || ['', '', '', '']
       })
 
@@ -171,6 +175,25 @@ export default function EditarCursoPage() {
     }
     const newArray = formData.whatYouLearn.filter((_, i) => i !== index)
     setFormData(prev => ({ ...prev, whatYouLearn: newArray }))
+  }
+
+  const handleCoverImageUpload = async (file: File) => {
+    try {
+      setToast({ message: 'Subiendo imagen...', type: 'info' })
+      
+      const { url, error } = await uploadCourseCoverImage(file, cursoId)
+      
+      if (error || !url) {
+        throw error || new Error('Error al subir la imagen')
+      }
+      
+      setFormData(prev => ({ ...prev, coverImageUrl: url }))
+      setToast({ message: 'Imagen de portada subida exitosamente', type: 'success' })
+    } catch (error) {
+      console.error('Error subiendo imagen de portada:', error)
+      setToast({ message: 'Error al subir la imagen. Inténtalo de nuevo.', type: 'error' })
+      throw error
+    }
   }
 
   const handleGenerateDescription = async () => {
@@ -263,6 +286,7 @@ export default function EditarCursoPage() {
         is_free: formData.isFree,
         is_published: formData.isPublished,
         thumbnail_url: formData.thumbnailUrl || null,
+        cover_image_url: formData.coverImageUrl || null,
       }
 
       await updateCourse(cursoId, courseData)
@@ -462,6 +486,22 @@ export default function EditarCursoPage() {
                   <div className="p-8">
                     {activeTab === 'info' && (
                       <div className="space-y-6">
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            Imagen de Portada
+                          </label>
+                          <ImageUpload
+                            onUpload={handleCoverImageUpload}
+                            currentImage={formData.coverImageUrl}
+                            label="Imagen de portada del curso"
+                            maxSize={5}
+                            compress={true}
+                          />
+                          <p className="mt-2 text-xs text-gray-500">
+                            Esta imagen se mostrará como portada del curso en la lista de cursos. Recomendado: 1200x675px (16:9)
+                          </p>
+                        </div>
+
                         <div>
                           <label className="block text-sm font-semibold text-gray-700 mb-2">
                             Título del Curso *

@@ -3,7 +3,7 @@
                     PLATAFORMA DIGITAL HAKADOGS.COM
 ═══════════════════════════════════════════════════════════════════════════════
 
-CLIENTE:        Hakadogs - Alfredo García
+CLIENTE:        Hakadogs - Alfredo Gandolfo
 PROYECTO:       Plataforma Web Completa de Educación Canina
 FECHA:          Enero 2026
 VERSIÓN:        3.0.1 (Gamificación + IA + Performance Optimizado)

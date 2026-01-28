@@ -25,7 +25,7 @@ De la auditoría externa recibida, se han implementado **exitosamente 33/35 punt
 **Archivos modificados:**
 - `app/layout.tsx` - Description principal con keywords "Archena-Murcia"
 - `app/servicios/page.tsx` - Keywords locales + checkmarks
-- `app/sobre-nosotros/page.tsx` - Alfredo García + metodología
+- `app/sobre-nosotros/page.tsx` - Alfredo Gandolfo + metodología
 - `app/metodologia/page.tsx` - BE HAKA + binomio perro-guía
 - `app/servicios/educacion-basica/page.tsx` - Comandos + CTA
 - `app/servicios/cachorros/page.tsx` - Edades 2-6 meses
@@ -47,7 +47,7 @@ De la auditoría externa recibida, se han implementado **exitosamente 33/35 punt
 ```typescript
 - generateMetadata() dinámico por post
 - Article Schema con:
-  ✅ author (Alfredo García)
+  ✅ author (Alfredo Gandolfo)
   ✅ datePublished y dateModified
   ✅ publisher (Hakadogs)
   ✅ mainEntityOfPage

@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   },
   description: 'Educador canino en Archena y Murcia con +8 años de experiencia. Metodología BE HAKA: educación presencial en Región de Murcia y cursos online España. ¡500+ perros felices!',
   keywords: ['educador canino murcia', 'adiestrador perros archena', 'educación canina', 'adiestramiento positivo', 'cursos online perros', 'BE HAKA', 'hakadogs'],
-  authors: [{ name: 'Alfredo García - Hakadogs' }],
+  authors: [{ name: 'Alfredo Gandolfo - Hakadogs' }],
   creator: 'Hakadogs',
   publisher: 'Hakadogs',
   

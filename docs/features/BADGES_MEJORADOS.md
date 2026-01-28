@@ -192,5 +192,5 @@ supabase/badges_mejorados.sql
 ---
 
 **Desarrollado por:** Narciso Pardo Buendía  
-**Cliente:** Hakadogs - Alfredo García  
+**Cliente:** Hakadogs - Alfredo Gandolfo  
 **Enero 2026**

@@ -44,12 +44,14 @@ Es como poner un candado en la puerta sin darle llaves a nadie.
 
 ### Paso 1: Ejecutar Script SQL de Corrección
 
-**Archivo**: `supabase/fix_rls_policies.sql`
+**Archivo**: `supabase/POLITICAS_RLS_DEFINITIVAS.sql` (v2.7.0)
+
+⚠️ **Nota:** El script anterior `fix_rls_policies.sql` está obsoleto.
 
 1. Abre **Supabase Dashboard**
 2. Ve a **SQL Editor** (icono de terminal)
 3. Haz clic en **"New Query"**
-4. Copia y pega **TODO** el contenido de `fix_rls_policies.sql`
+4. Copia y pega **TODO** el contenido de `POLITICAS_RLS_DEFINITIVAS.sql`
 5. Haz clic en **"Run"** (o presiona Ctrl+Enter)
 6. ✅ Verifica que diga: "Success. No rows returned"
 
@@ -258,7 +260,7 @@ O manualmente:
 Antes de considerar todo solucionado:
 
 ### Base de Datos
-- [ ] Script `fix_rls_policies.sql` ejecutado sin errores
+- [ ] Script `POLITICAS_RLS_DEFINITIVAS.sql` ejecutado sin errores
 - [ ] Políticas RLS visibles en `pg_policies`
 - [ ] Función `get_recent_sales` creada (si usas admin dashboard)
 
@@ -328,7 +330,7 @@ WHERE tablename = 'user_lesson_progress';
 
 - 📄 **Guía completa**: `docs/SOLUCION_ERRORES_PROGRESO.md`
 - 🧪 **Script de prueba**: `scripts/test-lesson-completion.js`
-- 🔧 **Script SQL**: `supabase/fix_rls_policies.sql`
+- 🔧 **Script SQL**: `supabase/POLITICAS_RLS_DEFINITIVAS.sql` (v2.7.0)
 - 📖 **Setup inicial**: `supabase/setup_completo.sql`
 
 ---
@@ -339,7 +341,7 @@ WHERE tablename = 'user_lesson_progress';
 Las tablas de progreso tienen seguridad habilitada (RLS) pero sin configurar políticas de acceso, bloqueando completamente las operaciones de lectura y escritura.
 
 ### La Solución
-Ejecutar `fix_rls_policies.sql` que configura las políticas correctamente, permitiendo:
+Ejecutar `POLITICAS_RLS_DEFINITIVAS.sql` que configura las políticas correctamente, permitiendo:
 - Usuarios acceder a **su propio** progreso
 - Crear y actualizar sus registros de progreso
 - Admins ver y gestionar todo

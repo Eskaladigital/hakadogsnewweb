@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         type: 'article',
         publishedTime: post.published_at || undefined,
         modifiedTime: post.updated_at || undefined,
-        authors: ['Alfredo García - Hakadogs'],
+        authors: ['Alfredo Gandolfo - Hakadogs'],
         images: [
           {
             url: image,
@@ -82,7 +82,7 @@ async function ArticleSchema({ slug }: { slug: string }) {
       dateModified: post.updated_at,
       author: {
         '@type': 'Person',
-        name: 'Alfredo García',
+        name: 'Alfredo Gandolfo',
         url: 'https://www.hakadogs.com/sobre-nosotros',
         jobTitle: 'Educador Canino Profesional',
         worksFor: {

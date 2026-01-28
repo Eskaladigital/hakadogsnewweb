@@ -241,7 +241,7 @@ export default function CursosPage() {
         </section>
       )}
 
-      {/* Cursos de Pago Section */}
+          {/* Cursos de Pago Section */}
       <section className="py-12 sm:py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8 sm:mb-12">
@@ -276,14 +276,34 @@ export default function CursosPage() {
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all flex flex-col border border-gray-100"
                   >
+                    {/* Imagen de portada */}
+                    {curso.cover_image_url && (
+                      <Link href={`/cursos/${curso.slug}`} className="block">
+                        <div className="relative w-full h-48 overflow-hidden bg-gray-100">
+                          <img 
+                            src={curso.cover_image_url} 
+                            alt={curso.title}
+                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                          />
+                          <div className="absolute top-3 right-3">
+                            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${difficultyColor} bg-opacity-90 backdrop-blur-sm`}>
+                              {difficultyLabel}
+                            </span>
+                          </div>
+                        </div>
+                      </Link>
+                    )}
+
                     {/* Header con dificultad - Enlace a página del curso */}
                     <Link href={`/cursos/${curso.slug}`} className="block">
-                      <div className="bg-gradient-to-br from-gray-50 to-white p-4 sm:p-6 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors">
-                        <div className="flex items-center justify-between mb-3 sm:mb-4">
-                          <span className={`px-2 sm:px-3 py-1 rounded-full text-xs font-semibold ${difficultyColor}`}>
-                            {difficultyLabel}
-                          </span>
-                        </div>
+                      <div className={`bg-gradient-to-br from-gray-50 to-white p-4 sm:p-6 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors ${!curso.cover_image_url ? '' : 'pt-4'}`}>
+                        {!curso.cover_image_url && (
+                          <div className="flex items-center justify-between mb-3 sm:mb-4">
+                            <span className={`px-2 sm:px-3 py-1 rounded-full text-xs font-semibold ${difficultyColor}`}>
+                              {difficultyLabel}
+                            </span>
+                          </div>
+                        )}
                         <h3 className="text-base sm:text-lg md:text-xl font-bold mb-2 text-gray-900">{curso.title}</h3>
                         <div 
                           className="responsive-prose text-gray-600 text-xs sm:text-sm prose max-w-none line-clamp-3"

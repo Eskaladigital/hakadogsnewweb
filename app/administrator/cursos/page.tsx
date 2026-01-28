@@ -416,9 +416,20 @@ export default function AdministratorPage() {
                       {paginatedCourses.map((course) => (
                         <tr key={course.id} className="hover:bg-gray-50 transition">
                           <td className="px-6 py-4">
-                            <div>
-                              <p className="text-sm font-medium text-gray-900">{course.title}</p>
-                              <p className="text-xs text-gray-500">{course.slug}</p>
+                            <div className="flex items-center gap-3">
+                              {course.cover_image_url && (
+                                <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                                  <img 
+                                    src={course.cover_image_url} 
+                                    alt={course.title}
+                                    className="w-full h-full object-cover"
+                                  />
+                                </div>
+                              )}
+                              <div>
+                                <p className="text-sm font-medium text-gray-900">{course.title}</p>
+                                <p className="text-xs text-gray-500">{course.slug}</p>
+                              </div>
                             </div>
                           </td>
                           <td className="px-6 py-4">

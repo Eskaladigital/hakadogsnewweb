@@ -984,7 +984,7 @@ export default function PresupuestoPage() {
               </div>
               <div>
                 <h3 className="font-bold text-sage text-xl mb-3">PARA:</h3>
-                <p className="text-lg">Hakadogs - Alfredo García 🐕</p>
+                <p className="text-lg">Hakadogs - Alfredo Gandolfo 🐕</p>
                 <p className="text-sage">contacto@hakadogs.com</p>
                 <p className="text-sage">www.hakadogs.com</p>
               </div>

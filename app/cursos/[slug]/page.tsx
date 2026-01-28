@@ -15,6 +15,81 @@ interface Props {
   params: Promise<{ slug: string }>
 }
 
+// =====================================================
+// GENERACIÓN ESTÁTICA DE PÁGINAS
+// =====================================================
+// Esta función le dice a Next.js qué rutas generar en build time
+export async function generateStaticParams() {
+  try {
+    const { data: courses } = await supabase
+      .from('courses')
+      .select('slug')
+      .eq('is_published', true)
+
+    if (!courses) return []
+
+    return courses.map((course) => ({
+      slug: course.slug,
+    }))
+  } catch (error) {
+    console.error('Error generating static params:', error)
+    return []
+  }
+}
+
+// Configuración de revalidación
+// Regenera las páginas cada 60 segundos si hay cambios
+export const revalidate = 60
+
+// =====================================================
+// METADATA DINÁMICA PARA SEO
+// =====================================================
+export async function generateMetadata({ params }: Props) {
+  const { slug } = await params
+  const course = await getCourse(slug)
+
+  if (!course) {
+    return {
+      title: 'Curso no encontrado | Hakadogs',
+      description: 'El curso que buscas no está disponible.',
+    }
+  }
+
+  // Extraer texto plano de la descripción HTML
+  const plainDescription = course.short_description
+    ? course.short_description.replace(/<[^>]*>/g, '').substring(0, 160)
+    : course.description?.replace(/<[^>]*>/g, '').substring(0, 160) || 'Curso de educación canina profesional'
+
+  return {
+    title: `${course.title} | Curso de Educación Canina | Hakadogs`,
+    description: plainDescription,
+    openGraph: {
+      title: course.title,
+      description: plainDescription,
+      type: 'website',
+      url: `https://www.hakadogs.com/cursos/${course.slug}`,
+      images: course.cover_image_url ? [
+        {
+          url: course.cover_image_url,
+          width: 1200,
+          height: 675,
+          alt: course.title,
+        }
+      ] : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: course.title,
+      description: plainDescription,
+      images: course.cover_image_url ? [course.cover_image_url] : undefined,
+    },
+  }
+}
+
+// =====================================================
+// FUNCIONES DE DATOS
+// =====================================================
+
 // Obtener curso por slug
 async function getCourse(slug: string): Promise<Course | null> {
   const { data, error } = await supabase
@@ -154,32 +229,46 @@ export default async function CursoPage({ params }: Props) {
       {/* Hero del curso - SSR estático */}
       <section className="bg-gradient-to-r from-forest to-sage text-white py-12 sm:py-16">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            {/* Badges */}
-            <div className="flex flex-wrap justify-center gap-3 mb-6">
-              <span className={`px-4 py-2 rounded-full text-sm font-semibold ${getDifficultyColor(course.difficulty)}`}>
-                {getDifficultyLabel(course.difficulty)}
-              </span>
-              <span className="px-4 py-2 rounded-full text-sm font-semibold bg-blue-100 text-blue-700 flex items-center">
-                <Clock className="w-4 h-4 mr-2" />
-                {course.duration_minutes} minutos
-              </span>
-              <span className="px-4 py-2 rounded-full text-sm font-semibold bg-purple-100 text-purple-700 flex items-center">
-                <PlayCircle className="w-4 h-4 mr-2" />
-                {course.total_lessons} lecciones
-              </span>
-            </div>
-
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
-              {course.title}
-            </h1>
-            
-            {course.short_description && (
-              <div 
-                className="text-lg sm:text-xl text-white/90 max-w-2xl mx-auto prose prose-invert"
-                dangerouslySetInnerHTML={{ __html: course.short_description }}
-              />
+          <div className="max-w-4xl mx-auto">
+            {/* Imagen de portada si existe */}
+            {course.cover_image_url && (
+              <div className="mb-8 rounded-2xl overflow-hidden shadow-2xl">
+                <img 
+                  src={course.cover_image_url} 
+                  alt={course.title}
+                  className="w-full h-auto object-cover"
+                  style={{ maxHeight: '400px' }}
+                />
+              </div>
             )}
+
+            <div className="text-center">
+              {/* Badges */}
+              <div className="flex flex-wrap justify-center gap-3 mb-6">
+                <span className={`px-4 py-2 rounded-full text-sm font-semibold ${getDifficultyColor(course.difficulty)}`}>
+                  {getDifficultyLabel(course.difficulty)}
+                </span>
+                <span className="px-4 py-2 rounded-full text-sm font-semibold bg-blue-100 text-blue-700 flex items-center">
+                  <Clock className="w-4 h-4 mr-2" />
+                  {course.duration_minutes} minutos
+                </span>
+                <span className="px-4 py-2 rounded-full text-sm font-semibold bg-purple-100 text-purple-700 flex items-center">
+                  <PlayCircle className="w-4 h-4 mr-2" />
+                  {course.total_lessons} lecciones
+                </span>
+              </div>
+
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
+                {course.title}
+              </h1>
+              
+              {course.short_description && (
+                <div 
+                  className="text-lg sm:text-xl text-white/90 max-w-2xl mx-auto prose prose-invert"
+                  dangerouslySetInnerHTML={{ __html: course.short_description }}
+                />
+              )}
+            </div>
           </div>
         </div>
       </section>

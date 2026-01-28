@@ -10,6 +10,14 @@ POST https://pfmqkioftagjnxqyrngk.supabase.co/rest/v1/user_lesson_progress?selec
 
 ## ✅ LA SOLUCIÓN (5 minutos)
 
+### ⚠️ IMPORTANTE - SCRIPT ACTUALIZADO
+
+**Usar:** `supabase/POLITICAS_RLS_DEFINITIVAS.sql` (versión 2.7.0)
+
+El script anterior (`fix_rls_policies.sql`) ha sido reemplazado por una versión optimizada.
+
+**Ubicación del script antiguo:** `supabase/_archivos_antiguos_rls/fix_rls_policies.sql` (no usar)
+
 ### PASO 1: Verificar Estado Actual en Supabase ⭐
 
 1. **Abre tu navegador** y ve a: https://app.supabase.com
@@ -51,7 +59,7 @@ users_can_view_own_lesson_progress
 
 1. **Mantén abierto** el SQL Editor de Supabase
 2. Haz clic en **"New Query"** de nuevo
-3. **Abre el archivo** `supabase/fix_rls_policies.sql` en VS Code o tu editor
+3. **Abre el archivo** `supabase/POLITICAS_RLS_DEFINITIVAS.sql` en VS Code o tu editor
 4. **Selecciona TODO** el contenido (Ctrl+A)
 5. **Copia** (Ctrl+C)
 6. **Vuelve a Supabase SQL Editor**
@@ -209,7 +217,7 @@ Marca cada paso cuando lo completes:
 - [ ] Accedí a https://app.supabase.com
 - [ ] Abrí SQL Editor
 - [ ] Verifiqué políticas actuales (PASO 1)
-- [ ] Ejecuté `fix_rls_policies.sql` completo (PASO 2)
+- [ ] Ejecuté `POLITICAS_RLS_DEFINITIVAS.sql` completo (PASO 2)
 - [ ] Vi "Success. No rows returned"
 - [ ] Verifiqué que hay 4+ políticas (PASO 3)
 
@@ -253,7 +261,8 @@ test-insert.bat
 
 ## 📚 ARCHIVOS DE REFERENCIA
 
-- `supabase/fix_rls_policies.sql` - Script principal de solución
+- `supabase/POLITICAS_RLS_DEFINITIVAS.sql` - Script principal (v2.7.0)
+- `supabase/_archivos_antiguos_rls/fix_rls_policies.sql` - ⚠️ Obsoleto, no usar
 - `supabase/check_current_policies.sql` - Script de verificación rápida
 - `scripts/test-insert-progress.js` - Test completo con autenticación
 - `test-insert.bat` - Atajo para ejecutar el test
@@ -276,7 +285,7 @@ test-insert.bat
 
 **Problema**: Tabla `user_lesson_progress` tiene RLS habilitado pero sin políticas.
 
-**Solución**: Ejecutar `fix_rls_policies.sql` en Supabase Dashboard.
+**Solución**: Ejecutar `POLITICAS_RLS_DEFINITIVAS.sql` en Supabase Dashboard.
 
 **Resultado**: Usuarios pueden crear/actualizar su propio progreso.
 

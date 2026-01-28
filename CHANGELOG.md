@@ -4,6 +4,46 @@ Todos los cambios importantes del proyecto Hakadogs documentados en orden cronol
 
 ---
 
+## [2.7.0] - 2026-01-15 🔒 SEGURIDAD: Simplificación de Políticas RLS
+
+### 🎯 Cambios Principales
+
+#### Simplificación Radical de RLS
+- **De 40+ políticas a 11 políticas** (reducción del 72%)
+- **10 tablas sin RLS** (courses, course_lessons, badges, blog_posts, etc.)
+- **8 tablas con RLS** (solo datos personales de usuarios)
+- **Nueva filosofía**: RLS solo donde realmente importa
+
+#### Problemas Solucionados
+- ✅ Usuario logueado ve sus cursos comprados en `/cursos/mi-escuela`
+- ✅ Admin edita/borra cursos sin errores 403
+- ✅ JOINs funcionan correctamente (sin error 500)
+- ✅ Usuario NO puede ver datos de otro (seguridad intacta)
+
+#### Archivos Nuevos
+- 📄 `supabase/POLITICAS_RLS_DEFINITIVAS.sql` - Script SQL completo
+- 📖 `supabase/POLITICAS_RLS_EXPLICADAS.md` - Guía detallada
+- 📋 `docs/POLITICAS_RLS_RESUMEN.md` - Resumen ejecutivo
+- Comentarios SQL detallados en cada política
+
+#### Configuración Final
+
+**Tablas SIN RLS (10):**
+- courses, course_lessons, course_modules, course_resources
+- module_tests, badges, blog_posts, blog_categories, blog_tags, blog_post_tags
+
+**Tablas CON RLS (8):**
+- user_lesson_progress, user_course_progress, course_purchases
+- user_test_attempts, user_badges, user_roles, blog_comments, contacts
+
+#### Resultado
+- 🚀 **Rendimiento mejorado** (menos checks de seguridad)
+- 🧹 **Código más limpio** (11 políticas vs 40+)
+- 🎯 **Mantenimiento simplificado**
+- ✅ **Seguridad donde importa** (datos de usuarios)
+
+---
+
 ## [3.0.2] - 2026-01-12 📊 PANEL ADMIN: Analytics de Badges
 
 ### 🎯 Nueva Funcionalidad Administrativa

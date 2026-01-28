@@ -121,7 +121,8 @@ DO UPDATE SET
 Si los pasos anteriores fallan, ejecuta:
 
 1. **En Supabase SQL Editor:**
-   - Copiar TODO el contenido de: `supabase/FIX_ALTERNATIVO_PERMISIVO.sql`
+   - Copiar TODO el contenido de: `supabase/POLITICAS_RLS_DEFINITIVAS.sql` (v2.7.0)
+   - ⚠️ El archivo `FIX_ALTERNATIVO_PERMISIVO.sql` está obsoleto (ver `_archivos_antiguos_rls/`)
    - Ejecutar
 
 2. **Ir a la app:**

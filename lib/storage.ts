@@ -75,6 +75,13 @@ export async function uploadExerciseThumbnail(file: File, exerciseId: string) {
 }
 
 /**
+ * Upload course cover image
+ */
+export async function uploadCourseCoverImage(file: File, courseId: string) {
+  return uploadFile(file, 'course-images', `covers/${courseId}`)
+}
+
+/**
  * Delete file from storage
  */
 export async function deleteFile(

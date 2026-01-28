@@ -61,7 +61,7 @@ export default function PrivacidadPage() {
 
           <h2>1. Responsable del Tratamiento</h2>
           <ul>
-            <li><strong>Identidad:</strong> Hakadogs (Alfredo García)</li>
+            <li><strong>Identidad:</strong> Hakadogs (Alfredo Gandolfo)</li>
             <li><strong>CIF/NIF:</strong> [Pendiente de completar]</li>
             <li><strong>Dirección:</strong> Murcia, España</li>
             <li><strong>Email:</strong> privacidad@hakadogs.com</li>

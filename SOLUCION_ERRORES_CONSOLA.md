@@ -301,7 +301,7 @@ Si prefieres ejecutar TODO de una vez, usa el archivo completo:
 
 ```bash
 # En Supabase SQL Editor, copiar y pegar:
-supabase/fix_rls_policies.sql
+supabase/POLITICAS_RLS_DEFINITIVAS.sql  ⭐ v2.7.0
 ```
 
 Este archivo incluye políticas para **TODAS** las tablas de cursos:

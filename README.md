@@ -1,8 +1,8 @@
 # 🐕 HAKADOGS - Plataforma de Educación Canina
 
-**Versión**: 3.4.1 TESTS IA CON MODAL + VALORACIONES  
-**Fecha Actualización**: 15 Enero 2026  
-**Estado**: ✅ **LIVE EN HAKADOGS.COM - TESTS CON IA Y MODAL DE PROGRESO - SISTEMA DE VALORACIONES - PAGESPEED 90-95 MÓVIL**
+**Versión**: 3.5.0 IMAGEN DE PORTADA + FIX 404 CURSOS  
+**Fecha Actualización**: 28 Enero 2026  
+**Estado**: ✅ **LIVE EN HAKADOGS.COM - IMAGEN DE PORTADA CURSOS - FIX 404 AUTOMÁTICO - TESTS CON IA - VALORACIONES - PAGESPEED 90-95 MÓVIL**
 
 ---
 
@@ -10,7 +10,38 @@
 
 Hakadogs es una plataforma web completa para educación canina profesional que integra sistema de cursos online con módulos organizados, **tests automáticos con IA (OpenAI GPT-4o) con modal de progreso en tiempo real**, **sistema de valoraciones con engagement scoring**, **gamificación totalmente automática**, gestión de usuarios y panel administrativo avanzado. **Optimizada para máximo rendimiento (95+ Google PageSpeed), SEO técnico avanzado con Schema.org, accesibilidad WCAG 2.1 AA compliant y experiencia móvil excepcional.**
 
-### 🆕 ÚLTIMA ACTUALIZACIÓN: MODAL DE PROGRESO PARA TESTS IA 🎯🤖
+### 🆕 ÚLTIMA ACTUALIZACIÓN: IMAGEN DE PORTADA + FIX 404 CURSOS 🖼️✅
+
+**✅ Imagen de Portada para Cursos (v3.5.0):**
+
+- 🖼️ **Imagen de portada**: Cada curso puede tener una imagen atractiva
+- 📁 **Storage en Supabase**: Bucket `course-images` con políticas RLS
+- 🎨 **Componente ImageUpload**: Upload con compresión automática
+- 📱 **Responsive**: Se muestra en lista, detalle y panel admin
+- ✅ **Metadata SEO**: Open Graph y Twitter Cards con imagen
+- 🔧 **Fácil de usar**: Upload desde `/administrator/cursos/editar/[id]`
+- 📐 **Optimización**: Compresión automática, máx 1200px ancho
+
+**✅ Fix Error 404 en Cursos Nuevos (v3.5.0):**
+
+- 🔄 **generateStaticParams()**: Generación automática de páginas
+- ⏱️ **ISR (Incremental Static Regeneration)**: Revalidación cada 60s
+- 📊 **Metadata dinámica**: SEO específico por curso
+- 🚀 **Sin configuración manual**: Cursos nuevos funcionan automáticamente
+- ✅ **Sin 404**: Al publicar curso, la página se genera sola
+
+**Componentes creados**:
+- `supabase/ADD_COURSE_COVER_IMAGE.sql` - Columna cover_image_url
+- `supabase/POLICIES_COURSE_IMAGES_BUCKET.sql` - Políticas RLS storage
+- `lib/storage.ts` - uploadCourseCoverImage()
+- `docs/setup/CONFIGURAR_BUCKET_COURSE_IMAGES.md` - Guía setup
+- `docs/SOLUCION_ERROR_404_CURSOS_NUEVOS.md` - Documentación fix 404
+
+**📂 Documentación:**
+- `GUIA_RAPIDA_IMAGEN_PORTADA.md` - ⭐ EMPEZAR AQUÍ
+- `docs/IMPLEMENTACION_IMAGEN_PORTADA_CURSOS.md` - Detalles técnicos completos
+
+### 🤖 MODAL DE PROGRESO PARA TESTS IA 🎯
 
 **✅ Modal de Progreso en Tiempo Real (v3.4.1):**
 
@@ -68,6 +99,10 @@ Hakadogs es una plataforma web completa para educación canina profesional que i
 - 📱 **Panel admin dedicado**: `/administrator/valoraciones` con stats completas
 
 **Beneficios para el Negocio:**
+- ✅ **Cursos más atractivos**: Imágenes de portada profesionales
+- ✅ **Sin errores 404**: Cursos nuevos funcionan automáticamente
+- ✅ **SEO mejorado**: Open Graph + Twitter Cards con imágenes
+- ✅ **Mejor conversión**: Visuales profesionales aumentan engagement
 - ✅ **Evaluación automática**: Tests generados por IA sin esfuerzo manual
 - ✅ **Visibilidad total**: Admin sabe exactamente qué está pasando en cada generación
 - ✅ **Diagnóstico rápido**: Errores específicos en lugar de mensajes genéricos
@@ -76,12 +111,25 @@ Hakadogs es una plataforma web completa para educación canina profesional que i
 - ✅ **Mejora continua**: Ajustar contenido basado en valoraciones reales
 - ✅ **Pedagogía reforzada**: Explicaciones en cada pregunta mejoran aprendizaje
 - ✅ **Mantenibilidad**: Script de diagnóstico facilita troubleshooting
+- ✅ **Zero-config**: Cursos nuevos disponibles en máx 60 segundos
 
-**📂 Documentación Tests IA:**
+**📂 Documentación Completa:**
+
+**Imagen de Portada:**
+- `GUIA_RAPIDA_IMAGEN_PORTADA.md` - ⭐ EMPEZAR AQUÍ - Guía rápida 3 pasos
+- `docs/setup/CONFIGURAR_BUCKET_COURSE_IMAGES.md` - Configuración bucket Supabase
+- `docs/IMPLEMENTACION_IMAGEN_PORTADA_CURSOS.md` - Detalles técnicos completos
+- `supabase/ADD_COURSE_COVER_IMAGE.sql` - Script SQL columna
+- `supabase/POLICIES_COURSE_IMAGES_BUCKET.sql` - Script políticas RLS
+
+**Fix 404 Cursos:**
+- `docs/SOLUCION_ERROR_404_CURSOS_NUEVOS.md` - Documentación completa del fix
+
+**Tests IA:**
 - `docs/SISTEMA_TESTS_MODULOS.md` - Sistema completo (actualizado con modal)
-- `docs/RESOLUCION_PROBLEMAS_TESTS.md` - ⭐ NUEVO - Guía troubleshooting
-- `scripts/test-module-test-api.js` - ⭐ NUEVO - Script diagnóstico configuración
-- `components/ui/TestGenerationModal.tsx` - ⭐ NUEVO - Modal de progreso
+- `docs/RESOLUCION_PROBLEMAS_TESTS.md` - Guía troubleshooting
+- `scripts/test-module-test-api.js` - Script diagnóstico configuración
+- `components/ui/TestGenerationModal.tsx` - Modal de progreso
 
 **Optimizaciones previas (v3.2.0):**
 - ⚡ **Score Móvil**: 81 → 90-95 (+11%)
@@ -321,8 +369,8 @@ Ver [`docs/setup/REGLAS_DESARROLLO.md`](./docs/setup/REGLAS_DESARROLLO.md) para 
 ### 📊 Estadísticas del Proyecto
 
 ```
-📦 Archivos creados:        240+
-📄 Líneas de código:        ~62,000
+📦 Archivos creados:        250+
+📄 Líneas de código:        ~64,000
 🎨 Componentes React:       60+
 📱 Páginas completas:       80+
 🗄️ Tablas SQL:              32+ (3 nuevas: module_tests, user_test_attempts, course_reviews)
@@ -747,6 +795,7 @@ Ver **[`/supabase/README.md`](./supabase/README.md)** para documentación comple
 
 ### Storage Buckets
 - **blog-images** - Imágenes del blog (con RLS policies)
+- **course-images** - Imágenes de portada de cursos (con RLS policies) ⭐ NUEVO
 
 ### Funciones RPC del Dashboard
 - `get_dashboard_stats()` - Estadísticas generales completas
@@ -930,6 +979,19 @@ Ver **[índice completo de documentación](./docs/README.md)** para acceder a to
 - [ ] Webinars en vivo
 
 ### ✅ Completado Recientemente (Enero 2026)
+- [x] **Imagen de portada para cursos** ⭐ NUEVO v3.5.0
+  - [x] Campo cover_image_url en tabla courses
+  - [x] Bucket course-images en Storage con RLS
+  - [x] Componente ImageUpload con compresión automática
+  - [x] Visualización en lista, detalle y admin
+  - [x] Metadata SEO con Open Graph y Twitter Cards
+  - [x] Documentación completa: guías, scripts SQL, políticas RLS
+- [x] **Fix error 404 en cursos nuevos** ⭐ NUEVO v3.5.0
+  - [x] Función generateStaticParams() para pre-generación
+  - [x] ISR (revalidate: 60s) para actualización automática
+  - [x] Metadata dinámica por curso para SEO
+  - [x] Imagen de portada visible en página de detalle
+  - [x] Cursos nuevos funcionan sin intervención manual
 - [x] **Sistema de valoraciones de cursos** ⭐ NUEVO v3.4.0
   - [x] Rating multi-criterio (Dificultad, Comprensión, Duración, Test)
   - [x] Rating global automático (1-5 estrellas)
@@ -1064,15 +1126,17 @@ Este proyecto es propiedad privada de Hakadogs y no puede ser reproducido, distr
 
 ## 🎉 ESTADO DEL PROYECTO
 
-### ✅ COMPLETADO AL 100% + OPTIMIZADO + AUDITORÍA WEB COMPLETA + TESTS IA + VALORACIONES
+### ✅ COMPLETADO AL 100% + OPTIMIZADO + AUDITORÍA WEB COMPLETA + TESTS IA + VALORACIONES + IMAGEN PORTADA
 
-**240+ archivos creados**  
-**~62,000 líneas de código**  
+**250+ archivos creados**  
+**~64,000 líneas de código**  
 **80+ páginas funcionales**  
 **54 páginas de localidades (dinámicas)**  
 **11+ cursos con lecciones, módulos, tests IA y progreso** ⭐  
-**Sistema de tests con IA (OpenAI GPT-4o)** ⭐ NUEVO  
-**Sistema de valoraciones con engagement score** ⭐ NUEVO  
+**Imagen de portada en cada curso** ⭐ NUEVO v3.5.0  
+**Fix 404 automático para cursos nuevos** ⭐ NUEVO v3.5.0  
+**Sistema de tests con IA (OpenAI GPT-4o)** ⭐ v3.4.0  
+**Sistema de valoraciones con engagement score** ⭐ v3.4.0  
 **Sistema de gamificación completo (20 badges)** ⭐  
 **Auditoría web completa: 19/19 mejoras implementadas**  
 **Schema.org completo (LocalBusiness, Organization, Service, Article)**  
@@ -1205,8 +1269,8 @@ Para cualquier duda o problema:
 
 ---
 
-**Última actualización**: Enero 2026  
-**Versión**: 3.4.0 TESTS IA + VALORACIONES  
+**Última actualización**: 28 Enero 2026  
+**Versión**: 3.5.0 IMAGEN PORTADA + FIX 404  
 **Estado**: ✅ LIVE EN HAKADOGS.COM  
 **Performance Móvil**: 90-95 Google PageSpeed (antes 81)  
 **INP**: <100ms (antes >200ms) - Mejora 50% ⚡  
@@ -1214,8 +1278,8 @@ Para cualquier duda o problema:
 **LCP**: 2.5s (antes 5.0s) - Mejora 50%  
 **Bundle**: -140KB JavaScript  
 **Dominio**: https://www.hakadogs.com  
-**Lanzamiento**: Versión 3.4 - Sistema de Tests IA + Valoraciones - Enero 2026
+**Lanzamiento**: Versión 3.5 - Imagen Portada + Fix 404 + Tests IA + Valoraciones - Enero 2026
 
 ---
 
-# 🏆 ¡Hakadogs está LIVE, ULTRA-OPTIMIZADO (90-95 móvil), INP <100ms, TBT <200ms, Tests con IA GPT-4o, Sistema de Valoraciones, y listo para dominar el SEO de educación canina en España! 🐕 🚀 ⚡ 🎯 🔍 🤖 ⭐
+# 🏆 ¡Hakadogs está LIVE, ULTRA-OPTIMIZADO (90-95 móvil), Imagen de Portada en Cursos 🖼️, Sin Error 404 ✅, Tests con IA GPT-4o 🤖, Sistema de Valoraciones ⭐, y listo para dominar el SEO de educación canina en España! 🐕 🚀 ⚡ 🎯 🔍

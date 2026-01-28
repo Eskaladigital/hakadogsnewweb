@@ -206,7 +206,7 @@ Este calendario editorial está diseñado para mejorar el posicionamiento orgán
 
 ## 📞 Responsabilidades
 
-- **Redacción**: Alfredo García / Colaborador externo
+- **Redacción**: Alfredo Gandolfo / Colaborador externo
 - **SEO**: Revisar keywords con herramientas
 - **Diseño**: Canva para infografías
 - **Publicación**: CMS / Supabase

@@ -208,6 +208,6 @@
 
 ---
 
-**Responsable:** Alfredo García / Equipo Hakadogs  
+**Responsable:** Alfredo Gandolfo / Equipo Hakadogs  
 **Revisión:** Mensual  
 **Actualización calendario:** Trimestral

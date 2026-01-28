@@ -18,7 +18,9 @@
 2. Selecciona tu proyecto
 3. Ve a **SQL Editor** (icono terminal en el menú izquierdo)
 4. Haz clic en **"New Query"**
-5. Abre el archivo `supabase/fix_rls_policies.sql` de este proyecto
+5. Abre el archivo `supabase/POLITICAS_RLS_DEFINITIVAS.sql` (v2.7.0) de este proyecto
+
+⚠️ **Nota:** El script anterior `fix_rls_policies.sql` está obsoleto (ver `_archivos_antiguos_rls/`)
 6. Copia TODO el contenido y pégalo en Supabase
 7. Haz clic en **"Run"** (botón verde) o presiona `Ctrl+Enter`
 8. ✅ Debe decir: "Success. No rows returned"
@@ -66,8 +68,8 @@ En la consola del navegador (F12):
 
 | Error | Qué significa | Criticidad | Solución |
 |-------|---------------|------------|----------|
-| **403 user_lesson_progress** | No hay permisos para guardar progreso | 🔴 CRÍTICO | `fix_rls_policies.sql` |
-| **406 user_course_progress** | No hay permisos para leer progreso | 🔴 CRÍTICO | `fix_rls_policies.sql` |
+| **403 user_lesson_progress** | No hay permisos para guardar progreso | 🔴 CRÍTICO | `POLITICAS_RLS_DEFINITIVAS.sql` |
+| **406 user_course_progress** | No hay permisos para leer progreso | 🔴 CRÍTICO | `POLITICAS_RLS_DEFINITIVAS.sql` |
 | **400 get_recent_sales** | Función RPC no existe (dashboard admin) | 🟡 Media | Ver sección "Bonus" |
 | **404 icon-144x144.png** | Faltan iconos PWA | 🟢 Baja | `node scripts/generate-pwa-icons.js` |
 
@@ -126,7 +128,8 @@ Sin las políticas (llaves), **NADIE** puede entrar, ni siquiera usuarios legít
 He creado varios archivos para ayudarte:
 
 ### Scripts SQL
-- `supabase/fix_rls_policies.sql` - **⭐ PRINCIPAL** - Configura todas las políticas RLS
+- `supabase/POLITICAS_RLS_DEFINITIVAS.sql` - **⭐ PRINCIPAL** - Configura todas las políticas RLS (v2.7.0)
+- `supabase/_archivos_antiguos_rls/fix_rls_policies.sql` - ⚠️ Obsoleto, no usar
 
 ### Scripts de Verificación
 - `scripts/check-rls-policies.js` - Verificador rápido (sin login)
@@ -273,7 +276,7 @@ Si necesitas más ayuda:
 ❌ Consola: 403 Forbidden
 ```
 
-### Después (con fix_rls_policies.sql)
+### Después (con POLITICAS_RLS_DEFINITIVAS.sql v2.7.0)
 ```
 ✅ Usuario hace clic en "Marcar como Completada"
 ✅ Spinner de carga

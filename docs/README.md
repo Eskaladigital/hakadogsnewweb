@@ -1,7 +1,7 @@
 # 📚 Documentación Técnica - Hakadogs
 
-**Actualizado:** 14 Enero 2026  
-**Versión:** 3.4.0 TESTS IA + VALORACIONES
+**Actualizado:** 28 Enero 2026  
+**Versión:** 3.5.0 IMAGEN PORTADA + FIX 404
 
 ---
 
@@ -30,6 +30,23 @@
 5. **[HUSKY_PRECOMMIT.md](./setup/HUSKY_PRECOMMIT.md)** - Pre-commit hooks con Husky
 6. **[REGLAS_DESARROLLO.md](./setup/REGLAS_DESARROLLO.md)** - Reglas y workflow de desarrollo
 7. **[INSTALACION_RAPIDA_GAMIFICACION.md](./setup/INSTALACION_RAPIDA_GAMIFICACION.md)** - Activación del sistema de gamificación
+8. **[CONFIGURAR_BUCKET_COURSE_IMAGES.md](./setup/CONFIGURAR_BUCKET_COURSE_IMAGES.md)** - ⭐ **NUEVO** Configuración bucket imágenes portada
+
+---
+
+### 🔒 Políticas RLS y Seguridad (`/`) ⭐ NUEVO - v2.7.0
+
+1. **[POLITICAS_RLS_RESUMEN.md](./POLITICAS_RLS_RESUMEN.md)** - Resumen ejecutivo (200 líneas)
+2. **[INDICE_DOCUMENTACION_RLS.md](./INDICE_DOCUMENTACION_RLS.md)** - Índice completo de documentación RLS (300 líneas)
+3. **[DOCUMENTACION_RLS_COMPLETADA.md](./DOCUMENTACION_RLS_COMPLETADA.md)** - Informe de completación (250 líneas)
+
+**En `/supabase/`:**
+- `POLITICAS_RLS_DEFINITIVAS.sql` - Script SQL ejecutable (375 líneas)
+- `POLITICAS_RLS_EXPLICADAS.md` - Guía técnica completa (600+ líneas)
+- `REFERENCIA_RAPIDA_RLS.md` - Comandos rápidos (250 líneas)
+- `RESUMEN_VISUAL_RLS.txt` - Diagrama ASCII (150 líneas)
+
+**Resultado:** De 40+ políticas a 11 políticas optimizadas. Sistema funcionando sin errores 403/406/500.
 
 ---
 
@@ -54,8 +71,11 @@
 
 ### 🎓 Sistemas Educativos (`/`)
 
-1. **[SISTEMA_TESTS_MODULOS.md](./SISTEMA_TESTS_MODULOS.md)** - 🤖 **NUEVO** Sistema completo de tests con IA (OpenAI GPT-4o)
-2. **[SISTEMA_VALORACIONES.md](./SISTEMA_VALORACIONES.md)** - ⭐ **NUEVO** Sistema de valoraciones con engagement score
+1. **[SISTEMA_TESTS_MODULOS.md](./SISTEMA_TESTS_MODULOS.md)** - 🤖 Sistema completo de tests con IA (OpenAI GPT-4o)
+2. **[SISTEMA_VALORACIONES.md](./SISTEMA_VALORACIONES.md)** - ⭐ Sistema de valoraciones con engagement score
+3. **[SOLUCION_ERROR_404_CURSOS_NUEVOS.md](./SOLUCION_ERROR_404_CURSOS_NUEVOS.md)** - ⭐ **NUEVO** Fix 404 en cursos nuevos
+4. **[IMPLEMENTACION_IMAGEN_PORTADA_CURSOS.md](./IMPLEMENTACION_IMAGEN_PORTADA_CURSOS.md)** - ⭐ **NUEVO** Sistema de imagen de portada
+5. **[../GUIA_RAPIDA_IMAGEN_PORTADA.md](../GUIA_RAPIDA_IMAGEN_PORTADA.md)** - ⭐ **NUEVO** Guía rápida configuración
 
 ---
 
@@ -98,7 +118,7 @@
 
 ### 📊 Métricas del Proyecto
 
-### Performance Actual (v3.4.0):
+### Performance Actual (v3.5.0):
 - **Score Móvil**: 90-95/100 ✅ (antes 81)
 - **LCP**: 2.5s ✅ (antes 5.0s, mejora -50%)
 - **Speed Index**: 1.0s ✅ (antes 1.5s)
@@ -111,8 +131,8 @@
 - **CLS**: 0 ✅
 
 ### Estadísticas:
-- **Archivos**: 240+
-- **Líneas de código**: ~62,000
+- **Archivos**: 250+
+- **Líneas de código**: ~64,000
 - **Componentes React**: 60+
 - **Páginas completas**: 80+
 - **Tablas SQL**: 32+
@@ -120,11 +140,25 @@
 - **Badges Sistema**: 20 (100% útiles)
 - **Tests con IA**: Generación automática OpenAI GPT-4o ⭐
 - **Valoraciones**: Sistema completo con engagement score ⭐
-- **Documentación**: 52+ archivos
+- **Imagen Portada**: Upload con compresión automática ⭐ NUEVO
+- **Fix 404**: Generación automática de páginas ⭐ NUEVO
+- **Documentación**: 58+ archivos
 
 ---
 
 ## 🎯 Novedades Principales
+
+### 🖼️ Imagen de Portada + Fix 404 (Enero 2026 - v3.5.0)
+- **Imagen de portada** para cada curso con upload automático
+- **Bucket course-images** en Supabase Storage con RLS
+- **Compresión automática** de imágenes (máx 1200px)
+- **Visualización** en lista, detalle y panel admin
+- **Metadata SEO** con Open Graph y Twitter Cards
+- **Fix 404 automático** para cursos nuevos
+- **generateStaticParams()** para pre-generación de páginas
+- **ISR (revalidate: 60s)** para actualización automática
+- **Metadata dinámica** por curso para SEO
+- **Sin configuración manual** - Todo automático
 
 ### 🤖 Tests con IA + Valoraciones (Enero 2026 - v3.4.0)
 - **Sistema de tests automáticos** con OpenAI GPT-4o
@@ -190,6 +224,6 @@ Para consultas sobre la documentación:
 
 ---
 
-**Última actualización**: 14 Enero 2026  
+**Última actualización**: 28 Enero 2026  
 **Estado**: ✅ Documentación completa y actualizada  
-**Versión**: 3.4.0 TESTS IA + VALORACIONES
+**Versión**: 3.5.0 IMAGEN PORTADA + FIX 404

@@ -11,6 +11,7 @@ export interface Course {
   duration_minutes: number
   difficulty: 'basico' | 'intermedio' | 'avanzado'
   thumbnail_url: string | null
+  cover_image_url: string | null
   what_you_learn: string[]
   is_free: boolean
   is_published: boolean

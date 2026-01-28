@@ -74,7 +74,7 @@ export const localBusinessSchema = {
   },
   founder: {
     '@type': 'Person',
-    name: 'Alfredo García',
+    name: 'Alfredo Gandolfo',
     jobTitle: 'Educador Canino Profesional',
     description: 'Educador canino con más de 8 años de experiencia y más de 500 perros educados',
   },
@@ -194,7 +194,7 @@ export function generateBlogPostSchema(post: {
     dateModified: post.updated_at || post.published_at,
     author: {
       '@type': 'Person',
-      name: post.author || 'Alfredo García',
+      name: post.author || 'Alfredo Gandolfo',
       url: 'https://www.hakadogs.com/sobre-nosotros',
     },
     publisher: {
