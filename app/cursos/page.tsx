@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { BookOpen, Download, ShoppingCart, CheckCircle, Mail, Clock, Loader2, ChevronDown, MapPin, Phone, ArrowRight, Info } from 'lucide-react'
+import { BookOpen, Download, ShoppingCart, CheckCircle, Mail, Clock, Loader2, ChevronDown, MapPin, Phone, ArrowRight, Info, PlayCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { getAllCourses } from '@/lib/supabase/courses'
 import type { Course } from '@/lib/supabase/courses'
@@ -161,7 +161,7 @@ export default function CursosPage() {
       {cursosGratuitos.length > 0 && (
         <section className="py-8 sm:py-16">
           <div className="container mx-auto px-4 sm:px-6">
-            <div className="max-w-full sm:max-w-4xl mx-auto">
+            <div className="max-w-6xl mx-auto">
               {cursosGratuitos.map((curso, index) => (
                 <motion.div
                   key={curso.id}
@@ -170,69 +170,125 @@ export default function CursosPage() {
                   transition={{ duration: 0.6 }}
                   className="bg-gradient-to-br from-gold to-yellow-400 rounded-2xl shadow-2xl overflow-hidden"
                 >
-                  <div className="bg-white/10 backdrop-blur-sm p-8 md:p-12 text-white">
-                    <div className="flex items-center mb-6">
-                      <div className="w-12 sm:w-16 h-12 sm:h-16 bg-white/20 rounded-full flex items-center justify-center mr-3 sm:mr-4">
-                        <Download className="w-6 sm:w-8 h-6 sm:h-8" />
-                      </div>
-                      <div>
-                        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold">{curso.title}</h2>
-                        <p className="text-sm sm:text-base text-white/90">Curso Gratuito</p>
-                      </div>
-                    </div>
-
-                    <div 
-                      className="responsive-prose text-sm sm:text-base md:text-lg mb-4 sm:mb-6 text-white/95 prose prose-invert max-w-none"
-                      style={{ fontSize: 'clamp(0.875rem, 2.5vw, 1.125rem)' }}
-                      dangerouslySetInnerHTML={{ __html: curso.short_description || curso.description || '' }}
-                    />
-
-                    {curso.what_you_learn && curso.what_you_learn.length > 0 && (
-                      <div className="grid md:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
-                        {curso.what_you_learn.map((item, idx) => (
-                          <div key={idx} className="flex items-start">
-                            <CheckCircle className="w-5 sm:w-6 h-5 sm:h-6 mr-2 sm:mr-3 flex-shrink-0" />
-                            <div>
-                              <p className="text-xs sm:text-sm text-white/95">{item}</p>
-                            </div>
+                  <div className="grid lg:grid-cols-2 gap-0">
+                    {/* Columna izquierda: Imagen de portada */}
+                    {curso.cover_image_url && (
+                      <div className="relative h-64 lg:h-auto min-h-[400px] overflow-hidden">
+                        <img
+                          src={curso.cover_image_url}
+                          alt={curso.title}
+                          className="absolute inset-0 w-full h-full object-cover"
+                        />
+                        {/* Overlay gradiente */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-gold/40 via-yellow-400/30 to-amber-500/40"></div>
+                        
+                        {/* Badge GRATUITO */}
+                        <div className="absolute top-6 left-6">
+                          <div className="bg-white text-gold font-black text-xl px-6 py-3 rounded-full shadow-lg flex items-center">
+                            <Download className="w-6 h-6 mr-2" />
+                            CURSO GRATIS
                           </div>
-                        ))}
+                        </div>
+
+                        {/* Duración y lecciones */}
+                        <div className="absolute bottom-6 left-6 right-6 flex gap-3">
+                          <div className="backdrop-blur-md bg-white/20 text-white px-4 py-2 rounded-full text-sm font-semibold flex items-center">
+                            <Clock className="w-4 h-4 mr-2" />
+                            {curso.duration_minutes} min
+                          </div>
+                          <div className="backdrop-blur-md bg-white/20 text-white px-4 py-2 rounded-full text-sm font-semibold flex items-center">
+                            <PlayCircle className="w-4 h-4 mr-2" />
+                            {curso.total_lessons || 0} lecciones
+                          </div>
+                        </div>
                       </div>
                     )}
 
-                    {/* Newsletter Form */}
-                    <form onSubmit={handleNewsletterSubmit} className="bg-white/20 backdrop-blur-sm rounded-xl p-6">
-                      <div className="flex flex-col md:flex-row gap-4">
-                        <div className="flex-1">
+                    {/* Columna derecha: Contenido */}
+                    <div className={`bg-white/10 backdrop-blur-sm p-6 sm:p-8 lg:p-12 text-white ${!curso.cover_image_url ? 'lg:col-span-2' : ''}`}>
+                      {!curso.cover_image_url && (
+                        <div className="flex items-center mb-6">
+                          <div className="w-12 sm:w-16 h-12 sm:h-16 bg-white/20 rounded-full flex items-center justify-center mr-3 sm:mr-4">
+                            <Download className="w-6 sm:w-8 h-6 sm:h-8" />
+                          </div>
+                          <div>
+                            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold">{curso.title}</h2>
+                            <p className="text-sm sm:text-base text-white/90">Curso Gratuito</p>
+                          </div>
+                        </div>
+                      )}
+
+                      {curso.cover_image_url && (
+                        <div className="mb-6">
+                          <span className="inline-block bg-white text-gold font-bold text-sm px-4 py-2 rounded-full mb-4">
+                            CURSO GRATUITO
+                          </span>
+                          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black mb-4 leading-tight">{curso.title}</h2>
+                        </div>
+                      )}
+
+                      <div 
+                        className="text-base sm:text-lg mb-6 text-white/95 prose prose-invert prose-lg max-w-none"
+                        dangerouslySetInnerHTML={{ __html: curso.short_description || curso.description || '' }}
+                      />
+
+                      {curso.what_you_learn && curso.what_you_learn.length > 0 && (
+                        <div className="grid gap-3 mb-8">
+                          {curso.what_you_learn.slice(0, 4).map((item, idx) => (
+                            <div key={idx} className="flex items-start backdrop-blur-sm bg-white/10 rounded-xl p-3">
+                              <CheckCircle className="w-5 h-5 mr-3 flex-shrink-0 mt-0.5" />
+                              <p className="text-sm sm:text-base text-white/95 font-medium">{item}</p>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Newsletter Form - MEJORADO */}
+                      <form onSubmit={handleNewsletterSubmit} className="bg-white rounded-2xl p-6 shadow-xl">
+                        <div className="flex flex-col gap-4">
+                          <div className="text-center mb-2">
+                            <p className="text-gold font-bold text-lg mb-1">¡Accede GRATIS ahora!</p>
+                            <p className="text-gray-600 text-sm">Introduce tu email para recibir acceso</p>
+                          </div>
                           <div className="relative">
-                            <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70" size={20} />
+                            <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
                             <input
                               type="email"
                               value={email}
                               onChange={(e) => setEmail(e.target.value)}
-                              placeholder="Tu email"
+                              placeholder="tu@email.com"
                               required
-                              className="w-full pl-12 pr-4 py-3 rounded-lg bg-white/90 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white"
+                              className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gold/20 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 text-base"
                             />
                           </div>
+                          <button
+                            type="submit"
+                            disabled={submitted}
+                            className="w-full bg-gradient-to-r from-gold to-yellow-500 hover:from-yellow-500 hover:to-gold text-white font-bold py-4 px-6 rounded-xl transition-all flex items-center justify-center text-base shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            {submitted ? (
+                              <>
+                                <CheckCircle className="w-5 h-5 mr-2" />
+                                ✓ Enviado
+                              </>
+                            ) : (
+                              <>
+                                <Download className="w-5 h-5 mr-2" />
+                                Quiero acceder GRATIS
+                              </>
+                            )}
+                          </button>
+                          {submitted && (
+                            <p className="text-center text-sm text-green-600 font-medium">
+                              ✓ ¡Gracias! Revisa tu email para acceder al curso.
+                            </p>
+                          )}
+                          <p className="text-center text-xs text-gray-500">
+                            ✓ Sin tarjeta • ✓ Acceso inmediato • ✓ Sin compromisos
+                          </p>
                         </div>
-                        <button
-                          type="submit"
-                          disabled={submitted}
-                          className="bg-white text-forest-dark font-bold px-8 py-3 rounded-lg hover:bg-white/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
-                        >
-                          {submitted ? '✓ Enviado' : 'Acceder Gratis'}
-                        </button>
-                      </div>
-                      {submitted && (
-                        <p className="mt-4 text-sm text-white/90 text-center">
-                          ✓ ¡Gracias! Revisa tu email para acceder al curso gratuito.
-                        </p>
-                      )}
-                      <p className="mt-4 text-xs text-white/80 text-center">
-                        Al registrarte, tendrás acceso inmediato al curso gratuito.
-                      </p>
-                    </form>
+                      </form>
+                    </div>
                   </div>
                 </motion.div>
               ))}
