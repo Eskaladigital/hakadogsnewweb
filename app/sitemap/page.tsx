@@ -221,7 +221,7 @@ export default function SitemapPage() {
                 {cities.filter(city => city.region === 'Región de Murcia').map(city => (
                   <Link 
                     key={city.slug} 
-                    href={`/localidades/${city.slug}`}
+                    href={`/adiestramiento-canino/${city.slug}`}
                     className="text-gray-700 hover:text-forest transition flex items-center p-3 rounded-lg hover:bg-forest/5"
                   >
                     <span className="mr-2">→</span> {city.name}
@@ -236,7 +236,7 @@ export default function SitemapPage() {
                 {cities.filter(city => city.region === 'Comunidad Valenciana').map(city => (
                   <Link 
                     key={city.slug} 
-                    href={`/localidades/${city.slug}`}
+                    href={`/adiestramiento-canino/${city.slug}`}
                     className="text-gray-700 hover:text-forest transition flex items-center p-3 rounded-lg hover:bg-forest/5"
                   >
                     <span className="mr-2">→</span> {city.name}
@@ -254,7 +254,7 @@ export default function SitemapPage() {
                 ).map(city => (
                   <Link 
                     key={city.slug} 
-                    href={`/localidades/${city.slug}`}
+                    href={`/adiestramiento-canino/${city.slug}`}
                     className="text-gray-700 hover:text-forest transition flex items-center p-3 rounded-lg hover:bg-forest/5"
                   >
                     <span className="mr-2">→</span> {city.name}

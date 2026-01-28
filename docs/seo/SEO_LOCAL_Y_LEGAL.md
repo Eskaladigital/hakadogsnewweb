@@ -217,7 +217,7 @@ export interface CityData {
    - Base de datos de ciudades (54 ciudades actualmente)
    - Interfaz `CityData` con campos `distanceFromArchena` e `isRemoteMarket`
 
-2. **`app/localidades/[ciudad]/page.tsx`**
+2. **`app/adiestramiento-canino/[ciudad]/page.tsx`**
    - Página dinámica que renderiza según `isRemoteMarket`
    - Lógica condicional para mostrar componentes diferentes
 
@@ -233,7 +233,7 @@ export interface CityData {
 ### Lógica de Renderizado
 
 ```typescript
-// app/localidades/[ciudad]/page.tsx
+// app/adiestramiento-canino/[ciudad]/page.tsx
 
 const isLocalMarket = !city.isRemoteMarket
 const isRemoteMarket = city.isRemoteMarket
@@ -446,7 +446,7 @@ return (
 
 ### Archivos Nuevos: 5
 1. `lib/cities.ts` - Base datos ciudades
-2. `app/localidades/[ciudad]/page.tsx` - Páginas dinámicas
+2. `app/adiestramiento-canino/[ciudad]/page.tsx` - Páginas dinámicas
 3. `app/legal/terminos/page.tsx` - Términos
 4. `app/legal/privacidad/page.tsx` - Privacidad
 5. `components/Footer.tsx` - Actualizado
@@ -543,7 +543,7 @@ return (
    ```
 
 4. **URLs se generan automáticamente:**
-   - `/localidades/nueva-ciudad` → Ya funciona con estrategia correcta
+   - `/adiestramiento-canino/nueva-ciudad` → Ya funciona con estrategia correcta
 
 5. **Contenido se adapta solo:**
    - `isRemoteMarket: false` → Presencial + Online complemento
@@ -581,12 +581,12 @@ return (
 
 1. **Por Tipo de Mercado:**
    ```
-   Páginas Locales (/localidades/murcia, etc):
+   Páginas Locales (/adiestramiento-canino/murcia, etc):
    - Conversión → Formulario contacto
    - Tiempo en página
    - CTR "Solicitar Consulta"
    
-   Páginas Remotas (/localidades/barcelona, etc):
+   Páginas Remotas (/adiestramiento-canino/barcelona, etc):
    - Conversión → Compra curso
    - Tiempo en página  
    - CTR "Ver Cursos Online"
@@ -624,21 +624,21 @@ return (
 ### Archivos Clave
 
 1. **`lib/cities.ts`** - Base datos con `distanceFromArchena` e `isRemoteMarket`
-2. **`app/localidades/[ciudad]/page.tsx`** - Lógica dual implementada
+2. **`app/adiestramiento-canino/[ciudad]/page.tsx`** - Lógica dual implementada
 3. **`components/OnlineCoursesCtaSection.tsx`** - CTA mercado remoto
 4. **`SEO_LOCAL_Y_LEGAL.md`** - Esta documentación (actualizada)
 
 ### URLs Ejemplo
 
 **Mercado LOCAL:**
-- https://www.hakadogs.com/localidades/murcia (25 km)
-- https://www.hakadogs.com/localidades/archena (0 km)
-- https://www.hakadogs.com/localidades/fortuna (15 km)
+- https://www.hakadogs.com/adiestramiento-canino/murcia (25 km)
+- https://www.hakadogs.com/adiestramiento-canino/archena (0 km)
+- https://www.hakadogs.com/adiestramiento-canino/fortuna (15 km)
 
 **Mercado REMOTO:**
-- https://www.hakadogs.com/localidades/cartagena (70 km)
-- https://www.hakadogs.com/localidades/alicante (100 km)
-- https://www.hakadogs.com/localidades/las-palmas-de-gran-canaria (2000+ km)
+- https://www.hakadogs.com/adiestramiento-canino/cartagena (70 km)
+- https://www.hakadogs.com/adiestramiento-canino/alicante (100 km)
+- https://www.hakadogs.com/adiestramiento-canino/las-palmas-de-gran-canaria (2000+ km)
 
 ---
 
@@ -652,7 +652,7 @@ return (
 - [ ] 4. Incluir `distanceFromArchena` e `isRemoteMarket`
 - [ ] 5. Adaptar `keywords` según mercado (presencial vs online)
 - [ ] 6. Opcional: Añadir parques caninos si es mercado LOCAL
-- [ ] 7. Verificar que la página se genera: `/localidades/[slug]`
+- [ ] 7. Verificar que la página se genera: `/adiestramiento-canino/[slug]`
 - [ ] 8. Comprobar que muestra contenido correcto según mercado
 - [ ] 9. Actualizar sitemap (automático)
 - [ ] 10. Añadir a Google Analytics para seguimiento

@@ -214,7 +214,7 @@ export function generateLocalPageSchema(city: { name: string; slug: string; prov
     '@type': 'LocalBusiness',
     name: `Hakadogs - Educación Canina en ${city.name}`,
     image: 'https://www.hakadogs.com/images/logo_definitivo_hakadogs.webp',
-    url: `https://www.hakadogs.com/localidades/${city.slug}`,
+    url: `https://www.hakadogs.com/adiestramiento-canino/${city.slug}`,
     telephone: '+34685648241',
     email: 'info@hakadogs.com',
     address: {

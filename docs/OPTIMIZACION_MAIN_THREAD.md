@@ -6,7 +6,7 @@
 URL                                                Start Time  Duration
 Unattributable                                     1.1s        238ms ❌
 Unattributable                                     1.5s        171ms ❌
-https://www.hakadogs.com/localidades/murcia       544ms       144ms ❌
+https://www.hakadogs.com/adiestramiento-canino/murcia       544ms       144ms ❌
 /_next/static/chunks/2117-xxx.js                   905ms       53ms  ⚠️
 /_next/static/chunks/webpack-xxx.js                1.3s        52ms  ⚠️
 ```
@@ -56,7 +56,7 @@ webpack: (config, { isServer }) => {
 **Después**: Lazy load + hidratación diferida
 
 ```typescript
-// app/localidades/[ciudad]/page.tsx
+// app/adiestramiento-canino/[ciudad]/page.tsx
 const ServicesSection = dynamic(() => import('@/components/ServicesSection'), { 
   ssr: false, // NO renderizar en servidor = menos hidratación
   loading: () => <div className="h-96 bg-gray-50 animate-pulse rounded-3xl" />

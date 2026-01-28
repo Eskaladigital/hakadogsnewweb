@@ -231,13 +231,13 @@ export default function SitemapHTMLPage() {
               <tbody>
                 {cities.map((city) => (
                   <tr key={city.slug} className="border-b border-gray-100 hover:bg-gray-50">
-                    <td className="py-3 px-4 text-sm font-mono text-gray-600">/localidades/{city.slug}</td>
+                    <td className="py-3 px-4 text-sm font-mono text-gray-600">/adiestramiento-canino/{city.slug}</td>
                     <td className="py-3 px-4 text-sm text-gray-800">{city.name}</td>
                     <td className="py-3 px-4 text-sm text-gray-600">{city.region}</td>
                     <td className="py-3 px-4 text-sm text-gray-600">0.85</td>
                     <td className="py-3 px-4">
                       <Link 
-                        href={`/localidades/${city.slug}`}
+                        href={`/adiestramiento-canino/${city.slug}`}
                         target="_blank"
                         className="text-forest hover:text-forest-dark text-sm inline-flex items-center gap-1"
                       >

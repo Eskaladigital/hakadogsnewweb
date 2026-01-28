@@ -414,11 +414,11 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 
 #### Modificado
 - `app/cursos/page.tsx` - Banner presencial al final (96 líneas añadidas)
-- `app/localidades/[ciudad]/page.tsx` - Sección cursos online para mercado local (66 líneas)
+- `app/adiestramiento-canino/[ciudad]/page.tsx` - Sección cursos online para mercado local (66 líneas)
 
 #### Estrategia Completada
 ```
-Usuario en Murcia → Visita /localidades/murcia → Ve presencial + online
+Usuario en Murcia → Visita /adiestramiento-canino/murcia → Ve presencial + online
                   ↓
                   O
                   ↓
@@ -449,7 +449,7 @@ Usuario busca cursos → Visita /cursos → Ve online + banner presencial
   - 54 ciudades totales
 
 #### Modificado
-- `app/localidades/[ciudad]/page.tsx` - Lógica condicional por mercado
+- `app/adiestramiento-canino/[ciudad]/page.tsx` - Lógica condicional por mercado
 - `lib/cities.ts` - Distancias y clasificación de mercados
 - `components/OnlineCoursesCtaSection.tsx` - Creado y optimizado (sin framer-motion)
 
@@ -798,7 +798,7 @@ Usuario busca cursos → Visita /cursos → Ve online + banner presencial
 - ✅ Robots.txt optimizado
 
 #### Archivos Nuevos
-- `app/localidades/[ciudad]/page.tsx` - Template ciudades
+- `app/adiestramiento-canino/[ciudad]/page.tsx` - Template ciudades
 - `lib/cities.ts` - 56 ciudades de Murcia
 - `lib/extendedCityData.ts` - Contenido único
 - `app/sitemap.ts` - Sitemap dinámico

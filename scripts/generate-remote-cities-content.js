@@ -374,7 +374,7 @@ async function generateContent() {
     console.log(`\n🌐 Todas las ${remoteCities.length} ciudades remotas ahora tienen contenido único`)
     console.log('   Puedes verificar las páginas en:')
     remoteCities.slice(0, 5).forEach(city => {
-      console.log(`   - https://www.hakadogs.com/localidades/${city.slug}`)
+      console.log(`   - https://www.hakadogs.com/adiestramiento-canino/${city.slug}`)
     })
     if (remoteCities.length > 5) {
       console.log(`   ... y ${remoteCities.length - 5} más`)

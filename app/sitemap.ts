@@ -120,7 +120,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Páginas de localidades (IMPORTANTE PARA SEO LOCAL)
   const localidadPages = cities.map((city) => ({
-    url: `${baseUrl}/localidades/${city.slug}`,
+    url: `${baseUrl}/adiestramiento-canino/${city.slug}`,
     lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.85, // Alta prioridad para SEO local

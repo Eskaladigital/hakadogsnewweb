@@ -9,9 +9,9 @@
 ## 🎯 PROBLEMA ORIGINAL
 
 Las páginas de localidades remotas (> 40km de Archena) como:
-- https://www.hakadogs.com/localidades/gijon
-- https://www.hakadogs.com/localidades/san-javier
-- https://www.hakadogs.com/localidades/yecla
+- https://www.hakadogs.com/adiestramiento-canino/gijon
+- https://www.hakadogs.com/adiestramiento-canino/san-javier
+- https://www.hakadogs.com/adiestramiento-canino/yecla
 
 **Estaban VACÍAS** - Solo mostraban el Hero pero sin contenido adicional.
 
@@ -168,7 +168,7 @@ Ejemplo para ciudad grande y lejana:
 
 ```mermaid
 graph TD
-    A[Usuario visita /localidades/gijon] --> B{Obtener ciudad de cities.ts}
+    A[Usuario visita /adiestramiento-canino/gijon] --> B{Obtener ciudad de cities.ts}
     B --> C{isRemoteMarket?}
     C -->|false < 40km| D[Renderizar contenido LOCAL]
     C -->|true > 40km| E[Llamar getCityContent slug]
@@ -229,16 +229,16 @@ graph TD
 ### Páginas a verificar (después del deploy):
 
 **Mercado LOCAL (debe mostrar servicios presenciales):**
-- ✅ https://www.hakadogs.com/localidades/murcia (< 40km)
-- ✅ https://www.hakadogs.com/localidades/archena (0km)
+- ✅ https://www.hakadogs.com/adiestramiento-canino/murcia (< 40km)
+- ✅ https://www.hakadogs.com/adiestramiento-canino/archena (0km)
 
 **Mercado REMOTO (debe mostrar cursos online + contenido único):**
-- ⏳ https://www.hakadogs.com/localidades/san-javier
-- ⏳ https://www.hakadogs.com/localidades/gijon
-- ⏳ https://www.hakadogs.com/localidades/yecla
-- ⏳ https://www.hakadogs.com/localidades/torrevieja
-- ⏳ https://www.hakadogs.com/localidades/barcelona
-- ⏳ https://www.hakadogs.com/localidades/madrid
+- ⏳ https://www.hakadogs.com/adiestramiento-canino/san-javier
+- ⏳ https://www.hakadogs.com/adiestramiento-canino/gijon
+- ⏳ https://www.hakadogs.com/adiestramiento-canino/yecla
+- ⏳ https://www.hakadogs.com/adiestramiento-canino/torrevieja
+- ⏳ https://www.hakadogs.com/adiestramiento-canino/barcelona
+- ⏳ https://www.hakadogs.com/adiestramiento-canino/madrid
 
 ### Qué debe aparecer:
 ✅ Hero con badge "Cursos Online"  
@@ -306,7 +306,7 @@ node scripts/generate-remote-cities-content.js
 
 3. **Verificar página:**
 ```
-https://www.hakadogs.com/localidades/nueva-ciudad
+https://www.hakadogs.com/adiestramiento-canino/nueva-ciudad
 ```
 
 ### Regenerar contenido existente:

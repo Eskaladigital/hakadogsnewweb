@@ -56,7 +56,7 @@ webpack: (config, { isServer }) => {
 9 componentes pesados lazy-loaded sin SSR:
 
 ```typescript
-// app/localidades/[ciudad]/page.tsx
+// app/adiestramiento-canino/[ciudad]/page.tsx
 const ServicesSection = dynamic(() => import('@/components/ServicesSection'), { 
   ssr: false, // No renderizar en servidor
   loading: () => <div className="h-96 bg-gray-50 animate-pulse" />

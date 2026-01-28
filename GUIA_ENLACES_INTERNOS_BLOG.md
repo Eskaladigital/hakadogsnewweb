@@ -115,7 +115,7 @@ basada en el binomio perro-guía y el juego estructurado.
 
 ### Si el artículo habla de ÁREAS LOCALES:
 ```
-Si vives en [ciudad], consulta nuestra [página de educación canina en [Ciudad]](/localidades/[ciudad]) 
+Si vives en [ciudad], consulta nuestra [página de educación canina en [Ciudad]](/adiestramiento-canino/[ciudad]) 
 para conocer parques caninos y zonas de entrenamiento cercanas.
 ```
 

@@ -6,7 +6,7 @@ Las optimizaciones de PageSpeed se han aplicado a **TODAS las páginas** de la a
 
 ### 📍 Páginas Críticas para SEO
 
-1. **Landings de Localidades** (`/localidades/[ciudad]`)
+1. **Landings de Localidades** (`/adiestramiento-canino/[ciudad]`)
    - ✅ Hero optimizado (sin framer-motion)
    - ✅ Imágenes con fetchPriority correcto
    - ✅ Lazy loading inteligente de secciones
@@ -93,7 +93,7 @@ experimental: {
 
 **Score esperado**: 90-95 móvil
 
-### Localidades (`/localidades/[ciudad]`)
+### Localidades (`/adiestramiento-canino/[ciudad]`)
 - ✅ Hero dinámico optimizado
 - ✅ Componentes locales lazy-loaded
 - ✅ Imágenes con sizes específicos
@@ -171,7 +171,7 @@ Google usa estas métricas para ranking:
 ### Páginas Prioritarias
 - [ ] Home (`/`) - Score móvil > 90
 - [ ] Blog principal (`/blog`) - Score móvil > 85
-- [ ] Landing ejemplo: `/localidades/murcia` - Score móvil > 85
+- [ ] Landing ejemplo: `/adiestramiento-canino/murcia` - Score móvil > 85
 - [ ] Post blog ejemplo: `/blog/[cualquier-slug]` - Score móvil > 85
 
 ### Métricas Clave
@@ -186,7 +186,7 @@ Google usa estas métricas para ranking:
 npx lighthouse https://www.hakadogs.com --view
 
 # Test landing localidad
-npx lighthouse https://www.hakadogs.com/localidades/murcia --view
+npx lighthouse https://www.hakadogs.com/adiestramiento-canino/murcia --view
 
 # Test blog
 npx lighthouse https://www.hakadogs.com/blog --view

@@ -118,12 +118,12 @@ export default function ContactoPage() {
                     <p className="text-gray-700">Archena, Región de Murcia</p>
                     <p className="text-sm text-gray-500 mt-1">
                       Nos desplazamos a:{' '}
-                      <Link href="/localidades/archena" className="text-forest hover:underline">Archena</Link>,{' '}
-                      <Link href="/localidades/molina-de-segura" className="text-forest hover:underline">Molina de Segura</Link>,{' '}
-                      <Link href="/localidades/murcia" className="text-forest hover:underline">Murcia</Link>,{' '}
-                      <Link href="/localidades/alguazas" className="text-forest hover:underline">Alguazas</Link>,{' '}
-                      <Link href="/localidades/ceuti" className="text-forest hover:underline">Ceutí</Link>,{' '}
-                      <Link href="/localidades/lorqui" className="text-forest hover:underline">Lorquí</Link> y alrededores
+                      <Link href="/adiestramiento-canino/archena" className="text-forest hover:underline">Archena</Link>,{' '}
+                      <Link href="/adiestramiento-canino/molina-de-segura" className="text-forest hover:underline">Molina de Segura</Link>,{' '}
+                      <Link href="/adiestramiento-canino/murcia" className="text-forest hover:underline">Murcia</Link>,{' '}
+                      <Link href="/adiestramiento-canino/alguazas" className="text-forest hover:underline">Alguazas</Link>,{' '}
+                      <Link href="/adiestramiento-canino/ceuti" className="text-forest hover:underline">Ceutí</Link>,{' '}
+                      <Link href="/adiestramiento-canino/lorqui" className="text-forest hover:underline">Lorquí</Link> y alrededores
                     </p>
                   </div>
                 </div>

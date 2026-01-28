@@ -68,7 +68,7 @@ export async function generateMetadata({ params }: { params: { ciudad: string } 
     openGraph: {
       title: `Educación Canina Profesional en ${city.name} | Hakadogs`,
       description: city.description,
-      url: `https://www.hakadogs.com/localidades/${city.slug}`,
+      url: `https://www.hakadogs.com/adiestramiento-canino/${city.slug}`,
       type: 'website',
       locale: 'es_ES',
       images: [

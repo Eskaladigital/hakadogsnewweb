@@ -87,7 +87,7 @@
 ### Archivos Clave
 
 - `app/api/generate-city-content/route.ts` - API de generación
-- `app/localidades/[ciudad]/page.tsx` - Páginas rediseñadas
+- `app/adiestramiento-canino/[ciudad]/page.tsx` - Páginas rediseñadas
 - `lib/supabase/cityContent.ts` - Helpers cliente
 - `scripts/generate-cities.js` - Script automatizado
 - `supabase/city_content_cache.sql` - Schema DB

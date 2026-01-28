@@ -154,11 +154,11 @@ Array de 3 preguntas/respuestas:
 
 🌐 Todas las 42 ciudades remotas ahora tienen contenido único
    Puedes verificar las páginas en:
-   - https://www.hakadogs.com/localidades/cartagena
-   - https://www.hakadogs.com/localidades/alicante
-   - https://www.hakadogs.com/localidades/valencia
-   - https://www.hakadogs.com/localidades/madrid
-   - https://www.hakadogs.com/localidades/barcelona
+   - https://www.hakadogs.com/adiestramiento-canino/cartagena
+   - https://www.hakadogs.com/adiestramiento-canino/alicante
+   - https://www.hakadogs.com/adiestramiento-canino/valencia
+   - https://www.hakadogs.com/adiestramiento-canino/madrid
+   - https://www.hakadogs.com/adiestramiento-canino/barcelona
    ... y 37 más
 
 ✅ Script finalizado
@@ -170,13 +170,13 @@ Después de ejecutar el script, verifica algunas páginas:
 
 ```bash
 # Ciudades problemáticas mencionadas
-https://www.hakadogs.com/localidades/gijon
-https://www.hakadogs.com/localidades/san-javier
+https://www.hakadogs.com/adiestramiento-canino/gijon
+https://www.hakadogs.com/adiestramiento-canino/san-javier
 
 # Otras ciudades remotas
-https://www.hakadogs.com/localidades/madrid
-https://www.hakadogs.com/localidades/barcelona
-https://www.hakadogs.com/localidades/sevilla
+https://www.hakadogs.com/adiestramiento-canino/madrid
+https://www.hakadogs.com/adiestramiento-canino/barcelona
+https://www.hakadogs.com/adiestramiento-canino/sevilla
 ```
 
 ## 🗄️ Estructura en Supabase
@@ -262,7 +262,7 @@ DELETE FROM city_content_cache;
 - `lib/cities.ts` - Definición de ciudades
 - `lib/uniqueCityContent.ts` - Funciones de generación (TypeScript)
 - `lib/supabase/cityContent.ts` - Lectura desde Supabase
-- `app/localidades/[ciudad]/page.tsx` - Renderizado de páginas
+- `app/adiestramiento-canino/[ciudad]/page.tsx` - Renderizado de páginas
 - `supabase/city_content_cache.sql` - Schema de la tabla
 - `docs/seo/SEO_LOCAL_Y_LEGAL.md` - Documentación de estrategia SEO
 - `docs/seo/CONTENIDO_UNICO_COMPLETO.md` - Sistema con IA (OpenAI)

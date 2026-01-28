@@ -331,7 +331,7 @@ Palabras Únicas Promedio:    650-950 por ciudad
 3. `components/LocalTestimonialsSection.tsx` - Testimonios
 4. `lib/cities.ts` - Base de datos 56 ciudades
 5. `lib/extendedCityData.ts` - Contenido extendido 26 ciudades
-6. `app/localidades/[ciudad]/page.tsx` - Página dinámica
+6. `app/adiestramiento-canino/[ciudad]/page.tsx` - Página dinámica
 
 ---
 

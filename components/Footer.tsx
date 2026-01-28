@@ -80,27 +80,27 @@ export default function Footer() {
             <h3 className="font-bold text-base sm:text-lg mb-3 sm:mb-4">Localidades</h3>
             <ul className="space-y-1.5 sm:space-y-2 text-sm">
               <li>
-                <Link href="/localidades/murcia" className="text-gray-300 hover:text-gold transition">
+                <Link href="/adiestramiento-canino/murcia" className="text-gray-300 hover:text-gold transition">
                   Murcia
                 </Link>
               </li>
               <li>
-                <Link href="/localidades/archena" className="text-gray-300 hover:text-gold transition">
+                <Link href="/adiestramiento-canino/archena" className="text-gray-300 hover:text-gold transition">
                   Archena
                 </Link>
               </li>
               <li>
-                <Link href="/localidades/molina-de-segura" className="text-gray-300 hover:text-gold transition">
+                <Link href="/adiestramiento-canino/molina-de-segura" className="text-gray-300 hover:text-gold transition">
                   Molina de Segura
                 </Link>
               </li>
               <li>
-                <Link href="/localidades/cartagena" className="text-gray-300 hover:text-gold transition">
+                <Link href="/adiestramiento-canino/cartagena" className="text-gray-300 hover:text-gold transition">
                   Cartagena
                 </Link>
               </li>
               <li>
-                <Link href="/localidades/lorca" className="text-gray-300 hover:text-gold transition">
+                <Link href="/adiestramiento-canino/lorca" className="text-gray-300 hover:text-gold transition">
                   Lorca
                 </Link>
               </li>
