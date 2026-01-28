@@ -196,6 +196,11 @@ export default function EditarCursoPage() {
     }
   }
 
+  const handleCoverImageRemove = () => {
+    setFormData(prev => ({ ...prev, coverImageUrl: null }))
+    setToast({ message: 'Imagen eliminada. Recuerda guardar los cambios.', type: 'info' })
+  }
+
   const handleGenerateDescription = async () => {
     if (!formData.title.trim()) {
       setToast({ message: 'Por favor, introduce primero el título del curso', type: 'error' })
@@ -492,6 +497,7 @@ export default function EditarCursoPage() {
                           </label>
                           <ImageUpload
                             onUpload={handleCoverImageUpload}
+                            onRemove={handleCoverImageRemove}
                             currentImage={formData.coverImageUrl}
                             label="Imagen de portada del curso"
                             maxSize={5}

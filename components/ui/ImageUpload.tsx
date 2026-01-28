@@ -6,6 +6,7 @@ import { validateImageFile, compressImage } from '@/lib/storage'
 
 interface ImageUploadProps {
   onUpload: (file: File) => Promise<void>
+  onRemove?: () => void  // Nueva prop para manejar la eliminación
   currentImage?: string
   label?: string
   maxSize?: number
@@ -13,7 +14,8 @@ interface ImageUploadProps {
 }
 
 export default function ImageUpload({ 
-  onUpload, 
+  onUpload,
+  onRemove,
   currentImage, 
   label = 'Subir imagen',
   maxSize = 5,
@@ -65,8 +67,13 @@ export default function ImageUpload({
 
   const handleRemove = () => {
     setPreview(null)
+    setError(null)
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
+    }
+    // Llamar al callback de eliminación si existe
+    if (onRemove) {
+      onRemove()
     }
   }
 
