@@ -1,9 +1,36 @@
+import { Metadata } from 'next'
 import Hero from '@/components/Hero'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { GraduationCap, Play, CheckCircle, ArrowRight, BookOpen, Clock, Award } from 'lucide-react'
 import { Suspense } from 'react'
 import { ServicesSkeleton, TestimonialsSkeleton, GallerySkeleton } from '@/components/ui/LoadingSkeleton'
+
+export const metadata: Metadata = {
+  title: 'Hakadogs - Educación Canina Profesional | Archena, Murcia',
+  description: 'Educador canino en Archena y Murcia con +8 años de experiencia. Metodología BE HAKA: educación presencial en Región de Murcia y cursos online España. ¡500+ perros felices!',
+  openGraph: {
+    title: 'Hakadogs - Educación Canina Profesional | Archena, Murcia',
+    description: 'Educador canino en Archena y Murcia con +8 años de experiencia. Metodología BE HAKA: educación presencial en Región de Murcia y cursos online España.',
+    url: 'https://www.hakadogs.com',
+    type: 'website',
+    locale: 'es_ES',
+    images: [
+      {
+        url: 'https://www.hakadogs.com/images/logo_facebook_1200_630.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Hakadogs - Educación Canina Profesional',
+      }
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Hakadogs - Educación Canina Profesional',
+    description: 'Educador canino Archena-Murcia. Metodología BE HAKA, +8 años experiencia, 500+ perros felices.',
+    images: ['https://www.hakadogs.com/images/logo_facebook_1200_630.jpg'],
+  },
+}
 
 // Lazy load componentes below-the-fold para mejorar FCP/LCP
 const ServicesSection = dynamic(() => import('@/components/ServicesSection'))

@@ -1,126 +1,75 @@
 import { Metadata } from 'next'
-import { getBlogPostBySlug } from '@/lib/supabase/blog'
-import Script from 'next/script'
+import { createClient } from '@supabase/supabase-js'
 
-type Props = {
-  params: { slug: string }
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+const supabase = createClient(supabaseUrl, supabaseAnonKey)
+
+interface Props {
+  params: Promise<{ slug: string }>
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params
+  
   try {
-    const post = await getBlogPostBySlug(params.slug)
-    
-    const title = post.seo_title || post.title
-    const description = post.seo_description || post.excerpt || `${post.title} - Blog Hakadogs`
-    const image = post.featured_image_url || 'https://www.hakadogs.com/images/logo_facebook_1200_630.jpg'
-    
+    const { data: post } = await supabase
+      .from('blog_posts')
+      .select('title, excerpt, featured_image_url')
+      .eq('slug', slug)
+      .eq('status', 'published')
+      .single()
+
+    if (!post) {
+      return {
+        title: 'Artículo no encontrado | Hakadogs',
+        description: 'El artículo que buscas no está disponible.',
+      }
+    }
+
     return {
-      title,
-      description,
-      keywords: post.seo_keywords || undefined,
-      alternates: {
-        canonical: `https://www.hakadogs.com/blog/${params.slug}`,
-      },
+      title: `${post.title} | Blog Hakadogs`,
+      description: post.excerpt || 'Artículo de educación canina profesional.',
       openGraph: {
-        title,
-        description,
-        url: `https://www.hakadogs.com/blog/${params.slug}`,
+        title: post.title,
+        description: post.excerpt || 'Artículo de educación canina profesional.',
+        url: `https://www.hakadogs.com/blog/${slug}`,
         type: 'article',
-        publishedTime: post.published_at || undefined,
-        modifiedTime: post.updated_at || undefined,
-        authors: ['Alfredo Gandolfo - Hakadogs'],
-        images: [
+        images: post.featured_image_url ? [
           {
-            url: image,
+            url: post.featured_image_url,
             width: 1200,
             height: 630,
             alt: post.title,
+          }
+        ] : [
+          {
+            url: 'https://www.hakadogs.com/images/logo_facebook_1200_630.jpg',
+            width: 1200,
+            height: 630,
+            alt: 'Hakadogs - Blog de Educación Canina',
           }
         ],
       },
       twitter: {
         card: 'summary_large_image',
-        title,
-        description,
-        images: [image],
+        title: post.title,
+        description: post.excerpt || 'Artículo de educación canina profesional.',
+        images: post.featured_image_url ? [post.featured_image_url] : ['https://www.hakadogs.com/images/logo_facebook_1200_630.jpg'],
       },
     }
   } catch (error) {
     return {
       title: 'Blog | Hakadogs',
-      description: 'Artículos sobre educación canina y adiestramiento.',
+      description: 'Blog de educación canina profesional.',
     }
   }
 }
 
 export default function BlogPostLayout({
   children,
-  params,
 }: {
   children: React.ReactNode
-  params: { slug: string }
 }) {
-  return (
-    <>
-      {children}
-      <ArticleSchema slug={params.slug} />
-    </>
-  )
-}
-
-async function ArticleSchema({ slug }: { slug: string }) {
-  try {
-    const post = await getBlogPostBySlug(slug)
-    
-    const articleSchema = {
-      '@context': 'https://schema.org',
-      '@type': 'Article',
-      headline: post.title,
-      description: post.excerpt || post.seo_description,
-      image: post.featured_image_url || 'https://www.hakadogs.com/images/logo_facebook_1200_630.jpg',
-      datePublished: post.published_at || post.created_at,
-      dateModified: post.updated_at,
-      author: {
-        '@type': 'Person',
-        name: 'Alfredo Gandolfo',
-        url: 'https://www.hakadogs.com/sobre-nosotros',
-        jobTitle: 'Educador Canino Profesional',
-        worksFor: {
-          '@type': 'Organization',
-          name: 'Hakadogs',
-          url: 'https://www.hakadogs.com'
-        }
-      },
-      publisher: {
-        '@type': 'Organization',
-        name: 'Hakadogs',
-        url: 'https://www.hakadogs.com',
-        logo: {
-          '@type': 'ImageObject',
-          url: 'https://www.hakadogs.com/images/logo_definitivo_hakadogs.webp'
-        }
-      },
-      mainEntityOfPage: {
-        '@type': 'WebPage',
-        '@id': `https://www.hakadogs.com/blog/${slug}`
-      },
-      articleBody: post.content,
-      wordCount: post.content.split(/\s+/).length,
-      inLanguage: 'es-ES',
-      about: {
-        '@type': 'Thing',
-        name: 'Educación Canina'
-      }
-    }
-
-    return (
-      <Script
-        id={`article-schema-${slug}`}
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
-      />
-    )
-  } catch (error) {
-    return null
-  }
+  return <>{children}</>
 }

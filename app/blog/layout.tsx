@@ -1,14 +1,11 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Blog - Consejos y Educación Canina | Hakadogs',
-  description: 'Artículos y consejos sobre educación canina, adiestramiento y cuidado de perros. Metodología BE HAKA, trucos, ejercicios y más.',
-  alternates: {
-    canonical: 'https://www.hakadogs.com/blog',
-  },
+  title: 'Blog de Educación Canina - Hakadogs',
+  description: 'Blog de educación canina con consejos profesionales, guías y recursos para educar a tu perro. Artículos sobre adiestramiento, comportamiento y bienestar canino.',
   openGraph: {
-    title: 'Blog - Consejos y Educación Canina | Hakadogs',
-    description: 'Artículos sobre educación canina, adiestramiento y cuidado de perros con metodología BE HAKA.',
+    title: 'Blog de Educación Canina | Hakadogs',
+    description: 'Consejos profesionales, guías y recursos para educar a tu perro. Artículos de expertos en comportamiento canino.',
     url: 'https://www.hakadogs.com/blog',
     images: [
       {
@@ -21,8 +18,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Blog - Consejos y Educación Canina | Hakadogs',
-    description: 'Artículos sobre educación canina y adiestramiento.',
+    title: 'Blog de Educación Canina | Hakadogs',
+    description: 'Consejos profesionales para educar a tu perro.',
     images: ['https://www.hakadogs.com/images/logo_facebook_1200_630.jpg'],
   },
 }
@@ -34,4 +31,3 @@ export default function BlogLayout({
 }) {
   return <>{children}</>
 }
-

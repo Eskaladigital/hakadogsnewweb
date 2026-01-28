@@ -1,29 +1,25 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Cursos Online de Educación Canina | Hakadogs',
-  description: 'Múltiples cursos online de educación canina. Curso gratuito + 11 cursos específicos por problema: sentarse, venir, no tirar de la correa, solucionar mordidas, socialización y más. Acceso 24/7.',
-  keywords: 'cursos educación canina, adiestramiento perros online, cursos perros, enseñar perro sentarse, perro tirar correa, solucionar mordidas perro, BE HAKA',
-  alternates: {
-    canonical: 'https://www.hakadogs.com/cursos',
-  },
+  title: 'Cursos de Educación Canina Online - Hakadogs',
+  description: 'Cursos online de educación canina profesional. +11 cursos específicos por problema: sentarse, venir, tirar correa, mordidas, socialización. Acceso 24/7 en toda España.',
   openGraph: {
-    title: 'Cursos Online de Educación Canina | Hakadogs',
-    description: 'Curso gratuito + 11 cursos específicos por problema. Aprende desde casa con la metodología BE HAKA. Acceso 24/7.',
+    title: 'Cursos de Educación Canina Online | Hakadogs',
+    description: 'Más de 11 cursos online de educación canina. Aprende desde casa con metodología profesional. Curso gratuito disponible.',
     url: 'https://www.hakadogs.com/cursos',
     images: [
       {
         url: 'https://www.hakadogs.com/images/logo_facebook_1200_630.jpg',
         width: 1200,
         height: 630,
-        alt: 'Hakadogs - Cursos Online de Educación Canina',
+        alt: 'Hakadogs - Cursos de Educación Canina',
       }
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Cursos Online de Educación Canina | Hakadogs',
-    description: '11+ cursos específicos por problema. Metodología BE HAKA. Acceso 24/7.',
+    title: 'Cursos de Educación Canina Online | Hakadogs',
+    description: '+11 cursos online específicos por problema. Metodología BE HAKA.',
     images: ['https://www.hakadogs.com/images/logo_facebook_1200_630.jpg'],
   },
 }

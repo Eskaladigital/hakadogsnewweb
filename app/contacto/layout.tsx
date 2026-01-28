@@ -1,14 +1,11 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Contacto - Consulta Gratuita | Hakadogs',
-  description: 'Contacta con Hakadogs para consultas sobre educación canina. Servicios presenciales en Murcia y cursos online. Respuesta en menos de 24 horas. Tel: 685 64 82 41',
-  alternates: {
-    canonical: 'https://www.hakadogs.com/contacto',
-  },
+  title: 'Contacto - Hakadogs',
+  description: 'Contacta con Hakadogs para tu consulta gratuita de educación canina. Teléfono: 685 64 82 41. Archena, Murcia y alrededores. Respuesta en 24 horas.',
   openGraph: {
-    title: 'Contacto - Consulta Gratuita | Hakadogs',
-    description: 'Contacta con Hakadogs para servicios presenciales en Murcia o cursos online. Respuesta en menos de 24 horas.',
+    title: 'Contacto | Hakadogs - Educación Canina Profesional',
+    description: 'Solicita tu consulta gratuita de educación canina. Servicios presenciales en Archena, Murcia y alrededores.',
     url: 'https://www.hakadogs.com/contacto',
     images: [
       {
@@ -22,7 +19,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Contacto | Hakadogs',
-    description: 'Servicios presenciales en Murcia y cursos online. Tel: 685 64 82 41',
+    description: 'Consulta gratuita de educación canina. Archena, Murcia.',
     images: ['https://www.hakadogs.com/images/logo_facebook_1200_630.jpg'],
   },
 }
@@ -34,4 +31,3 @@ export default function ContactoLayout({
 }) {
   return <>{children}</>
 }
-

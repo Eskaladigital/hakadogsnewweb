@@ -7,6 +7,7 @@ import BackToTop from '@/components/ui/BackToTop'
 import WhatsAppChat from '@/components/ui/WhatsAppChat'
 import CookieConsent from '@/components/ui/CookieConsent'
 import { localBusinessSchema, organizationSchema, websiteSchema, serviceSchema } from '@/lib/schema'
+import CanonicalUrl from '@/components/CanonicalUrl'
 
 export const viewport: Viewport = {
   themeColor: '#059669',
@@ -100,6 +101,9 @@ export default function RootLayout({
   return (
     <html lang="es">
       <head>
+        {/* URL Canónica Global - Se genera automáticamente para cada página */}
+        <CanonicalUrl />
+        
         {/* Critical CSS inline - Solo para above the fold */}
         <style dangerouslySetInnerHTML={{__html: `
           :root{--forest-dark:#1a3d23;--forest:#2d5f3a;--sage:#6b8e5f;--gold:#c9a961;--cream:#f9f6f1}
