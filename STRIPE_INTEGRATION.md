@@ -85,6 +85,16 @@ pk_live_51SrLFBLNDfpodT5TimW6Igt0eYYxSQacj0ytP33Z2WpTkgvMts3RzR2NvgdJ3n3aL4D4yWK
 - **Uso:** Se usa para verificar que los webhooks provienen realmente de Stripe
 - **Visible:** NO, solo en el servidor
 
+#### 4. SUPABASE_SERVICE_ROLE_KEY (🔴 CRÍTICO)
+```
+[Tu clave service_role de Supabase - eyJhbGciOi...]
+```
+- **Tipo:** Variable secreta
+- **Uso:** Se usa en el webhook para registrar compras sin autenticación de usuario
+- **Visible:** NO, solo en el servidor
+- ⚠️ **MUY IMPORTANTE:** Esta clave bypasea RLS, nunca exponerla al cliente
+- **Obtener:** Supabase Dashboard → Settings → API → Project API keys → `service_role` secret
+
 ## 🔗 Configuración del Webhook en Stripe
 
 ### Paso 1: Acceder al Dashboard de Stripe
@@ -127,6 +137,7 @@ Después de crear el webhook:
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_51SrLFBLNDfpodT5TimW6Igt0eYYxSQacj0ytP33Z2WpTkgvMts3RzR2NvgdJ3n3aL4D4yWKqTKUKGFA30X9Hw2Jf00ephSAFgi
 STRIPE_SECRET_KEY=sk_live_[TU_CLAVE_SECRETA]
 STRIPE_WEBHOOK_SECRET=whsec_[SE_GENERA_AL_CREAR_WEBHOOK]
+SUPABASE_SERVICE_ROLE_KEY=eyJ[TU_CLAVE_SERVICE_ROLE]
 ```
 
 ### 2. Redesplegar
@@ -225,18 +236,24 @@ En caso de problemas:
 2. Copia el signing secret del webhook
 3. Actualiza `STRIPE_WEBHOOK_SECRET` en Vercel
 
-### Error: "Error registrando compra en BD"
+### Error: "Error registrando compra en BD" (🔴 CRÍTICO)
 
-**Causa:** Problema con las políticas RLS de Supabase
-**Solución:** Verifica que la tabla `course_purchases` permita INSERT para usuarios autenticados
+**Causa:** El webhook no puede insertar en Supabase por problemas de RLS
+**Solución:** 
+1. Verifica que `SUPABASE_SERVICE_ROLE_KEY` esté configurada en Vercel
+2. Verifica que el webhook use `supabaseAdmin` (ver `app/api/stripe/webhook/route.ts`)
+3. Ejecuta el script: `supabase/FIX_COURSE_PURCHASES_RLS.sql`
+4. Ver documentación completa: `DEPLOYMENT_FIX_STRIPE.md`
 
 ### La compra no se registra
 
-**Causa:** El webhook no se está ejecutando
+**Causa:** El webhook no se está ejecutando o falla al insertar
 **Solución:**
 1. Verifica que el endpoint del webhook esté correcto
-2. Revisa los logs del webhook en Stripe
-3. Confirma que el evento `checkout.session.completed` esté seleccionado
+2. Revisa los logs del webhook en Stripe Dashboard
+3. Revisa los logs en Vercel para ver errores específicos
+4. Confirma que el evento `checkout.session.completed` esté seleccionado
+5. **CRÍTICO:** Verifica que tengas `SUPABASE_SERVICE_ROLE_KEY` configurada
 
 ## 📊 Datos que se Registran
 
@@ -278,13 +295,16 @@ Cuando un pago se completa, se crea un registro en `course_purchases`:
 
 ## ✅ Checklist Final
 
-- [ ] Variables de entorno añadidas en Vercel
+- [ ] Variables de entorno añadidas en Vercel (incluyendo `SUPABASE_SERVICE_ROLE_KEY`)
 - [ ] Webhook configurado en Stripe Dashboard
 - [ ] STRIPE_WEBHOOK_SECRET actualizado en Vercel
+- [ ] Webhook usa `supabaseAdmin` con SERVICE_ROLE (verificar código)
+- [ ] Políticas RLS correctas en `course_purchases`
 - [ ] Redespliegue de Vercel realizado
 - [ ] Prueba de compra completada exitosamente
 - [ ] Compra visible en dashboard de admin
 - [ ] Usuario tiene acceso al curso
+- [ ] Logs de Vercel muestran "✅ Compra registrada exitosamente"
 
 ## 🆘 Soporte
 

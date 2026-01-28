@@ -1,12 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
-import { createPurchase } from '@/lib/supabase/courses'
+import { createClient } from '@supabase/supabase-js'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-12-15.clover'
 })
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
+
+// Cliente de Supabase con SERVICE_ROLE para bypass de RLS
+// IMPORTANTE: Solo usar en el servidor, nunca exponer al cliente
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  }
+)
 
 export async function POST(req: NextRequest) {
   try {
@@ -56,28 +69,53 @@ export async function POST(req: NextRequest) {
             )
           }
 
-          // Registrar la compra en la base de datos
+          // Registrar la compra en la base de datos usando SERVICE_ROLE
+          // Esto bypasea las políticas RLS ya que el webhook no tiene sesión de usuario
           try {
-            await createPurchase({
-              user_id: userId,
-              course_id: courseId,
-              price_paid: parseFloat(priceEuros),
-              payment_status: 'completed',
-              payment_method: 'stripe',
-              payment_id: session.payment_intent as string || session.id,
-              purchase_date: new Date().toISOString()
-            })
+            const { data: purchase, error: dbError } = await supabaseAdmin
+              .from('course_purchases')
+              .insert([{
+                user_id: userId,
+                course_id: courseId,
+                price_paid: parseFloat(priceEuros),
+                payment_status: 'completed',
+                payment_method: 'stripe',
+                payment_id: session.payment_intent as string || session.id,
+                purchase_date: new Date().toISOString()
+              }])
+              .select()
+              .single()
+
+            if (dbError) {
+              console.error('❌ Error registrando compra en BD:', {
+                error: dbError,
+                code: dbError.code,
+                message: dbError.message,
+                details: dbError.details
+              })
+              // Importante: retornar 500 para que Stripe reintente
+              return NextResponse.json(
+                { error: 'Error registrando compra', details: dbError.message },
+                { status: 500 }
+              )
+            }
 
             console.log('✅ Compra registrada exitosamente en BD:', {
+              purchaseId: purchase?.id,
               userId,
               courseId,
-              price: priceEuros
+              price: priceEuros,
+              paymentId: session.payment_intent as string || session.id
             })
-          } catch (dbError) {
-            console.error('❌ Error registrando compra en BD:', dbError)
+          } catch (dbError: any) {
+            console.error('❌ Error inesperado registrando compra en BD:', {
+              error: dbError,
+              message: dbError?.message,
+              stack: dbError?.stack
+            })
             // Importante: retornar 500 para que Stripe reintente
             return NextResponse.json(
-              { error: 'Error registrando compra' },
+              { error: 'Error registrando compra', details: dbError?.message || 'Unknown error' },
               { status: 500 }
             )
           }
