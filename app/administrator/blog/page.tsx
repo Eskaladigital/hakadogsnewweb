@@ -155,10 +155,13 @@ export default function AdminBlogPage() {
   // ===== ACCIONES EN LOTE =====
 
   const handleSelectAll = () => {
-    if (selectedPosts.length === filteredPosts.length) {
+    // Solo seleccionar los artículos VISIBLES en la página actual
+    if (selectedPosts.length === paginatedPosts.length && paginatedPosts.every(p => selectedPosts.includes(p.id))) {
+      // Si todos los visibles están seleccionados, deseleccionar todos
       setSelectedPosts([])
     } else {
-      setSelectedPosts(filteredPosts.map(p => p.id))
+      // Seleccionar solo los visibles en la página actual
+      setSelectedPosts(paginatedPosts.map(p => p.id))
     }
   }
 
@@ -190,7 +193,25 @@ export default function AdminBlogPage() {
 
   const handleBulkDelete = async () => {
     if (selectedPosts.length === 0) return
-    if (!confirm(`¿ELIMINAR ${selectedPosts.length} artículos? Esta acción no se puede deshacer.`)) return
+    
+    // Confirmación MUY clara con advertencia
+    const confirmMessage = `⚠️ ¡ATENCIÓN! ⚠️
+
+Estás a punto de ELIMINAR PERMANENTEMENTE ${selectedPosts.length} artículo(s).
+
+Esta acción NO se puede deshacer.
+Los artículos se borrarán de la base de datos para siempre.
+
+¿Estás COMPLETAMENTE SEGURO de que quieres continuar?
+
+Escribe "ELIMINAR" para confirmar:`
+    
+    const userInput = prompt(confirmMessage)
+    
+    if (userInput !== 'ELIMINAR') {
+      alert('❌ Eliminación cancelada. Los artículos están a salvo.')
+      return
+    }
     
     try {
       setSaving(true)
@@ -199,8 +220,10 @@ export default function AdminBlogPage() {
       )
       setSelectedPosts([])
       await loadData()
+      alert(`✅ ${selectedPosts.length} artículo(s) eliminado(s) correctamente`)
     } catch (error) {
       console.error('Error eliminando artículos:', error)
+      alert('❌ Error al eliminar los artículos. Por favor, intenta de nuevo.')
     } finally {
       setSaving(false)
     }
@@ -594,9 +617,10 @@ export default function AdminBlogPage() {
                         <th className="px-4 py-3 text-left">
                           <input
                             type="checkbox"
-                            checked={selectedPosts.length === filteredPosts.length && filteredPosts.length > 0}
+                            checked={paginatedPosts.length > 0 && paginatedPosts.every(p => selectedPosts.includes(p.id))}
                             onChange={handleSelectAll}
                             className="w-4 h-4 text-forest border-gray-300 rounded"
+                            title={`Seleccionar todos (${paginatedPosts.length} visibles en esta página)`}
                           />
                         </th>
                         <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">
