@@ -197,7 +197,7 @@ export default function EditarCursoPage() {
   }
 
   const handleCoverImageRemove = () => {
-    setFormData(prev => ({ ...prev, coverImageUrl: null }))
+    setFormData(prev => ({ ...prev, coverImageUrl: '' }))
     setToast({ message: 'Imagen eliminada. Recuerda guardar los cambios.', type: 'info' })
   }
 
