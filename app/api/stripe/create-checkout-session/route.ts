@@ -10,8 +10,18 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 export async function POST(req: NextRequest) {
   try {
+    console.log('🔍 === STRIPE CHECKOUT DEBUG ===')
+    
     // Crear cliente de Supabase para el servidor
     const cookieStore = await cookies()
+    
+    // Log todas las cookies disponibles
+    const allCookies = cookieStore.getAll()
+    console.log('🍪 Todas las cookies recibidas:', allCookies.map(c => ({ name: c.name, hasValue: !!c.value, valueLength: c.value?.length })))
+    
+    // Buscar cookies de Supabase específicamente
+    const supabaseCookies = allCookies.filter(c => c.name.includes('supabase') || c.name.includes('sb-'))
+    console.log('🔐 Cookies de Supabase encontradas:', supabaseCookies.map(c => c.name))
     
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -19,25 +29,48 @@ export async function POST(req: NextRequest) {
       {
         cookies: {
           get(name: string) {
-            return cookieStore.get(name)?.value
+            const value = cookieStore.get(name)?.value
+            console.log(`  📖 Cookie get("${name}"): ${value ? `${value.substring(0, 20)}...` : 'undefined'}`)
+            return value
           },
           set(name: string, value: string, options: any) {
-            cookieStore.set({ name, value, ...options })
+            try {
+              cookieStore.set({ name, value, ...options })
+            } catch (e) {
+              console.log(`  ⚠️ No se pudo setear cookie "${name}"`)
+            }
           },
           remove(name: string, options: any) {
-            cookieStore.set({ name, value: '', ...options })
+            try {
+              cookieStore.set({ name, value: '', ...options })
+            } catch (e) {
+              console.log(`  ⚠️ No se pudo eliminar cookie "${name}"`)
+            }
           },
         },
       }
     )
     
     // Verificar autenticación
-    const { data: { session: userSession } } = await supabase.auth.getSession()
+    console.log('🔑 Verificando sesión de Supabase...')
+    const { data: { session: userSession }, error: sessionError } = await supabase.auth.getSession()
+    
+    if (sessionError) {
+      console.error('❌ Error al obtener sesión:', sessionError)
+    }
+    
+    console.log('📋 Resultado getSession:', {
+      hasSession: !!userSession,
+      userId: userSession?.user?.id,
+      userEmail: userSession?.user?.email,
+      expiresAt: userSession?.expires_at
+    })
     
     if (!userSession) {
       console.error('❌ No hay sesión autenticada en el servidor')
+      console.error('❌ Cookies presentes:', allCookies.map(c => c.name).join(', '))
       return NextResponse.json(
-        { error: 'No autenticado' },
+        { error: 'No autenticado', debug: { cookiesPresent: allCookies.map(c => c.name) } },
         { status: 401 }
       )
     }
