@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { ArrowLeft, ShoppingCart, CheckCircle, CreditCard, Lock, Clock, Loader2, AlertCircle, BookOpen, GraduationCap, ChevronRight } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { getSession } from '@/lib/supabase/auth'
-import { getCourseBySlug, hasPurchasedCourse, createPurchase, getCourseModules, courseHasModules } from '@/lib/supabase/courses'
+import { getCourseBySlug, hasPurchasedCourse, getCourseModules, courseHasModules } from '@/lib/supabase/courses'
 import type { Course, CourseModule, Lesson } from '@/lib/supabase/courses'
 import { supabase } from '@/lib/supabase/client'
 
@@ -17,8 +17,6 @@ export default function ComprarCursoPage({ params }: { params: { cursoId: string
   const [curso, setCurso] = useState<Course | null>(null)
   const [userId, setUserId] = useState<string | null>(null)
   const [alreadyPurchased, setAlreadyPurchased] = useState(false)
-  const [step, setStep] = useState<'info' | 'payment' | 'success'>('info')
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'paypal'>('card')
   const [error, setError] = useState<string | null>(null)
   const [processing, setProcessing] = useState(false)
   const [courseModules, setCourseModules] = useState<CourseModule[]>([])
@@ -138,26 +136,33 @@ export default function ComprarCursoPage({ params }: { params: { cursoId: string
     setError(null)
 
     try {
-      // Aquí iría la integración real con Stripe
-      // Por ahora, simulamos el pago y registramos directamente
-      
-      // Registrar la compra en la BD
-      await createPurchase({
-        user_id: userId,
-        course_id: curso.id,
-        price_paid: curso.price,
-        payment_status: 'completed',
-        payment_method: paymentMethod,
-        payment_id: `mock_${Date.now()}`, // En producción vendría de Stripe
-        purchase_date: new Date().toISOString()
+      // Crear sesión de checkout en Stripe
+      const response = await fetch('/api/stripe/create-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          courseId: curso.id,
+        }),
       })
 
-      // Éxito
-      setStep('success')
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Error al crear sesión de pago')
+      }
+
+      const { sessionId, url } = await response.json()
+
+      // Redirigir a Stripe Checkout usando la URL
+      if (url) {
+        window.location.href = url
+      } else {
+        throw new Error('No se recibió URL de pago')
+      }
     } catch (error) {
       console.error('Error al procesar la compra:', error)
-      setError('Error al procesar el pago. Por favor, intenta de nuevo.')
-    } finally {
+      setError(error instanceof Error ? error.message : 'Error al procesar el pago. Por favor, intenta de nuevo.')
       setProcessing(false)
     }
   }
@@ -239,46 +244,6 @@ export default function ComprarCursoPage({ params }: { params: { cursoId: string
           >
             Ir al Curso
           </Link>
-        </div>
-      </div>
-    )
-  }
-
-  if (step === 'success') {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white pt-20 flex items-center">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="max-w-2xl mx-auto text-center"
-          >
-            <div className="bg-white rounded-2xl shadow-2xl p-12">
-              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <CheckCircle className="w-12 h-12 text-green-600" />
-              </div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-4">
-                ¡Compra Realizada con Éxito!
-              </h1>
-              <p className="text-xl text-gray-600 mb-8">
-                Ya tienes acceso al curso <span className="font-semibold">&quot;{curso.title}&quot;</span>
-              </p>
-              <div className="space-y-4">
-                <Link
-                  href={`/cursos/mi-escuela/${curso.slug}`}
-                  className="block w-full bg-gradient-to-r from-forest to-sage text-white font-bold py-4 px-6 rounded-lg hover:opacity-90 transition-all"
-                >
-                  Comenzar Curso Ahora
-                </Link>
-                <Link
-                  href="/cursos/mi-escuela"
-                  className="block w-full bg-gray-100 text-gray-700 font-semibold py-4 px-6 rounded-lg hover:bg-gray-200 transition-all"
-                >
-                  Ir a Mi Escuela
-                </Link>
-              </div>
-            </div>
-          </motion.div>
         </div>
       </div>
     )
@@ -523,127 +488,6 @@ export default function ComprarCursoPage({ params }: { params: { cursoId: string
                   )}
                 </div>
               </div>
-
-              {step === 'payment' && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-white rounded-xl shadow-lg p-8"
-                >
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6">Método de Pago</h2>
-
-                  <div className="space-y-4 mb-6">
-                    <button
-                      onClick={() => setPaymentMethod('card')}
-                      disabled={processing}
-                      className={`w-full p-4 rounded-lg border-2 transition-all flex items-center ${
-                        paymentMethod === 'card'
-                          ? 'border-forest bg-forest/5'
-                          : 'border-gray-200 hover:border-gray-300'
-                      }`}
-                    >
-                      <CreditCard className="w-6 h-6 mr-3" />
-                      <div className="text-left">
-                        <div className="font-semibold">Tarjeta de Crédito/Débito</div>
-                        <div className="text-sm text-gray-600">Visa, Mastercard, American Express</div>
-                      </div>
-                    </button>
-
-                    <button
-                      onClick={() => setPaymentMethod('paypal')}
-                      disabled={processing}
-                      className={`w-full p-4 rounded-lg border-2 transition-all flex items-center ${
-                        paymentMethod === 'paypal'
-                          ? 'border-forest bg-forest/5'
-                          : 'border-gray-200 hover:border-gray-300'
-                      }`}
-                    >
-                      <div className="w-6 h-6 mr-3 flex items-center justify-center">
-                        <span className="text-2xl">💳</span>
-                      </div>
-                      <div className="text-left">
-                        <div className="font-semibold">PayPal</div>
-                        <div className="text-sm text-gray-600">Pago seguro con PayPal</div>
-                      </div>
-                    </button>
-                  </div>
-
-                  {paymentMethod === 'card' && (
-                    <div className="space-y-4 mb-6">
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
-                          Número de tarjeta
-                        </label>
-                        <input
-                          type="text"
-                          placeholder="1234 5678 9012 3456"
-                          disabled={processing}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
-                        />
-                      </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">
-                            Fecha de expiración
-                          </label>
-                          <input
-                            type="text"
-                            placeholder="MM/AA"
-                            disabled={processing}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">
-                            CVV
-                          </label>
-                          <input
-                            type="text"
-                            placeholder="123"
-                            disabled={processing}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
-                          Nombre en la tarjeta
-                        </label>
-                        <input
-                          type="text"
-                          placeholder="Juan Pérez"
-                          disabled={processing}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
-                        />
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="flex items-center text-sm text-gray-600 mb-6">
-                    <Lock className="w-4 h-4 mr-2" />
-                    Pago 100% seguro y encriptado
-                  </div>
-
-                  <button
-                    onClick={handleComprarCurso}
-                    disabled={processing}
-                    className="w-full bg-gradient-to-r from-forest to-sage text-white font-bold py-4 px-6 rounded-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-                  >
-                    {processing ? (
-                      <>
-                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                        Procesando...
-                      </>
-                    ) : (
-                      <>Completar Compra - {curso.price.toFixed(2)}€ (IVA incluido)</>
-                    )}
-                  </button>
-
-                  <p className="text-xs text-gray-500 mt-4 text-center">
-                    Al completar la compra, aceptas nuestros términos y condiciones. El acceso al curso será inmediato.
-                  </p>
-                </motion.div>
-              )}
             </div>
 
             {/* Resumen de Compra */}
@@ -667,15 +511,28 @@ export default function ComprarCursoPage({ params }: { params: { cursoId: string
                   </div>
                 </div>
 
-                {step === 'info' ? (
-                  <button
-                    onClick={() => setStep('payment')}
-                    className="w-full bg-gradient-to-r from-forest to-sage text-white font-bold py-4 px-6 rounded-lg hover:opacity-90 transition-all flex items-center justify-center mb-4"
-                  >
-                    <ShoppingCart className="w-5 h-5 mr-2" />
-                    Proceder al Pago
-                  </button>
-                ) : null}
+                <button
+                  onClick={handleComprarCurso}
+                  disabled={processing}
+                  className="w-full bg-gradient-to-r from-forest to-sage text-white font-bold py-4 px-6 rounded-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center mb-4"
+                >
+                  {processing ? (
+                    <>
+                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                      Redirigiendo al pago...
+                    </>
+                  ) : (
+                    <>
+                      <ShoppingCart className="w-5 h-5 mr-2" />
+                      Proceder al Pago Seguro
+                    </>
+                  )}
+                </button>
+
+                <div className="flex items-center justify-center text-sm text-gray-600 mb-4">
+                  <Lock className="w-4 h-4 mr-2" />
+                  <span>Pago 100% seguro con Stripe</span>
+                </div>
 
                 <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
                   <h4 className="font-semibold text-amber-900 mb-2 flex items-center">
