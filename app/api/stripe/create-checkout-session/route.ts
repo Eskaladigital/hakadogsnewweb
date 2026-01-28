@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
-import { getSession } from '@/lib/supabase/auth'
 import { getCourseById } from '@/lib/supabase/courses'
+import { cookies } from 'next/headers'
+import { createClient } from '@supabase/supabase-js'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-12-15.clover'
@@ -9,17 +10,36 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 export async function POST(req: NextRequest) {
   try {
+    // Crear cliente de Supabase para el servidor con las cookies
+    const cookieStore = cookies()
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        auth: {
+          persistSession: false
+        },
+        global: {
+          headers: {
+            cookie: cookieStore.toString()
+          }
+        }
+      }
+    )
+    
     // Verificar autenticación
-    const { data: sessionData } = await getSession()
-    if (!sessionData?.session) {
+    const { data: { session: userSession } } = await supabase.auth.getSession()
+    
+    if (!userSession) {
+      console.error('❌ No hay sesión autenticada en el servidor')
       return NextResponse.json(
         { error: 'No autenticado' },
         { status: 401 }
       )
     }
 
-    const userId = sessionData.session.user.id
-    const userEmail = sessionData.session.user.email
+    const userId = userSession.user.id
+    const userEmail = userSession.user.email
 
     // Obtener datos del body
     const { courseId } = await req.json()

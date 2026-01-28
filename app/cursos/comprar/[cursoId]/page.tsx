@@ -77,7 +77,7 @@ export default function ComprarCursoPage({ params }: { params: { cursoId: string
             const lessonsMap: Record<string, Lesson[]> = {}
             for (const courseModule of modules) {
               const { data: lessons } = await supabase
-                .from('lessons')
+                .from('course_lessons')
                 .select('*')
                 .eq('course_id', courseData.id)
                 .eq('module_id', courseModule.id)
@@ -91,7 +91,7 @@ export default function ComprarCursoPage({ params }: { params: { cursoId: string
 
             // Cargar lecciones sin módulo
             const { data: lessonsNoModule } = await supabase
-              .from('lessons')
+              .from('course_lessons')
               .select('*')
               .eq('course_id', courseData.id)
               .is('module_id', null)
@@ -103,7 +103,7 @@ export default function ComprarCursoPage({ params }: { params: { cursoId: string
           } else {
             // Sin módulos, cargar todas las lecciones
             const { data: allLessons } = await supabase
-              .from('lessons')
+              .from('course_lessons')
               .select('*')
               .eq('course_id', courseData.id)
               .order('order_index')
