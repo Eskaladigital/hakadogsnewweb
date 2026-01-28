@@ -287,7 +287,12 @@ export default function ComprarCursoPage({ params }: { params: { cursoId: string
                 <div className={`bg-gradient-to-r ${colorGradient} rounded-xl p-8 text-white mb-8`}>
                   <div className="mb-6">
                     <h1 className="text-3xl font-bold mb-2">{curso.title}</h1>
-                    <p className="text-white/90 text-lg">{curso.short_description || curso.description}</p>
+                    <div 
+                      className="text-white/90 text-lg [&>p]:m-0" 
+                      dangerouslySetInnerHTML={{ 
+                        __html: curso.short_description || curso.description || '' 
+                      }} 
+                    />
                   </div>
                   <div className="flex items-center space-x-6 text-sm">
                     <span className="flex items-center">
