@@ -819,20 +819,6 @@ Escribe "ELIMINAR" para confirmar:`
                         </tr>
                       ))}
                     </tbody>
-                                className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
-                                title="Eliminar"
-                              >
-                                {actionLoading === post.id ? (
-                                  <Loader2 className="w-4 h-4 animate-spin" />
-                                ) : (
-                                  <Trash2 className="w-4 h-4" />
-                                )}
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
                   </table>
                 </div>
               )}
