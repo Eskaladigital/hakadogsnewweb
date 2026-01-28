@@ -599,6 +599,46 @@ export default function CursoDetailPage({ params }: { params: { cursoId: string 
         </div>
       </div>
 
+      {/* Imagen de Portada Destacada - NUEVA SECCIÓN */}
+      {curso.cover_image_url && (
+        <div className="bg-gray-50 border-b border-gray-200">
+          <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
+            <div className="max-w-7xl mx-auto">
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+                <img
+                  src={curso.cover_image_url}
+                  alt={curso.title}
+                  className="w-full h-auto object-cover"
+                  style={{ maxHeight: '500px', minHeight: '300px' }}
+                />
+                {/* Overlay sutil con título */}
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent p-6 sm:p-8">
+                  <div className="flex items-center gap-4 text-white">
+                    <div className={`w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br ${colorGradient} rounded-2xl flex items-center justify-center shadow-lg`}>
+                      <BookOpen className="w-6 h-6 sm:w-8 sm:h-8" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight drop-shadow-lg">
+                        {curso.title}
+                      </h2>
+                      <div className="flex flex-wrap gap-3 mt-2">
+                        <span className="backdrop-blur-sm bg-white/20 px-3 py-1 rounded-full text-sm font-semibold">
+                          {getDifficultyLabel(curso.difficulty)}
+                        </span>
+                        <span className="backdrop-blur-sm bg-white/20 px-3 py-1 rounded-full text-sm font-semibold flex items-center">
+                          <Clock className="w-4 h-4 mr-2" />
+                          {curso.duration_minutes} min
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Breadcrumb */}
       <div className="bg-gradient-to-r from-gray-50 to-white border-b border-gray-200">
         <div className="container mx-auto px-4 sm:px-6 py-2 sm:py-3 md:py-4">
