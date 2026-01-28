@@ -146,7 +146,57 @@ const nextConfig = {
           },
         ],
       },
-      // Páginas HTML - caché corta con revalidación inteligente
+      // Páginas del administrador - SIN CACHÉ para ver cambios inmediatamente
+      {
+        source: '/administrator/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+          },
+          {
+            key: 'Pragma',
+            value: 'no-cache'
+          },
+          {
+            key: 'Expires',
+            value: '0'
+          },
+          {
+            key: 'X-DNS-Prefetch-Control',
+            value: 'on'
+          },
+          {
+            key: 'Link',
+            value: '<https://jshqrsnzxzbizgjyfsde.supabase.co>; rel=preconnect; crossorigin, <https://www.googletagmanager.com>; rel=preconnect'
+          },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=63072000; includeSubDomains; preload'
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff'
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN'
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin'
+          },
+          {
+            key: 'Content-Security-Policy',
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://cdn.tiny.cloud; style-src 'self' 'unsafe-inline' https://cdn.tiny.cloud https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' data: https://cdn.tiny.cloud https://fonts.gstatic.com; connect-src 'self' https://*.supabase.co https://jshqrsnzxzbizgjyfsde.supabase.co https://www.google-analytics.com https://region1.google-analytics.com https://api.openai.com https://cdn.tiny.cloud https://www.googletagmanager.com; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';"
+          },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=(), magnetometer=(), gyroscope=(), accelerometer=()'
+          }
+        ],
+      },
+      // Páginas HTML públicas - caché corta con revalidación inteligente
       {
         source: '/:path*',
         headers: [
