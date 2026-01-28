@@ -136,11 +136,21 @@ export default function ComprarCursoPage({ params }: { params: { cursoId: string
     setError(null)
 
     try {
-      // Crear sesión de checkout en Stripe
+      // Obtener el token de sesión de Supabase
+      const { data: { session } } = await supabase.auth.getSession()
+      
+      if (!session?.access_token) {
+        setError('Tu sesión ha expirado. Por favor, inicia sesión de nuevo.')
+        router.push(`/cursos/auth/login?redirect=/cursos/comprar/${cursoId}`)
+        return
+      }
+
+      // Crear sesión de checkout en Stripe con el token de autorización
       const response = await fetch('/api/stripe/create-checkout-session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
         },
         body: JSON.stringify({
           courseId: curso.id,

@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { getCourseById } from '@/lib/supabase/courses'
-import { createServerClient } from '@supabase/ssr'
-import { cookies } from 'next/headers'
+import { createClient } from '@supabase/supabase-js'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-12-15.clover'
@@ -10,75 +9,50 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 export async function POST(req: NextRequest) {
   try {
-    console.log('🔍 === STRIPE CHECKOUT DEBUG ===')
+    console.log('🔍 === STRIPE CHECKOUT ===')
     
-    // Crear cliente de Supabase para el servidor
-    const cookieStore = await cookies()
+    // Obtener el token de autorización del header
+    const authHeader = req.headers.get('authorization')
     
-    // Log todas las cookies disponibles
-    const allCookies = cookieStore.getAll()
-    console.log('🍪 Todas las cookies recibidas:', allCookies.map(c => ({ name: c.name, hasValue: !!c.value, valueLength: c.value?.length })))
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      console.error('❌ No se recibió token de autorización')
+      return NextResponse.json(
+        { error: 'No autenticado - Token requerido' },
+        { status: 401 }
+      )
+    }
     
-    // Buscar cookies de Supabase específicamente
-    const supabaseCookies = allCookies.filter(c => c.name.includes('supabase') || c.name.includes('sb-'))
-    console.log('🔐 Cookies de Supabase encontradas:', supabaseCookies.map(c => c.name))
+    const token = authHeader.replace('Bearer ', '')
+    console.log('🔑 Token recibido:', token.substring(0, 20) + '...')
     
-    const supabase = createServerClient(
+    // Crear cliente de Supabase y verificar el token
+    const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
-        cookies: {
-          get(name: string) {
-            const value = cookieStore.get(name)?.value
-            console.log(`  📖 Cookie get("${name}"): ${value ? `${value.substring(0, 20)}...` : 'undefined'}`)
-            return value
-          },
-          set(name: string, value: string, options: any) {
-            try {
-              cookieStore.set({ name, value, ...options })
-            } catch (e) {
-              console.log(`  ⚠️ No se pudo setear cookie "${name}"`)
-            }
-          },
-          remove(name: string, options: any) {
-            try {
-              cookieStore.set({ name, value: '', ...options })
-            } catch (e) {
-              console.log(`  ⚠️ No se pudo eliminar cookie "${name}"`)
-            }
-          },
-        },
+        global: {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
       }
     )
     
-    // Verificar autenticación
-    console.log('🔑 Verificando sesión de Supabase...')
-    const { data: { session: userSession }, error: sessionError } = await supabase.auth.getSession()
+    // Obtener el usuario desde el token
+    const { data: { user }, error: userError } = await supabase.auth.getUser(token)
     
-    if (sessionError) {
-      console.error('❌ Error al obtener sesión:', sessionError)
-    }
-    
-    console.log('📋 Resultado getSession:', {
-      hasSession: !!userSession,
-      userId: userSession?.user?.id,
-      userEmail: userSession?.user?.email,
-      expiresAt: userSession?.expires_at
-    })
-    
-    if (!userSession) {
-      console.error('❌ No hay sesión autenticada en el servidor')
-      console.error('❌ Cookies presentes:', allCookies.map(c => c.name).join(', '))
+    if (userError || !user) {
+      console.error('❌ Token inválido o expirado:', userError?.message)
       return NextResponse.json(
-        { error: 'No autenticado', debug: { cookiesPresent: allCookies.map(c => c.name) } },
+        { error: 'Token inválido o sesión expirada' },
         { status: 401 }
       )
     }
 
-    console.log('✅ Usuario autenticado:', userSession.user.email)
-
-    const userId = userSession.user.id
-    const userEmail = userSession.user.email
+    console.log('✅ Usuario autenticado:', user.email)
+    
+    const userId = user.id
+    const userEmail = user.email
 
     // Obtener datos del body
     const { courseId } = await req.json()
