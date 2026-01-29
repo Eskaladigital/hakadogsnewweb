@@ -127,11 +127,16 @@ export default function BlogPage() {
   // Obtener posts populares (ordenados por vistas) desde todos los posts
   const popularPosts = [...allPosts].sort((a, b) => b.views_count - a.views_count).slice(0, 5)
 
-  // Lógica de paginación
-  const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE)
+  // Filtrar el post destacado de la lista principal (ya se muestra arriba)
+  const postsForGrid = (!searchQuery && featuredPosts.length > 0)
+    ? posts.filter(post => post.id !== featuredPosts[0].id)
+    : posts
+
+  // Lógica de paginación (sobre los posts filtrados)
+  const totalPages = Math.ceil(postsForGrid.length / POSTS_PER_PAGE)
   const startIndex = (currentPage - 1) * POSTS_PER_PAGE
   const endIndex = startIndex + POSTS_PER_PAGE
-  const paginatedPosts = posts.slice(startIndex, endIndex)
+  const paginatedPosts = postsForGrid.slice(startIndex, endIndex)
 
   const goToPage = (page: number) => {
     setCurrentPage(page)
@@ -264,52 +269,49 @@ export default function BlogPage() {
               <>
                 <div className="grid md:grid-cols-2 gap-4 sm:gap-6 w-full overflow-hidden">
                   {paginatedPosts.map((post) => (
-                    // Saltar el primer post si es featured, no hay búsqueda y estamos en página 1
-                    (!searchQuery && currentPage === 1 && featuredPosts.length > 0 && post.id === featuredPosts[0].id) ? null : (
-                      <Link
-                        key={post.id}
-                        href={`/blog/${post.slug}`}
-                        className="group block bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300 border border-gray-100 flex flex-col w-full"
-                      >
-                        {post.featured_image_url && (
-                          <div className="aspect-video bg-gray-200 overflow-hidden relative">
-                            <Image
-                              src={post.featured_image_url}
-                              alt={post.title}
-                              fill
-                              className="object-cover group-hover:scale-105 transition-transform duration-300"
-                              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 400px"
-                              loading="lazy"
-                              quality={80}
-                            />
-                          </div>
-                        )}
-                        <div className="p-6 flex flex-col flex-1">
-                          {post.category && (
-                            <span
-                              className="inline-block px-3 py-1 rounded-full text-xs font-semibold text-white mb-3 w-fit"
-                              style={{ backgroundColor: post.category.color }}
-                            >
-                              {post.category.name}
-                            </span>
-                          )}
-                          <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-forest transition line-clamp-2">
-                            {post.title}
-                          </h3>
-                          <p className="text-sm text-gray-600 mb-4 line-clamp-3 flex-1">{post.excerpt}</p>
-                          <div className="flex items-center gap-4 text-sm text-gray-500 mt-auto">
-                            <span className="flex items-center">
-                              <Calendar className="w-4 h-4 mr-1.5" />
-                              {formatDate(post.published_at || post.created_at)}
-                            </span>
-                            <span className="flex items-center">
-                              <Clock className="w-4 h-4 mr-1.5" />
-                              {post.reading_time_minutes} min
-                            </span>
-                          </div>
+                    <Link
+                      key={post.id}
+                      href={`/blog/${post.slug}`}
+                      className="group block bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300 border border-gray-100 flex flex-col w-full"
+                    >
+                      {post.featured_image_url && (
+                        <div className="aspect-video bg-gray-200 overflow-hidden relative">
+                          <Image
+                            src={post.featured_image_url}
+                            alt={post.title}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-300"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 400px"
+                            loading="lazy"
+                            quality={80}
+                          />
                         </div>
-                      </Link>
-                    )
+                      )}
+                      <div className="p-6 flex flex-col flex-1">
+                        {post.category && (
+                          <span
+                            className="inline-block px-3 py-1 rounded-full text-xs font-semibold text-white mb-3 w-fit"
+                            style={{ backgroundColor: post.category.color }}
+                          >
+                            {post.category.name}
+                          </span>
+                        )}
+                        <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-forest transition line-clamp-2">
+                          {post.title}
+                        </h3>
+                        <p className="text-sm text-gray-600 mb-4 line-clamp-3 flex-1">{post.excerpt}</p>
+                        <div className="flex items-center gap-4 text-sm text-gray-500 mt-auto">
+                          <span className="flex items-center">
+                            <Calendar className="w-4 h-4 mr-1.5" />
+                            {formatDate(post.published_at || post.created_at)}
+                          </span>
+                          <span className="flex items-center">
+                            <Clock className="w-4 h-4 mr-1.5" />
+                            {post.reading_time_minutes} min
+                          </span>
+                        </div>
+                      </div>
+                    </Link>
                   ))}
                 </div>
 
@@ -391,7 +393,7 @@ export default function BlogPage() {
                 {/* Info de paginación */}
                 {totalPages > 1 && (
                   <p className="text-center text-sm text-gray-500 mt-4">
-                    Mostrando {startIndex + 1}-{Math.min(endIndex, posts.length)} de {posts.length} artículos
+                    Mostrando {startIndex + 1}-{Math.min(endIndex, postsForGrid.length)} de {postsForGrid.length} artículos
                   </p>
                 )}
               </>
