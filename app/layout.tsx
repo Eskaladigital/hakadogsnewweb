@@ -128,9 +128,12 @@ export default function RootLayout({
         {/* DNS Prefetch y Preconnect a dominios externos críticos */}
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://jshqrsnzxzbizgjyfsde.supabase.co" />
+        <link rel="dns-prefetch" href="https://pfmqkioftagjnxqyrngk.supabase.co" />
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         
+        {/* Preconnect para Supabase API y Storage (imágenes de cursos) */}
         <link rel="preconnect" href="https://jshqrsnzxzbizgjyfsde.supabase.co" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://pfmqkioftagjnxqyrngk.supabase.co" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
         
         {/* Schema.org Structured Data - Datos estructurados para SEO */}

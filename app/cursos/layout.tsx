@@ -29,5 +29,12 @@ export default function CursosLayout({
 }: {
   children: React.ReactNode
 }) {
-  return <>{children}</>
+  return (
+    <>
+      {/* Preconnect para optimizar LCP de imágenes de Supabase Storage */}
+      <link rel="preconnect" href="https://pfmqkioftagjnxqyrngk.supabase.co" crossOrigin="anonymous" />
+      <link rel="dns-prefetch" href="https://pfmqkioftagjnxqyrngk.supabase.co" />
+      {children}
+    </>
+  )
 }

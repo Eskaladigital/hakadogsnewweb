@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { BookOpen, CheckCircle, Clock, GraduationCap, Target, PlayCircle, ArrowLeft } from 'lucide-react'
 import { createClient } from '@supabase/supabase-js'
 import type { Course, CourseModule, Lesson } from '@/lib/supabase/courses'
@@ -228,13 +229,17 @@ export default async function CursoPage({ params }: Props) {
 
       {/* Hero del curso - DISEÑO MEJORADO */}
       <section className="relative bg-gradient-to-br from-forest via-sage to-forest-dark overflow-hidden">
-        {/* Imagen de fondo con overlay si existe */}
+        {/* Imagen de fondo con overlay si existe - OPTIMIZADA PARA LCP */}
         {course.cover_image_url && (
           <div className="absolute inset-0">
-            <img 
+            <Image 
               src={course.cover_image_url} 
               alt={course.title}
-              className="w-full h-full object-cover opacity-20"
+              fill
+              priority
+              fetchPriority="high"
+              sizes="100vw"
+              className="object-cover opacity-20"
             />
             <div className="absolute inset-0 bg-gradient-to-br from-forest/95 via-sage/90 to-forest-dark/95"></div>
           </div>
@@ -282,18 +287,21 @@ export default async function CursoPage({ params }: Props) {
                 </div>
               </div>
 
-              {/* Columna derecha: Imagen destacada (solo desktop) */}
+              {/* Columna derecha: Imagen destacada (solo desktop) - OPTIMIZADA */}
               {course.cover_image_url && (
                 <div className="hidden lg:block">
-                  <div className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white/20 backdrop-blur-sm">
-                    <img 
+                  <div className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white/20 backdrop-blur-sm aspect-[4/3]">
+                    <Image 
                       src={course.cover_image_url} 
                       alt={course.title}
-                      className="w-full h-auto object-cover"
-                      style={{ maxHeight: '500px' }}
+                      fill
+                      priority
+                      fetchPriority="high"
+                      sizes="(min-width: 1024px) 50vw, 100vw"
+                      className="object-cover"
                     />
                     {course.is_free && (
-                      <div className="absolute top-4 right-4">
+                      <div className="absolute top-4 right-4 z-10">
                         <span className="bg-gold text-white px-6 py-3 rounded-full text-lg font-bold shadow-lg">
                           GRATUITO
                         </span>

@@ -168,7 +168,7 @@ const nextConfig = {
           },
           {
             key: 'Link',
-            value: '<https://jshqrsnzxzbizgjyfsde.supabase.co>; rel=preconnect; crossorigin, <https://www.googletagmanager.com>; rel=preconnect'
+            value: '<https://pfmqkioftagjnxqyrngk.supabase.co>; rel=preconnect; crossorigin, <https://jshqrsnzxzbizgjyfsde.supabase.co>; rel=preconnect; crossorigin, <https://www.googletagmanager.com>; rel=preconnect'
           },
           {
             key: 'Strict-Transport-Security',
@@ -228,7 +228,7 @@ const nextConfig = {
           },
           {
             key: 'Link',
-            value: '<https://jshqrsnzxzbizgjyfsde.supabase.co>; rel=preconnect; crossorigin, <https://www.googletagmanager.com>; rel=preconnect'
+            value: '<https://pfmqkioftagjnxqyrngk.supabase.co>; rel=preconnect; crossorigin, <https://jshqrsnzxzbizgjyfsde.supabase.co>; rel=preconnect; crossorigin, <https://www.googletagmanager.com>; rel=preconnect'
           },
           {
             key: 'Strict-Transport-Security',

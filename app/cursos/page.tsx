@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { BookOpen, Download, ShoppingCart, CheckCircle, Mail, Clock, Loader2, ChevronDown, MapPin, Phone, ArrowRight, Info, PlayCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { getAllCourses } from '@/lib/supabase/courses'
@@ -171,13 +172,16 @@ export default function CursosPage() {
                   className="bg-gradient-to-br from-gold to-yellow-400 rounded-2xl shadow-2xl overflow-hidden"
                 >
                   <div className="grid lg:grid-cols-2 gap-0">
-                    {/* Columna izquierda: Imagen de portada */}
+                    {/* Columna izquierda: Imagen de portada - OPTIMIZADA */}
                     {curso.cover_image_url && (
                       <div className="relative h-64 lg:h-auto min-h-[400px] overflow-hidden">
-                        <img
+                        <Image
                           src={curso.cover_image_url}
                           alt={curso.title}
-                          className="absolute inset-0 w-full h-full object-cover"
+                          fill
+                          priority={index === 0}
+                          sizes="(max-width: 1024px) 100vw, 50vw"
+                          className="object-cover"
                         />
                         {/* Overlay gradiente */}
                         <div className="absolute inset-0 bg-gradient-to-br from-gold/40 via-yellow-400/30 to-amber-500/40"></div>
@@ -332,14 +336,16 @@ export default function CursosPage() {
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all flex flex-col border border-gray-100"
                   >
-                    {/* Imagen de portada */}
+                    {/* Imagen de portada - OPTIMIZADA */}
                     {curso.cover_image_url && (
                       <Link href={`/cursos/${curso.slug}`} className="block">
                         <div className="relative w-full h-48 overflow-hidden bg-gray-100">
-                          <img 
+                          <Image 
                             src={curso.cover_image_url} 
                             alt={curso.title}
-                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                            fill
+                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                            className="object-cover hover:scale-105 transition-transform duration-300"
                           />
                           <div className="absolute top-3 right-3">
                             <span className={`px-3 py-1 rounded-full text-xs font-semibold ${difficultyColor} bg-opacity-90 backdrop-blur-sm`}>
