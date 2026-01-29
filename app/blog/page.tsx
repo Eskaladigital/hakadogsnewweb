@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Calendar, Clock, Eye, Search, Tag, Filter, Loader2, ArrowRight, TrendingUp, Star } from 'lucide-react'
+import { Calendar, Clock, Eye, Search, Tag, Filter, Loader2, ArrowRight, TrendingUp, Star, ChevronLeft, ChevronRight } from 'lucide-react'
 import { getPublishedBlogPosts, getAllBlogCategories, getFeaturedBlogPosts, searchBlogPosts, getBlogPostsByCategoryId, getCategoryPostCounts } from '@/lib/supabase/blog'
 import type { BlogPostWithCategory, BlogCategory } from '@/lib/supabase/blog'
 import { Suspense } from 'react'
@@ -30,6 +30,8 @@ function BlogLoadingSkeleton() {
   )
 }
 
+const POSTS_PER_PAGE = 20
+
 export default function BlogPage() {
   const [loading, setLoading] = useState(true)
   const [posts, setPosts] = useState<BlogPostWithCategory[]>([])
@@ -40,6 +42,7 @@ export default function BlogPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string>('')
   const [searching, setSearching] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
 
   useEffect(() => {
     loadData()
@@ -75,7 +78,8 @@ export default function BlogPage() {
 
     try {
       setSearching(true)
-      const results = await searchBlogPosts(searchQuery, selectedCategory || undefined, 20)
+      setCurrentPage(1) // Resetear a página 1
+      const results = await searchBlogPosts(searchQuery, selectedCategory || undefined, 100) // Aumentar límite para paginación
       setPosts(results)
     } catch (error) {
       console.error('Error buscando:', error)
@@ -87,6 +91,7 @@ export default function BlogPage() {
   const filterByCategory = async (categoryId: string) => {
     setSelectedCategory(categoryId)
     setSearchQuery('') // Limpiar búsqueda
+    setCurrentPage(1) // Resetear a página 1
     
     if (!categoryId) {
       // Si no hay categoría seleccionada, mostrar todos los posts
@@ -121,6 +126,18 @@ export default function BlogPage() {
 
   // Obtener posts populares (ordenados por vistas) desde todos los posts
   const popularPosts = [...allPosts].sort((a, b) => b.views_count - a.views_count).slice(0, 5)
+
+  // Lógica de paginación
+  const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE)
+  const startIndex = (currentPage - 1) * POSTS_PER_PAGE
+  const endIndex = startIndex + POSTS_PER_PAGE
+  const paginatedPosts = posts.slice(startIndex, endIndex)
+
+  const goToPage = (page: number) => {
+    setCurrentPage(page)
+    // Scroll suave hacia arriba de la lista de artículos
+    window.scrollTo({ top: 400, behavior: 'smooth' })
+  }
 
   if (loading) {
     return <BlogLoadingSkeleton />
@@ -235,6 +252,7 @@ export default function BlogPage() {
                   onClick={() => {
                     setSearchQuery('')
                     setSelectedCategory('')
+                    setCurrentPage(1)
                     loadData()
                   }}
                   className="text-forest hover:underline font-medium"
@@ -243,56 +261,140 @@ export default function BlogPage() {
                 </button>
               </div>
             ) : (
-              <div className="grid md:grid-cols-2 gap-4 sm:gap-6 w-full overflow-hidden">
-                {posts.map((post, index) => (
-                  // Saltar el primer post si es featured y no hay búsqueda
-                  (!searchQuery && index === 0 && featuredPosts.length > 0 && post.id === featuredPosts[0].id) ? null : (
-                    <Link
-                      key={post.id}
-                      href={`/blog/${post.slug}`}
-                      className="group block bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300 border border-gray-100 flex flex-col w-full"
-                    >
-                      {post.featured_image_url && (
-                        <div className="aspect-video bg-gray-200 overflow-hidden relative">
-                          <Image
-                            src={post.featured_image_url}
-                            alt={post.title}
-                            fill
-                            className="object-cover group-hover:scale-105 transition-transform duration-300"
-                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 400px"
-                            loading="lazy"
-                            quality={80}
-                          />
-                        </div>
-                      )}
-                      <div className="p-6 flex flex-col flex-1">
-                        {post.category && (
-                          <span
-                            className="inline-block px-3 py-1 rounded-full text-xs font-semibold text-white mb-3 w-fit"
-                            style={{ backgroundColor: post.category.color }}
-                          >
-                            {post.category.name}
-                          </span>
+              <>
+                <div className="grid md:grid-cols-2 gap-4 sm:gap-6 w-full overflow-hidden">
+                  {paginatedPosts.map((post) => (
+                    // Saltar el primer post si es featured, no hay búsqueda y estamos en página 1
+                    (!searchQuery && currentPage === 1 && featuredPosts.length > 0 && post.id === featuredPosts[0].id) ? null : (
+                      <Link
+                        key={post.id}
+                        href={`/blog/${post.slug}`}
+                        className="group block bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300 border border-gray-100 flex flex-col w-full"
+                      >
+                        {post.featured_image_url && (
+                          <div className="aspect-video bg-gray-200 overflow-hidden relative">
+                            <Image
+                              src={post.featured_image_url}
+                              alt={post.title}
+                              fill
+                              className="object-cover group-hover:scale-105 transition-transform duration-300"
+                              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 400px"
+                              loading="lazy"
+                              quality={80}
+                            />
+                          </div>
                         )}
-                        <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-forest transition line-clamp-2">
-                          {post.title}
-                        </h3>
-                        <p className="text-sm text-gray-600 mb-4 line-clamp-3 flex-1">{post.excerpt}</p>
-                        <div className="flex items-center gap-4 text-sm text-gray-500 mt-auto">
-                          <span className="flex items-center">
-                            <Calendar className="w-4 h-4 mr-1.5" />
-                            {formatDate(post.published_at || post.created_at)}
-                          </span>
-                          <span className="flex items-center">
-                            <Clock className="w-4 h-4 mr-1.5" />
-                            {post.reading_time_minutes} min
-                          </span>
+                        <div className="p-6 flex flex-col flex-1">
+                          {post.category && (
+                            <span
+                              className="inline-block px-3 py-1 rounded-full text-xs font-semibold text-white mb-3 w-fit"
+                              style={{ backgroundColor: post.category.color }}
+                            >
+                              {post.category.name}
+                            </span>
+                          )}
+                          <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-forest transition line-clamp-2">
+                            {post.title}
+                          </h3>
+                          <p className="text-sm text-gray-600 mb-4 line-clamp-3 flex-1">{post.excerpt}</p>
+                          <div className="flex items-center gap-4 text-sm text-gray-500 mt-auto">
+                            <span className="flex items-center">
+                              <Calendar className="w-4 h-4 mr-1.5" />
+                              {formatDate(post.published_at || post.created_at)}
+                            </span>
+                            <span className="flex items-center">
+                              <Clock className="w-4 h-4 mr-1.5" />
+                              {post.reading_time_minutes} min
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                    </Link>
-                  )
-                ))}
-              </div>
+                      </Link>
+                    )
+                  ))}
+                </div>
+
+                {/* Paginación */}
+                {totalPages > 1 && (
+                  <div className="flex items-center justify-center gap-2 mt-8">
+                    {/* Botón Anterior */}
+                    <button
+                      onClick={() => goToPage(currentPage - 1)}
+                      disabled={currentPage === 1}
+                      className="flex items-center gap-1 px-4 py-2 rounded-lg bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                      <span className="hidden sm:inline">Anterior</span>
+                    </button>
+
+                    {/* Números de página */}
+                    <div className="flex items-center gap-1">
+                      {/* Primera página */}
+                      {currentPage > 3 && (
+                        <>
+                          <button
+                            onClick={() => goToPage(1)}
+                            className="w-10 h-10 rounded-lg bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition"
+                          >
+                            1
+                          </button>
+                          {currentPage > 4 && (
+                            <span className="px-2 text-gray-400">...</span>
+                          )}
+                        </>
+                      )}
+
+                      {/* Páginas cercanas */}
+                      {Array.from({ length: totalPages }, (_, i) => i + 1)
+                        .filter(page => page >= currentPage - 2 && page <= currentPage + 2)
+                        .map(page => (
+                          <button
+                            key={page}
+                            onClick={() => goToPage(page)}
+                            className={`w-10 h-10 rounded-lg transition ${
+                              page === currentPage
+                                ? 'bg-forest text-white font-bold'
+                                : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50'
+                            }`}
+                          >
+                            {page}
+                          </button>
+                        ))}
+
+                      {/* Última página */}
+                      {currentPage < totalPages - 2 && (
+                        <>
+                          {currentPage < totalPages - 3 && (
+                            <span className="px-2 text-gray-400">...</span>
+                          )}
+                          <button
+                            onClick={() => goToPage(totalPages)}
+                            className="w-10 h-10 rounded-lg bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition"
+                          >
+                            {totalPages}
+                          </button>
+                        </>
+                      )}
+                    </div>
+
+                    {/* Botón Siguiente */}
+                    <button
+                      onClick={() => goToPage(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                      className="flex items-center gap-1 px-4 py-2 rounded-lg bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                    >
+                      <span className="hidden sm:inline">Siguiente</span>
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
+
+                {/* Info de paginación */}
+                {totalPages > 1 && (
+                  <p className="text-center text-sm text-gray-500 mt-4">
+                    Mostrando {startIndex + 1}-{Math.min(endIndex, posts.length)} de {posts.length} artículos
+                  </p>
+                )}
+              </>
             )}
           </div>
 
@@ -333,6 +435,7 @@ export default function BlogPage() {
                     onClick={() => {
                       setSearchQuery('')
                       setSelectedCategory('')
+                      setCurrentPage(1)
                       loadData()
                     }}
                     className="w-full text-sm text-gray-600 hover:text-forest transition"
