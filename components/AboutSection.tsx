@@ -32,15 +32,9 @@ export default function AboutSection() {
             
             {/* Stats overlay */}
             <div className="absolute -bottom-8 -right-8 bg-white rounded-2xl shadow-xl p-6 max-w-xs">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <div className="text-3xl font-bold text-forest">+8</div>
-                  <div className="text-sm text-gray-600">Años</div>
-                </div>
-                <div>
-                  <div className="text-3xl font-bold text-forest">+500</div>
-                  <div className="text-sm text-gray-600">Perros</div>
-                </div>
+              <div className="flex flex-col gap-2 text-center">
+                <div className="text-lg font-bold text-forest">Educamos desde el equilibrio</div>
+                <div className="text-sm text-gray-600">Creamos binomios</div>
               </div>
             </div>
           </motion.div>
@@ -61,9 +55,9 @@ export default function AboutSection() {
             </h2>
             
             <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-              Con más de 8 años de experiencia y más de 500 perros educados, Alfredo ha perfeccionado 
+              Con amplia experiencia en el sector, Alfredo ha perfeccionado 
               un método único que combina técnicas de educación positiva con un profundo entendimiento 
-              del comportamiento canino.
+              del comportamiento canino. Educamos desde el equilibrio.
             </p>
             
             <p className="text-lg text-gray-700 mb-8 leading-relaxed">
@@ -99,7 +93,7 @@ export default function AboutSection() {
                 </div>
                 <div>
                   <div className="font-bold text-forest-dark">Resultados</div>
-                  <div className="text-sm text-gray-600">100% satisfacción</div>
+                  <div className="text-sm text-gray-600">Creamos binomios</div>
                 </div>
               </div>
               

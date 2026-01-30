@@ -5,13 +5,13 @@ import { Award, Heart, TrendingUp, Users, Target, BookOpen, ArrowRight, Gamepad2
 
 export const metadata: Metadata = {
   title: 'Sobre Nosotros - Alfredo Gandolfo',
-  description: 'Alfredo Gandolfo, educador canino profesional en Archena-Murcia. +8 años transformando perros con metodología BE HAKA. Binomio perro-guía. ¡Conoce mi historia!',
+  description: 'Alfredo Gandolfo, educador canino profesional en Archena-Murcia. Enfoque BE HAKA. Binomio perro-guía. Educamos desde el equilibrio.',
   alternates: {
     canonical: 'https://www.hakadogs.com/sobre-nosotros',
   },
   openGraph: {
     title: 'Sobre Nosotros - Alfredo Gandolfo | Hakadogs',
-    description: 'Conoce a Alfredo y la metodología BE HAKA: binomio perro-guía, juego estructurado y resultados medibles. +8 años de experiencia, +500 perros educados.',
+    description: 'Conoce a Alfredo y el Enfoque BE HAKA: binomio perro-guía, juego estructurado y resultados medibles. Educamos desde el equilibrio.',
     url: 'https://www.hakadogs.com/sobre-nosotros',
     images: [
       {
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Sobre Nosotros - Alfredo Gandolfo | Hakadogs',
-    description: 'Conoce a Alfredo y la metodología BE HAKA. +8 años de experiencia, +500 perros educados.',
+    description: 'Conoce a Alfredo y el Enfoque BE HAKA. Educamos desde el equilibrio. Creamos binomios.',
     images: ['https://www.hakadogs.com/images/logo_facebook_1200_630.jpg'],
   },
 }
@@ -48,29 +48,25 @@ export default function SobreNosotrosPage() {
               </h1>
               
               <p className="text-base sm:text-lg md:text-xl text-gray-700 leading-relaxed mb-4 sm:mb-6">
-                Con más de <strong className="text-forest">8 años de experiencia</strong> y más de <strong className="text-forest">500 perros educados</strong>, he desarrollado la <strong className="text-forest">metodología BE HAKA</strong>: un sistema basado en el binomio perro-guía, juego estructurado y resultados medibles.
+                Con <strong className="text-forest">amplia experiencia en el sector</strong>, he desarrollado el <strong className="text-forest">Enfoque BE HAKA</strong>: un sistema basado en el binomio perro-guía, juego estructurado y resultados medibles. <strong className="text-forest">Educamos desde el equilibrio</strong>.
               </p>
 
               <p className="text-sm sm:text-base md:text-lg text-gray-600 leading-relaxed mb-6 sm:mb-8">
                 Desde Archena (Murcia), ofrezco <strong>servicios presenciales</strong> en un radio de 40 km y <strong>cursos online profesionales</strong> para toda España, llevando la misma calidad de formación a cualquier rincón del país.
               </p>
 
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
+              <div className="grid grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
                 <div className="text-center">
-                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-forest">+8</div>
-                  <div className="text-xs sm:text-sm text-gray-600">Años</div>
+                  <div className="text-lg sm:text-xl md:text-2xl font-bold text-forest">Educamos desde</div>
+                  <div className="text-xs sm:text-sm text-gray-600">el equilibrio</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-forest">+500</div>
-                  <div className="text-xs sm:text-sm text-gray-600">Perros</div>
+                  <div className="text-lg sm:text-xl md:text-2xl font-bold text-forest">Amplia experiencia</div>
+                  <div className="text-xs sm:text-sm text-gray-600">en el sector</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-forest">11+</div>
-                  <div className="text-xs sm:text-sm text-gray-600">Cursos</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-forest">100%</div>
-                  <div className="text-xs sm:text-sm text-gray-600">Positivo</div>
+                  <div className="text-lg sm:text-xl md:text-2xl font-bold text-forest">Creamos</div>
+                  <div className="text-xs sm:text-sm text-gray-600">binomios</div>
                 </div>
               </div>
             </div>
@@ -90,7 +86,7 @@ export default function SobreNosotrosPage() {
               {/* Badges flotantes */}
               <div className="absolute -top-3 -right-3 sm:-top-4 sm:-right-4 bg-gold text-forest-dark px-4 sm:px-6 py-2 sm:py-3 rounded-xl sm:rounded-2xl shadow-xl font-bold text-center">
                 <div className="text-lg sm:text-xl md:text-2xl">BE HAKA</div>
-                <div className="text-xs">Metodología</div>
+                <div className="text-xs">Enfoque</div>
               </div>
             </div>
           </div>
@@ -219,12 +215,12 @@ export default function SobreNosotrosPage() {
         </div>
       </section>
 
-      {/* Metodología BE HAKA */}
+      {/* Enfoque BE HAKA */}
       <section className="py-20 bg-gradient-to-br from-forest to-forest-dark text-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Metodología BE HAKA
+              Enfoque BE HAKA
             </h2>
             <p className="text-xl text-white/90 max-w-3xl mx-auto">
               Un sistema completo basado en ciencia, estructura y respeto al binomio perro-guía
@@ -304,7 +300,7 @@ export default function SobreNosotrosPage() {
               href="/metodologia"
               className="inline-flex items-center gap-2 bg-white text-forest px-6 py-3 rounded-xl font-semibold mt-6 hover:bg-white/90 transition-all"
             >
-              Conocer Metodología Completa
+              Conocer Enfoque Completo
               <ArrowRight size={18} />
             </Link>
           </div>
@@ -466,7 +462,7 @@ export default function SobreNosotrosPage() {
               {
                 icon: Award,
                 title: 'Experiencia Comprobada',
-                description: '+8 años de trayectoria y +500 perros educados con éxito en toda la Región de Murcia y España'
+                description: 'Amplia experiencia en el sector, educamos desde el equilibrio en toda la Región de Murcia y España'
               },
               {
                 icon: Users,
@@ -475,7 +471,7 @@ export default function SobreNosotrosPage() {
               },
               {
                 icon: BookOpen,
-                title: 'Metodología Probada',
+                title: 'Enfoque Probado',
                 description: 'BE HAKA: sistema estructurado basado en ciencia, resultados medibles y respeto al binomio perro-guía'
               },
               {

@@ -64,7 +64,7 @@ export const localBusinessSchema = {
     'https://www.instagram.com/hakadogs',
   ],
   description:
-    'Educación canina profesional con metodología BE HAKA. Servicios presenciales en Murcia y cursos online en toda España. +8 años de experiencia, +500 perros educados. Métodos 100% positivos.',
+    'Educación canina profesional con Enfoque BE HAKA. Servicios presenciales en Murcia y cursos online en toda España. Educamos desde el equilibrio. Métodos 100% positivos.',
   aggregateRating: {
     '@type': 'AggregateRating',
     ratingValue: '4.9',
@@ -76,7 +76,7 @@ export const localBusinessSchema = {
     '@type': 'Person',
     name: 'Alfredo Gandolfo',
     jobTitle: 'Educador Canino Profesional',
-    description: 'Educador canino con más de 8 años de experiencia y más de 500 perros educados',
+    description: 'Educador canino con amplia experiencia en el sector, educamos desde el equilibrio',
   },
 }
 
@@ -107,9 +107,8 @@ export const websiteSchema = {
   '@type': 'WebSite',
   '@id': 'https://www.hakadogs.com/#website',
   url: 'https://www.hakadogs.com',
-  name: 'Hakadogs - Educación Canina Profesional',
   description:
-    'Educación canina profesional con metodología BE HAKA. Servicios presenciales en Murcia y cursos online en toda España.',
+    'Educación canina profesional con Enfoque BE HAKA. Servicios presenciales en Murcia y cursos online en toda España.',
   publisher: {
     '@id': 'https://www.hakadogs.com/#organization',
   },
@@ -227,7 +226,7 @@ export function generateLocalPageSchema(city: { name: string; slug: string; prov
       '@type': 'City',
       name: city.name,
     },
-    description: `Educación canina profesional en ${city.name}. Servicios presenciales y cursos online con metodología BE HAKA. Métodos 100% positivos.`,
+    description: `Educación canina profesional en ${city.name}. Servicios presenciales y cursos online con Enfoque BE HAKA. Métodos 100% positivos.`,
     aggregateRating: {
       '@type': 'AggregateRating',
       ratingValue: '4.9',

@@ -146,6 +146,7 @@ export async function createCourse(courseData: Partial<Course>) {
 }
 
 export async function updateCourse(id: string, courseData: Partial<Course>) {
+  // Primero intentar con select para obtener el registro actualizado
   const { data, error } = await supabase
     .from('courses')
     // @ts-ignore
@@ -154,7 +155,43 @@ export async function updateCourse(id: string, courseData: Partial<Course>) {
     .select()
     .single()
 
-  if (error) throw error
+  if (error) {
+    // Si hay error 406, puede ser problema de RLS o permisos
+    // Intentar sin select y luego leer el registro por separado
+    if (error.code === 'PGRST301' || error.message?.includes('406')) {
+      console.warn('⚠️ Error 406 al actualizar con select, intentando sin select...', error)
+      
+      // Actualizar sin select
+      const { error: updateError } = await supabase
+        .from('courses')
+        // @ts-ignore
+        .update({ ...courseData, updated_at: new Date().toISOString() })
+        .eq('id', id)
+
+      if (updateError) {
+        console.error('❌ Error al actualizar curso:', updateError)
+        throw updateError
+      }
+
+      // Leer el registro actualizado por separado
+      const { data: updatedData, error: readError } = await supabase
+        .from('courses')
+        .select('*')
+        .eq('id', id)
+        .single()
+
+      if (readError) {
+        console.error('❌ Error al leer curso actualizado:', readError)
+        throw readError
+      }
+
+      return updatedData as Course
+    }
+    
+    console.error('❌ Error al actualizar curso:', error)
+    throw error
+  }
+
   return data as Course
 }
 

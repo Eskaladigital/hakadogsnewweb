@@ -26,8 +26,8 @@ export default function OnlineCoursesCtaSection({ cityName }: OnlineCoursesCtaSe
     },
     {
       icon: CheckCircle,
-      title: 'Método Probado',
-      description: '+500 perros educados con éxito'
+      title: 'Enfoque Probado',
+      description: 'Educamos desde el equilibrio'
     }
   ]
 
@@ -94,8 +94,9 @@ export default function OnlineCoursesCtaSection({ cityName }: OnlineCoursesCtaSe
               </h3>
               
               <p className="text-gray-700 mb-6 leading-relaxed">
-                Con <strong className="text-forest">+8 años de experiencia</strong> y <strong className="text-forest">+500 perros educados</strong>, 
+                Con <strong className="text-forest">amplia experiencia en el sector</strong>, 
                 hemos desarrollado cursos online que replican fielmente nuestras sesiones presenciales. 
+                <strong className="text-forest">Educamos desde el equilibrio</strong>. 
                 Aprenderás técnicas profesionales de educación canina que podrás aplicar inmediatamente con tu perro.
               </p>
 
@@ -126,16 +127,16 @@ export default function OnlineCoursesCtaSection({ cityName }: OnlineCoursesCtaSe
             {/* Stats derecha */}
             <div className="grid grid-cols-2 gap-4">
               {[
-                { value: '+8', label: 'Años Experiencia' },
-                { value: '+500', label: 'Perros Educados' },
-                { value: '100%', label: 'Método Positivo' },
+                { value: 'Educamos desde', label: 'el equilibrio' },
+                { value: 'Amplia experiencia', label: 'en el sector' },
+                { value: 'Creamos', label: 'binomios' },
                 { value: '24/7', label: 'Acceso Total' }
               ].map((stat) => (
                 <div
                   key={stat.label}
                   className="bg-gradient-to-br from-forest/10 to-forest/5 rounded-2xl p-6 text-center border-2 border-forest/20"
                 >
-                  <div className="text-4xl font-bold text-forest mb-2">
+                  <div className="text-2xl font-bold text-forest mb-2">
                     {stat.value}
                   </div>
                   <div className="text-sm text-gray-600 font-medium">

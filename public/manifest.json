@@ -1,7 +1,7 @@
 {
   "name": "Hakadogs - Educación Canina Profesional",
   "short_name": "Hakadogs",
-  "description": "Educación canina profesional con metodología BE HAKA. Cursos online y servicios presenciales en Murcia.",
+  "description": "Educación canina profesional con Enfoque BE HAKA. Cursos online y servicios presenciales en Murcia.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

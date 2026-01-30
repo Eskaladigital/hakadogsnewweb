@@ -3,18 +3,14 @@
 -- EJECUTAR EN SUPABASE SQL EDITOR
 -- =====================================================
 
--- Opción 1: Deshabilitar RLS completamente (más simple)
+-- Solo para course_purchases (datos de ventas)
+-- Opción A: Deshabilitar RLS (simple, los datos de compras no son públicos de todos modos)
 ALTER TABLE course_purchases DISABLE ROW LEVEL SECURITY;
-
--- Opción 2 (alternativa): Si prefieres mantener RLS pero permitir lectura a todos
--- DROP POLICY IF EXISTS "Allow read for authenticated" ON course_purchases;
--- CREATE POLICY "Allow read for authenticated" ON course_purchases
---   FOR SELECT TO authenticated USING (true);
-
--- También asegurar que courses sea legible
-ALTER TABLE courses DISABLE ROW LEVEL SECURITY;
 
 -- Verificar que funcionó
 SELECT tablename, rowsecurity 
 FROM pg_tables 
-WHERE tablename IN ('course_purchases', 'courses');
+WHERE tablename = 'course_purchases';
+
+-- NOTA: NO tocamos la tabla 'courses' porque ya tiene políticas
+-- que permiten lectura pública (los cursos se muestran en la web)

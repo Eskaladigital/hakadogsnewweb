@@ -3,28 +3,28 @@ import Link from 'next/link'
 import { Users, Gamepad2, TrendingUp, Brain, Heart, Target, CheckCircle, ArrowRight, Zap, Pause, BarChart3 } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Metodología BE HAKA - Educación Canina',
-  description: 'Metodología BE HAKA: binomio perro-guía + juego estructurado + KPIs medibles. Sistema probado con 500+ perros. Principio de Premack. Educación respetuosa y efectiva.',
+  title: 'Enfoque BE HAKA - Educación Canina',
+  description: 'Enfoque BE HAKA: binomio perro-guía + juego estructurado + KPIs medibles. Sistema probado. Principio de Premack. Educación respetuosa y efectiva.',
   alternates: {
     canonical: 'https://www.hakadogs.com/metodologia',
   },
   openGraph: {
-    title: 'Metodología BE HAKA - Educación Canina | Hakadogs',
-    description: 'Metodología basada en el binomio perro-guía, juego estructurado y bienestar emocional. Principio de Premack, KPIs medibles, resultados comprobados.',
+    title: 'Enfoque BE HAKA - Educación Canina | Hakadogs',
+    description: 'Enfoque basado en el binomio perro-guía, juego estructurado y bienestar emocional. Principio de Premack, KPIs medibles, resultados comprobados.',
     url: 'https://www.hakadogs.com/metodologia',
     images: [
       {
         url: 'https://www.hakadogs.com/images/logo_facebook_1200_630.jpg',
         width: 1200,
         height: 630,
-        alt: 'Hakadogs - Metodología BE HAKA',
+        alt: 'Hakadogs - Enfoque BE HAKA',
       }
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Metodología BE HAKA | Hakadogs',
-    description: 'Binomio perro-guía, juego estructurado y resultados medibles. +500 perros educados.',
+    title: 'Enfoque BE HAKA | Hakadogs',
+    description: 'Binomio perro-guía, juego estructurado y resultados medibles. Educamos desde el equilibrio.',
     images: ['https://www.hakadogs.com/images/logo_facebook_1200_630.jpg'],
   },
 }
@@ -44,7 +44,7 @@ export default function MetodologiaPage() {
           </h1>
           
           <p className="text-xl text-gray-700 leading-relaxed max-w-3xl mx-auto">
-            Metodología basada en el <strong className="text-forest">binomio perro-guía</strong>, donde trabajamos con el sistema completo: 
+            Enfoque basado en el <strong className="text-forest">binomio perro-guía</strong>, donde trabajamos con el sistema completo: 
             tú, tu perro y vuestro entorno. Entrenamiento claro, simple y sostenible, con resultados medibles y respeto absoluto.
           </p>
         </div>
@@ -310,37 +310,6 @@ export default function MetodologiaPage() {
         </div>
       </section>
 
-      {/* Lo que NO hacemos */}
-      <section className="py-20 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl font-bold text-forest-dark text-center mb-12">
-            Lo que NO Encontrarás en Hakadogs
-          </h2>
-          
-          <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-8">
-            <ul className="grid md:grid-cols-2 gap-4">
-              {[
-                'Castigos físicos o collares aversivos',
-                'Métodos basados en "dominancia" o "ser alfa"',
-                'Gritos, tirones o intimidación',
-                'Soluciones rápidas que no duran',
-                'Improvisación sin plan claro',
-                'Ignorar el bienestar emocional',
-                'Entrenar sin medir resultados',
-                'Pedir demasiado sin construir base'
-              ].map((item) => (
-                <li key={item} className="flex items-start space-x-3">
-                  <div className="w-6 h-6 bg-red-200 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-red-600 font-bold text-sm">✕</span>
-                  </div>
-                  <span className="text-gray-700 font-medium text-sm">{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
       {/* Lo que SÍ hacemos */}
       <section className="py-20 bg-cream">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -381,7 +350,7 @@ export default function MetodologiaPage() {
             ¿Por Qué Funciona Nuestra Metodología?
           </h2>
           <p className="text-center text-gray-600 mb-12 max-w-3xl mx-auto">
-            Porque está <strong className="text-forest">basada en ciencia</strong>, probada con más de 500 perros, 
+            Porque está <strong className="text-forest">basada en ciencia</strong>, probada con amplia experiencia en el sector, 
             y diseñada para ser <strong className="text-forest">simple, clara y sostenible</strong>.
           </p>
           
@@ -454,7 +423,7 @@ export default function MetodologiaPage() {
             Experimenta una educación basada en respeto, ciencia y resultados medibles
           </p>
           <p className="text-lg text-white/80 mb-8">
-            Más de 8 años de experiencia · +500 perros educados · 100% método positivo
+            Amplia experiencia en el sector · Educamos desde el equilibrio · Creamos binomios
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <Link

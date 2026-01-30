@@ -8,10 +8,10 @@ import { ServicesSkeleton, TestimonialsSkeleton, GallerySkeleton } from '@/compo
 
 export const metadata: Metadata = {
   title: 'Hakadogs - Educación Canina Profesional | Archena, Murcia',
-  description: 'Educador canino en Archena y Murcia con +8 años de experiencia. Metodología BE HAKA: educación presencial en Región de Murcia y cursos online España. ¡500+ perros felices!',
+  description: 'Educador canino en Archena y Murcia. Enfoque BE HAKA: educación presencial en Región de Murcia y cursos online España. Educamos desde el equilibrio.',
   openGraph: {
     title: 'Hakadogs - Educación Canina Profesional | Archena, Murcia',
-    description: 'Educador canino en Archena y Murcia con +8 años de experiencia. Metodología BE HAKA: educación presencial en Región de Murcia y cursos online España.',
+    description: 'Educador canino en Archena y Murcia. Enfoque BE HAKA: educación presencial en Región de Murcia y cursos online España. Educamos desde el equilibrio.',
     url: 'https://www.hakadogs.com',
     type: 'website',
     locale: 'es_ES',
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Hakadogs - Educación Canina Profesional',
-    description: 'Educador canino Archena-Murcia. Metodología BE HAKA, +8 años experiencia, 500+ perros felices.',
+    description: 'Educador canino Archena-Murcia. Enfoque BE HAKA, amplia experiencia en el sector, educamos desde el equilibrio.',
     images: ['https://www.hakadogs.com/images/logo_facebook_1200_630.jpg'],
   },
 }
@@ -51,7 +51,7 @@ export default function Home() {
             <span className="block text-forest">Profesional</span>
           </>
         }
-        description="Transforma la relación con tu perro a través de la metodología BE HAKA: servicios presenciales en Murcia y cursos online en toda España. +8 años de experiencia, +500 perros educados."
+        description="Transforma la relación con tu perro a través del Enfoque BE HAKA: servicios presenciales en Murcia y cursos online en toda España. Amplia experiencia en el sector, educamos desde el equilibrio."
         primaryCTA={{
           text: 'Contacto',
           href: '/contacto'
@@ -131,7 +131,7 @@ export default function Home() {
                   Empieza Hoy con Nuestro Curso Gratuito
                 </h3>
                 <p className="text-sm sm:text-base text-white/90 mb-4 sm:mb-6 leading-relaxed">
-                  Accede gratis a nuestro curso introductorio y descubre cómo la metodología BE HAKA 
+                  Accede gratis a nuestro curso introductorio y descubre cómo el Enfoque BE HAKA 
                   puede transformar la relación con tu perro. Sin tarjeta de crédito.
                 </p>
 
@@ -172,16 +172,16 @@ export default function Home() {
               {/* Derecha - Stats */}
               <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 text-center border border-white/20">
-                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-1 sm:mb-2">+8</div>
-                  <div className="text-xs sm:text-sm text-white/90">Años Experiencia</div>
+                  <div className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-1 sm:mb-2">Educamos desde</div>
+                  <div className="text-xs sm:text-sm text-white/90">el equilibrio</div>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 text-center border border-white/20">
-                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-1 sm:mb-2">+500</div>
-                  <div className="text-xs sm:text-sm text-white/90">Perros Educados</div>
+                  <div className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-1 sm:mb-2">Amplia experiencia</div>
+                  <div className="text-xs sm:text-sm text-white/90">en el sector</div>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 text-center border border-white/20">
-                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-1 sm:mb-2">11+</div>
-                  <div className="text-xs sm:text-sm text-white/90">Cursos Disponibles</div>
+                  <div className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-1 sm:mb-2">Creamos</div>
+                  <div className="text-xs sm:text-sm text-white/90">binomios</div>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 text-center border border-white/20">
                   <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-1 sm:mb-2">24/7</div>

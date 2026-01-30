@@ -28,16 +28,16 @@ interface HeroProps {
 }
 
 export default function Hero({
-  badge = '+8 años de experiencia · +500 perros educados',
+  badge = 'Amplia experiencia en el sector',
   title,
   subtitle,
   description,
   primaryCTA,
   secondaryCTA,
   stats = [
-    { value: '+500', label: 'Perros Educados' },
-    { value: '+8', label: 'Años Experiencia' },
-    { value: '100%', label: 'Satisfacción' }
+    { value: 'Educamos desde', label: 'el equilibrio' },
+    { value: 'Amplia experiencia', label: 'en el sector' },
+    { value: 'Creamos', label: 'binomios' }
   ],
   image = '/images/hakadogs/5D1795D7-8557-4E5D-A50F-E0C56157FD8E.jpeg',
   floatingBadge = {

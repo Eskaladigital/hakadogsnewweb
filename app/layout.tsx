@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     url: 'https://www.hakadogs.com',
     siteName: 'Hakadogs - Educación Canina Profesional',
     title: 'Hakadogs - Educación Canina Profesional | Archena, Murcia',
-    description: 'Educador canino en Archena y Murcia con +8 años de experiencia. Metodología BE HAKA: educación presencial en Región de Murcia y cursos online España. ¡500+ perros felices!',
+    description: 'Educador canino en Archena y Murcia. Enfoque BE HAKA: educación presencial en Región de Murcia y cursos online España. Educamos desde el equilibrio.',
     images: [
       {
         url: 'https://www.hakadogs.com/images/logo_facebook_1200_630.jpg',
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     site: '@hakadogs',
     creator: '@hakadogs',
     title: 'Hakadogs - Educación Canina Profesional',
-    description: 'Educador canino Archena-Murcia. Metodología BE HAKA, +8 años experiencia, 500+ perros felices. Servicios presenciales y online.',
+    description: 'Educador canino Archena-Murcia. Enfoque BE HAKA, amplia experiencia en el sector, educamos desde el equilibrio. Servicios presenciales y online.',
     images: ['https://www.hakadogs.com/images/logo_facebook_1200_630.jpg'],
   },
   
