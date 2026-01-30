@@ -299,28 +299,36 @@ export default function VentasPage() {
           {dailyStats.every(d => d.count === 0) ? (
             <p className="text-gray-500 text-center py-8">No hay ventas en los últimos 30 días</p>
           ) : (
-            <div className="flex items-end gap-1 h-32">
-              {dailyStats.map((day, index) => (
-                <div 
-                  key={index}
-                  className="flex-1 flex flex-col items-center group relative"
-                >
-                  {/* Tooltip */}
-                  {day.count > 0 && (
-                    <div className="absolute bottom-full mb-2 hidden group-hover:block z-10">
-                      <div className="bg-gray-900 text-white text-xs rounded px-2 py-1 whitespace-nowrap">
-                        {new Date(day.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}: {day.count} ({day.revenue.toFixed(0)}€)
-                      </div>
-                    </div>
-                  )}
+            <div className="space-y-2">
+              <div className="flex items-end gap-1 h-32">
+                {dailyStats.map((day, index) => (
                   <div 
-                    className={`w-full rounded-t transition-all ${day.count > 0 ? 'bg-forest hover:bg-forest-dark' : 'bg-gray-200'}`}
-                    style={{ 
-                      height: day.count > 0 ? `${Math.max((day.count / maxDailySales) * 100, 10)}%` : '4px'
-                    }}
-                  />
-                </div>
-              ))}
+                    key={index}
+                    className="flex-1 flex flex-col items-center group relative"
+                  >
+                    {/* Tooltip */}
+                    {day.count > 0 && (
+                      <div className="absolute bottom-full mb-2 hidden group-hover:block z-10">
+                        <div className="bg-gray-900 text-white text-xs rounded px-2 py-1 whitespace-nowrap">
+                          {new Date(day.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}: {day.count} ({day.revenue.toFixed(0)}€)
+                        </div>
+                      </div>
+                    )}
+                    <div 
+                      className={`w-full rounded-t transition-all ${day.count > 0 ? 'bg-forest hover:bg-forest-dark' : 'bg-gray-200'}`}
+                      style={{ 
+                        height: day.count > 0 ? `${Math.max((day.count / maxDailySales) * 100, 10)}%` : '4px'
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+              {/* Etiquetas de fechas */}
+              <div className="flex items-center justify-between text-xs text-gray-500 px-1">
+                <span>{new Date(dailyStats[0]?.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}</span>
+                <span className="text-gray-400">Últimos 30 días</span>
+                <span>{new Date(dailyStats[dailyStats.length - 1]?.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}</span>
+              </div>
             </div>
           )}
         </div>
