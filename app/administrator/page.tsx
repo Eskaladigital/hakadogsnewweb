@@ -110,7 +110,7 @@ export default function DashboardPage() {
       change: `+${stats.sales.today} hoy`,
       icon: TrendingUp,
       color: 'bg-purple-500',
-      href: '/administrator/cursos'
+      href: '/administrator/ventas'
     },
     {
       title: 'Ingresos del Mes',
@@ -118,7 +118,7 @@ export default function DashboardPage() {
       change: `${stats.sales.revenue_total.toFixed(2)}€ total`,
       icon: DollarSign,
       color: 'bg-amber-500',
-      href: '/administrator/cursos'
+      href: '/administrator/ventas'
     },
     {
       title: 'Contactos Pendientes',
@@ -258,7 +258,7 @@ export default function DashboardPage() {
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-bold text-gray-900">Ventas Recientes</h3>
-            <Link href="/administrator/cursos" className="text-sm text-forest hover:text-forest-dark font-semibold">
+            <Link href="/administrator/ventas" className="text-sm text-forest hover:text-forest-dark font-semibold">
               Ver todos →
             </Link>
           </div>

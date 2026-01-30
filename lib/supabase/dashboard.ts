@@ -298,16 +298,66 @@ export async function getRecentUsers(limit: number = 10): Promise<RecentUser[]> 
  * Obtiene las ventas más recientes
  */
 export async function getRecentSales(limit: number = 10): Promise<RecentSale[]> {
-  const { data, error } = await (supabase as any).rpc('get_recent_sales', {
-    limit_count: limit
-  })
-  
-  if (error) {
-    console.warn('⚠️ Error getting recent sales:', error.message || error)
-    return [] // Devolver array vacío en lugar de lanzar error
+  try {
+    // Consulta directa a course_purchases con join a courses y users
+    const { data: purchases, error: purchasesError } = await supabase
+      .from('course_purchases')
+      .select(`
+        id,
+        user_id,
+        course_id,
+        price_paid,
+        purchase_date,
+        courses (
+          title
+        )
+      `)
+      .eq('payment_status', 'completed')
+      .order('purchase_date', { ascending: false })
+      .limit(limit)
+
+    if (purchasesError) {
+      console.warn('⚠️ Error getting purchases:', purchasesError.message)
+      return []
+    }
+
+    if (!purchases || purchases.length === 0) {
+      return []
+    }
+
+    // Obtener los user_ids únicos
+    const userIds = [...new Set(purchases.map((p: any) => p.user_id))]
+    
+    // Obtener información de usuarios desde user_roles
+    const { data: userRoles } = await supabase
+      .from('user_roles')
+      .select('user_id, email, name')
+      .in('user_id', userIds)
+
+    // Crear mapa de usuarios
+    const userMap: { [key: string]: { email: string; name: string | null } } = {}
+    userRoles?.forEach((ur: any) => {
+      userMap[ur.user_id] = { email: ur.email || '', name: ur.name }
+    })
+
+    // Formatear resultados
+    const recentSales: RecentSale[] = purchases.map((purchase: any) => {
+      const user = userMap[purchase.user_id] || { email: 'Usuario desconocido', name: null }
+      return {
+        id: purchase.id,
+        user_email: user.email,
+        user_name: user.name,
+        course_title: purchase.courses?.title || 'Curso desconocido',
+        price_paid: purchase.price_paid || 0,
+        purchase_date: purchase.purchase_date
+      }
+    })
+
+    return recentSales
+  } catch (error) {
+    console.error('❌ Error en getRecentSales:', error)
+    return []
   }
-  
-  return (data || []) as RecentSale[]
 }
 
 /**
@@ -330,41 +380,155 @@ export async function getRecentContacts(limit: number = 10): Promise<RecentConta
  * Obtiene datos para la gráfica de ventas por mes
  */
 export async function getSalesChartData(): Promise<SalesChartData[]> {
-  const { data, error } = await (supabase as any).rpc('get_sales_chart_data')
-  
-  if (error) {
-    console.warn('⚠️ Error getting sales chart data:', error.message || error)
-    return [] // Devolver array vacío en lugar de lanzar error
+  try {
+    // Obtener todas las compras completadas de los últimos 12 meses
+    const twelveMonthsAgo = new Date()
+    twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 12)
+    
+    const { data: purchases, error } = await supabase
+      .from('course_purchases')
+      .select('price_paid, purchase_date')
+      .eq('payment_status', 'completed')
+      .gte('purchase_date', twelveMonthsAgo.toISOString())
+      .order('purchase_date', { ascending: true })
+
+    if (error) {
+      console.warn('⚠️ Error getting sales chart data:', error.message)
+      return []
+    }
+
+    // Agrupar por mes
+    const monthlyData: { [key: string]: { count: number; revenue: number } } = {}
+    
+    // Inicializar los últimos 12 meses
+    for (let i = 11; i >= 0; i--) {
+      const date = new Date()
+      date.setMonth(date.getMonth() - i)
+      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
+      monthlyData[key] = { count: 0, revenue: 0 }
+    }
+
+    // Sumar ventas por mes
+    purchases?.forEach((purchase: any) => {
+      const date = new Date(purchase.purchase_date)
+      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
+      if (monthlyData[key]) {
+        monthlyData[key].count++
+        monthlyData[key].revenue += purchase.price_paid || 0
+      }
+    })
+
+    // Convertir a array
+    return Object.entries(monthlyData).map(([month, data]) => ({
+      month,
+      sales_count: data.count,
+      revenue: data.revenue
+    }))
+  } catch (error) {
+    console.error('❌ Error en getSalesChartData:', error)
+    return []
   }
-  
-  return (data || []) as SalesChartData[]
 }
 
 /**
  * Obtiene los cursos más vendidos
  */
 export async function getTopSellingCourses(limit: number = 5): Promise<TopCourse[]> {
-  const { data, error } = await (supabase as any).rpc('get_top_selling_courses', {
-    limit_count: limit
-  })
-  
-  if (error) {
-    console.warn('⚠️ Error getting top selling courses:', error.message || error)
-    return [] // Devolver array vacío en lugar de lanzar error
+  try {
+    // Obtener todas las compras completadas agrupadas por curso
+    const { data: purchases, error } = await supabase
+      .from('course_purchases')
+      .select(`
+        course_id,
+        price_paid,
+        courses (
+          id,
+          title
+        )
+      `)
+      .eq('payment_status', 'completed')
+
+    if (error) {
+      console.warn('⚠️ Error getting top selling courses:', error.message)
+      return []
+    }
+
+    // Agrupar por curso
+    const courseStats: { [key: string]: { title: string; sales_count: number; revenue: number } } = {}
+    
+    purchases?.forEach((purchase: any) => {
+      const courseId = purchase.course_id
+      const courseTitle = purchase.courses?.title || 'Curso desconocido'
+      
+      if (!courseStats[courseId]) {
+        courseStats[courseId] = {
+          title: courseTitle,
+          sales_count: 0,
+          revenue: 0
+        }
+      }
+      courseStats[courseId].sales_count++
+      courseStats[courseId].revenue += purchase.price_paid || 0
+    })
+
+    // Convertir a array y ordenar por ingresos
+    const topCourses: TopCourse[] = Object.entries(courseStats)
+      .map(([courseId, stats]) => ({
+        course_id: courseId,
+        title: stats.title,
+        sales_count: stats.sales_count,
+        revenue: stats.revenue,
+        avg_progress: 0 // No tenemos esta info sin consulta adicional
+      }))
+      .sort((a, b) => b.revenue - a.revenue)
+      .slice(0, limit)
+
+    return topCourses
+  } catch (error) {
+    console.error('❌ Error en getTopSellingCourses:', error)
+    return []
   }
-  
-  return (data || []) as TopCourse[]
 }
 
 /**
  * Obtiene métricas de conversión
  */
 export async function getConversionMetrics(): Promise<ConversionMetrics> {
-  const { data, error } = await (supabase as any).rpc('get_conversion_metrics')
-  
-  if (error) {
-    console.warn('⚠️ Error getting conversion metrics:', error.message || error)
-    // Devolver métricas por defecto
+  try {
+    // Obtener total de usuarios
+    const { count: totalUsers, error: usersError } = await supabase
+      .from('user_roles')
+      .select('*', { count: 'exact', head: true })
+
+    if (usersError) {
+      console.warn('⚠️ Error getting users count:', usersError.message)
+    }
+
+    // Obtener compras completadas
+    const { data: purchases, error: purchasesError } = await supabase
+      .from('course_purchases')
+      .select('user_id')
+      .eq('payment_status', 'completed')
+
+    if (purchasesError) {
+      console.warn('⚠️ Error getting purchases:', purchasesError.message)
+    }
+
+    const total = totalUsers || 0
+    const totalPurchases = purchases?.length || 0
+    const uniqueBuyers = new Set(purchases?.map((p: any) => p.user_id)).size
+    
+    const conversionRate = total > 0 ? (uniqueBuyers / total) * 100 : 0
+    const avgPurchases = uniqueBuyers > 0 ? totalPurchases / uniqueBuyers : 0
+
+    return {
+      total_users: total,
+      users_with_purchases: uniqueBuyers,
+      conversion_rate: conversionRate,
+      avg_purchases_per_user: avgPurchases
+    }
+  } catch (error) {
+    console.error('❌ Error en getConversionMetrics:', error)
     return {
       total_users: 0,
       users_with_purchases: 0,
@@ -372,6 +536,4 @@ export async function getConversionMetrics(): Promise<ConversionMetrics> {
       avg_purchases_per_user: 0
     }
   }
-  
-  return data as ConversionMetrics
 }
