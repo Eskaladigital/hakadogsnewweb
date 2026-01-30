@@ -131,7 +131,8 @@ export default function VentasPage() {
     
     purchases.forEach(p => {
       if (p.purchase_date) {
-        const key = p.purchase_date.split('T')[0]
+        // Manejar ambos formatos: "2026-01-30 08:07:38" y "2026-01-30T08:07:38"
+        const key = p.purchase_date.split('T')[0].split(' ')[0]
         if (grouped[key]) {
           grouped[key].count++
           grouped[key].revenue += p.price_paid || 0
