@@ -77,16 +77,18 @@ export default function VentasPage() {
   // Obtener ventas diarias del último mes
   const getDailySalesData = async (): Promise<DailySale[]> => {
     try {
-      const thirtyDaysAgo = new Date()
-      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
-      
+      // Obtener TODAS las compras sin filtrar por fecha
       const { data, error } = await supabase
         .from('course_purchases')
         .select('purchase_date, price_paid')
-        .gte('purchase_date', thirtyDaysAgo.toISOString())
         .order('purchase_date', { ascending: true })
 
-      if (error) throw error
+      if (error) {
+        console.error('❌ Error ventas diarias:', error)
+        return []
+      }
+
+      console.log('📊 Ventas para gráfico diario:', data?.length || 0, data)
 
       // Agrupar por día
       const grouped: { [key: string]: { count: number; revenue: number } } = {}
@@ -101,10 +103,12 @@ export default function VentasPage() {
 
       // Sumar ventas
       data?.forEach((sale: any) => {
-        const key = sale.purchase_date.split('T')[0]
-        if (grouped[key]) {
-          grouped[key].count++
-          grouped[key].revenue += sale.price_paid || 0
+        if (sale.purchase_date) {
+          const key = sale.purchase_date.split('T')[0]
+          if (grouped[key]) {
+            grouped[key].count++
+            grouped[key].revenue += sale.price_paid || 0
+          }
         }
       })
 

@@ -299,7 +299,7 @@ export async function getRecentUsers(limit: number = 10): Promise<RecentUser[]> 
  */
 export async function getRecentSales(limit: number = 10): Promise<RecentSale[]> {
   try {
-    // Consulta directa a course_purchases con join a courses y users
+    // Consulta directa a course_purchases con join a courses
     const { data: purchases, error: purchasesError } = await supabase
       .from('course_purchases')
       .select(`
@@ -308,46 +308,32 @@ export async function getRecentSales(limit: number = 10): Promise<RecentSale[]> 
         course_id,
         price_paid,
         purchase_date,
+        payment_status,
         courses (
           title
         )
       `)
-      .eq('payment_status', 'completed')
       .order('purchase_date', { ascending: false })
       .limit(limit)
 
     if (purchasesError) {
-      console.warn('⚠️ Error getting purchases:', purchasesError.message)
+      console.error('❌ Error getting purchases:', purchasesError)
       return []
     }
+
+    console.log('📊 Purchases encontrados:', purchases?.length || 0)
 
     if (!purchases || purchases.length === 0) {
       return []
     }
 
-    // Obtener los user_ids únicos
-    const userIds = [...new Set(purchases.map((p: any) => p.user_id))]
-    
-    // Obtener información de usuarios desde user_roles
-    const { data: userRoles } = await supabase
-      .from('user_roles')
-      .select('user_id, email, name')
-      .in('user_id', userIds)
-
-    // Crear mapa de usuarios
-    const userMap: { [key: string]: { email: string; name: string | null } } = {}
-    userRoles?.forEach((ur: any) => {
-      userMap[ur.user_id] = { email: ur.email || '', name: ur.name }
-    })
-
-    // Formatear resultados
+    // Formatear resultados - sin buscar emails en user_roles
     const recentSales: RecentSale[] = purchases.map((purchase: any) => {
-      const user = userMap[purchase.user_id] || { email: 'Usuario desconocido', name: null }
       return {
         id: purchase.id,
-        user_email: user.email,
-        user_name: user.name,
-        course_title: purchase.courses?.title || 'Curso desconocido',
+        user_email: purchase.user_id?.substring(0, 8) + '...',
+        user_name: null,
+        course_title: purchase.courses?.title || 'Curso',
         price_paid: purchase.price_paid || 0,
         purchase_date: purchase.purchase_date
       }
@@ -381,21 +367,18 @@ export async function getRecentContacts(limit: number = 10): Promise<RecentConta
  */
 export async function getSalesChartData(): Promise<SalesChartData[]> {
   try {
-    // Obtener todas las compras completadas de los últimos 12 meses
-    const twelveMonthsAgo = new Date()
-    twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 12)
-    
+    // Obtener TODAS las compras sin filtrar por status
     const { data: purchases, error } = await supabase
       .from('course_purchases')
       .select('price_paid, purchase_date')
-      .eq('payment_status', 'completed')
-      .gte('purchase_date', twelveMonthsAgo.toISOString())
       .order('purchase_date', { ascending: true })
 
     if (error) {
-      console.warn('⚠️ Error getting sales chart data:', error.message)
+      console.error('❌ Error getting sales chart data:', error)
       return []
     }
+
+    console.log('📊 Total compras para gráfico:', purchases?.length || 0)
 
     // Agrupar por mes
     const monthlyData: { [key: string]: { count: number; revenue: number } } = {}
@@ -410,11 +393,13 @@ export async function getSalesChartData(): Promise<SalesChartData[]> {
 
     // Sumar ventas por mes
     purchases?.forEach((purchase: any) => {
-      const date = new Date(purchase.purchase_date)
-      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
-      if (monthlyData[key]) {
-        monthlyData[key].count++
-        monthlyData[key].revenue += purchase.price_paid || 0
+      if (purchase.purchase_date) {
+        const date = new Date(purchase.purchase_date)
+        const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
+        if (monthlyData[key]) {
+          monthlyData[key].count++
+          monthlyData[key].revenue += purchase.price_paid || 0
+        }
       }
     })
 
@@ -435,7 +420,7 @@ export async function getSalesChartData(): Promise<SalesChartData[]> {
  */
 export async function getTopSellingCourses(limit: number = 5): Promise<TopCourse[]> {
   try {
-    // Obtener todas las compras completadas agrupadas por curso
+    // Obtener TODAS las compras sin filtrar
     const { data: purchases, error } = await supabase
       .from('course_purchases')
       .select(`
@@ -446,19 +431,20 @@ export async function getTopSellingCourses(limit: number = 5): Promise<TopCourse
           title
         )
       `)
-      .eq('payment_status', 'completed')
 
     if (error) {
-      console.warn('⚠️ Error getting top selling courses:', error.message)
+      console.error('❌ Error getting top selling courses:', error)
       return []
     }
+
+    console.log('📊 Compras para top cursos:', purchases?.length || 0)
 
     // Agrupar por curso
     const courseStats: { [key: string]: { title: string; sales_count: number; revenue: number } } = {}
     
     purchases?.forEach((purchase: any) => {
       const courseId = purchase.course_id
-      const courseTitle = purchase.courses?.title || 'Curso desconocido'
+      const courseTitle = purchase.courses?.title || 'Curso'
       
       if (!courseStats[courseId]) {
         courseStats[courseId] = {
@@ -495,28 +481,29 @@ export async function getTopSellingCourses(limit: number = 5): Promise<TopCourse
  */
 export async function getConversionMetrics(): Promise<ConversionMetrics> {
   try {
-    // Obtener total de usuarios
+    // Obtener total de usuarios desde user_roles
     const { count: totalUsers, error: usersError } = await supabase
       .from('user_roles')
       .select('*', { count: 'exact', head: true })
 
     if (usersError) {
-      console.warn('⚠️ Error getting users count:', usersError.message)
+      console.error('❌ Error getting users count:', usersError)
     }
 
-    // Obtener compras completadas
+    // Obtener TODAS las compras sin filtrar
     const { data: purchases, error: purchasesError } = await supabase
       .from('course_purchases')
       .select('user_id')
-      .eq('payment_status', 'completed')
 
     if (purchasesError) {
-      console.warn('⚠️ Error getting purchases:', purchasesError.message)
+      console.error('❌ Error getting purchases:', purchasesError)
     }
+
+    console.log('📊 Usuarios totales:', totalUsers, 'Compras:', purchases?.length)
 
     const total = totalUsers || 0
     const totalPurchases = purchases?.length || 0
-    const uniqueBuyers = new Set(purchases?.map((p: any) => p.user_id)).size
+    const uniqueBuyers = purchases ? new Set(purchases.map((p: any) => p.user_id)).size : 0
     
     const conversionRate = total > 0 ? (uniqueBuyers / total) * 100 : 0
     const avgPurchases = uniqueBuyers > 0 ? totalPurchases / uniqueBuyers : 0
