@@ -92,8 +92,8 @@ export default function AboutSection() {
                   <TrendingUp className="text-forest" size={20} />
                 </div>
                 <div>
-                  <div className="font-bold text-forest-dark">Resultados</div>
-                  <div className="text-sm text-gray-600">Creamos binomios</div>
+                  <div className="font-bold text-forest-dark">Creamos binomios</div>
+                  <div className="text-sm text-gray-600">perro guía</div>
                 </div>
               </div>
               

@@ -129,7 +129,7 @@ export default function OnlineCoursesCtaSection({ cityName }: OnlineCoursesCtaSe
               {[
                 { value: 'Educamos desde', label: 'el equilibrio' },
                 { value: 'Amplia experiencia', label: 'en el sector' },
-                { value: 'Creamos', label: 'binomios' },
+                { value: 'Creamos binomios', label: 'perro guía' },
                 { value: '24/7', label: 'Acceso Total' }
               ].map((stat) => (
                 <div

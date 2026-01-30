@@ -180,8 +180,8 @@ export default function Home() {
                   <div className="text-xs sm:text-sm text-white/90">en el sector</div>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 text-center border border-white/20">
-                  <div className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-1 sm:mb-2">Creamos</div>
-                  <div className="text-xs sm:text-sm text-white/90">binomios</div>
+                  <div className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-1 sm:mb-2">Creamos binomios</div>
+                  <div className="text-xs sm:text-sm text-white/90">perro guía</div>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 text-center border border-white/20">
                   <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-1 sm:mb-2">24/7</div>

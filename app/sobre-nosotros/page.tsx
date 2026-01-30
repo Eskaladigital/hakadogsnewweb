@@ -65,8 +65,8 @@ export default function SobreNosotrosPage() {
                   <div className="text-xs sm:text-sm text-gray-600">en el sector</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-lg sm:text-xl md:text-2xl font-bold text-forest">Creamos</div>
-                  <div className="text-xs sm:text-sm text-gray-600">binomios</div>
+                  <div className="text-lg sm:text-xl md:text-2xl font-bold text-forest">Creamos binomios</div>
+                  <div className="text-xs sm:text-sm text-gray-600">perro guía</div>
                 </div>
               </div>
             </div>

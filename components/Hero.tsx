@@ -37,7 +37,7 @@ export default function Hero({
   stats = [
     { value: 'Educamos desde', label: 'el equilibrio' },
     { value: 'Amplia experiencia', label: 'en el sector' },
-    { value: 'Creamos', label: 'binomios' }
+    { value: 'Creamos binomios', label: 'perro guía' }
   ],
   image = '/images/hakadogs/5D1795D7-8557-4E5D-A50F-E0C56157FD8E.jpeg',
   floatingBadge = {
