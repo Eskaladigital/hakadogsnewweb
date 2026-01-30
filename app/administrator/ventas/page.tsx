@@ -118,6 +118,14 @@ export default function VentasPage() {
     }))
   })()
 
+  // Función helper para formatear fecha en hora local (YYYY-MM-DD)
+  const formatDateLocal = (date: Date): string => {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+
   // Calcular ventas diarias (últimos 30 días)
   const dailyStats = (() => {
     const grouped: { [key: string]: { count: number; revenue: number } } = {}
@@ -125,14 +133,18 @@ export default function VentasPage() {
     for (let i = 29; i >= 0; i--) {
       const d = new Date()
       d.setDate(d.getDate() - i)
-      const key = d.toISOString().split('T')[0]
+      d.setHours(0, 0, 0, 0) // Normalizar a medianoche hora local
+      const key = formatDateLocal(d)
       grouped[key] = { count: 0, revenue: 0 }
     }
     
     purchases.forEach(p => {
       if (p.purchase_date) {
-        // Manejar ambos formatos: "2026-01-30 08:07:38" y "2026-01-30T08:07:38"
-        const key = p.purchase_date.split('T')[0].split(' ')[0]
+        // Parsear fecha y convertir a hora local
+        const purchaseDate = new Date(p.purchase_date)
+        purchaseDate.setHours(0, 0, 0, 0) // Normalizar a medianoche hora local
+        const key = formatDateLocal(purchaseDate)
+        
         if (grouped[key]) {
           grouped[key].count++
           grouped[key].revenue += p.price_paid || 0
