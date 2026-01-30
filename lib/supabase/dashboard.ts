@@ -309,7 +309,8 @@ export async function getRecentSales(limit: number = 10): Promise<RecentSale[]> 
         price_paid,
         purchase_date,
         payment_status,
-        courses (
+        payment_method,
+        courses!inner (
           title
         )
       `)
@@ -318,20 +319,47 @@ export async function getRecentSales(limit: number = 10): Promise<RecentSale[]> 
 
     if (purchasesError) {
       console.error('❌ Error getting purchases:', purchasesError)
-      return []
-    }
+      // Intentar sin el join si falla
+      const { data: purchasesSimple, error: simpleError } = await supabase
+        .from('course_purchases')
+        .select('*')
+        .order('purchase_date', { ascending: false })
+        .limit(limit)
+      
+      if (simpleError || !purchasesSimple) {
+        console.error('❌ Error simple query:', simpleError)
+        return []
+      }
 
-    console.log('📊 Purchases encontrados:', purchases?.length || 0)
+      // Obtener títulos de cursos por separado
+      const courseIds = [...new Set(purchasesSimple.map((p: any) => p.course_id))]
+      const { data: courses } = await supabase
+        .from('courses')
+        .select('id, title')
+        .in('id', courseIds)
+      
+      const courseMap: { [key: string]: string } = {}
+      courses?.forEach((c: any) => { courseMap[c.id] = c.title })
+
+      return purchasesSimple.map((purchase: any) => ({
+        id: purchase.id,
+        user_email: purchase.payment_method || 'stripe',
+        user_name: null,
+        course_title: courseMap[purchase.course_id] || 'Curso',
+        price_paid: purchase.price_paid || 0,
+        purchase_date: purchase.purchase_date
+      }))
+    }
 
     if (!purchases || purchases.length === 0) {
       return []
     }
 
-    // Formatear resultados - sin buscar emails en user_roles
+    // Formatear resultados
     const recentSales: RecentSale[] = purchases.map((purchase: any) => {
       return {
         id: purchase.id,
-        user_email: purchase.user_id?.substring(0, 8) + '...',
+        user_email: purchase.payment_method || 'stripe',
         user_name: null,
         course_title: purchase.courses?.title || 'Curso',
         price_paid: purchase.price_paid || 0,

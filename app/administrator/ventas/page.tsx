@@ -506,8 +506,7 @@ export default function VentasPage() {
             <thead>
               <tr className="border-b border-gray-200">
                 <th className="text-left text-xs font-semibold text-gray-600 uppercase tracking-wider pb-3 pl-2">Curso</th>
-                <th className="text-left text-xs font-semibold text-gray-600 uppercase tracking-wider pb-3">Cliente</th>
-                <th className="text-left text-xs font-semibold text-gray-600 uppercase tracking-wider pb-3">Email</th>
+                <th className="text-left text-xs font-semibold text-gray-600 uppercase tracking-wider pb-3">Método</th>
                 <th className="text-right text-xs font-semibold text-gray-600 uppercase tracking-wider pb-3">Precio</th>
                 <th className="text-right text-xs font-semibold text-gray-600 uppercase tracking-wider pb-3 pr-2">Fecha</th>
               </tr>
@@ -515,7 +514,7 @@ export default function VentasPage() {
             <tbody>
               {(showAllSales ? allSales : recentSales).length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="text-center py-12 text-gray-500">
+                  <td colSpan={4} className="text-center py-12 text-gray-500">
                     No hay ventas registradas
                   </td>
                 </tr>
@@ -526,10 +525,9 @@ export default function VentasPage() {
                       <span className="text-sm font-medium text-gray-900">{sale.course_title}</span>
                     </td>
                     <td className="py-4">
-                      <span className="text-sm text-gray-700">{sale.user_name || '-'}</span>
-                    </td>
-                    <td className="py-4">
-                      <span className="text-sm text-gray-600">{sale.user_email}</span>
+                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-700 capitalize">
+                        {sale.user_email || 'stripe'}
+                      </span>
                     </td>
                     <td className="py-4 text-right">
                       <span className="text-sm font-bold text-green-600">{sale.price_paid.toFixed(2)}€</span>
