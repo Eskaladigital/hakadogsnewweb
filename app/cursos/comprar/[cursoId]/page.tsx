@@ -647,7 +647,7 @@ export default function ComprarCursoPage({ params }: { params: { cursoId: string
                         <CheckCircle className="w-5 h-5 text-green-600 mr-2 flex-shrink-0 mt-0.5" />
                         <div>
                           <p className="text-sm font-semibold text-green-800">
-                            Cupón "{appliedCoupon.code}" aplicado
+                            Cupón &quot;{appliedCoupon.code}&quot; aplicado
                           </p>
                           <p className="text-xs text-green-700">
                             {appliedCoupon.discount_percentage}% de descuento
