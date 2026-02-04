@@ -97,7 +97,7 @@ export async function POST(req: NextRequest) {
     const userEmail = user.email
 
     // Obtener datos del body
-    const { courseId } = await req.json()
+    const { courseId, couponId, couponCode, discountPercentage } = await req.json()
 
     if (!courseId) {
       return NextResponse.json(
@@ -123,6 +123,22 @@ export async function POST(req: NextRequest) {
       )
     }
 
+    // Calcular precio final con descuento si hay cupón
+    let finalPrice = course.price
+    let discountAmount = 0
+    
+    if (couponId && discountPercentage && discountPercentage > 0) {
+      discountAmount = Math.round((course.price * discountPercentage / 100) * 100) / 100
+      finalPrice = Math.max(0, course.price - discountAmount)
+      console.log('💰 Cupón aplicado:', {
+        couponCode,
+        originalPrice: course.price,
+        discountPercentage,
+        discountAmount,
+        finalPrice
+      })
+    }
+
     // Obtener el dominio base para las URLs de retorno
     const origin = req.headers.get('origin') || 'https://www.hakadogs.com'
 
@@ -142,7 +158,7 @@ export async function POST(req: NextRequest) {
               description: cleanDescription,
               images: course.cover_image_url ? [course.cover_image_url] : undefined,
             },
-            unit_amount: Math.round(course.price * 100), // Stripe usa centavos
+            unit_amount: Math.round(finalPrice * 100), // Stripe usa centavos
           },
           quantity: 1,
         },
@@ -155,7 +171,12 @@ export async function POST(req: NextRequest) {
         courseId: course.id,
         courseSlug: course.slug,
         courseTitle: course.title,
-        priceEuros: course.price.toString(),
+        priceEuros: finalPrice.toString(),
+        originalPrice: course.price.toString(),
+        couponId: couponId || '',
+        couponCode: couponCode || '',
+        discountPercentage: discountPercentage?.toString() || '0',
+        discountAmount: discountAmount.toString(),
       },
       // Configuración de facturación
       billing_address_collection: 'required',

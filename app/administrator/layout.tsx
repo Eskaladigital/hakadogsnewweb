@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { getSession } from '@/lib/supabase/auth'
-import { Loader2, LayoutDashboard, Users, BookOpen, Mail, LogOut, FileText, Trophy, ClipboardCheck, Star, DollarSign } from 'lucide-react'
+import { Loader2, LayoutDashboard, Users, BookOpen, Mail, LogOut, FileText, Trophy, ClipboardCheck, Star, DollarSign, Tag } from 'lucide-react'
 import { supabase } from '@/lib/supabase/client'
 
 export default function AdministratorLayout({
@@ -77,6 +77,7 @@ export default function AdministratorLayout({
     { id: 'users', name: 'Usuarios', icon: Users, href: '/administrator/usuarios' },
     { id: 'courses', name: 'Cursos', icon: BookOpen, href: '/administrator/cursos' },
     { id: 'ventas', name: 'Ventas', icon: DollarSign, href: '/administrator/ventas' },
+    { id: 'cupones', name: 'Cupones', icon: Tag, href: '/administrator/cupones' },
     { id: 'tests', name: 'Tests', icon: ClipboardCheck, href: '/administrator/tests' },
     { id: 'valoraciones', name: 'Valoraciones', icon: Star, href: '/administrator/valoraciones' },
     { id: 'blog', name: 'Blog', icon: FileText, href: '/administrator/blog' },

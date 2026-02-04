@@ -59,7 +59,15 @@ export async function POST(req: NextRequest) {
 
         // Verificar que el pago se completó
         if (session.payment_status === 'paid') {
-          const { userId, courseId, priceEuros } = session.metadata || {}
+          const { 
+            userId, 
+            courseId, 
+            priceEuros,
+            originalPrice,
+            couponId,
+            couponCode,
+            discountAmount 
+          } = session.metadata || {}
 
           if (!userId || !courseId || !priceEuros) {
             console.error('❌ Metadata incompleta en sesión:', session.metadata)
@@ -69,6 +77,10 @@ export async function POST(req: NextRequest) {
             )
           }
 
+          const pricePaid = parseFloat(priceEuros)
+          const originalPriceNum = originalPrice ? parseFloat(originalPrice) : pricePaid
+          const discountApplied = discountAmount ? parseFloat(discountAmount) : 0
+
           // Registrar la compra en la base de datos usando SERVICE_ROLE
           // Esto bypasea las políticas RLS ya que el webhook no tiene sesión de usuario
           try {
@@ -77,7 +89,10 @@ export async function POST(req: NextRequest) {
               .insert([{
                 user_id: userId,
                 course_id: courseId,
-                price_paid: parseFloat(priceEuros),
+                price_paid: pricePaid,
+                original_price: originalPriceNum,
+                discount_applied: discountApplied,
+                coupon_id: couponId || null,
                 payment_status: 'completed',
                 payment_method: 'stripe',
                 payment_id: session.payment_intent as string || session.id,
@@ -105,8 +120,52 @@ export async function POST(req: NextRequest) {
               userId,
               courseId,
               price: priceEuros,
-              paymentId: session.payment_intent as string || session.id
+              paymentId: session.payment_intent as string || session.id,
+              couponUsed: couponCode || 'ninguno'
             })
+
+            // Si se usó un cupón, registrar en coupon_usage y actualizar contador
+            if (couponId && couponCode) {
+              try {
+                // Registrar el uso del cupón en coupon_usage
+                const { error: usageError } = await supabaseAdmin
+                  .from('coupon_usage')
+                  .insert([{
+                    coupon_id: couponId,
+                    purchase_id: purchase.id,
+                    user_id: userId,
+                    course_id: courseId,
+                    discount_applied: discountApplied,
+                    original_price: originalPriceNum,
+                    final_price: pricePaid
+                  }])
+
+                if (usageError) {
+                  console.error('⚠️ Error registrando uso de cupón:', usageError)
+                } else {
+                  console.log('✅ Uso de cupón registrado:', {
+                    couponCode,
+                    discountApplied: discountApplied
+                  })
+                }
+
+                // Incrementar el contador times_used del cupón usando función SQL segura
+                const { error: incrementError } = await supabaseAdmin
+                  .rpc('increment_coupon_usage', { p_coupon_id: couponId })
+
+                if (incrementError) {
+                  console.error('⚠️ Error incrementando contador de cupón:', incrementError)
+                } else {
+                  console.log('✅ Contador de cupón incrementado')
+                }
+
+              } catch (couponError) {
+                // No retornamos error aquí porque la compra ya se registró correctamente
+                // Solo logueamos el error del cupón
+                console.error('⚠️ Error procesando cupón (no crítico):', couponError)
+              }
+            }
+
           } catch (dbError: any) {
             console.error('❌ Error inesperado registrando compra en BD:', {
               error: dbError,

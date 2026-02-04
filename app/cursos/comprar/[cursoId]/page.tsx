@@ -3,12 +3,13 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, ShoppingCart, CheckCircle, CreditCard, Lock, Clock, Loader2, AlertCircle, BookOpen, GraduationCap, ChevronRight } from 'lucide-react'
+import { ArrowLeft, ShoppingCart, CheckCircle, CreditCard, Lock, Clock, Loader2, AlertCircle, BookOpen, GraduationCap, ChevronRight, Tag, X } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { getSession } from '@/lib/supabase/auth'
 import { getCourseBySlug, hasPurchasedCourse, getCourseModules, courseHasModules } from '@/lib/supabase/courses'
 import type { Course, CourseModule, Lesson } from '@/lib/supabase/courses'
 import { supabase } from '@/lib/supabase/client'
+import { calculateDiscountedPrice } from '@/lib/supabase/coupons'
 
 export default function ComprarCursoPage({ params }: { params: { cursoId: string } }) {
   const router = useRouter()
@@ -25,6 +26,17 @@ export default function ComprarCursoPage({ params }: { params: { cursoId: string
   const [loadingLessons, setLoadingLessons] = useState(false)
   const [expandedModules, setExpandedModules] = useState<Set<string>>(new Set())
   const [hasModules, setHasModules] = useState(false)
+  
+  // Estados para cupones
+  const [couponCode, setCouponCode] = useState('')
+  const [appliedCoupon, setAppliedCoupon] = useState<{
+    id: string
+    code: string
+    discount_percentage: number
+    partner_name: string | null
+  } | null>(null)
+  const [couponError, setCouponError] = useState<string | null>(null)
+  const [loadingCoupon, setLoadingCoupon] = useState(false)
 
   useEffect(() => {
     async function loadData() {
@@ -129,6 +141,83 @@ export default function ComprarCursoPage({ params }: { params: { cursoId: string
     loadData()
   }, [cursoId, router])
 
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) {
+      setCouponError('Por favor, introduce un código de cupón')
+      return
+    }
+
+    setLoadingCoupon(true)
+    setCouponError(null)
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      
+      if (!session?.access_token) {
+        setCouponError('Tu sesión ha expirado')
+        return
+      }
+
+      const response = await fetch('/api/coupons/validate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({ code: couponCode }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok || !data.valid) {
+        setCouponError(data.error_message || 'Cupón no válido')
+        return
+      }
+
+      // Cupón válido - aplicar
+      setAppliedCoupon({
+        id: data.coupon_id,
+        code: data.code,
+        discount_percentage: data.discount_percentage,
+        partner_name: data.partner_name
+      })
+      setCouponCode('')
+      setCouponError(null)
+    } catch (error) {
+      console.error('Error aplicando cupón:', error)
+      setCouponError('Error al validar el cupón')
+    } finally {
+      setLoadingCoupon(false)
+    }
+  }
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null)
+    setCouponCode('')
+    setCouponError(null)
+  }
+
+  const calculateFinalPrice = () => {
+    if (!curso) return 0
+    if (!appliedCoupon) return curso.price
+
+    const { finalPrice } = calculateDiscountedPrice(
+      curso.price,
+      appliedCoupon.discount_percentage
+    )
+    return finalPrice
+  }
+
+  const calculateDiscount = () => {
+    if (!curso || !appliedCoupon) return 0
+
+    const { discountAmount } = calculateDiscountedPrice(
+      curso.price,
+      appliedCoupon.discount_percentage
+    )
+    return discountAmount
+  }
+
   const handleComprarCurso = async () => {
     if (!curso || !userId) return
 
@@ -154,6 +243,9 @@ export default function ComprarCursoPage({ params }: { params: { cursoId: string
         },
         body: JSON.stringify({
           courseId: curso.id,
+          couponId: appliedCoupon?.id || null,
+          couponCode: appliedCoupon?.code || null,
+          discountPercentage: appliedCoupon?.discount_percentage || 0,
         }),
       })
 
@@ -510,20 +602,124 @@ export default function ComprarCursoPage({ params }: { params: { cursoId: string
               <div className="bg-white rounded-xl shadow-lg p-6 sticky top-24">
                 <h3 className="text-xl font-bold text-gray-900 mb-6">Resumen de Compra</h3>
                 
+                {/* Campo de Cupón de Descuento */}
+                <div className="mb-6 pb-6 border-b border-gray-200">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
+                    <Tag className="w-4 h-4 mr-2 text-forest" />
+                    ¿Tienes un cupón de descuento?
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      placeholder="Código de cupón"
+                      value={couponCode}
+                      onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                      onKeyPress={(e) => {
+                        if (e.key === 'Enter' && !loadingCoupon && !appliedCoupon) {
+                          handleApplyCoupon()
+                        }
+                      }}
+                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-forest focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                      disabled={appliedCoupon !== null || loadingCoupon}
+                      maxLength={50}
+                    />
+                    <button
+                      onClick={handleApplyCoupon}
+                      disabled={loadingCoupon || appliedCoupon !== null || !couponCode.trim()}
+                      className="px-4 py-2 bg-forest text-white rounded-lg font-semibold hover:bg-forest-dark transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                    >
+                      {loadingCoupon ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        'Aplicar'
+                      )}
+                    </button>
+                  </div>
+                  
+                  {/* Cupón aplicado */}
+                  {appliedCoupon && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg flex items-start justify-between"
+                    >
+                      <div className="flex items-start">
+                        <CheckCircle className="w-5 h-5 text-green-600 mr-2 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-sm font-semibold text-green-800">
+                            Cupón "{appliedCoupon.code}" aplicado
+                          </p>
+                          <p className="text-xs text-green-700">
+                            {appliedCoupon.discount_percentage}% de descuento
+                            {appliedCoupon.partner_name && ` · ${appliedCoupon.partner_name}`}
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        onClick={handleRemoveCoupon}
+                        className="text-green-600 hover:text-green-800 transition"
+                        title="Quitar cupón"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </motion.div>
+                  )}
+
+                  {/* Error de cupón */}
+                  {couponError && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start"
+                    >
+                      <AlertCircle className="w-5 h-5 text-red-600 mr-2 flex-shrink-0 mt-0.5" />
+                      <p className="text-sm text-red-800">{couponError}</p>
+                    </motion.div>
+                  )}
+                </div>
+                
                 <div className="mb-6">
                   <div className="flex justify-between text-gray-700 mb-2">
+                    <span>Precio del curso:</span>
+                    <span className="font-semibold">{curso.price.toFixed(2)}€</span>
+                  </div>
+                  
+                  {appliedCoupon && (
+                    <>
+                      <div className="flex justify-between text-green-600 font-semibold mb-2">
+                        <span>Descuento ({appliedCoupon.discount_percentage}%):</span>
+                        <span>-{calculateDiscount().toFixed(2)}€</span>
+                      </div>
+                      <div className="border-t border-gray-200 my-3"></div>
+                      <div className="flex justify-between text-gray-700 mb-2">
+                        <span>Subtotal:</span>
+                        <span className="font-semibold">{calculateFinalPrice().toFixed(2)}€</span>
+                      </div>
+                    </>
+                  )}
+                  
+                  <div className="flex justify-between text-gray-700 mb-2">
                     <span>Base imponible:</span>
-                    <span className="font-semibold">{(curso.price / 1.21).toFixed(2)}€</span>
+                    <span className="font-semibold">{(calculateFinalPrice() / 1.21).toFixed(2)}€</span>
                   </div>
                   <div className="flex justify-between text-gray-700 mb-2">
                     <span>IVA (21%):</span>
-                    <span className="font-semibold">{(curso.price - (curso.price / 1.21)).toFixed(2)}€</span>
+                    <span className="font-semibold">{(calculateFinalPrice() - (calculateFinalPrice() / 1.21)).toFixed(2)}€</span>
                   </div>
                   <div className="border-t border-gray-200 my-4"></div>
                   <div className="flex justify-between text-xl font-bold text-gray-900">
                     <span>Total (IVA incluido):</span>
-                    <span>{curso.price.toFixed(2)}€</span>
+                    <span className="text-forest">{calculateFinalPrice().toFixed(2)}€</span>
                   </div>
+                  
+                  {appliedCoupon && (
+                    <div className="mt-2 text-center">
+                      <span className="text-sm text-gray-500 line-through">{curso.price.toFixed(2)}€</span>
+                      <span className="ml-2 text-sm font-semibold text-green-600">
+                        ¡Ahorras {calculateDiscount().toFixed(2)}€!
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 <button
