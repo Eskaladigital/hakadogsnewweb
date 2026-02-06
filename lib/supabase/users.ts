@@ -13,6 +13,7 @@ export interface User {
   created_at: string
   last_sign_in: string | null
   email_confirmed_at: string | null
+  purchase_count?: number // Número de compras realizadas
 }
 
 export interface UserWithStats extends User {

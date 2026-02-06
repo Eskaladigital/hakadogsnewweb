@@ -4,6 +4,15 @@
 -- Estadísticas generales para el panel de administración
 -- =====================================================
 
+-- Drop de todas las funciones para evitar conflictos de tipo
+DROP FUNCTION IF EXISTS get_dashboard_stats();
+DROP FUNCTION IF EXISTS get_recent_users(INTEGER);
+DROP FUNCTION IF EXISTS get_recent_sales(INTEGER);
+DROP FUNCTION IF EXISTS get_recent_contacts(INTEGER);
+DROP FUNCTION IF EXISTS get_sales_chart_data();
+DROP FUNCTION IF EXISTS get_top_selling_courses(INTEGER);
+DROP FUNCTION IF EXISTS get_conversion_metrics();
+
 -- 1. Función para obtener estadísticas generales del dashboard
 CREATE OR REPLACE FUNCTION get_dashboard_stats()
 RETURNS JSON AS $$
@@ -67,23 +76,27 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE OR REPLACE FUNCTION get_recent_users(limit_count INTEGER DEFAULT 10)
 RETURNS TABLE (
   id UUID,
-  email TEXT,
+  email VARCHAR(255),
   name TEXT,
-  role TEXT,
+  role VARCHAR(50),
   created_at TIMESTAMPTZ,
-  last_sign_in TIMESTAMPTZ
+  last_sign_in TIMESTAMPTZ,
+  purchase_count BIGINT
 ) AS $$
 BEGIN
   RETURN QUERY
   SELECT 
     u.id,
     u.email,
-    u.raw_user_meta_data->>'name' as name,
-    COALESCE(ur.role, 'user') as role,
+    (u.raw_user_meta_data->>'name')::TEXT as name,
+    COALESCE(ur.role, 'user')::VARCHAR(50) as role,
     u.created_at,
-    u.last_sign_in_at as last_sign_in
+    u.last_sign_in_at as last_sign_in,
+    COUNT(cp.id) as purchase_count
   FROM auth.users u
   LEFT JOIN public.user_roles ur ON u.id = ur.user_id
+  LEFT JOIN public.course_purchases cp ON u.id = cp.user_id
+  GROUP BY u.id, u.email, u.raw_user_meta_data, ur.role, u.created_at, u.last_sign_in_at
   ORDER BY u.created_at DESC
   LIMIT limit_count;
 END;

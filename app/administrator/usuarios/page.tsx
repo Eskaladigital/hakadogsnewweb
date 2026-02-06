@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { getAllUsers, updateUserRole, searchUsers, type User } from '@/lib/supabase/users'
-import { Users as UsersIcon, Search, Edit, Crown, User as UserIcon, BookOpen, TrendingUp, DollarSign, Loader2, ArrowLeft } from 'lucide-react'
+import { Users as UsersIcon, Search, Edit, Crown, User as UserIcon, BookOpen, TrendingUp, DollarSign, Loader2, ArrowLeft, ShoppingCart } from 'lucide-react'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
 import Toast from '@/components/ui/Toast'
 import ConfirmModal from '@/components/ui/ConfirmModal'
@@ -219,6 +219,9 @@ export default function UsuariosPage() {
                   Rol
                 </th>
                 <th className="text-left px-6 py-4 text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Compras
+                </th>
+                <th className="text-left px-6 py-4 text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Fecha Registro
                 </th>
                 <th className="text-left px-6 py-4 text-xs font-semibold text-gray-600 uppercase tracking-wider">
@@ -232,7 +235,7 @@ export default function UsuariosPage() {
             <tbody className="divide-y divide-gray-200">
               {filteredUsers.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center">
+                  <td colSpan={6} className="px-6 py-12 text-center">
                     <UsersIcon className="w-12 h-12 text-gray-400 mx-auto mb-3" />
                     <p className="text-gray-500">No se encontraron usuarios</p>
                   </td>
@@ -253,6 +256,19 @@ export default function UsuariosPage() {
                         {getRoleIcon(user.role)}
                         {user.role}
                       </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2">
+                        <ShoppingCart className={`w-4 h-4 ${(user.purchase_count || 0) > 0 ? 'text-green-600' : 'text-gray-400'}`} />
+                        <span className={`text-sm font-semibold ${(user.purchase_count || 0) > 0 ? 'text-green-600' : 'text-gray-500'}`}>
+                          {user.purchase_count || 0}
+                        </span>
+                        {(user.purchase_count || 0) > 0 && (
+                          <span className="text-xs text-gray-500">
+                            {(user.purchase_count || 0) === 1 ? 'compra' : 'compras'}
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-600">
                       {formatDate(user.created_at)}
