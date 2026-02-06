@@ -188,7 +188,7 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://cdn.tiny.cloud; style-src 'self' 'unsafe-inline' https://cdn.tiny.cloud https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' data: https://cdn.tiny.cloud https://fonts.gstatic.com; connect-src 'self' https://*.supabase.co https://jshqrsnzxzbizgjyfsde.supabase.co https://www.google-analytics.com https://region1.google-analytics.com https://api.openai.com https://cdn.tiny.cloud https://www.googletagmanager.com; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';"
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://cdn.tiny.cloud https://www.google.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://cdn.tiny.cloud https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' data: https://cdn.tiny.cloud https://fonts.gstatic.com; connect-src 'self' https://*.supabase.co https://jshqrsnzxzbizgjyfsde.supabase.co https://www.google-analytics.com https://region1.google-analytics.com https://api.openai.com https://cdn.tiny.cloud https://www.googletagmanager.com https://www.google.com; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://www.google.com https://www.recaptcha.net; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';"
           },
           {
             key: 'Permissions-Policy',
@@ -248,8 +248,8 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            // CSP mejorado - IMPORTANTE: Incluir todos los dominios de Supabase + Google Analytics region1
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://cdn.tiny.cloud; style-src 'self' 'unsafe-inline' https://cdn.tiny.cloud https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' data: https://cdn.tiny.cloud https://fonts.gstatic.com; connect-src 'self' https://*.supabase.co https://jshqrsnzxzbizgjyfsde.supabase.co https://www.google-analytics.com https://region1.google-analytics.com https://api.openai.com https://cdn.tiny.cloud https://www.googletagmanager.com; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';"
+            // CSP mejorado - IMPORTANTE: Incluir todos los dominios de Supabase + Google Analytics + reCAPTCHA
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://cdn.tiny.cloud https://www.google.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://cdn.tiny.cloud https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' data: https://cdn.tiny.cloud https://fonts.gstatic.com; connect-src 'self' https://*.supabase.co https://jshqrsnzxzbizgjyfsde.supabase.co https://www.google-analytics.com https://region1.google-analytics.com https://api.openai.com https://cdn.tiny.cloud https://www.googletagmanager.com https://www.google.com; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://www.google.com https://www.recaptcha.net; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';"
           },
           {
             key: 'Permissions-Policy',
