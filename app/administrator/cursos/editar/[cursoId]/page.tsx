@@ -297,9 +297,33 @@ export default function EditarCursoPage() {
       await updateCourse(cursoId, courseData)
 
       // 2. Actualizar/crear/eliminar lecciones
+      
+      // Obtener todas las lecciones actuales de la BD para comparar
+      const allLessonsInDB = await getCourseLessons(cursoId)
+      const allDBLessonIds = allLessonsInDB.map(l => l.id)
+      
+      // Identificar lecciones actuales en el formulario
       const existingLessonIds = lessons.filter(l => l.id && !l.id.startsWith('lesson-')).map(l => l.id)
       const newLessons = lessons.filter(l => l.id.startsWith('lesson-'))
       const updatedLessons = lessons.filter(l => l.id && !l.id.startsWith('lesson-'))
+      
+      // Identificar lecciones a ELIMINAR (están en BD pero no en el formulario)
+      const lessonsToDelete = allDBLessonIds.filter(dbId => !existingLessonIds.includes(dbId))
+      
+      console.log('🗑️ DEBUG - Lecciones a eliminar:', lessonsToDelete)
+      console.log('📝 DEBUG - Lecciones existentes en formulario:', existingLessonIds)
+      console.log('🆕 DEBUG - Lecciones nuevas:', newLessons.length)
+
+      // ELIMINAR lecciones que ya no existen en el formulario
+      for (const lessonIdToDelete of lessonsToDelete) {
+        try {
+          await deleteLesson(lessonIdToDelete)
+          console.log('✅ Lección eliminada:', lessonIdToDelete)
+        } catch (error) {
+          console.error('❌ Error eliminando lección:', lessonIdToDelete, error)
+          throw new Error(`Error al eliminar lección: ${error instanceof Error ? error.message : 'Error desconocido'}`)
+        }
+      }
 
       // Actualizar lecciones existentes
       for (let i = 0; i < updatedLessons.length; i++) {
