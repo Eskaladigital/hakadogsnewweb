@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Calendar, Clock, Eye, Share2, Facebook, Twitter, Linkedin, Tag, Loader2, BookOpen, ChevronRight, Mail, Copy, Check, MessageCircle } from 'lucide-react'
+import { Calendar, Clock, Eye, Share2, Facebook, Twitter, Linkedin, Tag, Loader2, BookOpen, ChevronRight, Copy, Check, MessageCircle } from 'lucide-react'
 import { getBlogPostBySlug, getPublishedBlogPosts } from '@/lib/supabase/blog'
 import type { BlogPostWithCategory } from '@/lib/supabase/blog'
 
@@ -46,7 +46,6 @@ export default function BlogPostPage() {
       const postData = await getBlogPostBySlug(slug)
       setPost(postData)
 
-      // Cargar posts relacionados (misma categoría)
       if (postData.category_id) {
         const allPosts = await getPublishedBlogPosts(4)
         const related = allPosts
@@ -82,7 +81,6 @@ export default function BlogPostPage() {
       return
     }
 
-    // URLs de compartir que intentarán abrir la app nativa si está instalada
     const shareUrls = {
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
       twitter: `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`,
@@ -90,29 +88,21 @@ export default function BlogPostPage() {
       whatsapp: `https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`
     }
     
-    // En móvil, usar Web Share API si está disponible
     if (navigator.share && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-      navigator.share({
-        title: title,
-        text: text,
-        url: url
-      }).catch((error) => {
-        // Si falla Web Share API, usar método tradicional
-        console.log('Error compartiendo:', error)
+      navigator.share({ title, text, url }).catch(() => {
         window.open(shareUrls[platform], '_blank', 'width=600,height=400')
       })
     } else {
-      // Desktop o Web Share API no disponible
       window.open(shareUrls[platform], '_blank', 'width=600,height=400')
     }
   }
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white pt-20 flex items-center justify-center">
+      <div className="min-h-screen bg-white pt-20 flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="w-12 h-12 animate-spin text-forest mx-auto mb-4" />
-          <p className="text-gray-600">Cargando artículo...</p>
+          <Loader2 className="w-10 h-10 animate-spin text-forest mx-auto mb-4" />
+          <p className="text-gray-500">Cargando artículo...</p>
         </div>
       </div>
     )
@@ -120,9 +110,9 @@ export default function BlogPostPage() {
 
   if (!post) {
     return (
-      <div className="min-h-screen bg-gray-50 pt-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 text-center">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">Artículo no encontrado</h1>
+      <div className="min-h-screen bg-white pt-20">
+        <div className="max-w-3xl mx-auto px-4 py-12 text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Artículo no encontrado</h1>
           <Link href="/blog" className="text-forest hover:underline">
             Volver al blog
           </Link>
@@ -132,356 +122,240 @@ export default function BlogPostPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white">
+    <div className="min-h-screen bg-white">
       {/* Barra de progreso de lectura */}
-      <div className="fixed top-0 left-0 w-full h-1 bg-gray-100 z-50">
+      <div className="fixed top-0 left-0 w-full h-1 bg-gray-200/50 z-50">
         <div 
-          className="h-full bg-gradient-to-r from-forest to-sage transition-all duration-300"
+          className="h-full bg-forest transition-all duration-150 ease-out"
           style={{ width: `${readProgress}%` }}
         />
       </div>
 
-      {/* Header compacto con breadcrumb */}
-      <div className="bg-white border-b border-gray-100 pt-24 pb-6 sticky top-0 z-40 backdrop-blur-lg bg-white/90">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 w-full overflow-hidden">
-          <nav className="flex items-center gap-2 text-sm text-gray-600">
+      {/* Breadcrumb */}
+      <nav className="pt-24 pb-4 border-b border-gray-100">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6">
+          <div className="flex items-center gap-1.5 text-sm text-gray-400">
             <Link href="/" className="hover:text-forest transition">Inicio</Link>
-            <ChevronRight className="w-4 h-4" />
+            <ChevronRight className="w-3.5 h-3.5" />
             <Link href="/blog" className="hover:text-forest transition">Blog</Link>
             {post.category && (
               <>
-                <ChevronRight className="w-4 h-4" />
-                <span className="text-gray-900 font-medium">{post.category.name}</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+                <span className="text-gray-600">{post.category.name}</span>
               </>
             )}
-          </nav>
-        </div>
-      </div>
-
-      {/* Hero minimalista */}
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 pt-12 pb-8">
-        <div className="max-w-4xl mx-auto w-full overflow-hidden">
-          {/* Categoría */}
-          {post.category && (
-            <div className="mb-6">
-              <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-bold bg-gradient-to-r from-forest to-sage text-white shadow-md">
-                <Tag className="w-4 h-4 mr-2" />
-                {post.category.name}
-              </span>
-            </div>
-          )}
-
-          {/* Título */}
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black text-gray-900 mb-4 sm:mb-6 leading-tight tracking-tight">
-            {post.title}
-          </h1>
-
-          {/* Extracto grande */}
-          {post.excerpt && (
-            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-600 leading-relaxed mb-6 sm:mb-8 font-light">
-              {post.excerpt}
-            </p>
-          )}
-
-          {/* Meta información mejorada */}
-          <div className="flex flex-wrap items-center gap-6 pb-8 border-b border-gray-200">
-            <div className="flex items-center gap-2 text-gray-700">
-              <div className="w-10 h-10 bg-gradient-to-br from-forest to-sage rounded-full flex items-center justify-center">
-                <Calendar className="w-5 h-5 text-white" />
-              </div>
-              <div className="text-sm">
-                <div className="font-semibold">{formatDate(post.published_at || post.created_at)}</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 text-gray-700">
-              <div className="w-10 h-10 bg-gradient-to-br from-forest to-sage rounded-full flex items-center justify-center">
-                <Clock className="w-5 h-5 text-white" />
-              </div>
-              <div className="text-sm">
-                <div className="font-semibold">{post.reading_time_minutes} min lectura</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 text-gray-700">
-              <div className="w-10 h-10 bg-gradient-to-br from-forest to-sage rounded-full flex items-center justify-center">
-                <Eye className="w-5 h-5 text-white" />
-              </div>
-              <div className="text-sm">
-                <div className="font-semibold">{post.views_count.toLocaleString()} vistas</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Botones de acción */}
-          <div className="flex flex-wrap items-center gap-4 pt-8">
-            <div className="relative">
-              <button
-                onClick={() => setShowShareMenu(!showShareMenu)}
-                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-forest to-sage text-white rounded-full font-semibold hover:shadow-lg transition-all hover:scale-105"
-              >
-                <Share2 className="w-5 h-5" />
-                Compartir
-              </button>
-              
-              {showShareMenu && (
-                <div className="absolute top-full left-0 mt-2 bg-white rounded-xl shadow-2xl border border-gray-100 p-2 z-50 min-w-[200px]">
-                  <button
-                    onClick={() => sharePost('facebook')}
-                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-blue-50 rounded-lg transition text-left group"
-                  >
-                    <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                      <Facebook className="w-4 h-4 text-white" />
-                    </div>
-                    <span className="text-gray-700 font-medium group-hover:text-blue-600">Facebook</span>
-                  </button>
-                  <button
-                    onClick={() => sharePost('twitter')}
-                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-sky-50 rounded-lg transition text-left group"
-                  >
-                    <div className="w-8 h-8 bg-sky-500 rounded-lg flex items-center justify-center">
-                      <Twitter className="w-4 h-4 text-white" />
-                    </div>
-                    <span className="text-gray-700 font-medium group-hover:text-sky-500">Twitter</span>
-                  </button>
-                  <button
-                    onClick={() => sharePost('linkedin')}
-                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-blue-50 rounded-lg transition text-left group"
-                  >
-                    <div className="w-8 h-8 bg-blue-700 rounded-lg flex items-center justify-center">
-                      <Linkedin className="w-4 h-4 text-white" />
-                    </div>
-                    <span className="text-gray-700 font-medium group-hover:text-blue-700">LinkedIn</span>
-                  </button>
-                  <button
-                    onClick={() => sharePost('whatsapp')}
-                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-green-50 rounded-lg transition text-left group"
-                  >
-                    <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
-                      <MessageCircle className="w-4 h-4 text-white" />
-                    </div>
-                    <span className="text-gray-700 font-medium group-hover:text-green-600">WhatsApp</span>
-                  </button>
-                  <button
-                    onClick={() => sharePost('copy')}
-                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg transition text-left group"
-                  >
-                    <div className="w-8 h-8 bg-gray-600 rounded-lg flex items-center justify-center">
-                      {copied ? <Check className="w-4 h-4 text-white" /> : <Copy className="w-4 h-4 text-white" />}
-                    </div>
-                    <span className="text-gray-700 font-medium group-hover:text-gray-900">
-                      {copied ? '¡Copiado!' : 'Copiar enlace'}
-                    </span>
-                  </button>
-                </div>
-              )}
-            </div>
           </div>
         </div>
-      </div>
+      </nav>
 
-      {/* Imagen destacada full-width con efecto parallax */}
+      {/* Cabecera del artículo */}
+      <header className="max-w-3xl mx-auto px-4 sm:px-6 pt-10 sm:pt-14 pb-8">
+        {post.category && (
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-forest/10 text-forest mb-5">
+            <Tag className="w-3 h-3" />
+            {post.category.name}
+          </span>
+        )}
+
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 leading-[1.15] tracking-tight mb-5">
+          {post.title}
+        </h1>
+
+        {post.excerpt && (
+          <p className="text-lg sm:text-xl text-gray-500 leading-relaxed mb-8">
+            {post.excerpt}
+          </p>
+        )}
+
+        {/* Meta: fecha, tiempo, vistas + compartir */}
+        <div className="flex flex-wrap items-center justify-between gap-4 text-sm text-gray-400">
+          <div className="flex flex-wrap items-center gap-4 sm:gap-6">
+            <span className="flex items-center gap-1.5">
+              <Calendar className="w-4 h-4" />
+              {formatDate(post.published_at || post.created_at)}
+            </span>
+            <span className="flex items-center gap-1.5">
+              <Clock className="w-4 h-4" />
+              {post.reading_time_minutes} min
+            </span>
+            <span className="flex items-center gap-1.5">
+              <Eye className="w-4 h-4" />
+              {post.views_count.toLocaleString()}
+            </span>
+          </div>
+
+          {/* Botón compartir */}
+          <div className="relative">
+            <button
+              onClick={() => setShowShareMenu(!showShareMenu)}
+              className="flex items-center gap-1.5 text-gray-400 hover:text-forest transition text-sm"
+            >
+              <Share2 className="w-4 h-4" />
+              Compartir
+            </button>
+            
+            {showShareMenu && (
+              <div className="absolute right-0 top-full mt-2 bg-white rounded-xl shadow-xl border border-gray-100 p-1.5 z-50 min-w-[180px]">
+                {[
+                  { key: 'facebook' as const, icon: Facebook, label: 'Facebook', color: 'bg-blue-600' },
+                  { key: 'twitter' as const, icon: Twitter, label: 'Twitter', color: 'bg-sky-500' },
+                  { key: 'linkedin' as const, icon: Linkedin, label: 'LinkedIn', color: 'bg-blue-700' },
+                  { key: 'whatsapp' as const, icon: MessageCircle, label: 'WhatsApp', color: 'bg-green-500' },
+                ].map(({ key, icon: Icon, label, color }) => (
+                  <button
+                    key={key}
+                    onClick={() => sharePost(key)}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 hover:bg-gray-50 rounded-lg transition text-left"
+                  >
+                    <div className={`w-6 h-6 ${color} rounded flex items-center justify-center`}>
+                      <Icon className="w-3.5 h-3.5 text-white" />
+                    </div>
+                    <span className="text-sm text-gray-700">{label}</span>
+                  </button>
+                ))}
+                <button
+                  onClick={() => sharePost('copy')}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 hover:bg-gray-50 rounded-lg transition text-left"
+                >
+                  <div className="w-6 h-6 bg-gray-500 rounded flex items-center justify-center">
+                    {copied ? <Check className="w-3.5 h-3.5 text-white" /> : <Copy className="w-3.5 h-3.5 text-white" />}
+                  </div>
+                  <span className="text-sm text-gray-700">{copied ? '¡Copiado!' : 'Copiar enlace'}</span>
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </header>
+
+      {/* Imagen destacada */}
       {post.featured_image_url && (
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 mb-12 sm:mb-16">
-          <div className="relative aspect-[21/9] bg-gray-900 rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl w-full">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 mb-10 sm:mb-14">
+          <div className="relative aspect-[2/1] rounded-2xl overflow-hidden">
             <Image
               src={post.featured_image_url}
               alt={post.title}
               fill
               className="object-cover"
-              sizes="(max-width: 1280px) 100vw, 1280px"
+              sizes="(max-width: 900px) 100vw, 900px"
               priority
-              loading="eager"
-              fetchPriority="high"
               quality={85}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
           </div>
         </div>
       )}
 
-      {/* Layout con sidebar derecho solamente */}
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 pb-20">
-        <div className="grid lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 w-full overflow-hidden">
-          
-          {/* Contenido principal - MÁS ANCHO */}
-          <article className="lg:col-span-8 w-full">
-            <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden w-full">
-              <div className="p-4 sm:p-6 md:p-8 lg:p-12 w-full">
-                {/* Contenido HTML con estilos mejorados y responsive */}
-                <div
-                  className="responsive-prose prose prose-sm sm:prose-base md:prose-lg max-w-none w-full
-                    prose-headings:font-black prose-headings:tracking-tight
-                    prose-h2:text-xl sm:prose-h2:text-2xl md:prose-h2:text-3xl prose-h2:mt-8 sm:prose-h2:mt-12 prose-h2:mb-4 sm:prose-h2:mb-6 prose-h2:text-gray-900
-                    prose-h3:text-lg sm:prose-h3:text-xl md:prose-h3:text-2xl prose-h3:mt-6 sm:prose-h3:mt-8 prose-h3:mb-3 sm:prose-h3:mb-4 prose-h3:text-gray-800
-                    prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4 sm:prose-p:mb-6 prose-p:text-sm sm:prose-p:text-base
-                    prose-a:text-forest prose-a:font-semibold prose-a:no-underline hover:prose-a:underline
-                    prose-strong:text-gray-900 prose-strong:font-bold
-                    prose-ul:my-4 sm:prose-ul:my-6 prose-ul:space-y-2
-                    prose-ol:my-4 sm:prose-ol:my-6 prose-ol:space-y-2
-                    prose-li:text-gray-700 prose-li:leading-relaxed prose-li:text-sm sm:prose-li:text-base
-                    prose-blockquote:border-l-4 prose-blockquote:border-forest prose-blockquote:bg-forest/5 prose-blockquote:py-3 sm:prose-blockquote:py-4 prose-blockquote:px-4 sm:prose-blockquote:px-6 prose-blockquote:rounded-r-xl prose-blockquote:not-italic prose-blockquote:text-sm sm:prose-blockquote:text-base
-                    prose-img:rounded-xl sm:prose-img:rounded-2xl prose-img:shadow-lg prose-img:my-6 sm:prose-img:my-8
-                    prose-code:text-forest prose-code:bg-gray-50 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:font-mono prose-code:text-xs sm:prose-code:text-sm
-                    prose-pre:bg-gray-900 prose-pre:rounded-xl sm:prose-pre:rounded-2xl prose-pre:shadow-lg prose-pre:text-xs sm:prose-pre:text-sm
-                    overflow-hidden"
-                  dangerouslySetInnerHTML={{ __html: post.content }}
-                />
-              </div>
-            </div>
+      {/* CONTENIDO DEL ARTÍCULO — el corazón de la página */}
+      <article className="max-w-3xl mx-auto px-4 sm:px-6 pb-16">
+        <div
+          className="blog-content prose prose-lg max-w-none
+            prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-gray-900
+            prose-h2:text-2xl sm:prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-4
+            prose-h3:text-xl sm:prose-h3:text-2xl prose-h3:mt-8 prose-h3:mb-3
+            prose-p:text-gray-700 prose-p:leading-relaxed
+            prose-a:text-forest prose-a:font-medium hover:prose-a:underline
+            prose-strong:text-gray-900
+            prose-blockquote:border-l-4 prose-blockquote:border-forest prose-blockquote:bg-gray-50 prose-blockquote:rounded-r-lg prose-blockquote:not-italic
+            prose-img:rounded-xl prose-img:shadow-md
+            prose-li:text-gray-700"
+          dangerouslySetInnerHTML={{ __html: post.content }}
+        />
+      </article>
 
-            {/* Compartir al final del artículo */}
-            <div className="mt-8 sm:mt-12 bg-gradient-to-br from-forest/5 via-sage/5 to-forest/5 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 border border-forest/10 w-full overflow-hidden">
-              <div className="flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6">
-                <div className="text-center md:text-left">
-                  <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 mb-1 sm:mb-2">¿Te ha resultado útil?</h3>
-                  <p className="text-xs sm:text-sm md:text-base text-gray-600">Comparte este artículo con otros amantes de los perros</p>
-                </div>
-                <div className="flex gap-2 sm:gap-3">
-                  <button
-                    onClick={() => sharePost('facebook')}
-                    className="p-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition shadow-md hover:shadow-lg"
-                    title="Compartir en Facebook"
-                  >
-                    <Facebook className="w-5 h-5" />
-                  </button>
-                  <button
-                    onClick={() => sharePost('twitter')}
-                    className="p-3 bg-sky-500 text-white rounded-xl hover:bg-sky-600 transition shadow-md hover:shadow-lg"
-                    title="Compartir en Twitter"
-                  >
-                    <Twitter className="w-5 h-5" />
-                  </button>
-                  <button
-                    onClick={() => sharePost('linkedin')}
-                    className="p-3 bg-blue-700 text-white rounded-xl hover:bg-blue-800 transition shadow-md hover:shadow-lg"
-                    title="Compartir en LinkedIn"
-                  >
-                    <Linkedin className="w-5 h-5" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </article>
+      {/* Separador */}
+      <hr className="max-w-3xl mx-auto border-gray-100" />
 
-          {/* Sidebar derecho - Info adicional */}
-          <aside className="lg:col-span-4 w-full overflow-hidden">
-            <div className="sticky top-32 space-y-4 sm:space-y-6">
-              
-              {/* Artículos Relacionados */}
-              {relatedPosts.length > 0 && (
-                <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6">
-                  <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 mb-3 sm:mb-4 flex items-center">
-                    <BookOpen className="w-4 sm:w-5 h-4 sm:h-5 mr-2 text-forest" />
-                    Artículos Relacionados
-                  </h3>
-                  <div className="space-y-4">
-                    {relatedPosts.map((relatedPost) => (
-                      <Link
-                        key={relatedPost.id}
-                        href={`/blog/${relatedPost.slug}`}
-                        className="group block hover:bg-gray-50 p-3 rounded-lg transition"
-                      >
-                        {relatedPost.featured_image_url && (
-                          <div className="aspect-video bg-gray-200 rounded-lg overflow-hidden mb-3 relative">
-                            <Image
-                              src={relatedPost.featured_image_url}
-                              alt={relatedPost.title}
-                              fill
-                              className="object-cover group-hover:scale-105 transition duration-300"
-                              sizes="(max-width: 1024px) 100vw, 300px"
-                              loading="lazy"
-                              quality={75}
-                            />
-                          </div>
-                        )}
-                        {relatedPost.category && (
-                          <span className="inline-block px-2 py-1 rounded-full text-xs font-bold bg-forest/10 text-forest mb-2">
-                            {relatedPost.category.name}
-                          </span>
-                        )}
-                        <h4 className="text-sm font-bold text-gray-900 group-hover:text-forest transition line-clamp-2 mb-1">
-                          {relatedPost.title}
-                        </h4>
-                        <div className="flex items-center text-xs text-gray-500">
-                          <Clock className="w-3 h-3 mr-1" />
-                          {relatedPost.reading_time_minutes} min
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Categorías del Blog */}
-              {post.category && (
-                <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-                    <Tag className="w-5 h-5 mr-2 text-forest" />
-                    Más Temas
-                  </h3>
-                  <div className="space-y-2">
-                    <Link
-                      href="/blog"
-                      className="block px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition text-gray-700 font-medium"
-                    >
-                      Ver Todos los Artículos
-                    </Link>
-                    <Link
-                      href="/blog"
-                      className="block px-4 py-3 bg-gradient-to-r from-forest to-sage rounded-lg transition text-white font-medium hover:shadow-lg"
-                    >
-                      Más de {post.category.name}
-                    </Link>
-                  </div>
-                </div>
-              )}
-
-              {/* CTA Cursos */}
-              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
-                <div className="flex items-center justify-center w-12 h-12 bg-forest/10 rounded-xl mb-4">
-                  <BookOpen className="w-6 h-6 text-forest" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Aprende Más</h3>
-                <p className="text-gray-600 text-sm mb-4">
-                  Descubre nuestros cursos profesionales de educación canina
-                </p>
-                <Link
-                  href="/cursos"
-                  className="block w-full bg-gradient-to-r from-forest to-sage text-white text-center px-4 py-3 rounded-lg font-bold hover:shadow-lg transition"
-                >
-                  Ver Cursos
-                </Link>
-              </div>
-
-              {/* Info rápida */}
-              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
-                <h4 className="font-bold text-gray-900 mb-4">Sobre Hakadogs</h4>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  Somos profesionales con más de 8 años de experiencia en educación canina. 
-                  Nuestra misión es ayudarte a crear una relación equilibrada con tu perro.
-                </p>
-              </div>
-            </div>
-          </aside>
+      {/* Compartir al final */}
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-gray-500 text-sm">¿Te ha resultado útil? Compártelo</p>
+          <div className="flex gap-2">
+            {[
+              { key: 'facebook' as const, icon: Facebook, color: 'bg-blue-600 hover:bg-blue-700' },
+              { key: 'twitter' as const, icon: Twitter, color: 'bg-sky-500 hover:bg-sky-600' },
+              { key: 'linkedin' as const, icon: Linkedin, color: 'bg-blue-700 hover:bg-blue-800' },
+              { key: 'whatsapp' as const, icon: MessageCircle, color: 'bg-green-500 hover:bg-green-600' },
+            ].map(({ key, icon: Icon, color }) => (
+              <button
+                key={key}
+                onClick={() => sharePost(key)}
+                className={`p-2.5 ${color} text-white rounded-lg transition`}
+                title={`Compartir en ${key}`}
+              >
+                <Icon className="w-4 h-4" />
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
+      {/* Artículos relacionados */}
+      {relatedPosts.length > 0 && (
+        <section className="bg-gray-50 py-14 sm:py-20">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-8 text-center">
+              Artículos Relacionados
+            </h2>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {relatedPosts.map((relatedPost) => (
+                <Link
+                  key={relatedPost.id}
+                  href={`/blog/${relatedPost.slug}`}
+                  className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition"
+                >
+                  {relatedPost.featured_image_url && (
+                    <div className="aspect-video relative">
+                      <Image
+                        src={relatedPost.featured_image_url}
+                        alt={relatedPost.title}
+                        fill
+                        className="object-cover group-hover:scale-105 transition duration-300"
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        loading="lazy"
+                        quality={75}
+                      />
+                    </div>
+                  )}
+                  <div className="p-4">
+                    {relatedPost.category && (
+                      <span className="inline-block text-xs font-semibold text-forest mb-2">
+                        {relatedPost.category.name}
+                      </span>
+                    )}
+                    <h3 className="text-sm font-bold text-gray-900 group-hover:text-forest transition line-clamp-2 mb-2">
+                      {relatedPost.title}
+                    </h3>
+                    <span className="text-xs text-gray-400 flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      {relatedPost.reading_time_minutes} min
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* CTA Final */}
-      <section className="bg-gradient-to-r from-forest via-sage to-forest text-white py-12 sm:py-16 md:py-20">
-        <div className="max-w-4xl mx-auto px-3 sm:px-4 md:px-6 text-center w-full overflow-hidden">
-          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black mb-4 sm:mb-6">¿Listo para transformar la vida con tu perro?</h2>
-          <p className="text-base sm:text-lg md:text-xl text-white/90 mb-6 sm:mb-8 leading-relaxed">
-            Únete a miles de personas que ya han mejorado la relación con sus perros gracias a nuestros cursos profesionales
+      <section className="bg-forest text-white py-14 sm:py-20">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
+            ¿Listo para transformar la vida con tu perro?
+          </h2>
+          <p className="text-white/80 text-lg mb-8 max-w-xl mx-auto">
+            Únete a miles de personas que ya han mejorado la relación con sus perros
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               href="/cursos"
-              className="inline-block bg-white text-forest px-8 py-4 rounded-full font-bold hover:bg-gray-100 transition shadow-xl hover:shadow-2xl hover:scale-105"
+              className="inline-block bg-white text-forest px-8 py-3.5 rounded-full font-bold hover:bg-gray-100 transition"
             >
               Explorar Cursos
             </Link>
             <Link
               href="/blog"
-              className="inline-block bg-white/10 backdrop-blur text-white border-2 border-white px-8 py-4 rounded-full font-bold hover:bg-white/20 transition"
+              className="inline-block border-2 border-white/40 text-white px-8 py-3.5 rounded-full font-bold hover:bg-white/10 transition"
             >
               Más Artículos
             </Link>
