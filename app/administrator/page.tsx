@@ -9,6 +9,7 @@ import {
 } from 'lucide-react'
 import { getDashboardStats, getRecentUsers, getRecentSales, getRecentContacts, type DashboardStats } from '@/lib/supabase/dashboard'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
+import { formatCurrency } from '@/lib/utils'
 
 export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
@@ -114,8 +115,8 @@ export default function DashboardPage() {
     },
     {
       title: 'Ingresos del Mes',
-      value: `${stats.sales.revenue_month.toFixed(2)}€`,
-      change: `${stats.sales.revenue_total.toFixed(2)}€ total`,
+      value: formatCurrency(stats.sales.revenue_month),
+      change: `${formatCurrency(stats.sales.revenue_total)} total`,
       icon: DollarSign,
       color: 'bg-amber-500',
       href: '/administrator/ventas'
@@ -273,7 +274,7 @@ export default function DashboardPage() {
                     <p className="text-xs text-gray-500 truncate">{sale.user_name || sale.user_email}</p>
                   </div>
                   <div className="ml-4 text-right">
-                    <p className="text-sm font-bold text-green-600">{sale.price_paid.toFixed(2)}€</p>
+                    <p className="text-sm font-bold text-green-600">{formatCurrency(sale.price_paid)}</p>
                     <p className="text-xs text-gray-500">{formatDate(sale.purchase_date)}</p>
                   </div>
                 </div>

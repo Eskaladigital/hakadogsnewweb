@@ -8,6 +8,7 @@ import { motion } from 'framer-motion'
 import { getAllCourses } from '@/lib/supabase/courses'
 import type { Course } from '@/lib/supabase/courses'
 import { supabase } from '@/lib/supabase/client'
+import { formatCurrency } from '@/lib/utils'
 
 export default function CursosPage() {
   const [email, setEmail] = useState('')
@@ -410,7 +411,7 @@ export default function CursosPage() {
                     <div className="p-4 sm:p-6 border-t border-gray-100 bg-gray-50">
                       <div className="flex items-center justify-between mb-3 sm:mb-4">
                         <div>
-                          <span className="text-2xl sm:text-3xl font-bold text-gray-900">{curso.price.toFixed(2)}€</span>
+                          <span className="text-2xl sm:text-3xl font-bold text-gray-900">{formatCurrency(curso.price)}</span>
                           <span className="text-gray-600 text-xs sm:text-sm ml-1">/único pago</span>
                         </div>
                       </div>

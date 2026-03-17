@@ -43,3 +43,29 @@ export function getDaysBetween(date1: Date, date2: Date): number {
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
   return diffDays
 }
+
+/**
+ * Formatea cantidades monetarias en formato español:
+ * - Separador de miles: "."
+ * - Separador de decimales: ","
+ * Ejemplo: 1234.56 → "1.234,56 €"
+ */
+export function formatCurrency(amount: number, decimals: number = 2): string {
+  return new Intl.NumberFormat('es-ES', {
+    style: 'currency',
+    currency: 'EUR',
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals
+  }).format(amount)
+}
+
+/**
+ * Formatea solo la parte numérica (sin símbolo €) en formato español.
+ * Útil cuando el símbolo se muestra por separado.
+ */
+export function formatCurrencyNumber(amount: number, decimals: number = 2): string {
+  return new Intl.NumberFormat('es-ES', {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals
+  }).format(amount)
+}

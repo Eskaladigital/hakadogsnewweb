@@ -10,6 +10,7 @@ import { getCourseBySlug, hasPurchasedCourse, getCourseModules, courseHasModules
 import type { Course, CourseModule, Lesson } from '@/lib/supabase/courses'
 import { supabase } from '@/lib/supabase/client'
 import { calculateDiscountedPrice } from '@/lib/supabase/coupons'
+import { formatCurrency } from '@/lib/utils'
 
 export default function ComprarCursoPage({ params }: { params: { cursoId: string } }) {
   const router = useRouter()
@@ -681,42 +682,42 @@ export default function ComprarCursoPage({ params }: { params: { cursoId: string
                 <div className="mb-6">
                   <div className="flex justify-between text-gray-700 mb-2">
                     <span>Precio del curso:</span>
-                    <span className="font-semibold">{curso.price.toFixed(2)}€</span>
+                    <span className="font-semibold">{formatCurrency(curso.price)}</span>
                   </div>
                   
                   {appliedCoupon && (
                     <>
                       <div className="flex justify-between text-green-600 font-semibold mb-2">
                         <span>Descuento ({appliedCoupon.discount_percentage}%):</span>
-                        <span>-{calculateDiscount().toFixed(2)}€</span>
+                        <span>-{formatCurrency(calculateDiscount())}</span>
                       </div>
                       <div className="border-t border-gray-200 my-3"></div>
                       <div className="flex justify-between text-gray-700 mb-2">
                         <span>Subtotal:</span>
-                        <span className="font-semibold">{calculateFinalPrice().toFixed(2)}€</span>
+                        <span className="font-semibold">{formatCurrency(calculateFinalPrice())}</span>
                       </div>
                     </>
                   )}
                   
                   <div className="flex justify-between text-gray-700 mb-2">
                     <span>Base imponible:</span>
-                    <span className="font-semibold">{(calculateFinalPrice() / 1.21).toFixed(2)}€</span>
+                    <span className="font-semibold">{formatCurrency(calculateFinalPrice() / 1.21)}</span>
                   </div>
                   <div className="flex justify-between text-gray-700 mb-2">
                     <span>IVA (21%):</span>
-                    <span className="font-semibold">{(calculateFinalPrice() - (calculateFinalPrice() / 1.21)).toFixed(2)}€</span>
+                    <span className="font-semibold">{formatCurrency(calculateFinalPrice() - (calculateFinalPrice() / 1.21))}</span>
                   </div>
                   <div className="border-t border-gray-200 my-4"></div>
                   <div className="flex justify-between text-xl font-bold text-gray-900">
                     <span>Total (IVA incluido):</span>
-                    <span className="text-forest">{calculateFinalPrice().toFixed(2)}€</span>
+                    <span className="text-forest">{formatCurrency(calculateFinalPrice())}</span>
                   </div>
                   
                   {appliedCoupon && (
                     <div className="mt-2 text-center">
-                      <span className="text-sm text-gray-500 line-through">{curso.price.toFixed(2)}€</span>
+                      <span className="text-sm text-gray-500 line-through">{formatCurrency(curso.price)}</span>
                       <span className="ml-2 text-sm font-semibold text-green-600">
-                        ¡Ahorras {calculateDiscount().toFixed(2)}€!
+                        ¡Ahorras {formatCurrency(calculateDiscount())}!
                       </span>
                     </div>
                   )}

@@ -14,6 +14,7 @@ import UserStatsCard from '@/components/gamification/UserStatsCard'
 import StreakCounter from '@/components/gamification/StreakCounter'
 import BadgeCard from '@/components/gamification/BadgeCard'
 import CourseReviewModal from '@/components/courses/CourseReviewModal'
+import { formatCurrency } from '@/lib/utils'
 
 interface CursoConProgreso extends Course {
   progress: number
@@ -539,7 +540,7 @@ export default function MiEscuelaPage() {
                             <Clock className="w-4 h-4 mr-1" />
                             {curso.duration_minutes} min
                           </span>
-                          <span className="text-2xl font-bold text-gray-900">{curso.price.toFixed(2)}€</span>
+                          <span className="text-2xl font-bold text-gray-900">{formatCurrency(curso.price)}</span>
                         </div>
                       </div>
                       

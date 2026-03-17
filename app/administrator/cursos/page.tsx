@@ -8,6 +8,7 @@ import { getAllCourses, getAdminStats, deleteCourse, updateCourse, type Course }
 import { BookOpen, TrendingUp, DollarSign, Users, Plus, Edit, Trash2, Eye, Search, ChevronUp, ChevronDown, CheckCircle, XCircle, ArrowLeft } from 'lucide-react'
 import Toast from '@/components/ui/Toast'
 import ConfirmModal from '@/components/ui/ConfirmModal'
+import { formatCurrency } from '@/lib/utils'
 
 type SortField = 'title' | 'total_lessons' | 'duration_minutes' | 'price' | 'is_published'
 type SortDirection = 'asc' | 'desc'
@@ -251,9 +252,9 @@ export default function AdministratorPage() {
                 <p className="text-gray-600">Ingresos</p>
                 <DollarSign className="w-5 h-5 text-gold" />
               </div>
-              <p className="text-3xl font-bold text-gray-900">{stats.totalRevenue.toFixed(2)}€</p>
+              <p className="text-3xl font-bold text-gray-900">{formatCurrency(stats.totalRevenue)}</p>
               <p className="text-sm text-gray-500 mt-1">
-                {stats.totalSales > 0 ? `Promedio: ${(stats.totalRevenue / stats.totalSales).toFixed(2)}€` : 'Sin ventas aún'}
+                {stats.totalSales > 0 ? `Promedio: ${formatCurrency(stats.totalRevenue / stats.totalSales)}` : 'Sin ventas aún'}
               </p>
             </div>
 
@@ -440,7 +441,7 @@ export default function AdministratorPage() {
                           </td>
                           <td className="px-6 py-4">
                             <p className="text-sm font-semibold text-gray-900">
-                              {course.is_free ? 'Gratis' : `${course.price}€`}
+                              {course.is_free ? 'Gratis' : formatCurrency(course.price)}
                             </p>
                           </td>
                           <td className="px-6 py-4">

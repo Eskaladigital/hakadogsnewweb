@@ -13,6 +13,7 @@ import {
   type Coupon,
   type CouponStats
 } from '@/lib/supabase/coupons'
+import { formatCurrency } from '@/lib/utils'
 
 export default function CuponesAdminPage() {
   const [loading, setLoading] = useState(true)
@@ -216,7 +217,7 @@ export default function CuponesAdminPage() {
               <p className="text-sm font-medium text-gray-600 mb-1">Usos Totales</p>
               <p className="text-3xl font-bold text-gray-900">{totalStats.totalUses}</p>
               <p className="text-sm text-gray-500 mt-1">
-                {totalStats.totalDiscount.toFixed(2)}€ en descuentos
+                {formatCurrency(totalStats.totalDiscount)} en descuentos
               </p>
             </div>
             <div className="bg-green-100 w-12 h-12 rounded-lg flex items-center justify-center">
@@ -229,7 +230,7 @@ export default function CuponesAdminPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 mb-1">Ingresos con Cupón</p>
-              <p className="text-3xl font-bold text-gray-900">{totalStats.totalRevenue.toFixed(2)}€</p>
+              <p className="text-3xl font-bold text-gray-900">{formatCurrency(totalStats.totalRevenue)}</p>
               <p className="text-sm text-gray-500 mt-1">Ventas con descuento</p>
             </div>
             <div className="bg-amber-100 w-12 h-12 rounded-lg flex items-center justify-center">
@@ -307,7 +308,7 @@ export default function CuponesAdminPage() {
                           </p>
                           {couponStats && couponStats.total_discount_given > 0 && (
                             <p className="text-xs text-gray-500">
-                              {couponStats.total_discount_given.toFixed(2)}€ descuento
+                              {formatCurrency(couponStats.total_discount_given)} descuento
                             </p>
                           )}
                         </div>

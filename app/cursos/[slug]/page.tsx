@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { BookOpen, CheckCircle, Clock, GraduationCap, Target, PlayCircle, ArrowLeft } from 'lucide-react'
 import { createClient } from '@supabase/supabase-js'
 import type { Course, CourseModule, Lesson } from '@/lib/supabase/courses'
+import { formatCurrencyNumber } from '@/lib/utils'
 import CourseClientActions from './CourseClientActions'
 import CourseModulesAccordion from './CourseModulesAccordion'
 
@@ -456,7 +457,7 @@ export default async function CursoPage({ params }: Props) {
                   <div className="text-center mb-8 pb-8 border-b-2 border-gray-200">
                     <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Precio del curso</p>
                     <div className="flex items-baseline justify-center mb-2">
-                      <span className="text-6xl font-black text-forest-dark">{course.price.toFixed(2)}</span>
+                      <span className="text-6xl font-black text-forest-dark">{formatCurrencyNumber(course.price)}</span>
                       <span className="text-3xl font-bold text-forest-dark ml-1">€</span>
                     </div>
                     <p className="text-forest font-semibold mb-1">pago único</p>

@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ShoppingCart, Share2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase/client'
+import { formatCurrency } from '@/lib/utils'
 
 interface Props {
   courseTitle: string
@@ -97,7 +98,7 @@ export default function CourseClientActions({ courseTitle, courseSlug, actionTyp
         className="bg-white text-forest font-bold py-4 px-8 rounded-xl hover:bg-white/90 transition-all inline-flex items-center shadow-lg"
       >
         <ShoppingCart className="w-5 h-5 mr-2" />
-        Comprar Curso por {price?.toFixed(2)}€
+        Comprar Curso por {price != null ? formatCurrency(price) : ''}
       </button>
     )
   }

@@ -9,6 +9,7 @@ import {
 import { getDashboardStats, type DashboardStats } from '@/lib/supabase/dashboard'
 import { supabase } from '@/lib/supabase/client'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
+import { formatCurrency } from '@/lib/utils'
 
 interface Purchase {
   id: string
@@ -223,7 +224,7 @@ export default function VentasPage() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Análisis de Ventas</h1>
           <p className="text-gray-600">
-            {totalSales} ventas · {totalRevenue.toFixed(2)}€ ingresos totales
+            {totalSales} ventas · {formatCurrency(totalRevenue)} ingresos totales
           </p>
         </div>
       </div>
@@ -237,7 +238,7 @@ export default function VentasPage() {
             </div>
             <span className="text-sm text-gray-600">Ingresos Totales</span>
           </div>
-          <p className="text-3xl font-bold text-gray-900">{totalRevenue.toFixed(2)}€</p>
+          <p className="text-3xl font-bold text-gray-900">{formatCurrency(totalRevenue)}</p>
         </div>
 
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
@@ -257,7 +258,7 @@ export default function VentasPage() {
             </div>
             <span className="text-sm text-gray-600">Ticket Promedio</span>
           </div>
-          <p className="text-3xl font-bold text-gray-900">{ticketPromedio.toFixed(2)}€</p>
+          <p className="text-3xl font-bold text-gray-900">{formatCurrency(ticketPromedio)}</p>
         </div>
 
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
@@ -289,7 +290,7 @@ export default function VentasPage() {
                   />
                   {item.revenue > 0 && (
                     <span className="absolute right-2 top-1/2 -translate-y-1/2 text-sm font-semibold text-gray-700">
-                      {item.revenue.toFixed(0)}€ ({item.count})
+                      {formatCurrency(item.revenue, 0)} ({item.count})
                     </span>
                   )}
                 </div>
@@ -322,7 +323,7 @@ export default function VentasPage() {
                     {day.count > 0 && (
                       <div className="absolute bottom-full mb-2 hidden group-hover:block z-10">
                         <div className="bg-gray-900 text-white text-xs rounded px-2 py-1 whitespace-nowrap">
-                          {new Date(day.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}: {day.count} ({day.revenue.toFixed(0)}€)
+                          {new Date(day.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}: {day.count} ({formatCurrency(day.revenue, 0)})
                         </div>
                       </div>
                     )}
@@ -373,7 +374,7 @@ export default function VentasPage() {
                       </span>
                     </div>
                     <span className="text-sm font-bold text-green-600">
-                      {course.revenue.toFixed(2)}€ <span className="text-gray-400 font-normal">({course.count})</span>
+                      {formatCurrency(course.revenue)} <span className="text-gray-400 font-normal">({course.count})</span>
                     </span>
                   </div>
                   <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
@@ -439,7 +440,7 @@ export default function VentasPage() {
                       </span>
                     </td>
                     <td className="py-3 text-right">
-                      <span className="text-sm font-bold text-green-600">{sale.price_paid?.toFixed(2)}€</span>
+                      <span className="text-sm font-bold text-green-600">{sale.price_paid != null ? formatCurrency(sale.price_paid) : '-'}</span>
                     </td>
                     <td className="py-3 text-right">
                       <span className="text-sm text-gray-500">{formatDate(sale.purchase_date)}</span>
@@ -457,7 +458,7 @@ export default function VentasPage() {
               {showAllSales ? purchases.length : Math.min(10, purchases.length)} de {purchases.length} ventas
             </span>
             <span className="text-lg font-bold text-green-600">
-              Total: {totalRevenue.toFixed(2)}€
+              Total: {formatCurrency(totalRevenue)}
             </span>
           </div>
         )}
