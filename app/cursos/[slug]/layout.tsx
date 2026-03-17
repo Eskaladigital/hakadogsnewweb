@@ -1,9 +1,9 @@
 import { Metadata } from 'next'
 import { createClient } from '@supabase/supabase-js'
 
-// Generar TODAS las páginas estáticas para mejor SEO
-export const dynamicParams = false // Solo rutas pre-generadas, el resto 404
-export const revalidate = 86400 // Revalidar cada 24 horas
+// Permitir generación on-demand de cursos nuevos (los pre-generados siguen siendo estáticos)
+export const dynamicParams = true
+export const revalidate = 3600
 
 // Cliente de Supabase para server-side
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
