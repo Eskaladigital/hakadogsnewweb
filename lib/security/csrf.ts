@@ -21,7 +21,7 @@ export function generateCSRFToken(): string {
  * Este token debe ser incluido en formularios y peticiones de cambio de estado
  */
 export async function getCSRFToken(): Promise<string> {
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   let token = cookieStore.get(CSRF_TOKEN_NAME)?.value
 
   if (!token) {
@@ -46,7 +46,7 @@ export async function getCSRFToken(): Promise<string> {
 export async function validateCSRFToken(
   request: Request
 ): Promise<{ valid: boolean; error?: string }> {
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   const expectedToken = cookieStore.get(CSRF_TOKEN_NAME)?.value
 
   if (!expectedToken) {

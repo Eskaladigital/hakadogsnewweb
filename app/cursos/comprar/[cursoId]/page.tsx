@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, ShoppingCart, CheckCircle, CreditCard, Lock, Clock, Loader2, AlertCircle, BookOpen, GraduationCap, ChevronRight, Tag, X } from 'lucide-react'
 import { motion } from 'framer-motion'
@@ -12,9 +12,10 @@ import { supabase } from '@/lib/supabase/client'
 import { calculateDiscountedPrice } from '@/lib/supabase/coupons'
 import { formatCurrency } from '@/lib/utils'
 
-export default function ComprarCursoPage({ params }: { params: { cursoId: string } }) {
+export default function ComprarCursoPage() {
   const router = useRouter()
-  const { cursoId } = params
+  const params = useParams()
+  const cursoId = params.cursoId as string
   const [loading, setLoading] = useState(true)
   const [curso, setCurso] = useState<Course | null>(null)
   const [userId, setUserId] = useState<string | null>(null)

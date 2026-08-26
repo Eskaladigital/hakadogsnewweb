@@ -9,42 +9,31 @@ import { getExtendedCityData } from '@/lib/extendedCityData'
 import { getCityContent } from '@/lib/supabase/cityContent'
 import Hero from '@/components/Hero'
 
-// Lazy load de componentes pesados para reducir main thread blocking
-// ssr: false para reducir hydration cost, loading con Suspense
-const ServicesSection = dynamic(() => import('@/components/ServicesSection'), { 
-  ssr: false,
+const ServicesSection = dynamic(() => import('@/components/ServicesSection'), {
   loading: () => <div className="h-96 bg-gray-50 animate-pulse rounded-3xl" />
 })
-const LocalParksSection = dynamic(() => import('@/components/LocalParksSection'), { 
-  ssr: false,
+const LocalParksSection = dynamic(() => import('@/components/LocalParksSection'), {
   loading: () => <div className="h-96 bg-gray-50 animate-pulse rounded-3xl" />
 })
-const SessionsShowcase = dynamic(() => import('@/components/SessionsShowcase'), { 
-  ssr: false,
+const SessionsShowcase = dynamic(() => import('@/components/SessionsShowcase'), {
   loading: () => <div className="h-96 bg-gray-50 animate-pulse rounded-3xl" />
 })
-const LocalInfoSection = dynamic(() => import('@/components/LocalInfoSection'), { 
-  ssr: false,
+const LocalInfoSection = dynamic(() => import('@/components/LocalInfoSection'), {
   loading: () => <div className="h-96 bg-gray-50 animate-pulse rounded-3xl" />
 })
-const AppsSection = dynamic(() => import('@/components/AppsSection'), { 
-  ssr: false,
+const AppsSection = dynamic(() => import('@/components/AppsSection'), {
   loading: () => <div className="h-96 bg-gray-50 animate-pulse rounded-3xl" />
 })
-const AboutSection = dynamic(() => import('@/components/AboutSection'), { 
-  ssr: false,
+const AboutSection = dynamic(() => import('@/components/AboutSection'), {
   loading: () => <div className="h-96 bg-gray-50 animate-pulse rounded-3xl" />
 })
-const LocalTestimonialsSection = dynamic(() => import('@/components/LocalTestimonialsSection'), { 
-  ssr: false,
+const LocalTestimonialsSection = dynamic(() => import('@/components/LocalTestimonialsSection'), {
   loading: () => <div className="h-96 bg-gray-50 animate-pulse rounded-3xl" />
 })
-const CTASection = dynamic(() => import('@/components/CTASection'), { 
-  ssr: false,
+const CTASection = dynamic(() => import('@/components/CTASection'), {
   loading: () => <div className="h-64 bg-gray-50 animate-pulse rounded-3xl" />
 })
-const OnlineCoursesCtaSection = dynamic(() => import('@/components/OnlineCoursesCtaSection'), { 
-  ssr: false,
+const OnlineCoursesCtaSection = dynamic(() => import('@/components/OnlineCoursesCtaSection'), {
   loading: () => <div className="h-96 bg-gray-50 animate-pulse rounded-3xl" />
 })
 
@@ -52,8 +41,9 @@ const OnlineCoursesCtaSection = dynamic(() => import('@/components/OnlineCourses
 export const dynamicParams = false // Solo rutas pre-generadas, el resto 404
 export const revalidate = 86400 // Revalidar cada 24 horas
 
-export async function generateMetadata({ params }: { params: { ciudad: string } }): Promise<Metadata> {
-  const city = getCityBySlug(params.ciudad)
+export async function generateMetadata({ params }: { params: Promise<{ ciudad: string }> }): Promise<Metadata> {
+  const { ciudad } = await params
+  const city = getCityBySlug(ciudad)
   
   if (!city) {
     return {
@@ -96,9 +86,10 @@ export async function generateStaticParams() {
   }))
 }
 
-export default async function LocalidadPage({ params }: { params: { ciudad: string } }) {
-  const city = getCityBySlug(params.ciudad)
-  const extendedData = getExtendedCityData(params.ciudad)
+export default async function LocalidadPage({ params }: { params: Promise<{ ciudad: string }> }) {
+  const { ciudad } = await params
+  const city = getCityBySlug(ciudad)
+  const extendedData = getExtendedCityData(ciudad)
 
   if (!city) {
     notFound()
@@ -111,7 +102,7 @@ export default async function LocalidadPage({ params }: { params: { ciudad: stri
   // Para ciudades remotas, obtener contenido único de Supabase
   let uniqueContent = null
   if (isRemoteMarket) {
-    uniqueContent = await getCityContent(params.ciudad)
+    uniqueContent = await getCityContent(ciudad)
   }
 
   return (

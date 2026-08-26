@@ -15,7 +15,7 @@ const nextConfig = {
         pathname: '/**',
       },
     ],
-    formats: ['image/avif', 'image/webp'],
+    formats: ['image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 31536000, // 1 año de caché para imágenes
@@ -23,78 +23,17 @@ const nextConfig = {
     unoptimized: false,
   },
   
-  // Comprimir todas las respuestas
   compress: true,
-  
-  // Optimizar para navegadores modernos (elimina polyfills innecesarios)
-  swcMinify: true,
+
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
-  
-  // Optimización experimental para reducir CSS bloqueante
+
   experimental: {
-    optimizeCss: true, // Inline critical CSS
+    optimizeCss: true,
     optimizePackageImports: ['lucide-react', 'framer-motion', '@supabase/supabase-js'],
-    // Mejorar renderizado inicial
-    optimisticClientCache: true,
-    // Purge CSS no utilizado agresivamente
-    cssChunking: 'loose', // Permite mejor code splitting de CSS
   },
-  
-  // Optimizar chunks para mejor caché y reducir tareas largas en main thread
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      // Code splitting más agresivo para reducir main thread blocking
-      config.optimization.splitChunks = {
-        chunks: 'all',
-        cacheGroups: {
-          default: false,
-          vendors: false,
-          // Chunk de librerías base (React, Next.js core)
-          framework: {
-            name: 'framework',
-            chunks: 'all',
-            test: /[\\/]node_modules[\\/](react|react-dom|scheduler|next)[\\/]/,
-            priority: 40,
-            enforce: true,
-          },
-          // Lucide icons separado para lazy load
-          icons: {
-            name: 'icons',
-            test: /[\\/]node_modules[\\/]lucide-react[\\/]/,
-            priority: 30,
-            reuseExistingChunk: true,
-          },
-          // Librerías grandes separadas
-          lib: {
-            test: /[\\/]node_modules[\\/]/,
-            name(module) {
-              const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1]
-              return `npm.${packageName.replace('@', '')}`
-            },
-            priority: 20,
-            minChunks: 1,
-            reuseExistingChunk: true,
-          },
-          // Commons (código compartido entre páginas)
-          commons: {
-            name: 'commons',
-            minChunks: 2,
-            priority: 10,
-            reuseExistingChunk: true,
-          },
-        },
-        // Límites de tamaño para evitar chunks grandes que bloquean
-        maxInitialRequests: 25,
-        maxAsyncRequests: 25,
-        minSize: 20000,
-        maxSize: 244000, // ~244KB max por chunk (evita tareas largas >50ms)
-      }
-    }
-    return config
-  },
-  
+
   // Headers de seguridad y performance
   async headers() {
     return [

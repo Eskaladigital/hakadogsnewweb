@@ -1,17 +1,18 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { CheckCircle, Loader2, AlertCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { getCourseBySlug } from '@/lib/supabase/courses'
 import type { Course } from '@/lib/supabase/courses'
 
-export default function PurchaseSuccessPage({ params }: { params: { cursoId: string } }) {
+export default function PurchaseSuccessPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { cursoId } = params
+  const params = useParams()
+  const cursoId = params.cursoId as string
   const [loading, setLoading] = useState(true)
   const [curso, setCurso] = useState<Course | null>(null)
   const [error, setError] = useState<string | null>(null)

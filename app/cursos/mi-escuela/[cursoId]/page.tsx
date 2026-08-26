@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { useRouter } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { 
   ArrowLeft, Play, CheckCircle, Download, FileText, Clock, Loader2, 
@@ -20,9 +20,10 @@ import { getModuleTest, getModulesTestStatus, type ModuleTestStatus, type Module
 import ModuleTestComponent from '@/components/courses/ModuleTest'
 import { useSwipe } from '@/lib/hooks/useSwipe'
 
-export default function CursoDetailPage({ params }: { params: { cursoId: string } }) {
+export default function CursoDetailPage() {
   const router = useRouter()
-  const { cursoId } = params
+  const params = useParams()
+  const cursoId = params.cursoId as string
   const [loading, setLoading] = useState(true)
   const [curso, setCurso] = useState<Course | null>(null)
   const [lecciones, setLecciones] = useState<Lesson[]>([])
