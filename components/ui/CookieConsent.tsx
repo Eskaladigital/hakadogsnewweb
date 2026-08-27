@@ -48,10 +48,7 @@ export default function CookieConsent() {
       const savedPreferences = JSON.parse(consent)
       setPreferences(savedPreferences)
       
-      // Si se aceptaron analytics, cargar Google Analytics
-      if (savedPreferences.analytics) {
-        loadGoogleAnalytics()
-      }
+      applyConsent(savedPreferences)
     }
 
     // Cleanup: eliminar función global al desmontar
@@ -62,23 +59,22 @@ export default function CookieConsent() {
     }
   }, [])
 
-  const loadGoogleAnalytics = () => {
-    // Habilitar Google Analytics
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('consent', 'update', {
-        analytics_storage: 'granted'
-      })
-    }
+  const applyConsent = (prefs: CookiePreferences) => {
+    if (typeof window === 'undefined' || !(window as any).gtag) return
+    const analytics = prefs.analytics ? 'granted' : 'denied'
+    const ads = prefs.marketing ? 'granted' : 'denied'
+    ;(window as any).gtag('consent', 'update', {
+      analytics_storage: analytics,
+      ad_storage: ads,
+      ad_user_data: ads,
+      ad_personalization: ads,
+    })
   }
 
   const savePreferences = (prefs: CookiePreferences) => {
     localStorage.setItem('hakadogs_cookie_consent', JSON.stringify(prefs))
     localStorage.setItem('hakadogs_cookie_consent_date', new Date().toISOString())
-    
-    // Si se aceptaron analytics, cargar Google Analytics
-    if (prefs.analytics) {
-      loadGoogleAnalytics()
-    }
+    applyConsent(prefs)
     
     setShowBanner(false)
     setShowSettings(false)
@@ -253,7 +249,7 @@ export default function CookieConsent() {
                         </button>
                       </div>
                       <p className="text-xs text-gray-500 mt-2">
-                        Incluye: Google Analytics (G-NXPT2KNYGJ)
+                        Incluye: Google Analytics 4
                       </p>
                     </div>
 

@@ -1,6 +1,7 @@
 import './globals.css'
 import type { Metadata, Viewport } from 'next'
 import Script from 'next/script'
+import { GoogleAnalytics } from '@next/third-parties/google'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import BackToTop from '@/components/ui/BackToTop'
@@ -93,6 +94,9 @@ export const metadata: Metadata = {
   },
 }
 
+const GA_ID =
+  process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || process.env.NEXT_PUBLIC_GA_ID
+
 export default function RootLayout({
   children,
 }: {
@@ -158,21 +162,32 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
         />
         
-        {/* Google Analytics - Lazy extremo para no bloquear */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-NXPT2KNYGJ"
-          strategy="lazyOnload"
-        />
-        <Script id="google-analytics" strategy="lazyOnload">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-NXPT2KNYGJ', {
-              page_path: window.location.pathname,
-            });
-          `}
-        </Script>
+        {GA_ID ? (
+          <Script
+            id="gtag-consent-default"
+            strategy="beforeInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){window.dataLayer.push(arguments);}
+                window.gtag = gtag;
+                var analytics = 'denied', ads = 'denied';
+                try {
+                  var c = JSON.parse(localStorage.getItem('hakadogs_cookie_consent') || 'null');
+                  if (c && c.analytics) analytics = 'granted';
+                  if (c && c.marketing) ads = 'granted';
+                } catch (e) {}
+                gtag('consent', 'default', {
+                  analytics_storage: analytics,
+                  ad_storage: ads,
+                  ad_user_data: ads,
+                  ad_personalization: ads,
+                  wait_for_update: 500
+                });
+              `,
+            }}
+          />
+        ) : null}
         
         {/* Service Worker Registration - DESHABILITADO para mejorar LCP */}
         {/* 
@@ -209,6 +224,7 @@ export default function RootLayout({
         <BackToTop />
         <WhatsAppChat />
         <CookieConsent />
+        {GA_ID ? <GoogleAnalytics gaId={GA_ID} /> : null}
       </body>
     </html>
   )
