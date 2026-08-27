@@ -12,8 +12,6 @@ export default function ContactoPage() {
     dogName: '',
     service: '',
     message: '',
-    contact_type: 'particular',
-    company: '',
     referral_source: '',
     privacy: false,
   })
@@ -37,8 +35,6 @@ export default function ContactoPage() {
           dog_name: formData.dogName,
           service: formData.service,
           message: formData.message,
-          contact_type: formData.contact_type,
-          company: formData.company,
           referral_source: formData.referral_source,
           gdpr_consent: formData.privacy,
         }),
@@ -58,8 +54,6 @@ export default function ContactoPage() {
           dogName: '',
           service: '',
           message: '',
-          contact_type: 'particular',
-          company: '',
           referral_source: '',
           privacy: false,
         })
@@ -199,49 +193,6 @@ export default function ContactoPage() {
                 </h2>
                 
                 <form onSubmit={handleSubmit} className="space-y-6">
-                  <div>
-                    <p className="block text-sm font-medium text-gray-700 mb-2">Tipo de consulta</p>
-                    <div className="flex gap-6">
-                      <label className="flex items-center gap-2 text-sm text-gray-700">
-                        <input
-                          type="radio"
-                          name="contact_type"
-                          value="particular"
-                          checked={formData.contact_type === 'particular'}
-                          onChange={handleChange}
-                        />
-                        Particular
-                      </label>
-                      <label className="flex items-center gap-2 text-sm text-gray-700">
-                        <input
-                          type="radio"
-                          name="contact_type"
-                          value="professional"
-                          checked={formData.contact_type === 'professional'}
-                          onChange={handleChange}
-                        />
-                        Profesional
-                      </label>
-                    </div>
-                  </div>
-
-                  {formData.contact_type === 'professional' && (
-                    <div>
-                      <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-2">
-                        Empresa o clínica
-                      </label>
-                      <input
-                        type="text"
-                        id="company"
-                        name="company"
-                        value={formData.company}
-                        onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-forest focus:border-transparent transition"
-                        placeholder="Nombre de la clínica o empresa"
-                      />
-                    </div>
-                  )}
-
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
                       Tu Nombre <span className="text-forest" aria-label="requerido">*</span>

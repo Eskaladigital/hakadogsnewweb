@@ -431,16 +431,6 @@ export default function ContactosPage() {
                   <p className="text-gray-900">{selectedContact.phone}</p>
                 </div>
               )}
-              <div>
-                <p className="text-sm font-semibold text-gray-600 mb-1">Tipo:</p>
-                <p className="text-gray-900">{selectedContact.contact_type === 'professional' ? 'Profesional' : 'Particular'}</p>
-              </div>
-              {selectedContact.company && (
-                <div>
-                  <p className="text-sm font-semibold text-gray-600 mb-1">Empresa:</p>
-                  <p className="text-gray-900">{selectedContact.company}</p>
-                </div>
-              )}
               {selectedContact.dog_name && (
                 <div>
                   <p className="text-sm font-semibold text-gray-600 mb-1">Perro:</p>

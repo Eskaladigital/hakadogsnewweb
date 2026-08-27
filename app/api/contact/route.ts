@@ -18,8 +18,6 @@ export async function POST(request: Request) {
     const email = String(body.email || '').trim()
     const message = String(body.message || '').trim()
     const phone = String(body.phone || '').trim()
-    const contactType = body.contact_type === 'professional' ? 'professional' : 'particular'
-    const company = String(body.company || '').trim()
     const dogName = String(body.dog_name || body.dogName || '').trim()
     const service = String(body.service || '').trim()
     const referralSource = String(body.referral_source || '').trim()
@@ -47,8 +45,6 @@ export async function POST(request: Request) {
       subject: service || 'Consulta web',
       message,
       source: 'web_form',
-      contact_type: contactType,
-      company: contactType === 'professional' ? company || null : null,
       dog_name: dogName || null,
       service: service || null,
       referral_source: referralSource || null,
@@ -65,8 +61,6 @@ export async function POST(request: Request) {
         name,
         email,
         phone,
-        contactType,
-        company,
         dogName,
         service,
         referralSource,
