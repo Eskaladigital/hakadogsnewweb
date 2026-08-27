@@ -11,22 +11,44 @@ export default function ContactoPage() {
     phone: '',
     dogName: '',
     service: '',
-    message: ''
+    message: '',
+    contact_type: 'particular',
+    company: '',
+    referral_source: '',
+    privacy: false,
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitSuccess, setSubmitSuccess] = useState(false)
+  const [submitError, setSubmitError] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-    
+    setSubmitError('')
+
     try {
-      // Simular envío (aquí irá la lógica real)
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      console.log('Form submitted:', formData)
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          dog_name: formData.dogName,
+          service: formData.service,
+          message: formData.message,
+          contact_type: formData.contact_type,
+          company: formData.company,
+          referral_source: formData.referral_source,
+          gdpr_consent: formData.privacy,
+        }),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        setSubmitError(data.error || 'Hubo un error al enviar el mensaje. Inténtalo de nuevo.')
+        return
+      }
       setSubmitSuccess(true)
-      
-      // Reset form después de 3 segundos
       setTimeout(() => {
         setSubmitSuccess(false)
         setFormData({
@@ -35,21 +57,27 @@ export default function ContactoPage() {
           phone: '',
           dogName: '',
           service: '',
-          message: ''
+          message: '',
+          contact_type: 'particular',
+          company: '',
+          referral_source: '',
+          privacy: false,
         })
       }, 3000)
     } catch (error) {
       console.error('Error:', error)
-      alert('Hubo un error al enviar el mensaje. Por favor, inténtalo de nuevo.')
+      setSubmitError('Hubo un error al enviar el mensaje. Por favor, inténtalo de nuevo.')
     } finally {
       setIsSubmitting(false)
     }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target
+    const checked = (e.target as HTMLInputElement).checked
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: type === 'checkbox' ? checked : value,
     })
   }
 
@@ -172,6 +200,49 @@ export default function ContactoPage() {
                 
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
+                    <p className="block text-sm font-medium text-gray-700 mb-2">Tipo de consulta</p>
+                    <div className="flex gap-6">
+                      <label className="flex items-center gap-2 text-sm text-gray-700">
+                        <input
+                          type="radio"
+                          name="contact_type"
+                          value="particular"
+                          checked={formData.contact_type === 'particular'}
+                          onChange={handleChange}
+                        />
+                        Particular
+                      </label>
+                      <label className="flex items-center gap-2 text-sm text-gray-700">
+                        <input
+                          type="radio"
+                          name="contact_type"
+                          value="professional"
+                          checked={formData.contact_type === 'professional'}
+                          onChange={handleChange}
+                        />
+                        Profesional
+                      </label>
+                    </div>
+                  </div>
+
+                  {formData.contact_type === 'professional' && (
+                    <div>
+                      <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-2">
+                        Empresa o clínica
+                      </label>
+                      <input
+                        type="text"
+                        id="company"
+                        name="company"
+                        value={formData.company}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-forest focus:border-transparent transition"
+                        placeholder="Nombre de la clínica o empresa"
+                      />
+                    </div>
+                  )}
+
+                  <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
                       Tu Nombre <span className="text-forest" aria-label="requerido">*</span>
                     </label>
@@ -273,6 +344,47 @@ export default function ContactoPage() {
                       placeholder="Edad, raza, qué necesitas trabajar, cualquier información que nos ayude..."
                     />
                   </div>
+
+                  <div>
+                    <label htmlFor="referral_source" className="block text-sm font-medium text-gray-700 mb-2">
+                      ¿Cómo nos has conocido?
+                    </label>
+                    <select
+                      id="referral_source"
+                      name="referral_source"
+                      value={formData.referral_source}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-forest focus:border-transparent transition"
+                    >
+                      <option value="">Selecciona una opción</option>
+                      <option value="google">Búsqueda en Google</option>
+                      <option value="social">Redes sociales</option>
+                      <option value="referral">Recomendación</option>
+                      <option value="other">Otro</option>
+                    </select>
+                  </div>
+
+                  <label className="flex items-start gap-3 text-sm text-gray-600">
+                    <input
+                      type="checkbox"
+                      name="privacy"
+                      checked={formData.privacy}
+                      onChange={handleChange}
+                      required
+                      className="mt-1"
+                    />
+                    <span>
+                      He leído y acepto la{' '}
+                      <Link href="/legal/privacidad" className="text-forest hover:underline">
+                        política de privacidad
+                      </Link>
+                      . *
+                    </span>
+                  </label>
+
+                  {submitError && (
+                    <p className="text-sm text-red-600" role="alert">{submitError}</p>
+                  )}
 
                   <button
                     type="submit"

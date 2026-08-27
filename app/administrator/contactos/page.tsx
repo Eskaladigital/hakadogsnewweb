@@ -3,13 +3,12 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { 
-  getContactsByStatus, 
+  getAllContacts, 
   updateContact, 
   markContactAsResponded,
   deleteContact,
   type ContactWithDetails 
 } from '@/lib/supabase/contacts'
-import { getRecentContacts } from '@/lib/supabase/dashboard'
 import { getSession } from '@/lib/supabase/auth'
 import { Mail, Search, Eye, Trash2, Clock, CheckCircle, AlertCircle, MessageSquare, Phone, Calendar, X, ArrowLeft } from 'lucide-react'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
@@ -48,26 +47,9 @@ export default function ContactosPage() {
   const loadContacts = async () => {
     try {
       setLoading(true)
-      // Usar la función RPC que sí funciona en lugar de getAllContacts
-      const data = await getRecentContacts(1000) // límite alto para obtener todos
-      
-      // Mapear RecentContact a ContactWithDetails
-      const mappedData: ContactWithDetails[] = (data || []).map(contact => ({
-        ...contact,
-        status: contact.status as 'pending' | 'in_progress' | 'responded' | 'closed',
-        admin_notes: null,
-        responded_by: null,
-        responded_at: null,
-        responded_by_email: null,
-        responded_by_name: null,
-        source: 'web_form',
-        user_agent: null,
-        ip_address: null,
-        updated_at: contact.created_at
-      }))
-      
-      setContacts(mappedData)
-      if (mappedData.length === 0) {
+      const data = await getAllContacts()
+      setContacts(data)
+      if (data.length === 0) {
         console.warn('⚠️ No se encontraron contactos')
       }
     } catch (error) {
@@ -447,6 +429,34 @@ export default function ContactosPage() {
                 <div>
                   <p className="text-sm font-semibold text-gray-600 mb-1">Teléfono:</p>
                   <p className="text-gray-900">{selectedContact.phone}</p>
+                </div>
+              )}
+              <div>
+                <p className="text-sm font-semibold text-gray-600 mb-1">Tipo:</p>
+                <p className="text-gray-900">{selectedContact.contact_type === 'professional' ? 'Profesional' : 'Particular'}</p>
+              </div>
+              {selectedContact.company && (
+                <div>
+                  <p className="text-sm font-semibold text-gray-600 mb-1">Empresa:</p>
+                  <p className="text-gray-900">{selectedContact.company}</p>
+                </div>
+              )}
+              {selectedContact.dog_name && (
+                <div>
+                  <p className="text-sm font-semibold text-gray-600 mb-1">Perro:</p>
+                  <p className="text-gray-900">{selectedContact.dog_name}</p>
+                </div>
+              )}
+              {selectedContact.service && (
+                <div>
+                  <p className="text-sm font-semibold text-gray-600 mb-1">Servicio:</p>
+                  <p className="text-gray-900">{selectedContact.service}</p>
+                </div>
+              )}
+              {selectedContact.referral_source && (
+                <div>
+                  <p className="text-sm font-semibold text-gray-600 mb-1">Origen:</p>
+                  <p className="text-gray-900">{selectedContact.referral_source}</p>
                 </div>
               )}
               <div>

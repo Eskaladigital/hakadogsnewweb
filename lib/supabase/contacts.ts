@@ -13,6 +13,12 @@ export interface Contact {
   subject: string | null
   message: string
   status: 'pending' | 'in_progress' | 'responded' | 'closed'
+  contact_type?: string | null
+  company?: string | null
+  dog_name?: string | null
+  service?: string | null
+  referral_source?: string | null
+  gdpr_consent?: boolean | null
   admin_notes: string | null
   responded_by: string | null
   responded_at: string | null
