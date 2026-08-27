@@ -99,7 +99,7 @@ La descripción debe ser:
         'Authorization': `Bearer ${openaiApiKey}`
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'gpt-5.6-terra',
         messages: [
           {
             role: 'system',
@@ -110,8 +110,7 @@ La descripción debe ser:
             content: prompt
           }
         ],
-        max_tokens: 200,
-        temperature: 0.7
+        max_completion_tokens: 1500,
       })
     })
 

@@ -184,7 +184,7 @@ REGLAS IMPORTANTES:
 Responde SOLO con el JSON, sin texto adicional.`
 
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4o',
+      model: 'gpt-5.6-terra',
       messages: [
         {
           role: 'system',
@@ -195,8 +195,7 @@ Responde SOLO con el JSON, sin texto adicional.`
           content: prompt
         }
       ],
-      temperature: 0.7,
-      max_tokens: 2500,
+      max_completion_tokens: 4000,
     })
 
     const responseText = completion.choices[0].message.content?.trim()

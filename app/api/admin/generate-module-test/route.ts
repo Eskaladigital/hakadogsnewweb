@@ -188,7 +188,7 @@ IMPORTANTE:
         'Authorization': `Bearer ${openaiApiKey}`
       },
       body: JSON.stringify({
-        model: 'gpt-4o',
+        model: 'gpt-5.6-terra',
         messages: [
           {
             role: 'system',
@@ -199,8 +199,7 @@ IMPORTANTE:
             content: prompt
           }
         ],
-        max_tokens: 4000,
-        temperature: 0.7,
+        max_completion_tokens: 4000,
         response_format: { type: "json_object" }
       })
     })
