@@ -8,7 +8,7 @@ export default function Footer() {
   return (
     <footer className="bg-forest-dark text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 sm:gap-8">
           {/* Logo y descripción */}
           <div className="md:col-span-1">
             <div className="flex flex-col items-center md:items-start mb-3 sm:mb-4">
@@ -129,35 +129,38 @@ export default function Footer() {
                 <span className="text-gray-500 text-xs ml-2">🚧 Próximamente</span>
               </li>
             </ul>
+          </div>
 
-            <h3 className="font-bold text-lg mb-4 mt-8">Legal</h3>
+          {/* Legal */}
+          <div>
+            <h3 className="font-bold text-lg mb-4">Legal</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/legal/privacidad" className="text-gray-300 hover:text-gold transition">
-                  Política de Privacidad
+                <Link href="/legal/terminos" className="text-gray-300 hover:text-gold transition">
+                  Aviso legal
                 </Link>
               </li>
               <li>
-                <Link href="/legal/terminos" className="text-gray-300 hover:text-gold transition">
-                  Términos y Condiciones
+                <Link href="/legal/privacidad" className="text-gray-300 hover:text-gold transition">
+                  Política de privacidad
                 </Link>
               </li>
               <li>
                 <Link href="/legal/cookies" className="text-gray-300 hover:text-gold transition">
-                  Política de Cookies
+                  Política de cookies
                 </Link>
               </li>
               <li>
                 <button
+                  type="button"
                   onClick={() => {
-                    // Llamar a la función global para abrir el panel
                     if (typeof window !== 'undefined' && (window as any).openCookieSettings) {
                       (window as any).openCookieSettings()
                     }
                   }}
                   className="text-gray-300 hover:text-gold transition text-left"
                 >
-                  ⚙️ Configurar Cookies
+                  Configurar cookies
                 </button>
               </li>
             </ul>
@@ -221,22 +224,9 @@ export default function Footer() {
             <p className="text-sm text-gray-400">
               © {new Date().getFullYear()} Hakadogs. Todos los derechos reservados.
             </p>
-
-            {/* Enlaces legales */}
-            <div className="flex flex-wrap justify-center gap-6 text-sm">
-              <Link href="/legal/privacidad" className="text-gray-400 hover:text-gold transition">
-                Política de Privacidad
-              </Link>
-              <Link href="/legal/terminos" className="text-gray-400 hover:text-gold transition">
-                Términos y Condiciones
-              </Link>
-              <Link href="/legal/cookies" className="text-gray-400 hover:text-gold transition">
-                Política de Cookies
-              </Link>
-              <Link href="/sitemap" className="text-gray-400 hover:text-gold transition">
-                Mapa del Sitio
-              </Link>
-            </div>
+            <Link href="/sitemap" className="text-gray-400 hover:text-gold transition text-sm">
+              Mapa del Sitio
+            </Link>
           </div>
 
           {/* Créditos de desarrollo */}
